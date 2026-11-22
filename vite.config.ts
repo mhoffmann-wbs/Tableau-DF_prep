@@ -11,6 +11,11 @@ const base = process.env.BASE_PATH ?? '/'
 export default defineConfig({
   base,
   plugins: [{ enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm] }) }, react({ include: /\.(mdx|tsx?)$/ }), tailwindcss()],
+  build: {
+    // The chart runtime (Vega + Vega-Lite, ~860 kB, ~295 kB gzipped) is one
+    // lazily loaded chunk, fetched only by pages that draw a chart.
+    chunkSizeWarningLimit: 900,
+  },
   test: {
     environment: 'node',
     include: ['src/**/*.test.{ts,tsx}'],

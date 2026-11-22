@@ -11,7 +11,7 @@ export type Aggregation = (typeof AGGREGATIONS)[number]
 export const DATE_LEVELS = ['year', 'quarter', 'month', 'week', 'day', 'weekday'] as const
 export type DateLevel = (typeof DATE_LEVELS)[number]
 
-export const MARK_TYPES = ['automatic', 'bar', 'line', 'area', 'circle', 'square', 'shape', 'text', 'map', 'density', 'pie'] as const
+export const MARK_TYPES = ['automatic', 'bar', 'line', 'area', 'circle', 'square', 'shape', 'text', 'map', 'density'] as const
 export type MarkType = (typeof MARK_TYPES)[number]
 
 const fieldName = z.string().trim().min(1)
@@ -25,6 +25,19 @@ export const pillSchema = z
     date: z.object({ level: z.enum(DATE_LEVELS), mode: z.enum(['part', 'value']) }).optional(),
     /** Overrides the default: date parts and dimensions are discrete, date values and measures continuous. */
     as: z.enum(['discrete', 'continuous']).optional(),
+    /**
+     * Discrete pills only. Without `field` the members sort by their own value
+     * (data source order); with `field` + `agg` it is a computed sort by that
+     * measure; `manual` lists members first in the given order.
+     */
+    sort: z
+      .object({
+        order: z.enum(['asc', 'desc']).default('asc'),
+        field: fieldName.optional(),
+        agg: z.enum(AGGREGATIONS).optional(),
+        manual: z.array(z.string()).optional(),
+      })
+      .optional(),
   })
   .refine((p) => !(p.date?.level === 'weekday' && p.date.mode === 'value'), 'weekday is a date part only')
 
@@ -39,7 +52,12 @@ const filterSchema = z.discriminatedUnion('kind', [
 
 export type Filter = z.infer<typeof filterSchema>
 
+/** The engine's data sources (PLAN.md §6b): one row per session, subscriber or title. */
+export const SOURCES = ['sessions', 'subscribers', 'titles'] as const
+export type SourceId = (typeof SOURCES)[number]
+
 export const vizSpecSchema = z.object({
+  source: z.enum(SOURCES).default('sessions'),
   columns: z.array(pillSchema).default([]),
   rows: z.array(pillSchema).default([]),
   marks: z

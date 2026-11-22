@@ -6,12 +6,14 @@ import { Layout } from './Layout'
 // content and, later, the chart engine) loads on first use. Keep content
 // imports out of this file and Layout.
 const HomePage = lazy(() => import('../pages/HomePage'))
+const ChartGalleryPage = lazy(() => import('../pages/ChartGalleryPage'))
 
 export const routes: RouteObject[] = [
   {
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'dev/charts', element: <ChartGalleryPage /> },
       { path: '*', element: <h1 className="text-2xl font-semibold">Page not found</h1> },
     ],
   },

@@ -18,6 +18,15 @@ describe('pages', () => {
     expect(screen.getByText('Create a density map')).toBeInTheDocument()
   })
 
+  it('draws shelves with blue discrete and green continuous pills on the chart gallery', async () => {
+    await renderAt('/dev/charts', 'Chart gallery')
+    const columns = screen.getAllByRole('group', { name: 'Columns shelf' })[1]!
+    expect(columns).toHaveTextContent('MONTH(Start) (continuous)')
+    const rows = screen.getAllByRole('group', { name: 'Rows shelf' })[0]!
+    expect(rows).toHaveTextContent('Genre (discrete)')
+    expect(screen.getAllByText('Drawing the chart…').length).toBeGreaterThan(0)
+  })
+
   it('shows the non-affiliation footer and a not-found page', async () => {
     await renderAt('/nope', 'Page not found')
     expect(screen.getByText(/Not affiliated with or endorsed by Salesforce/)).toBeInTheDocument()

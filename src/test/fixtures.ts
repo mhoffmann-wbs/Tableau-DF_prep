@@ -36,6 +36,7 @@ export const VIZ: Item = {
   viz: {
     show: 'both',
     spec: {
+      source: 'sessions',
       columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }],
       rows: [{ field: 'Minutes Watched', agg: 'sum' }],
       marks: { type: 'line', detail: [], tooltip: [] },

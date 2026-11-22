@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-Phase 0 is done: the scaffold, the blueprint, the item schema, the content tests and scripts, and the Driftlight dataset. The app is currently a home page showing the exam format and outline. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
+Phases 0–1 are done: the scaffold, the blueprint, the item schema, the content tests and scripts, the Driftlight dataset, and the chart engine. The app has a home page showing the exam format and outline, plus an unlisted `/dev/charts` gallery. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
 
 ## Purpose
 
@@ -52,6 +52,8 @@ Tests run in Node by default. Component tests start with `// @vitest-environment
 
 The `scripts/` run TypeScript directly in Node (native type stripping). So any `src/` module a script imports, and that module's own imports, must use explicit `.ts` extensions (`allowImportingTsExtensions` is on). The data modules and `content/schema.ts`/`quality.ts` already do.
 
+To check a production build in a browser, run `BASE_PATH=/Tableau-DF_prep/ npm run build`, then `BASE_PATH=/Tableau-DF_prep/ npx vite preview`. Preview also reads `base` from `BASE_PATH`; without it, asset requests under the sub-path fall back to `index.html` and the page stays blank. Headless Chrome needs `--virtual-time-budget=30000` to wait for the lazy pages and the dataset.
+
 GitHub Pages serves the app under `/Tableau-DF_prep/`. `.github/workflows/deploy.yml` runs lint, the tests and `BASE_PATH=/Tableau-DF_prep/ npm run build`, copies `index.html` to `404.html` so deep links work, and deploys on push to `main`. Vite's `base` and the router's `basename` come from `BASE_PATH`, so use router `Link`s, never root-relative `<a href="/…">`.
 
 ## Layout
@@ -68,7 +70,31 @@ GitHub Pages serves the app under `/Tableau-DF_prep/`. `.github/workflows/deploy
   - the key is the strictly longest option in at most 40%
   - no duplicate stems (stem + viz spec)
   - explanations and rationales never cite option letters, so options can be reordered
-- `src/engine/spec.ts`: the viz spec (v0, to be refined in phase 1). It has `columns`/`rows` of pills, the Marks card (`type`, `color`, `size`, `label`, `shape`, `detail[]`, `tooltip[]`) and `filters` (`values`, `range`, `dateRange`, `datePart`). A pill is `{field, agg?, date?: {level, mode: part|value}, as?: discrete|continuous}`, and `weekday` can only be a part. Field names aren't checked against the data model yet (phase 1).
+- **Engine** (`src/engine/`). Engine modules import each other with `.ts` extensions, so scripts can use them.
+  - `spec.ts`: the viz spec.
+    - `source` is `sessions` (default), `subscribers` or `titles`.
+    - `columns`/`rows` hold pills. The Marks card has `type`, `color`, `size`, `label`, `shape`, `detail[]` and `tooltip[]`.
+    - `filters`: `values` (members by display string, optionally `exclude`), `range` (row-level, or a measure filter after aggregation when `agg` is set), `dateRange` and `datePart` (canonical numbers).
+    - A pill is `{field, agg?, date?: {level, mode: part|value}, as?: discrete|continuous, sort?: {order, field?+agg? (computed), manual?}}`. `weekday` can only be a part.
+  - `model.ts`: the field metadata (the dataset after preparation: Postal Code is a geo string, Release Year a discrete dimension, and Latitude/Longitude are measures with an AVG default) and `SOURCE_INFO` (fields in Data pane order, a `<Source> (Count)` measure, and `Latitude/Longitude (generated)`).
+    - `buildDataset(csvTexts)` builds three flattened sources. Each base table is left-joined many-to-one to its lookups, so rows never multiply, and unmatched lookups become nulls. Sessions get titles, subscribers, plans and regions; subscribers get plans, regions and cancellations.
+    - Values are typed: dates are UTC epoch ms and empty cells are null. `loadDataset()` fetches `public/data/` once in the browser.
+  - `pills.ts`: `resolvePill` decides dimension or measure, blue or green, and the Tableau label (`SUM(…)`, `CNTD(…)`, `MONTH(…)`). It throws `EngineError`, which carries learner-facing messages.
+    - Date dimensions default to the YEAR part.
+    - Aggregated numbers and COUNT/COUNTD are continuous, and MIN/MAX/ATTR of non-numbers are discrete.
+  - `query.ts` (`query(spec, dataset)`) runs: row filters → one group per combination of the view's dimension members → aggregation → measure filters → member order. Results are `{columns, rows}`, keyed `c0, c1…`.
+    - Discrete members are display strings (`Q3`, `January`, `Null`, `True`). Continuous dates are epoch ms.
+    - Each discrete column carries its member `order`: the natural order (date parts chronologically, strings alphabetically, Null last), a computed sort, or a manual one.
+    - Generated coordinates come from the finest geographic dimension in the view, using `data/geography.ts`.
+    - `columnOf(result, source, pill)` reads a pill's column. Use it in tests and checkpoints instead of assuming column order, because columns follow `pillsOf` order: Columns, Rows, then the Marks card.
+  - `render.ts` (`toVegaLite`):
+    - The innermost pill on a shelf becomes the axis (continuous) or the band (discrete). The discrete pills before it become facet panes, several joined with " · ". Only one continuous pill per shelf for now.
+    - `automaticMark` follows Tableau's Automatic: geo → circle, nothing continuous → text ("Abc" without a label), a continuous date → line, measure × measure → circle, otherwise bar.
+    - `square` on two discrete shelves becomes a highlight-table `rect`. `density` uses translucent circles. `map` draws a filled country map via a lookup on world-atlas ISO ids; lat/long marks draw on an `equalEarth` world.
+    - Band width comes from the longest label. Charts take colours from a `Theme`. `needsWorld(spec)` says whether to load the topology.
+  - `runtime.ts`: a lazy chunk with the dataset, query, vega-embed and world-atlas. `Viz.tsx` imports it on first draw, keys its state by the spec's JSON, and shows `EngineError` messages. `Shelves.tsx` and `PillChip` show a spec's shelves read-only and need no data.
+  - Tests: `src/test/dataset.ts` gives `testDataset()` (the committed CSVs) and `referenceData()` (the generator's typed rows, the independent reference). `query.test.ts` checks the engine against plain reductions over the reference. `render.test.ts` compiles every chart type with Vega-Lite and renders it to SVG in Node (`new View(parse(compile(vl).spec), {renderer: 'none'}).toSVG()`).
+  - `src/pages/ChartGalleryPage.tsx` (`/dev/charts`, not in the nav) shows each basic chart type from the outline with its shelves. Use it to check rendering in a browser.
 - **Dataset** (`src/data/`):
   - `generate.ts` builds the Driftlight dataset from `SEED`: 3,000 subscribers, 4 plans, 400 titles, 15k sessions in 2024 and 17k in 2025, about 400 cancellations, 25 countries in 5 regions, and monthly targets by region. It returns the file contents plus the typed rows.
   - `scripts/generate-data.ts` writes the files to `public/data/` (committed, served for download). Changing the generator moves every number the content cites.
@@ -79,5 +105,6 @@ GitHub Pages serves the app under `/Tableau-DF_prep/`. `.github/workflows/deploy
     - union-compatible session files
   - `xlsx.ts` is a minimal deterministic `.xlsx` writer (fflate, fixed local-time mtime) for `targets.xlsx`. Monthly dates are stored as real Excel dates.
   - `rng.ts` holds `seededRng` (mulberry32), `pick`, `weighted` and `randInt`. Never use `Math.random` for content or samplers.
+- `src/data/geography.ts`: the regions, countries (with ISO numeric ids for world-atlas) and cities with coordinates. Both the generator and the engine use it.
 - `src/app/`: `routes.tsx` (every page lazy-loaded; keep content imports out of it and `Layout`) and `Layout.tsx` (nav, a phone Menu button, the non-affiliation footer). `src/pages/`: `HomePage` (format and outline). `pages.test.tsx` renders real routes with `createMemoryRouter` and an async `renderAt()`.
 - Theme tokens (`src/index.css`, `@theme`): `brand`, `brand-dark`, `accent`, `chalk`, `page`, `header`, and the pill colours `discrete` (blue) and `continuous` (green). Dark mode follows the OS by remapping the tokens and the slate scale once, so components don't use `dark:` variants.
