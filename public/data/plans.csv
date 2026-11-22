@@ -1,0 +1,5 @@
+Plan Code,Plan,Monthly Price,Screens,Ad Supported
+BAS,Basic,7.99,1,FALSE
+STD,Standard,13.99,2,FALSE
+PRM,Premium,19.99,4,FALSE
+ADS,Basic with Ads,5.99,1,TRUE

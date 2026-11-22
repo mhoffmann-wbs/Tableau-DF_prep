@@ -6,7 +6,7 @@ The footer and README say: "Not affiliated with or endorsed by Salesforce, Inc. 
 Authoritative sources. Where they disagree with this plan, the sources win.
 - Exam guide (Salesforce Help article 005298988): https://help.salesforce.com/s/articleView?id=005298988&type=1. The page is rendered with JavaScript, so automated fetches get an empty shell: read it in a browser. Its text was captured on 2026-11-23 and is the basis of §2 and §3.
 - Certificate page: https://trailheadacademy.salesforce.com/certificate/exam-tableau-desktop-found---Analytics-101
-- Tableau Desktop help for **2022.3**, the version the exam tests on: https://help.tableau.com/v2022.3/pro/desktop/en-us/default.htm
+- Tableau Desktop help: https://help.tableau.com/current/pro/desktop/en-us/default.htm. The exam tests **2022.3**, but Tableau doesn't keep version-specific help online (every `/v20xx.x/` path returns 404). Check whether a feature is newer than 2022.3 in the release notes: https://www.tableau.com/products/new-features
 
 Recheck the guide's "Product Version" line before every content phase. If it moves past 2022.3, the version-sensitive notes in the lessons have to follow.
 
@@ -38,7 +38,7 @@ Recheck the guide's "Product Version" line before every content phase. If it mov
 | Fee and retake | US$75; retake free | Shown in the exam-day guide. |
 | Delivery | Proctored at a test centre or online; no reference materials allowed | Shown in the exam-day guide. |
 | Prerequisite | None. The audience is described as having "a minimum of 3 months experience" | Shown on the home page. |
-| Item style | MC/MR. Each multi-select item says how many to choose | `multi` stems say "(Choose two.)", and so on. |
+| Item style | MC/MR. Each multi-select item says how many to choose | `multi` stems say "(Choose 2 answers.)", and so on. |
 
 The guide notes that the outline "is not a comprehensive listing". Lessons may touch adjacent basics (Show Me, the Marks card, worksheet vs. dashboard vs. story, Tableau file types), but questions stay tagged to an outline objective.
 
@@ -57,7 +57,7 @@ The blueprint also holds:
 - `EXAM_FORMAT` (§2), which the mock, the exam-day guide and the home page read.
 - `questionTarget()` and `allocateMock()`, both largest-remainder splits (§4).
 - A **feature map** listing which Build parts serve each objective (sandbox, calc, sim:<id>, challenge:<id>). Lessons use it to link their Build section, and `content:status` uses it to flag objectives with no hands-on support.
-- `publicLimits`: the objectives Tableau Public can't do (likely candidates are saving a `.tds`, publishing to Tableau Server, exporting to PowerPoint, and some connection types). **Verify each one in Public in phase 0.** Don't write the list from memory.
+- `PUBLIC_LIMITS`: the objectives Tableau Desktop Public Edition can't do. Each entry is either `documented` (in Tableau's help, with a source) or `unverified` (still to be checked in Public). Don't add entries from memory.
 
 ## 4. Question bank
 
@@ -85,7 +85,7 @@ Mix target: about 55% `single`, 25% `multi` and 20% `viz`. Objectives 2.1.x, 2.3
 - ✓ For `multi`, `correct.length === select` and there are at least 5 options. Every `objectives[]` id belongs to the item's `taskId`.
 - ✓ Every `viz` spec validates against the sandbox schema, references real fields, and renders without error in a test.
 - ✓ **Numbers come from the data, not from memory.** A `viz` item or challenge checkpoint that states a value (the highest bar, a total, a count) declares it as a `check` query that the test evaluates against the dataset.
-- Tableau behaviour (menu paths, defaults, what is or isn't possible) is checked against the 2022.3 help and cited in `sourceLinks` when it isn't obvious.
+- Tableau behaviour (menu paths, defaults, what is or isn't possible) is checked against the Tableau help (and the release notes for anything that may be newer than 2022.3) and cited in `sourceLinks` when it isn't obvious.
 - Every item is written for this app. Never reproduce live exam content (candidates accept the Certification Program Agreement) or third-party dumps.
 
 ## 5. Learn: lessons
@@ -188,7 +188,7 @@ Leitner boxes 0–5 rated Again, Good or Easy, with intervals of 0, 1, 3, 7, 16 
 
 ## 9. Phases
 
-0. **Scaffold**: set up the tooling and the Pages deploy, and add the non-affiliation footer. Write `blueprint.ts` (verbatim from the guide) and the item schema, the content tests, the dataset generator and the Driftlight CSVs. Check every `publicLimits` entry in Tableau Public.
+0. **Scaffold** (done 2026-11-23): set up the tooling and the Pages deploy, and add the non-affiliation footer. Write `blueprint.ts` (verbatim from the guide) and the item schema, the content tests, the dataset generator and the Driftlight CSVs. `PUBLIC_LIMITS` records 1.1.1 and 3.3.1 as documented limits. **Open:** check the three `unverified` entries (1.1.4 `.tds`, 1.1.5 CSV + Excel connections, 3.3.3 PowerPoint) in Tableau Public before writing phase 8's challenges.
 1. **Engine**: the model, the query layer and the Vega-Lite renderer, with tests against raw-row computations, and a `<Viz>` component.
 2. **Quiz engine**: render and grade `single`, `multi` and `viz` items; practice, the question bank and the mock (40 items, 70 minutes, pass at 48%, per-domain report); readiness; session review; shortcuts.
 3. **Sandbox v1**: the Data pane, shelves, the Marks card, pills, URL specs and "make this chart" challenges.

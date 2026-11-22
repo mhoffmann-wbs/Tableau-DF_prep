@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --color-brand: #3b3486;
+  --color-brand-dark: #2d2867;
+  --color-accent: #f0a63c;
+  --color-chalk: #f7f7fb;
+  /* Pill colours: blue = discrete, green = continuous, as in Tableau. */
+  --color-discrete: #2f6fbf;
+  --color-continuous: #23875a;
+  /* Surfaces that differ between light and dark mode. */
+  --color-page: #f5f5fa;
+  --color-header: #221f4d;
+}
+
+/*
+ * Dark mode follows the OS setting. Instead of adding dark: variants to every
+ * component, the tokens the UI uses are remapped once here: the slate scale is
+ * inverted, "white" cards become dark surfaces, and brand-dark (link text)
+ * becomes a light violet.
+ */
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --color-page: #12111e;
+    --color-header: #0d0c1a;
+    --color-white: #1b1a2b;
+    --color-brand: #6a61c9;
+    --color-brand-dark: #bdb6ff;
+    --color-discrete: #5d9be6;
+    --color-continuous: #4cbf88;
+    --color-slate-50: #1f1e30;
+    --color-slate-100: #252438;
+    --color-slate-200: #333247;
+    --color-slate-300: #444359;
+    --color-slate-400: #6e6d85;
+    --color-slate-500: #9392a8;
+    --color-slate-600: #b4b3c7;
+    --color-slate-700: #d0cfde;
+    --color-slate-800: #e3e2ed;
+    --color-slate-900: #f0eff6;
+    --color-green-50: #10301f;
+    --color-green-600: #3fa66b;
+    --color-red-50: #3a1717;
+    --color-red-600: #e05a5a;
+    --color-red-700: #f08080;
+    --color-amber-50: #33280f;
+    --color-amber-300: #8a6a1f;
+  }
+}
+
+/* Phone layout: never let long text or wide tables push the page sideways. */
+body {
+  overflow-wrap: break-word;
+}
+
+/*
+ * Lesson prose: the typography plugin ships fixed colours, so point its variables
+ * at the theme tokens (which dark mode remaps). Unlayered, so it beats the plugin.
+ */
+.prose {
+  --tw-prose-body: var(--color-slate-700);
+  --tw-prose-headings: var(--color-slate-900);
+  --tw-prose-lead: var(--color-slate-600);
+  --tw-prose-links: var(--color-brand-dark);
+  --tw-prose-bold: var(--color-slate-900);
+  --tw-prose-counters: var(--color-slate-500);
+  --tw-prose-bullets: var(--color-slate-400);
+  --tw-prose-hr: var(--color-slate-200);
+  --tw-prose-quotes: var(--color-slate-900);
+  --tw-prose-quote-borders: var(--color-slate-200);
+  --tw-prose-captions: var(--color-slate-500);
+  --tw-prose-code: var(--color-slate-900);
+  --tw-prose-th-borders: var(--color-slate-300);
+  --tw-prose-td-borders: var(--color-slate-200);
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+}
+
+/* Print (guides): dark mode only applies on screen, so paper gets the light tokens. */
+@media print {
+  main {
+    padding-top: 0;
+  }
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+  table {
+    break-inside: avoid;
+  }
+}
