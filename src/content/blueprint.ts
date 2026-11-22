@@ -207,8 +207,9 @@ const PUBLIC_FAQ = 'https://help.tableau.com/current/pro/desktop/en-gb/public_fa
 /**
  * Objectives that Tableau Desktop Public Edition (the challenges' target) can't
  * do, or may not. `documented` entries are stated in Tableau's help;
- * `unverified` ones still need a check in Public itself (PLAN.md §3). Lessons
- * and challenges mark these "Desktop only" and point to a simulator instead.
+ * `unverified` ones still need a check in Public itself (PLAN.md §3). Challenges
+ * cover these with an optional Desktop Free Edition step, or, when only the
+ * paid Desktop can do it, point to a simulator instead (PLAN.md §1, §7d).
  */
 export const PUBLIC_LIMITS: { objectiveId: string; status: 'documented' | 'unverified'; note: string; source?: string }[] = [
   {

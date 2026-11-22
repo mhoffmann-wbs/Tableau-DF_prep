@@ -25,7 +25,7 @@ Recheck the guide's "Product Version" line before every content phase. If it mov
 | Bank size | About **600 items** (§4). |
 | Mock exam | 40 items in 70 minutes, **all scored**, pass at 48%, split by domain weight. |
 | Stack | Vite + React + TypeScript + Tailwind v4 + React Router + Zod + MDX + Vitest/RTL + oxlint, plus Vega-Lite for charts (lazy-loaded). The app is a static SPA with no backend. Progress lives in `localStorage` and can be exported and imported. |
-| Tableau licence | Never needed for Learn or Check. The challenges target the free **Tableau Public** app. Steps that Public can't do are marked "Desktop only" and taught through lessons and simulators instead. |
+| Tableau licence | Never needed for Learn or Check. The challenges mainly target the free **Tableau Desktop Public Edition** ("Tableau Public"). The exam assumes the paid Tableau Desktop, so where Public can't teach something (`PUBLIC_LIMITS`), an optional step may use the free **Tableau Desktop Free Edition** instead. Tableau's comparison page says it "can connect to all data sources" and needs no licence, but it can't save to Tableau Public. Anything only the paid Desktop can do is taught through lessons and simulators. |
 
 ## 2. Exam facts the app must mirror
 
@@ -165,10 +165,10 @@ Components with their copy as data. Each ends with 2–3 bank items.
 | Dashboard actions | Wires a filter, highlight, URL or parameter action between two canned sheets and tries it. | 3.2.2, 3.2.3 |
 
 ### 7d. Tableau Public challenges (`/build/challenges/:id`)
-About 12 MDX challenges, roughly one per task, in Tableau Public with the downloaded Driftlight files. Each has:
+About 12 MDX challenges, roughly one per task, in Tableau Public with the downloaded Driftlight files. A few optional steps use Desktop Free Edition (§1). Each has:
 - `meta.steps`, a checklist stored in progress (don't rename step ids), and `meta.checkpoints`, numeric or text answers the learner reads from their own viz ("Total minutes watched on Mobile in Q3 2025?"). The `check` query in the engine computes each answer, and a test verifies them.
 - sections `## Goal`, `## Get the data`, `## Steps`, `## Checkpoints` and `## Exam angle`, plus a `> Public vs. Desktop` callout wherever the steps differ from Desktop or from 2022.3.
-- a mark on any challenge step that Public can't do, pointing to the simulator that covers it instead.
+- a mark on any step Public can't do. Such a step is either an optional **Desktop Free Edition** step (with a `meta.steps` flag `edition: "free"`, so it never blocks completion), or, if only the paid Desktop can do it, a pointer to the simulator that covers it. Check what Free Edition supports in Tableau's help before relying on it.
 
 Challenges never count towards readiness.
 

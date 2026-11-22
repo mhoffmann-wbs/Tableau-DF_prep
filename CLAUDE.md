@@ -26,6 +26,7 @@ Every scenario uses one invented streaming service, **Driftlight**, and its gene
 - **Content is data.** Lessons, questions, calc exercises, challenges and flashcards are files under `src/content/`, validated with Zod and rendered generically. To add content, add data, not a component. The exception is the simulators, which are components, though their copy is data.
 - **One engine.** `src/engine/` (data model, query layer, calc evaluator, Vega-Lite renderer) is shared by the sandbox, `viz` items, lesson embeds, simulators and challenge checkpoints. Don't build a second chart path.
 - **Numbers come from the data.** Any value an item, lesson or checkpoint states about the Driftlight data is declared as an engine query and checked in a test, never typed by hand.
+- **Tableau editions**: the challenges target Tableau Desktop Public Edition. Where Public can't teach an objective, an optional step may use the free Desktop Free Edition. The exam itself assumes the paid Desktop.
 - **Tableau facts are never written from memory.** Menu paths, defaults and the differences between Tableau Public and Desktop are checked against the docs. `PUBLIC_LIMITS` entries are `documented` (with a help.tableau.com source) or `unverified`.
 - Draw the Tableau UI as schematic diagrams in our own style. Never use Tableau screenshots or copy its visual design. Don't redistribute Sample-Superstore: Superstore is mentioned in notes only.
 - Write every question for this app. Never reproduce live exam content or third-party question dumps.
