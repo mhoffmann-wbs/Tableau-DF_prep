@@ -1,0 +1,677 @@
+[
+  {
+    "id": "4.2-001",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "An analyst drags the string field `Genre` to Rows. What does Tableau draw for it?",
+    "options": [
+      {
+        "text": "A vertical axis with tick marks running from the lowest to the highest genre",
+        "correct": false,
+        "rationale": "Axes belong to continuous fields. A string field has no number line, so it cannot get one."
+      },
+      {
+        "text": "A color gradient legend that shades each genre from low to high",
+        "correct": false,
+        "rationale": "Gradients are what a continuous field gets on Color, and `Genre` is not on Color here."
+      },
+      {
+        "text": "One row header for each genre in the data",
+        "correct": true,
+        "rationale": "The field is discrete, so it makes a separate, distinct label for every member, like a pivot table row label."
+      },
+      {
+        "text": "A single combined row that adds up all genres into one mark",
+        "correct": false,
+        "rationale": "Putting a dimension on Rows splits the view by its members instead of combining them."
+      }
+    ],
+    "explanation": "Discrete fields are blue and draw headers, one per member. Continuous fields draw axes. A string dimension such as `Genre` is always discrete.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-002",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "A view has the discrete field `Type` on Color. What does the legend show?",
+    "options": [
+      {
+        "text": "A distinct color for each member of `Type`",
+        "correct": true,
+        "rationale": "A discrete field on Color gets a categorical palette: one color per member, listed in a legend."
+      },
+      {
+        "text": "A gradient bar that runs from the smallest to the largest `Type`",
+        "correct": false,
+        "rationale": "A gradient (quantitative legend) is for continuous fields, and `Type` is discrete here."
+      },
+      {
+        "text": "One shade of a single color, darker for members with more rows",
+        "correct": false,
+        "rationale": "Shading by size or count of members is how a continuous measure behaves, not a discrete field."
+      },
+      {
+        "text": "No legend, because discrete fields on Color are drawn as headers",
+        "correct": false,
+        "rationale": "Headers appear on Rows and Columns. On Color, discrete fields get a legend."
+      }
+    ],
+    "explanation": "The Color shelf follows the same rule as the shelves: discrete means separate members, so each gets its own color. Continuous means a range, so it gets a gradient.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-003",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "In a view, the `Release Year` pill on Columns was made continuous and now draws an axis of years. The analyst wants one header per year instead. What should the analyst do?",
+    "options": [
+      {
+        "text": "Change the aggregation of `Release Year` to Count (Distinct)",
+        "correct": false,
+        "rationale": "This changes the pill to an aggregated measure value, which does not give a header for each year."
+      },
+      {
+        "text": "Drag `Release Year` onto the Detail card on the Marks card",
+        "correct": false,
+        "rationale": "Detail changes the level of detail of the marks but does not draw headers."
+      },
+      {
+        "text": "Right-click `Release Year` in the Data pane and choose Create > Group",
+        "correct": false,
+        "rationale": "A group makes a new field that combines members. It does not change how the field is displayed."
+      },
+      {
+        "text": "Switch the `Release Year` pill back to discrete from its right-click menu",
+        "correct": true,
+        "rationale": "Making the pill discrete turns it blue, so it draws a header for each year."
+      }
+    ],
+    "explanation": "A numeric dimension can be discrete or continuous. A discrete pill draws headers, a continuous one an axis. The pill's right-click menu switches it for this view only.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-004",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "An analyst right-clicks the green `SUM(Minutes Watched)` pill on Columns and chooses Convert to Discrete. Which statement is correct?",
+    "options": [
+      {
+        "text": "The pill becomes a dimension and is no longer aggregated",
+        "correct": false,
+        "rationale": "Converting to discrete does not turn a measure into a dimension."
+      },
+      {
+        "text": "The field is still a measure and still aggregated, but now draws headers",
+        "correct": true,
+        "rationale": "Continuity and role are separate properties. Making a measure discrete changes the display, not the role."
+      },
+      {
+        "text": "The pill stays green, because measures are always continuous",
+        "correct": false,
+        "rationale": "Measures can be discrete or continuous. A discrete pill is blue."
+      },
+      {
+        "text": "The pill still draws an axis, but with whole-number ticks only",
+        "correct": false,
+        "rationale": "A discrete pill draws headers instead of an axis."
+      }
+    ],
+    "explanation": "Blue/green (continuity) is a different question from dimension/measure (role). A blue measure is still aggregated.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-005",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "Which Driftlight field can NOT be made continuous?",
+    "options": [
+      {
+        "text": "`Release Year`, a numeric dimension",
+        "correct": false,
+        "rationale": "Numeric dimensions can be discrete or continuous."
+      },
+      {
+        "text": "`Country`, a string dimension",
+        "correct": true,
+        "rationale": "Strings and Booleans have no number line, so Tableau offers no continuous option for them."
+      },
+      {
+        "text": "`Start`, a date dimension",
+        "correct": false,
+        "rationale": "Date dimensions can be discrete or continuous."
+      },
+      {
+        "text": "`Minutes Watched`, a measure",
+        "correct": false,
+        "rationale": "All measures can be discrete or continuous."
+      }
+    ],
+    "explanation": "Tableau's help says date and numeric dimensions can be discrete or continuous, and all measures can too. String and Boolean dimensions cannot be continuous.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-006",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "An analyst puts the measure `Minutes Watched` on Color in a view of genres. What does the color legend look like?",
+    "options": [
+      {
+        "text": "A list with one fixed color per genre",
+        "correct": false,
+        "rationale": "That is a categorical palette, which a discrete field gets."
+      },
+      {
+        "text": "A list with one fixed color per distinct minute value",
+        "correct": false,
+        "rationale": "A continuous field does not break into one color per value."
+      },
+      {
+        "text": "No legend, because measures cannot be placed on Color",
+        "correct": false,
+        "rationale": "Measures can go on Color. The legend is a gradient."
+      },
+      {
+        "text": "A gradient from low to high values",
+        "correct": true,
+        "rationale": "Continuous fields on Color get a quantitative legend with a continuous range of colors."
+      }
+    ],
+    "explanation": "A continuous field on Color shows a gradient so any value in between has a place on the color scale.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-007",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "A view contains a green pill on Columns. What does Tableau draw for it?",
+    "options": [
+      {
+        "text": "An axis, a range with tick marks",
+        "correct": true,
+        "rationale": "Green means continuous, and continuous fields draw an axis."
+      },
+      {
+        "text": "A header for each member, with a label above each column",
+        "correct": false,
+        "rationale": "Headers are drawn for discrete (blue) pills."
+      },
+      {
+        "text": "A categorical legend with one color per member",
+        "correct": false,
+        "rationale": "Legends belong to the Color shelf, and a green pill on Columns draws an axis."
+      },
+      {
+        "text": "A table of the individual records behind the marks",
+        "correct": false,
+        "rationale": "Showing records is a different feature and not linked to pill color."
+      }
+    ],
+    "explanation": "Continuous pills create axes with a minimum, a maximum and tick marks, where any value in between has a place.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-008",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "In a worksheet, an analyst right-clicks the `Release Year` pill on Columns and chooses Convert to Continuous. What happens to the `Release Year` field in the Data pane?",
+    "options": [
+      {
+        "text": "It also turns green and becomes continuous in every worksheet",
+        "correct": false,
+        "rationale": "Only the pill in the view changes."
+      },
+      {
+        "text": "It moves from Dimensions to Measures, because it is now continuous",
+        "correct": false,
+        "rationale": "Continuity does not change the field's role, so it stays a dimension."
+      },
+      {
+        "text": "Nothing: it stays discrete, and only this view changes",
+        "correct": true,
+        "rationale": "Converting a pill affects that view only. The field in the Data pane keeps its default."
+      },
+      {
+        "text": "It is removed from the Data pane and replaced by a copy",
+        "correct": false,
+        "rationale": "Converting a pill does not copy or remove the field."
+      }
+    ],
+    "explanation": "There are two places to switch continuity: the field in the Data pane, or a pill in one view. The pill's change stays in that view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-009",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "How does an analyst make the `Release Year` field continuous for every new view?",
+    "options": [
+      {
+        "text": "Drag the field from the Dimensions area into the Measures area",
+        "correct": false,
+        "rationale": "Moving a field between areas is about its role, not its continuity, and does not make it continuous."
+      },
+      {
+        "text": "Change the aggregation of the field to Sum in a view",
+        "correct": false,
+        "rationale": "Aggregation does not set blue or green for a field in the Data pane."
+      },
+      {
+        "text": "Change its default number format under Default Properties",
+        "correct": false,
+        "rationale": "Number format changes how values are written, not whether the field is discrete or continuous."
+      },
+      {
+        "text": "Right-click the field in the Data pane and choose Convert to Continuous",
+        "correct": true,
+        "rationale": "The Data pane menu changes the field itself, so new pills start out green."
+      }
+    ],
+    "explanation": "Use Convert to Discrete or Convert to Continuous, either on the Data pane field or on a pill in the view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-010",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "The marketing team asks whether Driftlight viewing is higher in certain months of the year, whichever year it is. Which pill suits this question?",
+    "options": [
+      {
+        "text": "The continuous date value `MONTH(Start)`",
+        "correct": false,
+        "rationale": "A date value keeps the year, so January 2024 and January 2025 stay apart on a timeline."
+      },
+      {
+        "text": "The discrete date part `MONTH(Start)`",
+        "correct": true,
+        "rationale": "A date part merges the same month of every year into one of 12 headers, which shows seasonality."
+      },
+      {
+        "text": "The continuous date value `YEAR(Start)`",
+        "correct": false,
+        "rationale": "This shows one point per year and has no month-level pattern."
+      },
+      {
+        "text": "The Exact Date level of `Start`",
+        "correct": false,
+        "rationale": "Exact Date gives one member per distinct date-time, far more detailed than months."
+      }
+    ],
+    "explanation": "Date parts answer \"which month is busiest in any year?\" Date values answer \"how did viewing change over time?\"",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  },
+  {
+    "id": "4.2-011",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "Finance wants a line that follows Driftlight viewing month by month across 2024 and 2025. Which pill goes on Columns?",
+    "options": [
+      {
+        "text": "The continuous (green) date value `MONTH(Start)`",
+        "correct": true,
+        "rationale": "It keeps the year, so the line runs through the months in order and shows the trend."
+      },
+      {
+        "text": "The discrete (blue) date part `MONTH(Start)`",
+        "correct": false,
+        "rationale": "It would merge both years into 12 headers, hiding the trend across years."
+      },
+      {
+        "text": "The discrete date part `YEAR(Start)` only",
+        "correct": false,
+        "rationale": "It gives a header per year, with no month-level detail."
+      },
+      {
+        "text": "A continuous measure `SUM(Minutes Watched)` on Columns",
+        "correct": false,
+        "rationale": "A measure is not a date and does not lay out months in time order."
+      }
+    ],
+    "explanation": "The continuous date value sits in the lower, continuous section of the date menu and draws a timeline.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  },
+  {
+    "id": "4.2-012",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "An analyst drags a date field spanning several years to Columns. Which level does Tableau pick by default?",
+    "options": [
+      {
+        "text": "MONTH, because it is the most common level",
+        "correct": false,
+        "rationale": "MONTH is the default only when the data covers a single year."
+      },
+      {
+        "text": "Exact Date, because it is the most detailed",
+        "correct": false,
+        "rationale": "Exact Date is a choice from the menu, not the default."
+      },
+      {
+        "text": "YEAR, the level with multiple instances",
+        "correct": true,
+        "rationale": "Tableau picks the level at which there are multiple instances. With several years, that is YEAR."
+      },
+      {
+        "text": "QUARTER, as the middle level between year and month",
+        "correct": false,
+        "rationale": "Tableau does not choose a middle level by default."
+      }
+    ],
+    "explanation": "The default depends on the data: several years of data gives YEAR, a single year gives MONTH.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm"
+    ]
+  },
+  {
+    "id": "4.2-013",
+    "taskId": "4.2",
+    "kind": "single",
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "A view shows the discrete pill `YEAR(Start)`. The analyst clicks its + control. What happens?",
+    "options": [
+      {
+        "text": "The pill is converted to a continuous date value",
+        "correct": false,
+        "rationale": "Converting needs the pill menu. The + control only drills."
+      },
+      {
+        "text": "Tableau adds the year before to the filter",
+        "correct": false,
+        "rationale": "The + control does not filter."
+      },
+      {
+        "text": "The pill changes to the Exact Date level",
+        "correct": false,
+        "rationale": "Drilling steps down one level at a time."
+      },
+      {
+        "text": "Tableau drills down and adds `QUARTER(Start)` next to it",
+        "correct": true,
+        "rationale": "The plus control drills into the next level of the date hierarchy: quarter, then month, and so on."
+      }
+    ],
+    "explanation": "Discrete date pills can be drilled with a +, which adds the next level of detail beside them.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm"
+    ]
+  },
+  {
+    "id": "4.2-014",
+    "taskId": "4.2",
+    "kind": "multi",
+    "objectives": [
+      "4.2.1"
+    ],
+    "select": 2,
+    "stem": "Which statements about discrete fields are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Their pills are blue",
+        "correct": true,
+        "rationale": "Blue marks a discrete field."
+      },
+      {
+        "text": "On Rows or Columns they draw headers, one per member",
+        "correct": true,
+        "rationale": "Headers are how discrete fields are displayed."
+      },
+      {
+        "text": "On Rows or Columns they draw an axis with tick marks",
+        "correct": false,
+        "rationale": "Axes belong to continuous fields."
+      },
+      {
+        "text": "On Color they get a gradient legend",
+        "correct": false,
+        "rationale": "Gradients are for continuous fields. Discrete fields get a palette."
+      },
+      {
+        "text": "Only dimensions can be discrete",
+        "correct": false,
+        "rationale": "Measures can also be discrete, and then they draw headers."
+      }
+    ],
+    "explanation": "Discrete fields are blue and draw headers. Dimensions are often discrete but measures can be too.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-015",
+    "taskId": "4.2",
+    "kind": "multi",
+    "objectives": [
+      "4.2.1"
+    ],
+    "select": 3,
+    "stem": "Which three view choices make Tableau draw headers rather than an axis? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "`Genre` on Rows",
+        "correct": true,
+        "rationale": "A string dimension is discrete, so it draws headers."
+      },
+      {
+        "text": "The date part `MONTH(Start)` on Columns",
+        "correct": true,
+        "rationale": "A date part is discrete and gives 12 headers."
+      },
+      {
+        "text": "`Release Year` converted to discrete on Columns",
+        "correct": true,
+        "rationale": "A discrete numeric dimension gives a header per year."
+      },
+      {
+        "text": "The date value `MONTH(Start)` on Columns",
+        "correct": false,
+        "rationale": "A date value is continuous and draws a timeline axis."
+      },
+      {
+        "text": "`SUM(Minutes Watched)` on Rows with its default continuity",
+        "correct": false,
+        "rationale": "A measure is continuous by default and draws an axis."
+      },
+      {
+        "text": "`Release Year` converted to continuous on Columns",
+        "correct": false,
+        "rationale": "Continuous draws an axis of years."
+      }
+    ],
+    "explanation": "Headers come from blue pills: string dimensions, date parts and fields converted to discrete.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  },
+  {
+    "id": "4.2-016",
+    "taskId": "4.2",
+    "kind": "multi",
+    "objectives": [
+      "4.2.2"
+    ],
+    "select": 2,
+    "stem": "Which two Driftlight fields can be continuous? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Start`, a date field",
+        "correct": true,
+        "rationale": "Date dimensions can be discrete or continuous."
+      },
+      {
+        "text": "`Minutes Watched`, a measure",
+        "correct": true,
+        "rationale": "All measures can be discrete or continuous."
+      },
+      {
+        "text": "`Genre`, a string field",
+        "correct": false,
+        "rationale": "Strings can't be continuous."
+      },
+      {
+        "text": "`Country`, a string field",
+        "correct": false,
+        "rationale": "Strings can't be continuous."
+      },
+      {
+        "text": "A field containing only True or False values",
+        "correct": false,
+        "rationale": "Booleans can't be continuous."
+      }
+    ],
+    "explanation": "Only dates, numbers and measures can be continuous. Strings and Booleans cannot.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-017",
+    "taskId": "4.2",
+    "kind": "multi",
+    "objectives": [
+      "4.2.3"
+    ],
+    "select": 2,
+    "stem": "Which two statements describe the date value `MONTH(Start)`, in the continuous section of the date menu? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Its pill is green and draws an axis",
+        "correct": true,
+        "rationale": "Date values are continuous."
+      },
+      {
+        "text": "January 2024 and January 2025 stay separate points",
+        "correct": true,
+        "rationale": "A date value keeps the year, so each month of each year is its own point."
+      },
+      {
+        "text": "It merges the same month of every year",
+        "correct": false,
+        "rationale": "That describes the date part."
+      },
+      {
+        "text": "It draws 12 headers from January to December",
+        "correct": false,
+        "rationale": "That is the date part, which is discrete."
+      },
+      {
+        "text": "It turns the date field into a measure",
+        "correct": false,
+        "rationale": "The role stays a dimension."
+      }
+    ],
+    "explanation": "A date value is a truncated date, a position on a timeline, so it suits trends.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  },
+  {
+    "id": "4.2-018",
+    "taskId": "4.2",
+    "kind": "multi",
+    "objectives": [
+      "4.2.3"
+    ],
+    "select": 3,
+    "stem": "Which three statements about discrete date parts are true? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "The pill is blue",
+        "correct": true,
+        "rationale": "Date parts are discrete."
+      },
+      {
+        "text": "`MONTH(Start)` as a part adds up the same month across all years",
+        "correct": true,
+        "rationale": "A part merges everything but that part of the date."
+      },
+      {
+        "text": "It suits questions about seasonality",
+        "correct": true,
+        "rationale": "Months from all years share one header, so seasonal patterns stand out."
+      },
+      {
+        "text": "It draws a continuous timeline with one point for each month",
+        "correct": false,
+        "rationale": "That is the date value."
+      },
+      {
+        "text": "It keeps January 2024 separate from January 2025",
+        "correct": false,
+        "rationale": "The part drops the year."
+      },
+      {
+        "text": "It turns the date field into a measure",
+        "correct": false,
+        "rationale": "Dates stay dimensions."
+      }
+    ],
+    "explanation": "A date part is like `EXTRACT(MONTH FROM start)`: one part of the date. A date value is like `DATE_TRUNC`.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  }
+]
