@@ -1,0 +1,773 @@
+[
+  {
+    "id": "2.2-001",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "The `City` field has both Cologne and Köln as separate members, and the analyst wants them to count as one city in the view. Which action does this?",
+    "options": [
+      {
+        "text": "Right-click the `City` field and choose Create Hierarchy",
+        "correct": false,
+        "rationale": "A hierarchy stacks fields for drilling. It does not merge members of one field."
+      },
+      {
+        "text": "Select both marks and choose Create Set to build an In/Out field",
+        "correct": false,
+        "rationale": "A set only marks members as In or Out. Both spellings would still be separate members."
+      },
+      {
+        "text": "Select both city headers and click the group icon",
+        "correct": true,
+        "rationale": "The group icon combines the selected members into a single group, which is what merging spellings needs."
+      },
+      {
+        "text": "Drag `City` to the Filters shelf and keep only Köln",
+        "correct": false,
+        "rationale": "Filtering removes the Cologne rows rather than combining them with Köln."
+      }
+    ],
+    "explanation": "A group combines related members of one field into a single member. You can start one from selected marks or headers, using the paperclip group icon on the tooltip or the toolbar.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-002",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "Which Data pane menu path starts a group on a dimension?",
+    "options": [
+      {
+        "text": "Right-click the field, then Create > Group",
+        "correct": true,
+        "rationale": "In the Data pane, Create > Group opens the dialog where you pick the members to combine."
+      },
+      {
+        "text": "Right-click the field, then Create > Set",
+        "correct": false,
+        "rationale": "Create > Set opens the set dialog, which defines an In/Out subset and combines nothing."
+      },
+      {
+        "text": "Right-click the field, then Create Hierarchy",
+        "correct": false,
+        "rationale": "Create Hierarchy starts a drill path of several fields; it doesn't combine members."
+      },
+      {
+        "text": "Right-click the field, then Show Filter",
+        "correct": false,
+        "rationale": "Show Filter adds a filter card to the sheet and does not create any new field."
+      }
+    ],
+    "explanation": "Groups can be created from marks or headers in the view or from the Data pane. In the Data pane you right-click a dimension, choose Create > Group, then select the members to combine.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-003",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "An analyst selects the `Comedy` and `Drama` headers and clicks the group icon without naming anything. What name does the group get?",
+    "options": [
+      {
+        "text": "It stays unnamed until the analyst opens Edit Group and types a name",
+        "correct": false,
+        "rationale": "A default name is created automatically, so the group is never unnamed."
+      },
+      {
+        "text": "It is named `Group 1`, and the name cannot be changed afterwards",
+        "correct": false,
+        "rationale": "The default name comes from the member names, and the group can be renamed."
+      },
+      {
+        "text": "It takes the name of the field, such as `Genre (group)`, and the members are hidden",
+        "correct": false,
+        "rationale": "The default name uses the combined member names, and the members are not hidden by naming."
+      },
+      {
+        "text": "A default name built from the combined member names, which Rename can change",
+        "correct": true,
+        "rationale": "Tableau generates the name from the members. Rename lets you replace it with something clearer."
+      }
+    ],
+    "explanation": "When you group, Tableau names the group by joining the member names. Use Rename in the dialog to give it a better name.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-004",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "The Driftlight content team created a genre group last month and now wants to move one genre out of it. Where do they do that?",
+    "options": [
+      {
+        "text": "Right-click the group in the Data pane, choose Create Set, and untick the member",
+        "correct": false,
+        "rationale": "Create Set builds a new In/Out field and leaves the group itself unchanged."
+      },
+      {
+        "text": "Choose Edit Group on the group field, select the member and click Ungroup",
+        "correct": true,
+        "rationale": "Edit Group is where you select members and click Ungroup to take them out of the group."
+      },
+      {
+        "text": "Drag the group field onto another field in the Data pane",
+        "correct": false,
+        "rationale": "Dropping a field onto another creates a hierarchy and does not change group membership."
+      },
+      {
+        "text": "Open the Filters shelf, edit the group's filter and exclude the member",
+        "correct": false,
+        "rationale": "A filter hides the member from the view. It does not take it out of the group definition."
+      }
+    ],
+    "explanation": "Existing groups are edited through the group field's Edit Group command. There you select members and click Ungroup, or rename the group.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-005",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "The content team wants three named genre groups, with every remaining genre lumped into one bucket. Which setting does this?",
+    "options": [
+      {
+        "text": "Include 'Other' in the Edit Group dialog",
+        "correct": true,
+        "rationale": "Include 'Other' groups all remaining, non-grouped members into an Other group."
+      },
+      {
+        "text": "Show In/Out of Set on the Color shelf",
+        "correct": false,
+        "rationale": "Show In/Out of Set belongs to sets, and it gives two categories, not named groups."
+      },
+      {
+        "text": "Add the remaining genres to a context filter",
+        "correct": false,
+        "rationale": "A context filter removes rows from the view. The leftovers would disappear and not be bucketed."
+      },
+      {
+        "text": "Create a hierarchy with `Genre` at the top level",
+        "correct": false,
+        "rationale": "A hierarchy adds drill levels and does not collect leftover members."
+      }
+    ],
+    "explanation": "Include 'Other' keeps a few named groups and puts the long tail of members into one extra group. It is useful when most members are not worth showing individually.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-006",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "Which statement describes a group in Tableau?",
+    "options": [
+      {
+        "text": "It splits a dimension into In and Out members based on a subset",
+        "correct": false,
+        "rationale": "That describes a set, which marks each member as In or Out."
+      },
+      {
+        "text": "It stacks related dimensions so the view can be drilled down and up",
+        "correct": false,
+        "rationale": "That describes a hierarchy, which uses the + and - icons to drill."
+      },
+      {
+        "text": "It combines members of a field into larger categories",
+        "correct": true,
+        "rationale": "A group merges members, such as several genres into one broader category."
+      },
+      {
+        "text": "It removes marks from the view by testing a condition on a measure",
+        "correct": false,
+        "rationale": "That describes a filter. A group changes how members are categorized and removes none."
+      }
+    ],
+    "explanation": "Groups, sets and hierarchies are easy to mix up. A group merges members into new categories, a set marks In or Out, and a hierarchy orders dimensions for drilling.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-007",
+    "taskId": "2.2",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "Which two actions start the creation of a group? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Drag a dimension onto another dimension in the Data pane",
+        "correct": false,
+        "rationale": "This starts a hierarchy, not a group."
+      },
+      {
+        "text": "Select marks in the view and click the group icon on the tooltip",
+        "correct": true,
+        "rationale": "The tooltip's paperclip icon groups the selected marks."
+      },
+      {
+        "text": "Right-click a mark and choose Create Set",
+        "correct": false,
+        "rationale": "This makes a set with In and Out members."
+      },
+      {
+        "text": "Right-click a dimension in the Data pane and choose Create > Group",
+        "correct": true,
+        "rationale": "This opens the group dialog from the Data pane."
+      },
+      {
+        "text": "Drag a dimension to the Filters shelf",
+        "correct": false,
+        "rationale": "This opens the Filter dialog and creates no group."
+      }
+    ],
+    "explanation": "You can create a group from selected marks or headers in the view, or from a dimension in the Data pane. The other actions create a hierarchy, a set or a filter.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-008",
+    "taskId": "2.2",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "Which two things can an analyst do in the Edit Group dialog? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Select members and click Ungroup",
+        "correct": true,
+        "rationale": "Ungroup takes the selected members out of the group."
+      },
+      {
+        "text": "Define the members by a Top N rule on a measure",
+        "correct": false,
+        "rationale": "Top rules belong to the dynamic set dialog, not to groups."
+      },
+      {
+        "text": "Switch the group to a fixed or dynamic type",
+        "correct": false,
+        "rationale": "Groups have no fixed or dynamic type. That distinction applies to sets."
+      },
+      {
+        "text": "Add the group to a context filter so it runs first",
+        "correct": false,
+        "rationale": "Context is set from a filter's menu and is not an option in the group dialog."
+      },
+      {
+        "text": "Include 'Other' to collect the non-grouped members",
+        "correct": true,
+        "rationale": "This option puts the remaining members into an Other group."
+      }
+    ],
+    "explanation": "Edit Group lets you rename the group, ungroup members and include an Other group for the rest. Rules based on measures belong to sets and filters.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-009",
+    "taskId": "2.2",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "Which two Driftlight requests call for a group? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Flag the top 20 titles by minutes watched against all the others",
+        "correct": false,
+        "rationale": "An In/Out flag defined by a Top rule is a set."
+      },
+      {
+        "text": "Drill from Type down to Genre in the same view",
+        "correct": false,
+        "rationale": "Drill paths are built with a hierarchy."
+      },
+      {
+        "text": "Combine the München and Munich spellings into one city",
+        "correct": true,
+        "rationale": "Merging several members into one category is a group."
+      },
+      {
+        "text": "Bundle genres into a Scripted and an Unscripted category",
+        "correct": true,
+        "rationale": "Broader categories made from members are groups."
+      },
+      {
+        "text": "Show only sessions that started on a TV",
+        "correct": false,
+        "rationale": "Restricting rows is a filter, not a group."
+      }
+    ],
+    "explanation": "A group merges members into new categories. Flagging members In or Out is a set, drilling is a hierarchy, and removing rows is a filter.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-010",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "An analyst selects five title marks in a bar chart and wants to save exactly those titles as a subset. What should they do?",
+    "options": [
+      {
+        "text": "Click the group icon on the tooltip and rename the group",
+        "correct": false,
+        "rationale": "A group merges the five titles into one member, which hides them individually."
+      },
+      {
+        "text": "Drag `Title` onto `Genre` in the Data pane and name it",
+        "correct": false,
+        "rationale": "This builds a hierarchy of two fields, not a subset."
+      },
+      {
+        "text": "Choose Keep Only, then Add to Context on the filter",
+        "correct": false,
+        "rationale": "Keep Only filters the view and does not leave a reusable In/Out field."
+      },
+      {
+        "text": "Right-click the marks and choose Create Set",
+        "correct": true,
+        "rationale": "Creating a set from marks gives a fixed set made of the selected members."
+      }
+    ],
+    "explanation": "Sets are made from marks with Create Set. The set holds the selected members, and each other member of the field is Out of the set.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-011",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "Marketing wants a set of the top 20 titles by minutes that updates each week as viewing changes. How is it built?",
+    "options": [
+      {
+        "text": "Select the top 20 title marks in a bar chart and choose Create Set",
+        "correct": false,
+        "rationale": "A set made from selected marks is fixed and never updates."
+      },
+      {
+        "text": "Use Create > Set on `Title` and define it on the Top tab",
+        "correct": true,
+        "rationale": "A set defined on the Top tab is dynamic, so it follows the data."
+      },
+      {
+        "text": "Select the top 20 titles and group them with the paperclip icon",
+        "correct": false,
+        "rationale": "A group merges the titles into one member and does not follow the data."
+      },
+      {
+        "text": "Drag `Title` onto `Minutes Watched` in the Data pane",
+        "correct": false,
+        "rationale": "Dropping a field onto another does not build a set."
+      }
+    ],
+    "explanation": "Dynamic sets are created from a dimension in the Data pane and defined by the General, Condition or Top tab. Condition and Top rules are recomputed when the underlying data changes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-012",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "A set was created by selecting marks. Later, new sessions are added to the data. What happens to the set?",
+    "options": [
+      {
+        "text": "Its members stay exactly as they were selected",
+        "correct": true,
+        "rationale": "A set made from marks is fixed, so its members do not change when the data does."
+      },
+      {
+        "text": "It recalculates its members from the new data",
+        "correct": false,
+        "rationale": "Only dynamic sets, defined by a condition or a top N, recalculate."
+      },
+      {
+        "text": "It becomes a group made of the selected members",
+        "correct": false,
+        "rationale": "Sets and groups are different fields, and a set never converts into a group."
+      },
+      {
+        "text": "It is deleted and has to be created again from the new marks",
+        "correct": false,
+        "rationale": "Fixed sets persist as fields in the Data pane."
+      }
+    ],
+    "explanation": "A fixed set keeps the members chosen at creation. A dynamic set follows the data because it is defined by a rule instead of a list of marks.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-013",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "The analyst wants a set of every title where `SUM(Minutes Watched)` is above a threshold. Which tab of the set dialog defines this?",
+    "options": [
+      {
+        "text": "General",
+        "correct": false,
+        "rationale": "General is for picking individual members from a list, or Use all."
+      },
+      {
+        "text": "Top",
+        "correct": false,
+        "rationale": "Top limits members to a number or a percentage by a measure, not to a threshold."
+      },
+      {
+        "text": "Condition",
+        "correct": true,
+        "rationale": "The Condition tab defines a rule on a measure that decides which members are included."
+      },
+      {
+        "text": "Fixed",
+        "correct": false,
+        "rationale": "The set dialog has no Fixed tab. A fixed set is the kind made from marks."
+      }
+    ],
+    "explanation": "The dynamic set dialog has General, Condition and Top tabs. A threshold such as `SUM(Minutes Watched) > 20000` is a Condition. A limit like the top 10 is a Top definition.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-014",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "A set named `Top Titles` is on the Color shelf, and the analyst wants only two colors: titles in the set and everything else. What should they choose?",
+    "options": [
+      {
+        "text": "Right-click the set and choose Create Hierarchy",
+        "correct": false,
+        "rationale": "Hierarchies are built from fields dropped on each other, not from a set."
+      },
+      {
+        "text": "Right-click the set and choose Include 'Other'",
+        "correct": false,
+        "rationale": "Include 'Other' belongs to the group dialog."
+      },
+      {
+        "text": "Right-click the set and choose Show Members in Set",
+        "correct": false,
+        "rationale": "This lists every member individually, so there would be many colors."
+      },
+      {
+        "text": "Right-click the set and choose Show In/Out of Set",
+        "correct": true,
+        "rationale": "This aggregates the members into In and Out categories."
+      }
+    ],
+    "explanation": "A set in the view can show its members or collapse them into In and Out. Show In/Out of Set compares the subset against the rest.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-015",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "Which statement about creating sets is correct?",
+    "options": [
+      {
+        "text": "A set from the Data pane can use several dimensions, and one from marks only one",
+        "correct": false,
+        "rationale": "This is reversed. Marks can span dimensions and the Data pane route cannot."
+      },
+      {
+        "text": "A set from marks can use several dimensions, and one from the Data pane uses a single dimension",
+        "correct": true,
+        "rationale": "Marks may carry several dimensions, while the Data pane route works on one dimension."
+      },
+      {
+        "text": "Both ways create dynamic sets that update when the underlying data changes",
+        "correct": false,
+        "rationale": "Only the Data pane route, with a Condition or Top rule, gives a dynamic set."
+      },
+      {
+        "text": "Both ways create fixed sets whose members are chosen from a list of marks",
+        "correct": false,
+        "rationale": "The Data pane route offers dynamic definitions as well, through the General, Condition and Top tabs."
+      }
+    ],
+    "explanation": "Marks give you fixed sets that can cover several dimensions. The Data pane route works on one dimension at a time and can be dynamic.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-016",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "The analyst selects some marks and wants the set to hold every member except those marks. What helps?",
+    "options": [
+      {
+        "text": "Choose Exclude these members instead",
+        "correct": true,
+        "rationale": "This option defines the set as everything except the selected members."
+      },
+      {
+        "text": "Choose Show In/Out of Set after dragging the set to the Rows shelf",
+        "correct": false,
+        "rationale": "This only changes how a set is displayed after it exists."
+      },
+      {
+        "text": "Use Keep Only on the selected marks, which filters the view",
+        "correct": false,
+        "rationale": "Keep Only filters the view and creates no set."
+      },
+      {
+        "text": "Create a group from the selected marks and tick Include 'Other'",
+        "correct": false,
+        "rationale": "A group merges members, so it cannot produce an exclusion set."
+      }
+    ],
+    "explanation": "The Create Set dialog lets you invert the selection with Exclude these members instead. The result is still a fixed set.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-017",
+    "taskId": "2.2",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "Which two statements describe a dynamic set? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It is defined on the General, Condition or Top tab",
+        "correct": true,
+        "rationale": "These tabs are the three ways to define it."
+      },
+      {
+        "text": "It is created by right-clicking marks and choosing Create Set",
+        "correct": false,
+        "rationale": "That route creates a fixed set."
+      },
+      {
+        "text": "It always spans several dimensions",
+        "correct": false,
+        "rationale": "A dynamic set from the Data pane is based on a single dimension."
+      },
+      {
+        "text": "Its members change when the underlying data changes",
+        "correct": true,
+        "rationale": "This is what makes it dynamic."
+      },
+      {
+        "text": "Its members never change once it exists",
+        "correct": false,
+        "rationale": "That is the behavior of a fixed set."
+      }
+    ],
+    "explanation": "Dynamic sets are defined by rules instead of a hand-picked list, so they follow the data. They come from the Data pane and are based on one dimension.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-018",
+    "taskId": "2.2",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "Which two Driftlight requests call for a set? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Merge Cologne and Köln into one city",
+        "correct": false,
+        "rationale": "Merging members is a group."
+      },
+      {
+        "text": "Compare the top 20 titles by minutes with every other title",
+        "correct": true,
+        "rationale": "An In/Out split by a Top rule is a dynamic set."
+      },
+      {
+        "text": "Drill from Type down to Genre",
+        "correct": false,
+        "rationale": "Drilling uses a hierarchy."
+      },
+      {
+        "text": "Let viewers pick a Device from a card",
+        "correct": false,
+        "rationale": "A filter card is Show Filter, not a set."
+      },
+      {
+        "text": "Flag titles where `SUM(Minutes Watched)` exceeds a threshold",
+        "correct": true,
+        "rationale": "A rule on a measure is a Condition on a set."
+      }
+    ],
+    "explanation": "A set divides a dimension into In and Out, which makes comparisons of a subset against the rest simple. Merging, drilling and filter cards use other tools.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-019",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "Where does the analyst start in the Data pane to create a hierarchy from `Type` and `Genre`?",
+    "options": [
+      {
+        "text": "Right-click `Type` and choose Create > Group, then add `Genre`",
+        "correct": false,
+        "rationale": "Create > Group merges members of one field and does not link two fields."
+      },
+      {
+        "text": "Right-click `Type` and choose Create > Set, then add `Genre`",
+        "correct": false,
+        "rationale": "A set marks members of one dimension as In or Out and cannot nest fields."
+      },
+      {
+        "text": "Drop `Genre` directly on `Type`, then name the hierarchy",
+        "correct": true,
+        "rationale": "Dropping a field on another creates the hierarchy and prompts for a name."
+      },
+      {
+        "text": "Drag both fields to the Filters shelf at the same time",
+        "correct": false,
+        "rationale": "The Filters shelf removes data and builds no drill path."
+      }
+    ],
+    "explanation": "A hierarchy is created in the Data pane by dropping one field on top of another. Add the further fields in order from general to detailed.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-020",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "A dimension sits inside a folder in the Data pane. How can the analyst start a hierarchy from it?",
+    "options": [
+      {
+        "text": "Right-click the field and select Create > Group",
+        "correct": false,
+        "rationale": "This merges members rather than ordering fields."
+      },
+      {
+        "text": "Right-click the field and select Show Filter",
+        "correct": false,
+        "rationale": "This adds a filter card and creates no field."
+      },
+      {
+        "text": "Drag the folder onto the Rows shelf and click + on it",
+        "correct": false,
+        "rationale": "Folders are not hierarchies, and + only drills one that already exists."
+      },
+      {
+        "text": "Right-click the field and select Create Hierarchy",
+        "correct": true,
+        "rationale": "For a field inside a folder, Create Hierarchy is on its right-click menu."
+      }
+    ],
+    "explanation": "Dragging one field onto another is one way to build a hierarchy. For a field inside a folder, the right-click Create Hierarchy command is the alternative.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-021",
+    "taskId": "2.2",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "Which two steps are part of creating a hierarchy in the Data pane? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Select two marks and click the paperclip group icon",
+        "correct": false,
+        "rationale": "This creates a group of members."
+      },
+      {
+        "text": "Right-click a mark and choose Create Set",
+        "correct": false,
+        "rationale": "This creates a set from the mark."
+      },
+      {
+        "text": "Drop one field directly on top of another and name the hierarchy",
+        "correct": true,
+        "rationale": "This starts the hierarchy and gives it a name."
+      },
+      {
+        "text": "Drag further fields in, ordered from general to detailed",
+        "correct": true,
+        "rationale": "The order sets the drill path, such as Type before Genre."
+      },
+      {
+        "text": "Drag the dimension to the Filters shelf",
+        "correct": false,
+        "rationale": "This opens a filter dialog and builds no hierarchy."
+      }
+    ],
+    "explanation": "Creating a hierarchy means stacking dimensions in the Data pane, from the most general at the top to the most detailed. In the view, + and - on the hierarchy field then drill down and up.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  }
+]
