@@ -1,0 +1,149 @@
+export const meta = {
+  taskId: '4.3',
+  updated: '2026-11-23',
+  tldr: 'Every measure has a default aggregation that Tableau sets when you connect, usually `SUM`. You change it on a pill for one view, or under Default Properties > Aggregation for the whole workbook. An aggregated measure is computed once per mark, so adding a dimension (to Rows, Columns or the Marks card) splits each total into more, smaller values.',
+  objectivesCovered: ['4.3.1', '4.3.2'],
+  links: [
+    { title: 'Data Aggregation in Tableau', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm' },
+    { title: 'Dimensions and Measures, Blue and Green', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm' },
+    { title: 'The Data pane', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_understanddatawindow.htm' },
+  ],
+  vizzes: {
+    'avg-runtime': {
+      spec: { source: 'titles', rows: [{ field: 'Genre' }], columns: [{ field: 'Runtime', agg: 'avg' }] },
+      caption: 'Runtime with its aggregation changed from SUM to AVG: the average length of a title in each genre.',
+    },
+    'lod-plan': {
+      spec: { columns: [{ field: 'Plan' }], rows: [{ field: 'Minutes Watched' }] },
+      caption: 'One dimension: SUM(Minutes Watched) is computed once per plan.',
+    },
+    'lod-plan-device': {
+      spec: { columns: [{ field: 'Plan' }], rows: [{ field: 'Minutes Watched' }], marks: { color: { field: 'Device' } } },
+      caption: 'Add Device on Color: each plan’s bar splits into one segment per device. The bars stay the same height.',
+    },
+    'lod-detail': {
+      spec: {
+        columns: [{ field: 'Sessions (Count)' }],
+        rows: [{ field: 'Minutes Watched' }],
+        marks: { detail: [{ field: 'Country' }] },
+      },
+      caption: 'Country on Detail: one circle per country, with no new headers.',
+    },
+  },
+  facts: {
+    'total-minutes': { kind: 'value', says: '2,859,617', spec: { rows: [{ field: 'Minutes Watched' }] }, measure: { field: 'Minutes Watched' } },
+    'premium-minutes': {
+      kind: 'value',
+      says: '616,750',
+      spec: { columns: [{ field: 'Plan' }], rows: [{ field: 'Minutes Watched' }] },
+      measure: { field: 'Minutes Watched' },
+      where: { Plan: 'Premium' },
+    },
+    'premium-tv-minutes': {
+      kind: 'value',
+      says: '258,237',
+      spec: { columns: [{ field: 'Plan' }], rows: [{ field: 'Minutes Watched' }], marks: { color: { field: 'Device' } } },
+      measure: { field: 'Minutes Watched' },
+      where: { Plan: 'Premium', Device: 'TV' },
+    },
+    'country-count': { kind: 'value', says: '25', spec: { rows: [{ field: 'Country', agg: 'countd' }] }, measure: { field: 'Country', agg: 'countd' } },
+    'plan-count': { kind: 'value', says: '4', spec: { rows: [{ field: 'Plan', agg: 'countd' }] }, measure: { field: 'Plan', agg: 'countd' } },
+    'longest-genre': {
+      kind: 'top',
+      says: 'Comedy',
+      spec: { source: 'titles', rows: [{ field: 'Genre' }], columns: [{ field: 'Runtime', agg: 'avg' }] },
+      dimension: { field: 'Genre' },
+      measure: { field: 'Runtime', agg: 'avg' },
+    },
+  },
+}
+
+## Big idea
+
+A view in Tableau almost never shows raw rows. It shows **marks**, and each mark stands for a group of rows. The measures on a mark are **aggregated**: Tableau combines all the rows in the group into one number, by adding them up, averaging them, counting them and so on.
+
+Two questions decide every number you see:
+1. **Which aggregation?** Each measure has a default, usually `SUM`, and you can change it.
+2. **Which groups?** The dimensions in the view decide how the rows are grouped: their combinations form the **level of detail**. Add a dimension and the groups get smaller and more numerous.
+
+In SQL terms, the aggregation is the function in `SELECT SUM(minutes)`, and the dimensions are the `GROUP BY` list. Adding a dimension to the view is adding a column to `GROUP BY`.
+
+## How it works
+
+### The default aggregation for measures
+
+"Every measure has a default aggregation that is set by Tableau when you connect to a data source." For numeric measures such as Minutes Watched this is a sum, so dropping the field on a shelf gives `SUM(Minutes Watched)`. The aggregation always appears in the pill's name.
+
+With no dimension in the view, all of Driftlight's sessions form one group and the view has a single mark: <Fact id="total-minutes" /> minutes.
+
+You can change the aggregation in two places:
+
+| Where | How | Scope |
+|---|---|---|
+| On a pill in the view | Open the pill's menu and choose another aggregation, under **Measure** | This pill only |
+| In the Data pane | Right-click the measure and choose **Default Properties > Aggregation** | Every new use of the field in the workbook |
+
+The usual choices are Sum, Average, Median, Count (Distinct), Minimum and Maximum, plus statistical ones such as standard deviation and variance. A field like Runtime makes more sense as an average than as a sum. The genre with the longest average title is <Fact id="longest-genre" />:
+
+<LessonViz id="avg-runtime" />
+
+Some more details from Tableau's help:
+- You can't set default aggregations for **published data sources**: that is decided where the data source is published.
+- Dimensions can be aggregated too, with Minimum, Maximum, Count, Count (Distinct) or Attribute. Doing so "creates a new temporary measure column", as in `COUNTD(Country)`: Driftlight's sessions come from <Fact id="country-count" /> countries.
+- **ATTR** (Attribute) returns the value "if it only has a single value for all rows in the group, otherwise it displays an asterisk (\*) character". When you aggregate a dimension as Attribute, its pill shows `ATTR(…)`.
+- **Aggregate Measures** on the **Analysis** menu controls the whole behaviour. When it's selected, Tableau aggregates measures. Clear it and the view is **disaggregated**: Tableau "displays a separate mark for every data value in every row", one mark per row of data, like a scatterplot of raw records.
+
+### How an aggregated measure changes when dimensions are added
+
+Add a dimension and Tableau computes the measure again, once per member. Put Plan on Columns and the single total splits into <Fact id="plan-count" /> bars, one per plan. The Premium bar is <Fact id="premium-minutes" /> minutes:
+
+<LessonViz id="lod-plan" />
+
+Every dimension in the view adds to the level of detail, wherever you place it. As Tableau's help puts it, "Encoding a dimension by a property on the Marks card (such as Color or Size) increases the number of marks without adding headers." Drop Device on Color and each plan bar splits into segments, one per device. Premium on TV is now its own mark: <Fact id="premium-tv-minutes" /> minutes. The segments still add up to the plan total, because `SUM` is additive:
+
+<LessonViz id="lod-plan-device" />
+
+**Detail** is the Marks card property for exactly this: it adds a dimension to the level of detail without colour, size or headers. Here two measures make a scatterplot, and Country on Detail gives one circle per country. Without it, there would be a single circle for all of Driftlight:
+
+<LessonViz id="lod-detail" />
+
+What the exam wants you to know:
+- **More dimensions, more marks, smaller values.** The number of marks can be at most the number of member combinations. Tableau's help gives a scatterplot with State and Category, where the number of marks equals the number of states multiplied by the number of categories.
+- **Additive aggregations add back up.** The pieces of a `SUM` or `COUNT` add up to the old total. An `AVG`, `MEDIAN`, `MIN`, `MAX` or `COUNTD` doesn't: averaging the averages of each device doesn't give the plan's average, and distinct subscribers per device can add up to more than distinct subscribers per plan, because one subscriber watches on several devices.
+- **Removing a dimension** merges the groups again, and the measure is recomputed over the larger groups.
+
+## At Driftlight
+
+Driftlight's head of content asks for "minutes per plan". The analyst builds it with Plan on Columns. Then come follow-up questions, and each one adds a dimension:
+
+- *"…and per device?"* Device on Color. The bars keep their height, split into coloured segments.
+- *"…and per country?"* Country on Detail: more marks, no new headers or legend, and every value is smaller again.
+- *"What's the typical session length?"* Here the problem is the aggregation, not the level of detail. A `SUM` of minutes grows with the number of sessions, so the analyst switches to `AVG(Minutes Watched)` or `MEDIAN(Minutes Watched)`.
+
+Before trusting a number, the analyst reads two things off the shelves: the aggregation in each green pill's name, and every dimension in the view (Rows, Columns, Color, Size, Label, Detail).
+
+## Exam traps
+
+<Callout title="SUM is the usual default, not the only one">
+  <p>Tableau sets each measure's default aggregation when you connect, and for numbers that is usually SUM. If a question asks how to change it for every future view, the answer is Default Properties &gt; Aggregation in the Data pane. Changing a pill's aggregation affects that view only.</p>
+</Callout>
+
+<Callout title="Marks card dimensions count too">
+  <p>A dimension on Color, Size, Label or Detail changes the level of detail just like one on Rows or Columns. A question that asks why the numbers got smaller after a field was dropped on Color is about level of detail.</p>
+</Callout>
+
+<Callout title="Disaggregated means one mark per row">
+  <p>Clearing Analysis &gt; Aggregate Measures shows every row as its own mark. It isn't the same as adding a dimension, and it isn't a filter.</p>
+</Callout>
+
+<Callout title="The asterisk is ATTR">
+  <p>An asterisk (*) in a header or tooltip means ATTR found more than one value in the group. It's not an error in the data.</p>
+</Callout>
+
+<Callout title="Superstore note">
+  <p>SUM(Sales) by Category, then Region added to Color, is the classic setup: each Category bar splits into regional segments that add up to the Category total. Profit Ratio, a ratio of sums, is the classic measure that doesn't add up across segments.</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
