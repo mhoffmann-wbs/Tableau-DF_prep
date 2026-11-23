@@ -1,0 +1,1047 @@
+[
+  {
+    "id": "3.1-001",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "A Driftlight analyst drags the dimension `Plan` onto Color on the Marks card. What does Tableau display?",
+    "options": [
+      {
+        "text": "A continuous range of colours with a start value and an end value in the legend",
+        "correct": false,
+        "rationale": "This quantitative legend is what a continuous field (typically a measure) gets, not a dimension."
+      },
+      {
+        "text": "One colour for every plan, with the opacity of the marks changing by plan",
+        "correct": false,
+        "rationale": "Opacity is a separate formatting setting; a dimension on Color assigns distinct colours."
+      },
+      {
+        "text": "A categorical palette, with a distinct colour and a legend entry for each plan",
+        "correct": true,
+        "rationale": "A discrete field on Color gets a categorical palette, one colour per member, plus a legend."
+      },
+      {
+        "text": "A single legend entry named Plan, with all the marks in the default blue",
+        "correct": false,
+        "rationale": "Encoding with a field splits the marks by colour; they do not all stay blue."
+      }
+    ],
+    "explanation": "Dropping a field on Color encodes it. A discrete field (typically a dimension) gets a categorical palette with one colour per member, and Tableau adds a legend that lists them.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-002",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "What kind of legend does Tableau show when `AVG(Monthly Price)` is placed on Color?",
+    "options": [
+      {
+        "text": "A quantitative legend with a continuous range of colours",
+        "correct": true,
+        "rationale": "A continuous field (typically a measure) on Color gets a gradient legend."
+      },
+      {
+        "text": "A categorical legend with one swatch for each distinct price",
+        "correct": false,
+        "rationale": "Categorical palettes belong to discrete fields; this aggregated measure is continuous."
+      },
+      {
+        "text": "No legend, because a measure can only be used to format all marks equally",
+        "correct": false,
+        "rationale": "Any field on Color is an encoding and creates a legend, whatever its type."
+      },
+      {
+        "text": "A stepped legend with ten fixed bins that cannot be changed",
+        "correct": false,
+        "rationale": "Stepped Color is an optional setting in Edit Colors; the default is a continuous range."
+      }
+    ],
+    "explanation": "The palette follows the continuity of the field on Color. Discrete fields get distinct colours; continuous fields get a gradient and a quantitative legend.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-003",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "The analyst wants every mark on a sheet to be orange, with no legend and no change to what the view shows. What should they do?",
+    "options": [
+      {
+        "text": "Drag `Plan` to Color and assign orange to each member in Edit Colors",
+        "correct": false,
+        "rationale": "This encodes a field, which adds a legend and splits the marks by member."
+      },
+      {
+        "text": "Choose Format > Font and set the colour of the pane text to orange",
+        "correct": false,
+        "rationale": "Format > Font changes text in the pane and headers, not the colour of marks."
+      },
+      {
+        "text": "Choose Format > Workbook and set a workbook-wide mark colour",
+        "correct": false,
+        "rationale": "The Format Workbook pane sets fonts, not the colour of the marks on a sheet."
+      },
+      {
+        "text": "Click Color on the Marks card and pick orange from the menu",
+        "correct": true,
+        "rationale": "Clicking Color without dropping a field formats every mark and adds no legend."
+      }
+    ],
+    "explanation": "Clicking Color on the Marks card without dropping a field is formatting: it recolours every mark the same way. Dropping a field is encoding and always creates a legend.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-004",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "The analyst wants to choose a different palette for the field currently on Color. Which path on the Marks card opens the right dialog?",
+    "options": [
+      {
+        "text": "Shape > Edit Shape",
+        "correct": false,
+        "rationale": "Edit Shape changes the shapes of marks, not their colours."
+      },
+      {
+        "text": "Color > Edit Colors",
+        "correct": true,
+        "rationale": "Edit Colors is where you pick a colour or assign a palette; the colour legend menu offers the same command."
+      },
+      {
+        "text": "Size > Edit Sizes",
+        "correct": false,
+        "rationale": "Edit Sizes controls how mark sizes vary, not their colours."
+      },
+      {
+        "text": "Label > Edit Colors",
+        "correct": false,
+        "rationale": "Label controls text on the marks; the palette dialog is reached through Color."
+      }
+    ],
+    "explanation": "On the Marks card, click Color and then Edit Colors, or use Edit Colors from the colour legend menu. For a discrete field you can pick a colour per member or assign a palette.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-005",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "A continuous field is on Color. Which Edit Colors setting groups its values into uniform bins instead of a smooth gradient?",
+    "options": [
+      {
+        "text": "Reversed",
+        "correct": false,
+        "rationale": "Reversed inverts the colours of the palette; it does not create bins."
+      },
+      {
+        "text": "Stepped Color",
+        "correct": true,
+        "rationale": "Stepped Color divides the values into uniform bins, each with its own colour."
+      },
+      {
+        "text": "Use Full Color Range",
+        "correct": false,
+        "rationale": "This stretches a diverging palette across the full range; it does not bin the values."
+      },
+      {
+        "text": "Assign Palette",
+        "correct": false,
+        "rationale": "Assign Palette applies a palette to the members of a discrete field."
+      }
+    ],
+    "explanation": "For a continuous field you can choose a sequential or diverging palette. Stepped Color groups the values into uniform bins, and Reversed inverts the colours.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-006",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "Before the analyst changes anything, how does Tableau draw most marks and the text marks of a new view?",
+    "options": [
+      {
+        "text": "Most marks in grey, text in black, and all marks with a thin dark border",
+        "correct": false,
+        "rationale": "The default colour of most marks is blue, and by default there is no border."
+      },
+      {
+        "text": "Most marks in blue, text in blue, and all marks with a white halo",
+        "correct": false,
+        "rationale": "Text is black by default, and halos only apply with a background image or a map."
+      },
+      {
+        "text": "Most marks in orange, text in grey, and all marks without a border",
+        "correct": false,
+        "rationale": "Orange is not the default colour; most marks start out blue and text black."
+      },
+      {
+        "text": "Most marks in blue, text in black, and all marks without a border",
+        "correct": true,
+        "rationale": "Blue is the default colour for most marks, black for text, and marks have no border by default."
+      }
+    ],
+    "explanation": "Every mark has a default colour: blue for most marks and black for text. By default Tableau draws marks without a border, so borders are a format you switch on.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-007",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.1"
+    ],
+    "select": 2,
+    "stem": "Which actions encode data on the Marks card and create a legend? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Dragging `Genre` onto Color",
+        "correct": true,
+        "rationale": "A field on Color is an encoding with a categorical palette and a legend."
+      },
+      {
+        "text": "Clicking Color and choosing a red from the menu",
+        "correct": false,
+        "rationale": "This formats every mark the same way; no field is involved and no legend appears."
+      },
+      {
+        "text": "Dragging `SUM(Minutes Watched)` onto Color",
+        "correct": true,
+        "rationale": "A measure on Color is an encoding too, with a quantitative legend."
+      },
+      {
+        "text": "Clicking Color and moving the Opacity slider",
+        "correct": false,
+        "rationale": "Opacity is formatting for all marks and adds no legend."
+      },
+      {
+        "text": "Clicking Color and switching on mark borders",
+        "correct": false,
+        "rationale": "Borders are formatting; they do not depend on a field."
+      }
+    ],
+    "explanation": "Encoding means dropping a field on Color, which adds information and a legend. Clicking Color without a field only changes how all marks look.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-008",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.1"
+    ],
+    "select": 2,
+    "stem": "Which statements about colour palettes in Edit Colors are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A diverging palette can be chosen for a continuous field.",
+        "correct": true,
+        "rationale": "Diverging palettes are offered for continuous fields."
+      },
+      {
+        "text": "A discrete field on Color uses a sequential gradient by default.",
+        "correct": false,
+        "rationale": "A discrete field gets a categorical palette with one colour per member."
+      },
+      {
+        "text": "Stepped Color is available for a continuous field.",
+        "correct": true,
+        "rationale": "Stepped Color groups the values of a continuous field into uniform bins."
+      },
+      {
+        "text": "Use Full Color Range works with every palette of a discrete field.",
+        "correct": false,
+        "rationale": "It applies to a diverging palette on a continuous field, not to discrete members."
+      },
+      {
+        "text": "Tableau 10 is an ordinal palette listed at the bottom.",
+        "correct": false,
+        "rationale": "Categorical palettes such as Tableau 10 are at the top; ordinal ones such as Orange are at the bottom."
+      }
+    ],
+    "explanation": "The palette follows the continuity of the field. Continuous colour has sequential and diverging palettes plus Stepped Color; discrete colour has categorical palettes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-009",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.1"
+    ],
+    "select": 2,
+    "stem": "Which settings can the analyst change after clicking Color on the Marks card, without dropping any field? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Opacity of all marks",
+        "correct": true,
+        "rationale": "The Color menu sets opacity for every mark."
+      },
+      {
+        "text": "Stepped Color",
+        "correct": false,
+        "rationale": "Stepped Color needs a continuous field on Color."
+      },
+      {
+        "text": "Borders around the marks",
+        "correct": true,
+        "rationale": "By default marks have no border; the Color menu can add one."
+      },
+      {
+        "text": "Reversed",
+        "correct": false,
+        "rationale": "Reversing a palette needs a field on Color."
+      },
+      {
+        "text": "Assign Palette",
+        "correct": false,
+        "rationale": "Assigning a palette needs the members of a discrete field on Color."
+      }
+    ],
+    "explanation": "The Color menu formats every mark: its colour, opacity and borders. The palette options in Edit Colors only make sense once a field is on Color.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-010",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.1"
+    ],
+    "select": 2,
+    "stem": "Which statements about the default look of marks are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "For most marks, blue is the default colour.",
+        "correct": true,
+        "rationale": "Most marks start out blue."
+      },
+      {
+        "text": "Most marks are grey until a field is placed on Color.",
+        "correct": false,
+        "rationale": "The default colour is blue, not grey."
+      },
+      {
+        "text": "Text marks are black by default.",
+        "correct": true,
+        "rationale": "Black is the default colour for text."
+      },
+      {
+        "text": "Text marks are blue by default.",
+        "correct": false,
+        "rationale": "Blue is the default for most marks, but text is black."
+      },
+      {
+        "text": "Marks are drawn with a thin white border by default.",
+        "correct": false,
+        "rationale": "By default Tableau displays all marks without a border."
+      }
+    ],
+    "explanation": "Marks start with a default colour: blue for most marks and black for text. Without a border, they only change when you format them or encode a field on Color.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-011",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.2"
+    ],
+    "stem": "The analyst wants one font for every title, label and header in the whole workbook. Which menu path should they use?",
+    "options": [
+      {
+        "text": "Format > Workbook",
+        "correct": true,
+        "rationale": "The Format Workbook pane changes all font settings in a workbook."
+      },
+      {
+        "text": "Format > Font",
+        "correct": false,
+        "rationale": "Format > Font formats the pane and header text of the current sheet only."
+      },
+      {
+        "text": "Format > Borders",
+        "correct": false,
+        "rationale": "Borders are a part of the view to format on one sheet, and not a font setting."
+      },
+      {
+        "text": "Format > Animations",
+        "correct": false,
+        "rationale": "Animations control transitions between views, not fonts."
+      }
+    ],
+    "explanation": "Format > Workbook opens the Format Workbook pane, where one change reaches all font settings in the workbook, including titles of worksheets, stories and dashboards.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm"
+    ]
+  },
+  {
+    "id": "3.1-012",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.2"
+    ],
+    "stem": "The analyst chooses Format > Workbook. What changes in the Tableau window?",
+    "options": [
+      {
+        "text": "A dialog opens over the view and blocks the sheet until it is closed",
+        "correct": false,
+        "rationale": "Workbook formatting happens in a pane, not in a modal dialog."
+      },
+      {
+        "text": "A new tab named Workbook appears on the Marks card",
+        "correct": false,
+        "rationale": "The Marks card is not involved; the pane sits where the Data pane was."
+      },
+      {
+        "text": "The Format Workbook pane replaces the Data pane",
+        "correct": true,
+        "rationale": "The pane takes the place of the Data pane while it is open."
+      },
+      {
+        "text": "The Data pane stays and a font list is added below the Filters shelf",
+        "correct": false,
+        "rationale": "The Format Workbook pane replaces the Data pane instead of sitting beside it."
+      }
+    ],
+    "explanation": "Opening Format > Workbook shows a pane in place of the Data pane. From there you change all font settings of the workbook, as well as the titles of worksheets, stories and dashboards.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm"
+    ]
+  },
+  {
+    "id": "3.1-013",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.2"
+    ],
+    "stem": "The analyst made a sheet-level change to a header font. Later a colleague changes the font under Format > Workbook. What happens to the sheet-level change?",
+    "options": [
+      {
+        "text": "It is kept, because sheet-level formatting always wins",
+        "correct": false,
+        "rationale": "Workbook-level font changes overwrite sheet-level ones, not the other way around."
+      },
+      {
+        "text": "It is kept for headers but overwritten for pane text",
+        "correct": false,
+        "rationale": "Tableau does not split sheet-level font changes this way; they are overwritten."
+      },
+      {
+        "text": "Tableau asks which of the two fonts to keep for every sheet",
+        "correct": false,
+        "rationale": "There is no such prompt; the workbook setting simply takes over."
+      },
+      {
+        "text": "It is overwritten by the new workbook font",
+        "correct": true,
+        "rationale": "Changing the workbook font overwrites font changes made at sheet level."
+      }
+    ],
+    "explanation": "Workbook formatting is the broadest scope. Applying a font there overwrites font changes made on individual sheets, so set the workbook font first and make exceptions afterwards.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm"
+    ]
+  },
+  {
+    "id": "3.1-014",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.2"
+    ],
+    "stem": "After setting several fonts in the Format Workbook pane, the analyst wants to undo all of it. Which command does that?",
+    "options": [
+      {
+        "text": "Reset All Sheets",
+        "correct": false,
+        "rationale": "Reset All Sheets belongs to Animations and returns sheets to the workbook default."
+      },
+      {
+        "text": "Reset to Defaults",
+        "correct": true,
+        "rationale": "Reset to Defaults in the Format Workbook pane undoes the workbook changes."
+      },
+      {
+        "text": "Clear Sheet",
+        "correct": false,
+        "rationale": "Clear Sheet empties the current view; it does not touch workbook formatting."
+      },
+      {
+        "text": "Assign Palette",
+        "correct": false,
+        "rationale": "Assign Palette is for colours of a discrete field, not for fonts."
+      }
+    ],
+    "explanation": "The Format Workbook pane has a Reset to Defaults command that returns the formatting to Tableau's defaults.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm"
+    ]
+  },
+  {
+    "id": "3.1-015",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.2"
+    ],
+    "stem": "What does Format > Font apply to?",
+    "options": [
+      {
+        "text": "The pane text or the header text, or both, of the current view",
+        "correct": true,
+        "rationale": "Format > Font works on the view of the current sheet, for either pane or header text."
+      },
+      {
+        "text": "Every sheet, dashboard and story title in the workbook",
+        "correct": false,
+        "rationale": "That is the reach of Format > Workbook, not of Format > Font."
+      },
+      {
+        "text": "Only the text on the Marks card Label property",
+        "correct": false,
+        "rationale": "Format > Font formats the pane and header text of the view, not only labels."
+      },
+      {
+        "text": "Only the titles of stories and dashboards",
+        "correct": false,
+        "rationale": "Titles of stories and dashboards are handled in the Format Workbook pane."
+      }
+    ],
+    "explanation": "Format > Font is sheet-level formatting. For one view you can set the font, style, size and colour of the pane text, the header text or both.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_worksheet.htm"
+    ]
+  },
+  {
+    "id": "3.1-016",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.2"
+    ],
+    "stem": "The head of design wants a consistent look in a workbook, with a few exceptions on individual sheets. What is the best order of work?",
+    "options": [
+      {
+        "text": "Format each sheet first, then apply the font under Format > Workbook",
+        "correct": false,
+        "rationale": "The workbook font would overwrite every sheet-level change made earlier."
+      },
+      {
+        "text": "Use Format > Workbook for the exceptions and Format > Font for the baseline",
+        "correct": false,
+        "rationale": "This reverses the scopes: workbook is broad and sheet-level is specific."
+      },
+      {
+        "text": "Set the workbook font first, then override the exceptions on those sheets",
+        "correct": true,
+        "rationale": "The workbook setting is the baseline; later sheet-level changes stay."
+      },
+      {
+        "text": "Set a font on every sheet separately and never open Format > Workbook",
+        "correct": false,
+        "rationale": "This works but is slow, and misses titles of stories and dashboards that the workbook pane covers."
+      }
+    ],
+    "explanation": "Start broad, then refine. The workbook font gives every sheet the same base look, and the sheet-level exceptions come after it so they are not overwritten.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm"
+    ]
+  },
+  {
+    "id": "3.1-017",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.2"
+    ],
+    "select": 2,
+    "stem": "Which items can be changed in the Format Workbook pane? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "All font settings in the workbook",
+        "correct": true,
+        "rationale": "The pane changes all font settings in a workbook."
+      },
+      {
+        "text": "The join type between two tables",
+        "correct": false,
+        "rationale": "Joins are set in the data source, not in the Format pane."
+      },
+      {
+        "text": "The font settings for titles of worksheets, stories and dashboards",
+        "correct": true,
+        "rationale": "Titles of these are covered by the Format Workbook pane."
+      },
+      {
+        "text": "The data type of every dimension",
+        "correct": false,
+        "rationale": "Data types are changed in the Data pane or data source, not by formatting."
+      },
+      {
+        "text": "The default aggregation of every measure",
+        "correct": false,
+        "rationale": "Default properties are not set in the Format Workbook pane."
+      }
+    ],
+    "explanation": "The Format Workbook pane is for appearance: all fonts in the workbook, plus the titles of worksheets, stories and dashboards.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm"
+    ]
+  },
+  {
+    "id": "3.1-018",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.2"
+    ],
+    "select": 3,
+    "stem": "For a view formatted with Format > Font, which properties can the analyst specify for pane text or header text? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "The font",
+        "correct": true,
+        "rationale": "Font is one of the properties you can specify."
+      },
+      {
+        "text": "The sort order of the members",
+        "correct": false,
+        "rationale": "Sorting is not a font property."
+      },
+      {
+        "text": "The size",
+        "correct": true,
+        "rationale": "Size is one of the properties you can specify."
+      },
+      {
+        "text": "The data source connection",
+        "correct": false,
+        "rationale": "Connections are not part of text formatting."
+      },
+      {
+        "text": "The colour",
+        "correct": true,
+        "rationale": "Colour is one of the properties you can specify."
+      },
+      {
+        "text": "The aggregation of the measure",
+        "correct": false,
+        "rationale": "Aggregation is a pill setting, not a font property."
+      }
+    ],
+    "explanation": "For a view you can set font, style, size and colour for the pane text, the header text or both.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_worksheet.htm"
+    ]
+  },
+  {
+    "id": "3.1-019",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.2"
+    ],
+    "select": 2,
+    "stem": "Which statements about workbook-level and sheet-level fonts are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Format > Workbook can overwrite font changes made on individual sheets.",
+        "correct": true,
+        "rationale": "The workbook setting takes over, including sheet-level changes."
+      },
+      {
+        "text": "Format > Font changes the font of every sheet in the workbook.",
+        "correct": false,
+        "rationale": "Format > Font only reaches the current sheet."
+      },
+      {
+        "text": "Format > Font changes only the pane and header text of the current sheet.",
+        "correct": true,
+        "rationale": "It works at the worksheet level."
+      },
+      {
+        "text": "Format > Workbook only works on dashboards.",
+        "correct": false,
+        "rationale": "It covers all font settings in the workbook, sheets included."
+      },
+      {
+        "text": "Reset to Defaults only works for one sheet at a time.",
+        "correct": false,
+        "rationale": "It belongs to the Format Workbook pane and resets workbook formatting."
+      }
+    ],
+    "explanation": "Workbook is the broad scope and the worksheet is the narrow one. A workbook change reaches every sheet and can overwrite sheet-level fonts; Format > Font stays on one sheet.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_worksheet.htm"
+    ]
+  },
+  {
+    "id": "3.1-020",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "Which mark type must be selected on the Marks card for the shapes assigned to a field to show?",
+    "options": [
+      {
+        "text": "Circle",
+        "correct": false,
+        "rationale": "Circle marks are drawn as circles whatever is on the Shape property."
+      },
+      {
+        "text": "Square",
+        "correct": false,
+        "rationale": "Square marks are drawn as squares and ignore the shapes."
+      },
+      {
+        "text": "Shape",
+        "correct": true,
+        "rationale": "Shapes only appear when the mark type is Shape."
+      },
+      {
+        "text": "Text",
+        "correct": false,
+        "rationale": "Text marks show words; they do not draw shapes."
+      }
+    ],
+    "explanation": "Set the mark type to Shape, then drag a field to Shape on the Marks card. Tableau then draws a different shape for each member.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-021",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "What does Tableau do when the dimension `Device` is placed on Shape?",
+    "options": [
+      {
+        "text": "It separates the marks by member and assigns a unique shape to each",
+        "correct": true,
+        "rationale": "A dimension on Shape splits the marks by member, with a shape per member."
+      },
+      {
+        "text": "It converts `Device` to a measure and uses one shape for all marks",
+        "correct": false,
+        "rationale": "Only a measure is converted (to a discrete measure); a dimension is kept."
+      },
+      {
+        "text": "It keeps one mark per row and varies only the size of the shapes",
+        "correct": false,
+        "rationale": "Size is a separate property; Shape assigns a different shape per member."
+      },
+      {
+        "text": "It uses one shape but adds a legend with the names of the members",
+        "correct": false,
+        "rationale": "Each member gets its own shape, which is what the legend shows."
+      }
+    ],
+    "explanation": "Placing a dimension on Shape splits the marks according to its members and gives each member a shape. The legend lists which shape stands for which member.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-022",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "Which view makes the Automatic mark type pick Shape?",
+    "options": [
+      {
+        "text": "A continuous date on Columns and a measure on Rows",
+        "correct": false,
+        "rationale": "This combination is drawn as a line."
+      },
+      {
+        "text": "A measure as the innermost field on Rows and another measure on Columns",
+        "correct": true,
+        "rationale": "Automatic uses Shape when measures are the innermost fields on both shelves."
+      },
+      {
+        "text": "A dimension on Columns and a measure on Rows",
+        "correct": false,
+        "rationale": "A dimension with a measure is drawn as bars."
+      },
+      {
+        "text": "A dimension on Columns and another dimension on Rows",
+        "correct": false,
+        "rationale": "Only dimensions with no continuous field gives text."
+      }
+    ],
+    "explanation": "When measures are the innermost fields on both Rows and Columns, Automatic picks the Shape mark. You can also set the mark type to Shape yourself.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-023",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "A dimension with 14 members is placed on Shape and the default shapes are used. What happens?",
+    "options": [
+      {
+        "text": "Tableau shows a message and refuses to draw more than ten members",
+        "correct": false,
+        "rationale": "There is no such limit on members; the default shapes repeat."
+      },
+      {
+        "text": "The extra four members are drawn as plain circles without a shape",
+        "correct": false,
+        "rationale": "The shapes repeat; the remaining members do not turn into circles."
+      },
+      {
+        "text": "The four smallest members are grouped into one member called Other",
+        "correct": false,
+        "rationale": "Tableau does not group members automatically."
+      },
+      {
+        "text": "Ten unique shapes are used, and the shapes repeat for the remaining members",
+        "correct": true,
+        "rationale": "By default, ten unique shapes are used to encode dimensions, then they repeat."
+      }
+    ],
+    "explanation": "The default shape palette has ten shapes. With more than ten members they repeat, so two members can share a shape; assign shapes by hand or filter to avoid that.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-024",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "Which command on the shape legend's card menu opens the dialog for choosing other shapes?",
+    "options": [
+      {
+        "text": "Edit Shape",
+        "correct": true,
+        "rationale": "Edit Shape (or clicking Shape on the Marks card) lets you pick shapes from palettes."
+      },
+      {
+        "text": "Edit Colors",
+        "correct": false,
+        "rationale": "Edit Colors changes the palette of the Color property."
+      },
+      {
+        "text": "Edit Sizes",
+        "correct": false,
+        "rationale": "Edit Sizes changes how sizes vary on the Size property."
+      },
+      {
+        "text": "Reload Shapes",
+        "correct": false,
+        "rationale": "Reload Shapes refreshes the custom shape palettes from the repository after a change."
+      }
+    ],
+    "explanation": "You can click Shape on the Marks card, or use Edit Shape on the legend's menu. There you choose from palettes such as filled shapes, arrows and weather symbols.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-025",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "The analyst has a set of PNG image files that should become a custom shape palette. Where do they go?",
+    "options": [
+      {
+        "text": "In a new folder inside My Tableau Repository\\Datasources",
+        "correct": false,
+        "rationale": "Datasources holds connection files, not shape palettes."
+      },
+      {
+        "text": "In a new folder inside My Tableau Repository\\Workbooks",
+        "correct": false,
+        "rationale": "Workbooks holds workbook files; Tableau reads shapes from the Shapes folder."
+      },
+      {
+        "text": "In a new folder inside My Tableau Repository\\Shapes",
+        "correct": true,
+        "rationale": "The folder name becomes the name of the palette."
+      },
+      {
+        "text": "In the same folder as the workbook that will use them",
+        "correct": false,
+        "rationale": "Tableau reads custom shapes from the repository, not from beside the workbook."
+      }
+    ],
+    "explanation": "Copy the image files into a new folder in My Tableau Repository\\Shapes. The folder name becomes the palette name and shows up in the Edit Shape dialog.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-026",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "Tableau was running when the analyst copied a new folder of images into the Shapes folder. The palette is missing in Edit Shape. What should they do?",
+    "options": [
+      {
+        "text": "Click Assign Palette in the Edit Colors dialog",
+        "correct": false,
+        "rationale": "Assign Palette is about colour, not shapes."
+      },
+      {
+        "text": "Click Reload Shapes in the Edit Shape dialog",
+        "correct": true,
+        "rationale": "Reload Shapes loads the new palette without restarting."
+      },
+      {
+        "text": "Choose Data > Refresh All Extracts",
+        "correct": false,
+        "rationale": "Extract refreshes update data, not shape palettes."
+      },
+      {
+        "text": "Drag a measure onto Shape on the Marks card",
+        "correct": false,
+        "rationale": "This would convert the measure to discrete but not load new images."
+      }
+    ],
+    "explanation": "If Tableau was already running, use Reload Shapes in the Edit Shape dialog so that the new palette appears.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-027",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.3"
+    ],
+    "select": 3,
+    "stem": "Which image file formats can be used for custom shapes? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": ".gif",
+        "correct": true,
+        "rationale": "GIF is listed as supported."
+      },
+      {
+        "text": ".xlsx",
+        "correct": false,
+        "rationale": "A spreadsheet is not an image format."
+      },
+      {
+        "text": ".bmp",
+        "correct": true,
+        "rationale": "BMP is listed as supported."
+      },
+      {
+        "text": ".pdf",
+        "correct": false,
+        "rationale": "PDF is not among the formats for custom shapes."
+      },
+      {
+        "text": ".tiff",
+        "correct": true,
+        "rationale": "TIFF is listed as supported."
+      },
+      {
+        "text": ".csv",
+        "correct": false,
+        "rationale": "A text data file is not an image."
+      }
+    ],
+    "explanation": "Custom shapes are image files: .png, .gif, .jpg, .bmp or .tiff, copied into a folder in My Tableau Repository\\Shapes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-028",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.3"
+    ],
+    "select": 2,
+    "stem": "Which statements about fields on Shape are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A dimension on Shape gets a unique shape per member.",
+        "correct": true,
+        "rationale": "Marks are separated by the members of the dimension."
+      },
+      {
+        "text": "A measure on Shape stays continuous and gets a gradient.",
+        "correct": false,
+        "rationale": "A measure on Shape is converted to a discrete measure."
+      },
+      {
+        "text": "A measure on Shape is converted to a discrete measure.",
+        "correct": true,
+        "rationale": "Shape needs discrete values, so the measure is converted."
+      },
+      {
+        "text": "A dimension on Shape adds no legend.",
+        "correct": false,
+        "rationale": "A field on Shape is an encoding and adds a legend."
+      },
+      {
+        "text": "Shapes never repeat, however many members there are.",
+        "correct": false,
+        "rationale": "By default ten shapes are used and they repeat after that."
+      }
+    ],
+    "explanation": "Shape is a discrete encoding: dimensions get one shape per member, and a measure is turned into a discrete measure first.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  }
+]
