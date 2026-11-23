@@ -1006,5 +1006,1004 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm"
     ]
+  },
+  {
+    "id": "3.2-028",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "Which text in a Go to URL action inserts the value of the Title ID field into the link?",
+    "options": [
+      {
+        "text": "`https://example.com/title?id=[Title ID]`",
+        "correct": false,
+        "rationale": "Square brackets reference a field inside a calculated field, not in a URL action."
+      },
+      {
+        "text": "`https://example.com/title?id={Title ID}`",
+        "correct": false,
+        "rationale": "Curly braces belong to level of detail expressions and are not read as field placeholders in a URL."
+      },
+      {
+        "text": "`https://example.com/title?id=<Title ID>`",
+        "correct": true,
+        "rationale": "Field names go in angle brackets, and Tableau replaces the placeholder with the selected mark's value."
+      },
+      {
+        "text": "`https://example.com/title?id=(Title ID)`",
+        "correct": false,
+        "rationale": "Parentheses are plain text in a URL, so the link would contain the words \"Title ID\" literally."
+      }
+    ],
+    "explanation": "In a Go to URL action the URL may contain field names in angle brackets. When the viewer acts on a mark, Tableau substitutes that mark's value into the link.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_url.htm"
+    ]
+  },
+  {
+    "id": "3.2-029",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "A Go to URL action uses `<Subscriber ID>`, but the link comes out without the ID because the source worksheet does not show that field. What should the analyst do?",
+    "options": [
+      {
+        "text": "Put `Subscriber ID` on Detail on the source sheet's Marks card.",
+        "correct": true,
+        "rationale": "A field used in a URL action must be in the view, and Detail is enough without changing the chart's look."
+      },
+      {
+        "text": "Create a Change Parameter action that stores the ID in a parameter.",
+        "correct": false,
+        "rationale": "A parameter action sets a parameter value; it does not make a field available to a URL action."
+      },
+      {
+        "text": "Add a filter card for `Subscriber ID` to the dashboard.",
+        "correct": false,
+        "rationale": "A filter card limits which marks are shown but does not add the field to the view's marks."
+      },
+      {
+        "text": "Switch the action to Run action on Menu instead of Select.",
+        "correct": false,
+        "rationale": "How the action is triggered has no effect on which fields the URL can read."
+      }
+    ],
+    "explanation": "URL actions can only insert fields that are used in the source view. Placing the field on Detail makes it available without altering what the chart displays.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_url.htm"
+    ]
+  },
+  {
+    "id": "3.2-030",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "Clicking a country mark on the overview dashboard should open the separate Regions dashboard. Which type of action does that?",
+    "options": [
+      {
+        "text": "Filter, with the Regions dashboard as the target sheet",
+        "correct": false,
+        "rationale": "A filter action restricts data in sheets that appear on the same dashboard; it does not open another sheet."
+      },
+      {
+        "text": "Highlight, with the Regions dashboard as the target sheet",
+        "correct": false,
+        "rationale": "Highlight dims marks in target views and does not navigate anywhere."
+      },
+      {
+        "text": "Change Set Values, so the set points to the Regions dashboard",
+        "correct": false,
+        "rationale": "Change Set Values changes the members of a set; sets are not navigation targets."
+      },
+      {
+        "text": "Go to Sheet, with the Regions dashboard as the target",
+        "correct": true,
+        "rationale": "Go to Sheet opens another sheet, dashboard or story when the viewer acts on a mark."
+      }
+    ],
+    "explanation": "Go to Sheet is the action type for navigating from a mark to a different sheet, dashboard or story. Filter and highlight actions affect the views already on screen.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions.htm"
+    ]
+  },
+  {
+    "id": "3.2-031",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "Viewers should click a genre bar and have a parameter take that genre as its value, which then drives a calculation elsewhere. Which action type fits?",
+    "options": [
+      {
+        "text": "Go to URL, with the genre in angle brackets",
+        "correct": false,
+        "rationale": "Go to URL opens a web page and never writes into a parameter."
+      },
+      {
+        "text": "Change Parameter, with the genre field as the source field",
+        "correct": true,
+        "rationale": "A parameter action sets a parameter to the value of the selected mark."
+      },
+      {
+        "text": "Filter, with the calculation's sheet as the target",
+        "correct": false,
+        "rationale": "A filter action removes marks from target sheets and does not set a parameter."
+      },
+      {
+        "text": "Highlight, with the genre field as the field to match",
+        "correct": false,
+        "rationale": "Highlight fades non-matching marks and does not change any parameter."
+      }
+    ],
+    "explanation": "Change Parameter actions pass the selected mark's value into a parameter. Calculations or reference lines that use that parameter then update when the viewer clicks.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_parameters.htm"
+    ]
+  },
+  {
+    "id": "3.2-032",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.3"
+    ],
+    "select": 2,
+    "stem": "Which two are possible targets of a Go to URL action? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A new browser tab",
+        "correct": true,
+        "rationale": "The URL can open in the viewer's browser in a new tab."
+      },
+      {
+        "text": "A Filter action on another sheet",
+        "correct": false,
+        "rationale": "A filter action is its own action type and not a destination for a link."
+      },
+      {
+        "text": "A story point of the same workbook",
+        "correct": false,
+        "rationale": "Opening a sheet, dashboard or story is the job of a Go to Sheet action, not of a URL action."
+      },
+      {
+        "text": "A Web Page object on the same dashboard",
+        "correct": true,
+        "rationale": "The URL can load inside a Web Page object that sits on the dashboard."
+      },
+      {
+        "text": "A Show/Hide button next to the source sheet",
+        "correct": false,
+        "rationale": "Show/Hide buttons fold objects away; they are not link targets."
+      }
+    ],
+    "explanation": "A URL action either opens the address in a browser tab or loads it into a Web Page object on the dashboard. Navigating to other workbook sheets is handled by Go to Sheet.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_url.htm"
+    ]
+  },
+  {
+    "id": "3.2-033",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.3"
+    ],
+    "select": 2,
+    "stem": "Which two are action types in the Dashboard > Actions dialog? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Apply to Worksheets",
+        "correct": false,
+        "rationale": "This is a submenu of a filter card, not an action type."
+      },
+      {
+        "text": "Change Set Values",
+        "correct": true,
+        "rationale": "The action changes the members of a set when the viewer selects marks."
+      },
+      {
+        "text": "Add Show/Hide Button",
+        "correct": false,
+        "rationale": "This is a menu entry on a dashboard object, not an action type."
+      },
+      {
+        "text": "Include command buttons",
+        "correct": false,
+        "rationale": "This is a tooltip setting, not an action type."
+      },
+      {
+        "text": "Go to Sheet",
+        "correct": true,
+        "rationale": "The action opens another sheet, dashboard or story."
+      }
+    ],
+    "explanation": "The Actions dialog offers Filter, Highlight, Go to URL, Go to Sheet, Change Parameter and Change Set Values. Items such as Apply to Worksheets and Show/Hide buttons are separate dashboard features.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions.htm"
+    ]
+  },
+  {
+    "id": "3.2-034",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.4"
+    ],
+    "stem": "Which description matches tiled items on a dashboard?",
+    "options": [
+      {
+        "text": "They float above other objects and can be placed at any pixel position.",
+        "correct": false,
+        "rationale": "That describes floating items, which can be layered over other objects."
+      },
+      {
+        "text": "They do not overlap and become part of a single-layer grid.",
+        "correct": true,
+        "rationale": "Tiled items share one non-overlapping grid, so adding one resizes its neighbours."
+      },
+      {
+        "text": "They are always inside a vertical layout container and resize only in height.",
+        "correct": false,
+        "rationale": "Tiled items need not be in a container, and containers can be horizontal or vertical."
+      },
+      {
+        "text": "They keep a fixed pixel size when the dashboard is resized.",
+        "correct": false,
+        "rationale": "Size is set per dashboard (Fixed, Range, Automatic), not by tiling."
+      }
+    ],
+    "explanation": "Tiled is the default way to place objects: a single layer without overlap. Floating is the alternative when objects must be layered.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-035",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.4"
+    ],
+    "stem": "The analyst drags a legend onto the dashboard and wants it to sit on top of a map in the corner. What should they hold while dragging?",
+    "options": [
+      {
+        "text": "Ctrl, to copy the legend onto the map",
+        "correct": false,
+        "rationale": "Ctrl-dragging does not turn an item into a floating one."
+      },
+      {
+        "text": "Alt, to attach the legend to the map's layout container",
+        "correct": false,
+        "rationale": "Alt is not how an item is made to float or to join a container."
+      },
+      {
+        "text": "Tab, to toggle between Tiled and Floating",
+        "correct": false,
+        "rationale": "Tab is not a layout modifier on the dashboard."
+      },
+      {
+        "text": "Shift, to make the item float",
+        "correct": true,
+        "rationale": "Holding Shift while dragging places the item as a floating object that can overlap others."
+      }
+    ],
+    "explanation": "Floating items are layered over other objects. Hold Shift while dragging to float an item, and use it sparingly, for things like legends or a logo.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-036",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.4"
+    ],
+    "stem": "Three sheets should stack top to bottom and share the dashboard's height evenly as the dashboard is resized. Which container fits?",
+    "options": [
+      {
+        "text": "A vertical layout container",
+        "correct": true,
+        "rationale": "A vertical container adjusts the height of the views and objects it holds."
+      },
+      {
+        "text": "A horizontal layout container",
+        "correct": false,
+        "rationale": "A horizontal container resizes the width of its contents, so it lines items up side by side."
+      },
+      {
+        "text": "A Blank object",
+        "correct": false,
+        "rationale": "Blank adds empty space; it does not organise sheets."
+      },
+      {
+        "text": "A Navigation object",
+        "correct": false,
+        "rationale": "Navigation creates a button to go to another sheet, not a layout."
+      }
+    ],
+    "explanation": "Horizontal containers resize the width of what they contain and vertical containers adjust height. Containers keep groups of sheets aligned when the dashboard changes size.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-037",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.4"
+    ],
+    "stem": "Which dashboard size setting is the default for a new dashboard?",
+    "options": [
+      {
+        "text": "Automatic, which fills the window",
+        "correct": false,
+        "rationale": "Automatic adapts to the window but is not the default."
+      },
+      {
+        "text": "Range, between a minimum and a maximum",
+        "correct": false,
+        "rationale": "Range is chosen deliberately to allow a limited amount of resizing."
+      },
+      {
+        "text": "Fixed size",
+        "correct": true,
+        "rationale": "Fixed size is the default, and a preset such as Desktop Browser can be picked."
+      },
+      {
+        "text": "Fit width, as recommended for phones",
+        "correct": false,
+        "rationale": "Fit width is an option for device layouts, not the dashboard's default size."
+      }
+    ],
+    "explanation": "A new dashboard has a fixed size, so it looks the same everywhere. Range and Automatic let it adapt to the viewer's window instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-038",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.4"
+    ],
+    "stem": "A dashboard should always fill whatever browser window it is opened in, even if views are squeezed. Which size setting does that?",
+    "options": [
+      {
+        "text": "Automatic",
+        "correct": true,
+        "rationale": "Automatic resizes the dashboard to fill the window."
+      },
+      {
+        "text": "Fixed size with the Desktop Browser preset",
+        "correct": false,
+        "rationale": "A fixed size stays the same regardless of the window."
+      },
+      {
+        "text": "Range with a minimum and a maximum",
+        "correct": false,
+        "rationale": "Range resizes only between its limits, so it does not always fill the window."
+      },
+      {
+        "text": "Floating layout for every object",
+        "correct": false,
+        "rationale": "Floating changes how objects are placed, not the overall dashboard size."
+      }
+    ],
+    "explanation": "Automatic fills the window and adapts to it, at the risk of squeezing views. Fixed and Range limit the amount of adaptation.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-039",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.4"
+    ],
+    "stem": "Where does the analyst type the exact x and y position, in pixels, for a floating object?",
+    "options": [
+      {
+        "text": "The Size section of the Dashboard pane",
+        "correct": false,
+        "rationale": "That section sets the size of the whole dashboard, not an item's position."
+      },
+      {
+        "text": "The Marks card of the source sheet",
+        "correct": false,
+        "rationale": "The Marks card shapes marks in one worksheet."
+      },
+      {
+        "text": "The Dashboard > Actions dialog",
+        "correct": false,
+        "rationale": "Actions define interactions and have no position settings."
+      },
+      {
+        "text": "The Layout pane",
+        "correct": true,
+        "rationale": "The Layout pane sets an item's position and size, and whether its title shows."
+      }
+    ],
+    "explanation": "For fine control, select the item and use the Layout pane. It shows the item's position and size in pixels as well as its title setting.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-040",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.4"
+    ],
+    "stem": "The analyst wants a separate arrangement of the dashboard for tablets. How do they start?",
+    "options": [
+      {
+        "text": "Duplicate the dashboard and rename it for tablets.",
+        "correct": false,
+        "rationale": "This works but makes two dashboards, and device layouts are meant to keep one dashboard with several layouts."
+      },
+      {
+        "text": "Click Device Preview, pick the device type, then click Add Layout.",
+        "correct": true,
+        "rationale": "Device Preview shows device frames, and Add Layout (for example Add Tablet Layout) creates the device-specific layout."
+      },
+      {
+        "text": "Set the dashboard size to Range and enter tablet dimensions.",
+        "correct": false,
+        "rationale": "Range allows resizing between limits and does not create a tablet layout."
+      },
+      {
+        "text": "Add a Navigation object that sends tablet viewers to another sheet.",
+        "correct": false,
+        "rationale": "Navigation buttons are chosen by the viewer, not by device."
+      }
+    ],
+    "explanation": "Device-specific layouts live inside a single dashboard. Open Device Preview, select the device and add the layout; it then appears under Default on the Dashboard tab.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_dsd_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-041",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.5"
+    ],
+    "stem": "How does the analyst begin a story in a workbook?",
+    "options": [
+      {
+        "text": "Click the New Dashboard icon and enable the story option.",
+        "correct": false,
+        "rationale": "New Dashboard creates a dashboard; the sheet type for stories is separate."
+      },
+      {
+        "text": "Choose Dashboard > Actions and add a Go to Sheet action.",
+        "correct": false,
+        "rationale": "A Go to Sheet action navigates from marks and does not create a story."
+      },
+      {
+        "text": "Click the New Story tab.",
+        "correct": true,
+        "rationale": "This opens a story sheet where story points can be added."
+      },
+      {
+        "text": "Open Device Preview and click Add Layout.",
+        "correct": false,
+        "rationale": "Device layouts belong to dashboards."
+      }
+    ],
+    "explanation": "A story is its own sheet type. It is created with the New Story tab and then filled with story points.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-042",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.5"
+    ],
+    "stem": "The analyst has dragged a dashboard into the first story point. How do they add a one-line summary of the point?",
+    "options": [
+      {
+        "text": "Click Add a caption on the story point and type it.",
+        "correct": true,
+        "rationale": "Each story point can carry a caption that summarises it."
+      },
+      {
+        "text": "Edit the dashboard's title in the Layout pane.",
+        "correct": false,
+        "rationale": "That changes the dashboard object's own title and not the story point's caption."
+      },
+      {
+        "text": "Add a Text object from the dashboard Objects section.",
+        "correct": false,
+        "rationale": "That puts text inside the dashboard rather than writing the caption of the story point."
+      },
+      {
+        "text": "Edit the tooltip on the Marks card.",
+        "correct": false,
+        "rationale": "Tooltips appear on hover over marks and are not story captions."
+      }
+    ],
+    "explanation": "Story points have a caption box above the content where the analyst writes a short summary of what the point shows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-043",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.5"
+    ],
+    "stem": "The analyst wants a second story point that starts as a copy of the current one so that they can change only a filter. Which command suits that?",
+    "options": [
+      {
+        "text": "Blank",
+        "correct": false,
+        "rationale": "Blank adds an empty point with no content, so the sheet would have to be added again."
+      },
+      {
+        "text": "Update",
+        "correct": false,
+        "rationale": "Update overwrites the current point's saved state and does not add a point."
+      },
+      {
+        "text": "Add Show/Hide Button",
+        "correct": false,
+        "rationale": "Show/Hide buttons belong to dashboard objects."
+      },
+      {
+        "text": "Duplicate",
+        "correct": true,
+        "rationale": "Duplicate copies the current story point so it can then be adjusted (filter, highlight)."
+      }
+    ],
+    "explanation": "To add a point, choose Blank for a fresh one or Duplicate to copy the current one. Duplicating is quickest when the next point differs only slightly.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-044",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.5"
+    ],
+    "stem": "In a story point, the analyst filters the dashboard to one region. How do they keep that state in the point?",
+    "options": [
+      {
+        "text": "Click Save as New on the Story pane.",
+        "correct": false,
+        "rationale": "Save as New keeps both versions, so the original point would stay as it was."
+      },
+      {
+        "text": "Click Update on the story toolbar above the navigator box.",
+        "correct": true,
+        "rationale": "Update saves the changed sheet state back into the current story point."
+      },
+      {
+        "text": "Select Dashboard > Actions and add a filter action.",
+        "correct": false,
+        "rationale": "An action is a dashboard interaction and does not store state in a story point."
+      },
+      {
+        "text": "Switch the dashboard to Fixed size.",
+        "correct": false,
+        "rationale": "Dashboard size has no connection to what is remembered in a story point."
+      }
+    ],
+    "explanation": "After changing the sheet inside a point, Update stores the new state in that point. A story point remembers filters and selections as saved.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-045",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.5"
+    ],
+    "stem": "After changing a story point's filter, the analyst wants to keep the old version of the point and also have the changed one. What should they do?",
+    "options": [
+      {
+        "text": "Click Update on the story toolbar.",
+        "correct": false,
+        "rationale": "Update replaces the saved state, so the old version would be lost."
+      },
+      {
+        "text": "Click Blank and rebuild the point.",
+        "correct": false,
+        "rationale": "Blank adds an empty point and would need the whole sheet to be added again."
+      },
+      {
+        "text": "Click Save as New.",
+        "correct": true,
+        "rationale": "Save as New stores the change as a new point and leaves the original in place."
+      },
+      {
+        "text": "Add a data highlighter to the story point.",
+        "correct": false,
+        "rationale": "A highlighter only helps viewers find marks and does not save versions of a point."
+      }
+    ],
+    "explanation": "Update overwrites the current point, whereas Save as New keeps both versions side by side.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-046",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.5"
+    ],
+    "stem": "Where does the analyst choose the navigator style of a story and show or hide the next and previous arrows?",
+    "options": [
+      {
+        "text": "In the Story pane",
+        "correct": true,
+        "rationale": "The Story pane controls how viewers navigate the story, such as navigator style and arrows."
+      },
+      {
+        "text": "In the Layout pane",
+        "correct": false,
+        "rationale": "The Layout pane sets item position, size and title for dashboard objects."
+      },
+      {
+        "text": "In the Tooltip editor",
+        "correct": false,
+        "rationale": "The Tooltip editor sets the text shown on hover over marks."
+      },
+      {
+        "text": "In the Dashboard > Actions dialog",
+        "correct": false,
+        "rationale": "Actions define interactions between sheets and do not control story navigation."
+      }
+    ],
+    "explanation": "The Story pane lets the analyst pick a navigator style and show or hide the arrows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-047",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.5"
+    ],
+    "stem": "How does a story differ from a dashboard?",
+    "options": [
+      {
+        "text": "A story shows several worksheets at once; a dashboard shows them one after another.",
+        "correct": false,
+        "rationale": "This reverses the two: a dashboard shows several sheets at the same time."
+      },
+      {
+        "text": "A story can only contain worksheets, but a dashboard can contain dashboards.",
+        "correct": false,
+        "rationale": "A story point can show either a worksheet or a dashboard."
+      },
+      {
+        "text": "A story is for editing; a dashboard is for viewing only.",
+        "correct": false,
+        "rationale": "Both can be viewed and edited; they differ in structure."
+      },
+      {
+        "text": "A story is a sequence of points, each showing one sheet or dashboard with a caption.",
+        "correct": true,
+        "rationale": "Points are visited in order, so a story walks the reader through an argument."
+      }
+    ],
+    "explanation": "A dashboard arranges several sheets on one screen. A story is a series of story points, each showing one sheet or dashboard, often with a caption.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-048",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.4"
+    ],
+    "select": 2,
+    "stem": "Which two are layout containers in the Objects section? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Horizontal",
+        "correct": true,
+        "rationale": "A horizontal layout container resizes the width of the items it holds."
+      },
+      {
+        "text": "Blank",
+        "correct": false,
+        "rationale": "Blank adds empty space between objects; it does not group them."
+      },
+      {
+        "text": "Navigation",
+        "correct": false,
+        "rationale": "Navigation creates buttons that take viewers to other sheets."
+      },
+      {
+        "text": "Vertical",
+        "correct": true,
+        "rationale": "A vertical layout container adjusts the height of the items it holds."
+      },
+      {
+        "text": "Web Page",
+        "correct": false,
+        "rationale": "Web Page embeds a page by URL and is not a container."
+      }
+    ],
+    "explanation": "Horizontal and vertical layout containers group views and objects so they stay aligned when the dashboard resizes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-049",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.4"
+    ],
+    "select": 2,
+    "stem": "Which two statements about device-specific layouts are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "They require a separate workbook for every device type.",
+        "correct": false,
+        "rationale": "One dashboard can carry layouts for desktop, tablet and phone."
+      },
+      {
+        "text": "A phone layout can be generated automatically with Auto-Generate Layout.",
+        "correct": true,
+        "rationale": "Tableau can build a phone layout from the default one automatically."
+      },
+      {
+        "text": "They are defined in the Dashboard > Actions dialog.",
+        "correct": false,
+        "rationale": "Device layouts are added in Device Preview, not in actions."
+      },
+      {
+        "text": "Fit width is a recommended size option for phone layouts.",
+        "correct": true,
+        "rationale": "Fit width is recommended for phones."
+      },
+      {
+        "text": "They only work if Show sheets as tabs is selected on publishing.",
+        "correct": false,
+        "rationale": "The help says to clear Show sheets as tabs so the device layouts are used."
+      }
+    ],
+    "explanation": "A dashboard can hold device layouts for desktop, tablet and phone. A phone layout can be auto-generated and works best with Fit width.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_dsd_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-050",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.4"
+    ],
+    "select": 3,
+    "stem": "Which three are size settings for a dashboard? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Fixed size",
+        "correct": true,
+        "rationale": "A fixed size looks the same everywhere and is the default."
+      },
+      {
+        "text": "Fit width",
+        "correct": false,
+        "rationale": "Fit width is an option for device layouts rather than a dashboard-wide size setting."
+      },
+      {
+        "text": "Range",
+        "correct": true,
+        "rationale": "Range sets a minimum and a maximum size."
+      },
+      {
+        "text": "Entire View",
+        "correct": false,
+        "rationale": "Entire View fits a worksheet in its window; it is not a dashboard size setting."
+      },
+      {
+        "text": "Automatic",
+        "correct": true,
+        "rationale": "Automatic fills the available window."
+      }
+    ],
+    "explanation": "A dashboard's size is Fixed size (the default), Range or Automatic. Fit width and Entire View belong to other contexts.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-051",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.4"
+    ],
+    "select": 2,
+    "stem": "Which two items are the typical use of floating objects? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The main grid of three charts",
+        "correct": false,
+        "rationale": "The main charts normally sit tiled in a grid so that they never overlap."
+      },
+      {
+        "text": "A title row across the top of every dashboard",
+        "correct": false,
+        "rationale": "A title is normally tiled in a row of the layout."
+      },
+      {
+        "text": "A legend placed in a corner of a chart",
+        "correct": true,
+        "rationale": "Legends are a typical floating item because they sit over other content."
+      },
+      {
+        "text": "A vertical container for stacked sheets",
+        "correct": false,
+        "rationale": "Containers are normally tiled to keep sheets aligned."
+      },
+      {
+        "text": "A company logo in a corner",
+        "correct": true,
+        "rationale": "A logo is a typical floating item layered above the layout."
+      }
+    ],
+    "explanation": "Floating items can be layered over other objects, so use them sparingly, for things such as legends or a logo, and tile the main content.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm"
+    ]
+  },
+  {
+    "id": "3.2-052",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.5"
+    ],
+    "select": 2,
+    "stem": "Which two can the analyst show in a story point? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A single field dragged from the Data pane",
+        "correct": false,
+        "rationale": "Fields are used in worksheets; a story point shows a sheet or dashboard."
+      },
+      {
+        "text": "A worksheet",
+        "correct": true,
+        "rationale": "A story point can show a worksheet."
+      },
+      {
+        "text": "A dashboard",
+        "correct": true,
+        "rationale": "A story point can show a dashboard."
+      },
+      {
+        "text": "A parameter",
+        "correct": false,
+        "rationale": "Parameters drive calculations and are not shown as points."
+      },
+      {
+        "text": "A Navigation object by itself",
+        "correct": false,
+        "rationale": "Navigation objects sit on dashboards and do not form a story point."
+      }
+    ],
+    "explanation": "Each story point shows one sheet or dashboard. The point also remembers the state of that sheet, such as filters.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-053",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.5"
+    ],
+    "select": 2,
+    "stem": "Which two statements about story points are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A story point remembers the state of its sheet, such as filters and selections.",
+        "correct": true,
+        "rationale": "The same dashboard can appear in several points, each with a different state."
+      },
+      {
+        "text": "A filter change in a point is saved automatically without clicking Update.",
+        "correct": false,
+        "rationale": "The analyst saves the change by clicking Update or Save as New."
+      },
+      {
+        "text": "A story can contain only one dashboard.",
+        "correct": false,
+        "rationale": "The same or different sheets and dashboards can appear in any number of points."
+      },
+      {
+        "text": "A caption can summarise each story point.",
+        "correct": true,
+        "rationale": "Click Add a caption to summarise the point."
+      },
+      {
+        "text": "Story points are ordered by the dashboard's size setting.",
+        "correct": false,
+        "rationale": "Order comes from the sequence in the story, not from dashboard size."
+      }
+    ],
+    "explanation": "A story point stores its sheet's state and may have a caption. Changes are saved with Update or Save as New.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-054",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.5"
+    ],
+    "select": 3,
+    "stem": "Which three commands create or save a story point in the story toolbar? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Blank",
+        "correct": true,
+        "rationale": "Blank adds an empty point."
+      },
+      {
+        "text": "Duplicate",
+        "correct": true,
+        "rationale": "Duplicate copies the current point as a new one."
+      },
+      {
+        "text": "Add Show/Hide Button",
+        "correct": false,
+        "rationale": "This is a dashboard-object command and not a story-point command."
+      },
+      {
+        "text": "Save as New",
+        "correct": true,
+        "rationale": "Save as New stores the changed point as a new one."
+      },
+      {
+        "text": "Add Layout",
+        "correct": false,
+        "rationale": "Add Layout creates device layouts for a dashboard."
+      }
+    ],
+    "explanation": "A new point comes from Blank, Duplicate or Save as New; Update replaces the current point's state. Dashboard-object and device-layout commands are separate.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/story_create.htm"
+    ]
   }
 ]
