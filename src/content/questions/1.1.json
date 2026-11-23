@@ -1012,5 +1012,980 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
     ]
+  },
+  {
+    "id": "1.1-028",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "Driftlight's dashboards only ever show session trends by month, so the analyst wants the extract to store dates at month level instead of every timestamp. Which Extract Data setting does that?",
+    "options": [
+      {
+        "text": "Filters, with a date condition on the Start field of the sessions",
+        "correct": false,
+        "rationale": "A filter drops whole rows; it doesn't change the level of detail of the rows that remain."
+      },
+      {
+        "text": "Number of Rows, set to Sample so that only part of the rows is kept",
+        "correct": false,
+        "rationale": "Sample keeps only a portion of the rows; it doesn't roll dates up to a coarser level."
+      },
+      {
+        "text": "Aggregate data for visible dimensions, then Roll up dates to Month",
+        "correct": true,
+        "rationale": "Aggregation stores pre-aggregated rows, and Roll up dates sets the date level the extract keeps."
+      },
+      {
+        "text": "Incremental refresh, naming the Start field as the column for new rows",
+        "correct": false,
+        "rationale": "Incremental refresh decides how new rows are added later; it doesn't change how dates are stored."
+      }
+    ],
+    "explanation": "In the Aggregation section of the Extract Data dialog, aggregating for visible dimensions stores summarised rows instead of every record, and Roll up dates lets you keep dates at a level such as month. The result is a smaller extract.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-029",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "The analyst wants a small test extract of a large Driftlight table, built from a portion of the rows. Where in the Extract Data dialog is that chosen?",
+    "options": [
+      {
+        "text": "Number of Rows, with the Sample option",
+        "correct": true,
+        "rationale": "Number of Rows offers All rows, Top N rows or a Sample."
+      },
+      {
+        "text": "Data Storage, with the Physical Tables option",
+        "correct": false,
+        "rationale": "Data Storage decides how tables are stored, not how many rows are kept."
+      },
+      {
+        "text": "Aggregation, with Roll up dates selected",
+        "correct": false,
+        "rationale": "Rolling up dates reduces date detail; it isn't a way to pick a portion of the rows."
+      },
+      {
+        "text": "Hide All Unused Fields, which is a check box",
+        "correct": false,
+        "rationale": "That option leaves out hidden fields (columns), not a portion of the rows."
+      }
+    ],
+    "explanation": "The Number of Rows setting limits how many rows go into the extract: all of them, the top N, or a sample. Filters, aggregation and hiding fields reduce the extract in other ways.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-030",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "A data source joins two tables. In the Extract Data dialog, which Data Storage choice stores one table in the extract for each table in the data source's logical layer?",
+    "options": [
+      {
+        "text": "Physical Tables",
+        "correct": false,
+        "rationale": "Physical Tables stores one table per physical table, which is the other choice."
+      },
+      {
+        "text": "Aggregate data for visible dimensions",
+        "correct": false,
+        "rationale": "That is an Aggregation option, not a Data Storage choice."
+      },
+      {
+        "text": "All rows",
+        "correct": false,
+        "rationale": "That is a Number of Rows option and has nothing to do with how tables are stored."
+      },
+      {
+        "text": "Logical Tables",
+        "correct": true,
+        "rationale": "Logical Tables stores one table per logical table."
+      }
+    ],
+    "explanation": "Data Storage has two choices: Logical Tables, with one extract table per logical table, and Physical Tables, with one per physical table. The other settings in the dialog are filters, aggregation, number of rows, incremental refresh and hiding unused fields.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-031",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "A Driftlight extract uses incremental refresh with a column that identifies new rows. Later, a value in an old session row is corrected in the source database. What happens at the next incremental refresh?",
+    "options": [
+      {
+        "text": "The corrected row is updated, because Tableau compares every row with the source",
+        "correct": false,
+        "rationale": "That describes a full refresh; incremental refresh doesn't compare existing rows."
+      },
+      {
+        "text": "The corrected old row isn't updated; only rows new since the last refresh are added",
+        "correct": true,
+        "rationale": "Incremental refresh only includes new rows since the previous refresh."
+      },
+      {
+        "text": "The whole extract is replaced with the latest data from the source",
+        "correct": false,
+        "rationale": "Replacing everything is what a full refresh does, and it is the default."
+      },
+      {
+        "text": "The refresh fails, because incremental refresh can't be used after a data change",
+        "correct": false,
+        "rationale": "Corrections to old rows don't make it fail; they are simply not picked up."
+      }
+    ],
+    "explanation": "An incremental refresh adds only the rows that are new since the previous refresh, found through the column you chose. Changes to rows already in the extract are not picked up, so use a full refresh when old rows can change.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_refresh.htm"
+    ]
+  },
+  {
+    "id": "1.1-032",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.3"
+    ],
+    "select": 2,
+    "stem": "Which two statements about incremental refresh of an extract are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It only includes rows that are new since the previous refresh",
+        "correct": true,
+        "rationale": "That is what makes it incremental, as opposed to a full refresh."
+      },
+      {
+        "text": "It replaces all the data in the extract with the latest information",
+        "correct": false,
+        "rationale": "That describes a full refresh, which is the default."
+      },
+      {
+        "text": "It picks up edits made to rows that are already in the extract",
+        "correct": false,
+        "rationale": "Only new rows are added; existing rows stay as they were."
+      },
+      {
+        "text": "It needs a column that identifies new rows, and Number of Rows set to All rows",
+        "correct": true,
+        "rationale": "You name the column in the dialog, and the option needs All rows."
+      },
+      {
+        "text": "It works together with Aggregate data for visible dimensions",
+        "correct": false,
+        "rationale": "Incremental refresh can't be used together with aggregation."
+      }
+    ],
+    "explanation": "Incremental refresh uses a column you name to find new rows and adds only those. It requires All rows and can't be combined with aggregation, and it doesn't update rows already in the extract.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_refresh.htm"
+    ]
+  },
+  {
+    "id": "1.1-033",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.3"
+    ],
+    "select": 2,
+    "stem": "Which two actions are in the Extract submenu of the Data menu for a data source that has an extract? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "History, to see the past refreshes of the extract",
+        "correct": true,
+        "rationale": "Extract > History lists the refreshes."
+      },
+      {
+        "text": "Add, to connect a second connection to the data source",
+        "correct": false,
+        "rationale": "A second connection is added with Add in the Connections pane, not in the Extract submenu."
+      },
+      {
+        "text": "Remove, to remove the extract from the data source",
+        "correct": true,
+        "rationale": "Extract > Remove removes the extract."
+      },
+      {
+        "text": "Add to Saved Data Sources, to create a .tds file",
+        "correct": false,
+        "rationale": "That is on the data source's right-click menu at the top of the Data pane."
+      },
+      {
+        "text": "Package, to turn the workbook into a .twbx",
+        "correct": false,
+        "rationale": "Packaging a workbook is a File menu task, not an extract action."
+      }
+    ],
+    "explanation": "With the data source selected, the Data menu has an Extract submenu: Refresh, History and Remove. Saving data sources and adding connections happen elsewhere.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_refresh.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-034",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.4"
+    ],
+    "stem": "A lead analyst wants to reuse renamed fields and calculated fields in other workbooks, saving the connection details but no rows. Which file type should be saved?",
+    "options": [
+      {
+        "text": ".hyper",
+        "correct": false,
+        "rationale": "A .hyper file holds the extracted data itself, not a reusable set of metadata."
+      },
+      {
+        "text": ".twbx",
+        "correct": false,
+        "rationale": "A packaged workbook zips a workbook with its local data; it isn't a data source file."
+      },
+      {
+        "text": ".tds",
+        "correct": true,
+        "rationale": "A Tableau data source file saves the connection and the metadata, without the data."
+      },
+      {
+        "text": ".tdsx",
+        "correct": false,
+        "rationale": "A packaged data source also contains a copy of the local data or extracts, which was not wanted."
+      }
+    ],
+    "explanation": "A .tds file contains the connection information and metadata such as calculated fields, groups, sets, bins, default properties and renamed fields. It does not contain the data itself.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm"
+    ]
+  },
+  {
+    "id": "1.1-035",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.4"
+    ],
+    "stem": "Where does an analyst start saving a data source as a .tds so that colleagues can reuse it?",
+    "options": [
+      {
+        "text": "Right-click a worksheet tab, then choose Save as Data Source",
+        "correct": false,
+        "rationale": "Worksheet tabs offer worksheet actions; the data source is saved from the Data pane."
+      },
+      {
+        "text": "Right-click the data source's name at the top of the Data pane, then choose Add to Saved Data Sources",
+        "correct": true,
+        "rationale": "That is the path to the Save dialog where you choose .tds or .tdsx."
+      },
+      {
+        "text": "Open the Data menu, then choose Extract > Save Settings",
+        "correct": false,
+        "rationale": "The Extract submenu manages refreshes and the extract itself; it doesn't save the data source."
+      },
+      {
+        "text": "Open the File menu, then choose Save to save the workbook",
+        "correct": false,
+        "rationale": "Saving the workbook creates a .twb, which isn't a reusable data source file."
+      }
+    ],
+    "explanation": "At the top of the Data pane, right-click the data source name and select Add to Saved Data Sources. Then enter a file name, choose .tds or .tdsx and click Save.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm"
+    ]
+  },
+  {
+    "id": "1.1-036",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.4"
+    ],
+    "stem": "A Driftlight analyst must send a colleague, who can't reach the original files, a data source with its metadata and the local data. Which file type fits?",
+    "options": [
+      {
+        "text": ".tds",
+        "correct": false,
+        "rationale": "A .tds holds the connection and metadata but no data, so the colleague still wouldn't have the rows."
+      },
+      {
+        "text": ".twb",
+        "correct": false,
+        "rationale": "A workbook file holds worksheets, dashboards and stories, and no data."
+      },
+      {
+        "text": ".hyper",
+        "correct": false,
+        "rationale": "A .hyper file holds extracted data, but not the metadata the colleague also needs."
+      },
+      {
+        "text": ".tdsx",
+        "correct": true,
+        "rationale": "A packaged data source contains the .tds contents plus a copy of the local file-based data or extracts."
+      }
+    ],
+    "explanation": "A .tdsx is the packaged version of a data source: it includes everything in the .tds and a copy of local file data or extracts. Use it when the data has to travel with the metadata.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm"
+    ]
+  },
+  {
+    "id": "1.1-037",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.4"
+    ],
+    "stem": "By default, where does Tableau Desktop save a data source added with Add to Saved Data Sources?",
+    "options": [
+      {
+        "text": "In the Datasources folder of My Tableau Repository",
+        "correct": true,
+        "rationale": "The repository is created in the Documents folder, and the Datasources folder is the default save location."
+      },
+      {
+        "text": "In the Workbooks folder of My Tableau Repository, beside saved workbooks",
+        "correct": false,
+        "rationale": "The Workbooks folder is for workbooks, not saved data sources."
+      },
+      {
+        "text": "Next to the original file that holds the data, in the same folder",
+        "correct": false,
+        "rationale": "Tableau doesn't use the location of the source file as the default."
+      },
+      {
+        "text": "On Tableau Public, as a shared extract for other people to download",
+        "correct": false,
+        "rationale": "Saving a data source through this command creates a local file, not a public upload."
+      }
+    ],
+    "explanation": "The save dialog opens in the Datasources folder of My Tableau Repository, which Tableau creates in your Documents folder. You can choose another folder if you prefer.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm"
+    ]
+  },
+  {
+    "id": "1.1-038",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.4"
+    ],
+    "stem": "Which item is stored in a .tds file?",
+    "options": [
+      {
+        "text": "Every session row from the source CSV files",
+        "correct": false,
+        "rationale": "A .tds never contains the data itself."
+      },
+      {
+        "text": "The worksheets and dashboards built on the data",
+        "correct": false,
+        "rationale": "Worksheets and dashboards belong in a workbook file, not a data source file."
+      },
+      {
+        "text": "The rows of an extract built from the data source",
+        "correct": false,
+        "rationale": "Extract data lives in a .hyper file or inside a packaged .tdsx, not in a .tds."
+      },
+      {
+        "text": "A calculated field in the data source",
+        "correct": true,
+        "rationale": "Calculated fields are metadata and are kept in the data source file."
+      }
+    ],
+    "explanation": "A .tds saves the connection information and metadata: groups, sets, calculated fields, bins, default properties such as number formats and sort order, and renamed fields. Worksheets and the data itself are not part of it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm"
+    ]
+  },
+  {
+    "id": "1.1-039",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.4"
+    ],
+    "stem": "What does a packaged workbook (.twbx) contain?",
+    "options": [
+      {
+        "text": "Only the connection details and the metadata of one data source",
+        "correct": false,
+        "rationale": "That describes a .tds, which doesn't hold a workbook."
+      },
+      {
+        "text": "A workbook, plus any local file data and background images, in one zip file",
+        "correct": true,
+        "rationale": "That is the definition of a packaged workbook."
+      },
+      {
+        "text": "Only the extracted data, with no worksheets or dashboards",
+        "correct": false,
+        "rationale": "That describes a .hyper extract."
+      },
+      {
+        "text": "Worksheets, dashboards and stories, but never any data",
+        "correct": false,
+        "rationale": "That describes an unpackaged workbook (.twb), which has no data."
+      }
+    ],
+    "explanation": "A .twb holds the worksheets, dashboards and stories only. A .twbx zips that workbook with local file data and background images, so it can be opened on a machine without the original files.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm"
+    ]
+  },
+  {
+    "id": "1.1-040",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.4"
+    ],
+    "stem": "Which of these does a .tdsx contain that a plain .tds does not?",
+    "options": [
+      {
+        "text": "The default number formats that were set on fields",
+        "correct": false,
+        "rationale": "Default properties are metadata, so a plain .tds already has them."
+      },
+      {
+        "text": "The calculated fields added to the data source",
+        "correct": false,
+        "rationale": "Calculations are metadata and are stored in the plain .tds too."
+      },
+      {
+        "text": "A copy of any local file-based data or extracts",
+        "correct": true,
+        "rationale": "The packaged version adds the local data, which the plain data source file never holds."
+      },
+      {
+        "text": "The connection information that points to the data",
+        "correct": false,
+        "rationale": "Connection information is part of every data source file, packaged or not."
+      }
+    ],
+    "explanation": "A .tdsx has everything a .tds has, plus a copy of local file data or extracts. The metadata and connection information are in both.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm"
+    ]
+  },
+  {
+    "id": "1.1-041",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.4"
+    ],
+    "select": 3,
+    "stem": "Which three items are saved in a Tableau data source file (.tds)? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Calculated fields",
+        "correct": true,
+        "rationale": "Calculations are metadata and are stored."
+      },
+      {
+        "text": "The rows of the original table",
+        "correct": false,
+        "rationale": "A .tds holds no data."
+      },
+      {
+        "text": "Default number formats for fields",
+        "correct": true,
+        "rationale": "Default field properties are saved as metadata."
+      },
+      {
+        "text": "Worksheets and dashboards",
+        "correct": false,
+        "rationale": "Those are stored in a workbook, not a data source file."
+      },
+      {
+        "text": "Groups, sets and bins",
+        "correct": true,
+        "rationale": "Groups, sets and bins are part of the saved metadata."
+      },
+      {
+        "text": "Background images for dashboards",
+        "correct": false,
+        "rationale": "Background images are packaged in a .twbx workbook."
+      }
+    ],
+    "explanation": "A .tds stores the connection information plus metadata such as calculated fields, groups, sets, bins and default field properties. Data, worksheets and images are not in it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm"
+    ]
+  },
+  {
+    "id": "1.1-042",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.4"
+    ],
+    "select": 2,
+    "stem": "In the Save dialog opened by Add to Saved Data Sources, which two file types can be chosen? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Tableau Data Source (.tds)",
+        "correct": true,
+        "rationale": "The unpackaged data source file."
+      },
+      {
+        "text": "Tableau Workbook (.twb)",
+        "correct": false,
+        "rationale": "Workbooks are saved from the File menu, not as saved data sources."
+      },
+      {
+        "text": "Tableau Hyper Extract (.hyper)",
+        "correct": false,
+        "rationale": "A .hyper file is created by extracting data, not by saving a data source."
+      },
+      {
+        "text": "Tableau Packaged Workbook (.twbx)",
+        "correct": false,
+        "rationale": "Packaged workbooks are created by saving a workbook."
+      },
+      {
+        "text": "Tableau Packaged Data Source (.tdsx)",
+        "correct": true,
+        "rationale": "The packaged data source includes local data or extracts."
+      }
+    ],
+    "explanation": "Add to Saved Data Sources asks for a file name and a choice between .tds and .tdsx, then saves to the Datasources folder by default.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm"
+    ]
+  },
+  {
+    "id": "1.1-043",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.4"
+    ],
+    "select": 2,
+    "stem": "Which two statements about Tableau file types are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A .tds contains the actual data of the data source",
+        "correct": false,
+        "rationale": "A .tds only contains the information needed to connect to the data."
+      },
+      {
+        "text": "A .twbx contains a workbook and its supporting local file data",
+        "correct": true,
+        "rationale": "It is a zip file with the workbook and local data and images."
+      },
+      {
+        "text": "A .twb contains local file data and background images",
+        "correct": false,
+        "rationale": "That is what the packaged .twbx adds; a .twb has no data."
+      },
+      {
+        "text": "A .tdsx contains a copy of any local data or extracts",
+        "correct": true,
+        "rationale": "That is what separates it from a .tds."
+      },
+      {
+        "text": "A .hyper file stores the connection and the metadata of a data source",
+        "correct": false,
+        "rationale": "A .hyper file stores extracted data."
+      }
+    ],
+    "explanation": "The packaged formats, .twbx and .tdsx, add local data to their unpackaged counterparts. The .twb and .tds hold definitions only, and a .hyper holds extracted data.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm"
+    ]
+  },
+  {
+    "id": "1.1-044",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.5"
+    ],
+    "stem": "A Driftlight analyst is on the Data Source page with the sessions CSV on the canvas and now wants to connect to the Excel targets file in the same data source. What should the analyst click?",
+    "options": [
+      {
+        "text": "New Data Source on the Data menu, then drag the Excel tables across",
+        "correct": false,
+        "rationale": "That creates a separate data source, which can't be joined to the first one."
+      },
+      {
+        "text": "Add, to the right of the Connections heading in the left pane",
+        "correct": true,
+        "rationale": "Add creates a second connection inside the current data source."
+      },
+      {
+        "text": "Extract in the upper-right corner of the Data Source page",
+        "correct": false,
+        "rationale": "That switches the data source to an extract; it adds no connection."
+      },
+      {
+        "text": "More in the Connect pane of the Start page",
+        "correct": false,
+        "rationale": "That lists more connector types on the Start page; it doesn't add a connection to the open data source."
+      }
+    ],
+    "explanation": "The Add link next to Connections creates a second connection in the same data source, rather than an entirely different one. Then you connect to the Excel file as usual.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-045",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.5"
+    ],
+    "stem": "After adding a second connection to the Excel targets file, what does the analyst do to bring its data in?",
+    "options": [
+      {
+        "text": "Build a view with the targets on a separate worksheet, then switch off the first connection",
+        "correct": false,
+        "rationale": "Each connection stays in the data source and nothing needs switching off."
+      },
+      {
+        "text": "Save the first connection as a .tds, then reopen it with the Excel file inside",
+        "correct": false,
+        "rationale": "A .tds doesn't hold data, so it can't merge the Excel file in."
+      },
+      {
+        "text": "Select Extract on both connections so that Tableau merges the files",
+        "correct": false,
+        "rationale": "Making an extract doesn't combine tables; you still need a join or relationship."
+      },
+      {
+        "text": "Drag a table from the new connection to the canvas and relate or join it",
+        "correct": true,
+        "rationale": "The new table joins the existing table in the same data source."
+      }
+    ],
+    "explanation": "With the second connection in place, you drag a table from it onto the canvas and relate or join it to a table from the first connection. Both connections then belong to one data source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-046",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.5"
+    ],
+    "stem": "In a data source with two connections, how does Tableau show which connection a table or column belongs to?",
+    "options": [
+      {
+        "text": "It colours the tables on the canvas and the columns in the grid",
+        "correct": true,
+        "rationale": "Tableau colours them to show which connection the data comes from."
+      },
+      {
+        "text": "It adds the name of the connection to the start of every field name",
+        "correct": false,
+        "rationale": "Field names are not changed by connections."
+      },
+      {
+        "text": "It puts each connection's fields on a separate worksheet automatically",
+        "correct": false,
+        "rationale": "Fields from all connections are available in the same data source."
+      },
+      {
+        "text": "It hides the fields of the connection that was added first in the pane",
+        "correct": false,
+        "rationale": "Nothing is hidden; both connections' fields can be used."
+      }
+    ],
+    "explanation": "Tableau colours the canvas tables and the data grid columns so that you can see their connection. This helps when several files or databases are combined.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-047",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.5"
+    ],
+    "stem": "An analyst opens the Excel targets file through a new data source in the Data menu and then tries to join it to the sessions tables. Why can't that work?",
+    "options": [
+      {
+        "text": "Excel files can't be joined to anything other than other Excel files",
+        "correct": false,
+        "rationale": "Tables from different files and databases can be joined within one data source."
+      },
+      {
+        "text": "Joins are only possible when both sources are extracts",
+        "correct": false,
+        "rationale": "Cross-database joins work with live connections too."
+      },
+      {
+        "text": "Separate data sources can't be joined; both tables must be in one data source as two connections",
+        "correct": true,
+        "rationale": "A cross-database join needs the tables in one data source."
+      },
+      {
+        "text": "Targets files must first be saved as a .tdsx before they can be joined",
+        "correct": false,
+        "rationale": "File types for saving data sources have no effect on joining."
+      }
+    ],
+    "explanation": "Two separate data sources can't be joined; they can only be combined in a view by blending. To join across files or databases, add the second source with Add in the Connections pane so both are connections in one data source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-048",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.5"
+    ],
+    "stem": "What is a join between tables from two different connections in one data source called?",
+    "options": [
+      {
+        "text": "A data blend, which combines separate data sources in a view",
+        "correct": false,
+        "rationale": "Blending combines separate data sources in a view; it isn't a join in a data source."
+      },
+      {
+        "text": "A relationship, a flexible way to combine tables on the canvas",
+        "correct": false,
+        "rationale": "Relationships are a way to combine tables on the canvas, but they aren't the name for a join across connections."
+      },
+      {
+        "text": "A union, which appends the rows of tables with matching columns",
+        "correct": false,
+        "rationale": "A union appends rows of tables with matching columns; it doesn't match rows across keys."
+      },
+      {
+        "text": "A cross-database join",
+        "correct": true,
+        "rationale": "That is the name for joining tables from different connections."
+      }
+    ],
+    "explanation": "Joining tables that come from different connections is a cross-database join. It lets one data source combine, say, a CSV and an Excel workbook.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-049",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.5"
+    ],
+    "stem": "Which data source typically does not support cross-database joins?",
+    "options": [
+      {
+        "text": "A Microsoft Excel workbook with a targets sheet",
+        "correct": false,
+        "rationale": "Excel files can be joined to other connections, such as a CSV file."
+      },
+      {
+        "text": "A text file such as one of the sessions CSV files",
+        "correct": false,
+        "rationale": "Text files can be one side of a cross-database join."
+      },
+      {
+        "text": "A published Tableau data source",
+        "correct": true,
+        "rationale": "Published data sources are among the sources that don't support cross-database joins."
+      },
+      {
+        "text": "A relational database server that holds a sessions table",
+        "correct": false,
+        "rationale": "Tables from two databases can be joined with a cross-database join."
+      }
+    ],
+    "explanation": "Not every source supports cross-database joins. Cube data, most extract-only connectors and published Tableau data sources are among those that don't.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-050",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.5"
+    ],
+    "stem": "Which statement about the speed of joins is correct?",
+    "options": [
+      {
+        "text": "Cross-database joins are always faster, because Tableau processes them locally",
+        "correct": false,
+        "rationale": "They're not always faster; joins in one database are usually quicker."
+      },
+      {
+        "text": "Joins within a single database are usually faster than cross-database joins",
+        "correct": true,
+        "rationale": "Tableau's help notes this."
+      },
+      {
+        "text": "Joins are always equally fast, whatever the connections",
+        "correct": false,
+        "rationale": "Where the tables come from does affect speed."
+      },
+      {
+        "text": "Joins are only possible within a single database",
+        "correct": false,
+        "rationale": "Cross-database joins are possible, but they come with limits."
+      }
+    ],
+    "explanation": "A cross-database join has to combine data from different connections, so joins within a single database are usually faster. That is a reason to keep related tables in one database when you can.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-051",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.5"
+    ],
+    "select": 2,
+    "stem": "Which two statements about adding a second connection to a data source are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It creates a second connection rather than an entirely different data source",
+        "correct": true,
+        "rationale": "That is how Tableau describes the Add link."
+      },
+      {
+        "text": "It adds a new data source to the Data pane next to the first",
+        "correct": false,
+        "rationale": "A new data source comes from the Data menu, not from Add in the Connections pane."
+      },
+      {
+        "text": "Tables and columns are coloured to show which connection they come from",
+        "correct": true,
+        "rationale": "The canvas and the data grid use colour for the connection."
+      },
+      {
+        "text": "Both connections must use the same connector type",
+        "correct": false,
+        "rationale": "A CSV file and an Excel workbook can sit in one data source."
+      },
+      {
+        "text": "Both connections must be extracts",
+        "correct": false,
+        "rationale": "Live connections can be combined too."
+      }
+    ],
+    "explanation": "Add in the Connections pane keeps everything in one data source, with Tableau colouring tables and columns by connection. The connectors can be different, such as a text file and an Excel workbook.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-052",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.5"
+    ],
+    "select": 2,
+    "stem": "Which two sources are among those that usually do not support cross-database joins? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Cube data",
+        "correct": true,
+        "rationale": "Cube data is one of the sources listed as not supporting them."
+      },
+      {
+        "text": "A text file",
+        "correct": false,
+        "rationale": "Text files can be joined to other connections."
+      },
+      {
+        "text": "A Microsoft Excel workbook",
+        "correct": false,
+        "rationale": "Excel workbooks work in cross-database joins."
+      },
+      {
+        "text": "A published Tableau data source",
+        "correct": true,
+        "rationale": "Published data sources are also on the list."
+      },
+      {
+        "text": "A relational database server",
+        "correct": false,
+        "rationale": "Relational databases support cross-database joins."
+      }
+    ],
+    "explanation": "Cube data, most extract-only connectors and published Tableau data sources don't support cross-database joins. Common file and database connectors do.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.1-053",
+    "taskId": "1.1",
+    "kind": "multi",
+    "objectives": [
+      "1.1.5"
+    ],
+    "select": 3,
+    "stem": "Which three steps are part of creating a data source that uses multiple connections? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Connect to the first source and drag a table to the canvas",
+        "correct": true,
+        "rationale": "This is the starting point."
+      },
+      {
+        "text": "Click Add next to the Connections heading and connect to the second source",
+        "correct": true,
+        "rationale": "This adds the second connection to the same data source."
+      },
+      {
+        "text": "Choose New Data Source on the Data menu for the second source",
+        "correct": false,
+        "rationale": "That makes a separate data source, which can't be joined."
+      },
+      {
+        "text": "Drag a table from the new connection onto the canvas and relate or join it to the first",
+        "correct": true,
+        "rationale": "This is how the two connections are combined."
+      },
+      {
+        "text": "Select Extract on the first connection and reconnect the second",
+        "correct": false,
+        "rationale": "Extracting is not part of combining connections."
+      },
+      {
+        "text": "Save the first connection as a .tdsx and import it into the second",
+        "correct": false,
+        "rationale": "Saving a data source doesn't combine connections."
+      }
+    ],
+    "explanation": "Connect to the first source, add the second with Add in the Connections pane, then drag a table from the new connection onto the canvas and relate or join it. New Data Source would create a second data source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
   }
 ]
