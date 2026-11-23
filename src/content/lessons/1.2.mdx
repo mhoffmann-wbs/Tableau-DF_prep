@@ -1,0 +1,165 @@
+export const meta = {
+  taskId: '1.2',
+  updated: '2026-11-23',
+  tldr: 'Tableau’s data model has two layers. In the logical layer you **relate** tables (the "noodles"): Tableau keeps each table at its own level of detail and picks the join for each view, so measures are not duplicated. In the physical layer, inside a logical table, you **join** tables side by side (Venn diagram) or **union** them on top of each other. Relationships are the default; use a join when you deliberately need a fixed join type or a single merged table.',
+  objectivesCovered: ['1.2.1', '1.2.2', '1.2.3'],
+  links: [
+    { title: 'The Tableau Data Model', url: 'https://help.tableau.com/current/pro/desktop/en-us/datasource_datamodel.htm' },
+    { title: 'Relate your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/relate_tables.htm' },
+    { title: 'How relationships differ from joins', url: 'https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm' },
+    { title: 'Relationship performance options', url: 'https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_perfoptions.htm' },
+    { title: 'Join your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm' },
+    { title: 'Union your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/union.htm' },
+    { title: 'Blend your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/multiple_connections.htm' },
+  ],
+  vizzes: {
+    'union-years': {
+      spec: { columns: [{ field: 'Start' }], rows: [{ field: 'Sessions (Count)' }] },
+      caption: 'sessions_2024.csv and sessions_2025.csv unioned into one table: one bar per year.',
+    },
+    'price-right': {
+      spec: { source: 'subscribers', columns: [{ field: 'Plan' }], rows: [{ field: 'Monthly Price' }] },
+      caption: 'SUM(Monthly Price) per plan with one row per subscriber: each subscriber’s price counted once.',
+    },
+    'price-inflated': {
+      spec: { columns: [{ field: 'Plan' }], rows: [{ field: 'Monthly Price' }] },
+      caption: 'The same SUM after joining plans to sessions: each price is counted once per session.',
+    },
+  },
+  facts: {
+    'sessions-2024': {
+      kind: 'value',
+      says: '15,000',
+      spec: { columns: [{ field: 'Start' }], rows: [{ field: 'Sessions (Count)' }] },
+      measure: { field: 'Sessions (Count)' },
+      where: { Start: '2024' },
+    },
+    'sessions-2025': {
+      kind: 'value',
+      says: '17,000',
+      spec: { columns: [{ field: 'Start' }], rows: [{ field: 'Sessions (Count)' }] },
+      measure: { field: 'Sessions (Count)' },
+      where: { Start: '2025' },
+    },
+    'revenue-right': {
+      kind: 'value',
+      says: '36,112.00',
+      spec: { source: 'subscribers', rows: [{ field: 'Monthly Price' }] },
+      measure: { field: 'Monthly Price' },
+      digits: 2,
+    },
+    'revenue-inflated': { kind: 'value', says: '389,500.00', spec: { rows: [{ field: 'Monthly Price' }] }, measure: { field: 'Monthly Price' }, digits: 2 },
+  },
+}
+
+## Big idea
+
+Real data rarely sits in one table. Driftlight has sessions, subscribers, plans, titles, regions, cancellations and targets, each in its own file. Tableau offers three ways to combine tables, and the exam wants you to pick the right one:
+
+| | Combines | SQL / pandas analogy |
+|---|---|---|
+| **Relationship** | Tables side by side, but only when a view needs them, at each table's own level of detail | No direct equivalent: Tableau writes the right `JOIN` per query |
+| **Join** | Tables side by side, merged into one fixed table | `JOIN … ON` / `pd.merge` |
+| **Union** | Tables with the same columns, stacked on top of each other | `UNION ALL` / `pd.concat` |
+
+A fourth option, **blending**, combines data from separate data sources inside one view. It comes up as a distractor in the traps below.
+
+## How it works
+
+The **data model** has two layers. Tableau's help says to think of the **logical layer** as "the Relationships canvas in the Data Source page" and the **physical layer** as "the Join/Union canvas". The Data Source page opens on the logical layer. "Logical tables are like containers for physical tables": double-click a logical table to open it and see or add joins and unions inside it.
+
+On the canvas, the two look different: "Noodles = Relationships" and "Venn diagram = Joins".
+
+This model (relationships on a logical layer) arrived with Tableau 2020.2, so it is part of the 2022.3 version the exam tests. Workbooks from earlier versions only had the single physical layer. Newer features such as multi-fact relationships (2024.2) are past the exam's version.
+
+### Add relationships to a data source
+
+1. Drag the first table to the canvas.
+2. "Drag another table to the canvas. When you see the "noodle" between the two tables that you want to relate, drop that table."
+3. "Tableau automatically attempts to create the relationship based on existing key constraints and matching fields." Check or change the matching fields in the settings that open below the canvas. The fields on both sides "must have the same data type".
+
+What makes relationships different:
+- **Deferred and context-aware.** "Relationships defer joins to the time and context of analysis." Tableau "automatically selects join types based on the fields being used in the visualization", so a view that only uses Sessions fields doesn't touch the Plans table at all.
+- **Each table keeps its level of detail.** Relationships "maintain each table's level of detail", so they "do not duplicate aggregate values" and "unmatched measure values aren't dropped".
+- **Performance options** describe how the tables match: **cardinality** (One or Many on each side) and **referential integrity** (Some Records Match or All Records Match). If Tableau finds no key constraints, it uses Many-to-Many and Some Records Match. "If you aren't sure what to choose, use the recommended default settings indicated by Tableau."
+
+### Add joins and unions
+
+**Joins.** Open the physical layer: double-click the logical table (or select **Open** from its menu). Then "double-click or drag another table to the join canvas" and "click the join icon to configure the join":
+
+- Pick one of the **four join types**: inner, left, right and full outer.
+  - **Inner** keeps only rows with matches in both tables.
+  - **Left** keeps every row of the left table; where the right table has no match, you see null values.
+  - **Right** is the mirror of left.
+  - **Full outer** keeps all values from both tables.
+- Set one or more **join clauses**. They "most often use the equality operator (=)", but can also use operators such as `<` and `<>`, and can contain calculations.
+
+The joined tables are "merged into a single logical table with a fixed combination of data". That fixed table is the risk: when the tables are at different levels of detail, a join "may duplicate aggregate values". Driftlight's plans table has one row per plan, with its Monthly Price. Combined with subscribers (one row each, many subscribers to one plan), every subscriber's price is counted once, and `SUM(Monthly Price)` over all subscribers who ever signed up is <Fact id="revenue-right" />:
+
+<LessonViz id="price-right" />
+
+Join plans to the **sessions** table instead and every session row carries its plan's price. `SUM(Monthly Price)` now adds a price once per session, not once per subscriber, and the same sum balloons to <Fact id="revenue-inflated" />:
+
+<LessonViz id="price-inflated" />
+
+(The app's sandbox data sources are built with exactly such joins, which is how this demo works. With a relationship, Tableau would compute Monthly Price at the plans table's own level and avoid the duplication.)
+
+**Unions.** A union appends rows: "appending values (rows) from one table to another". On the Data Source page, double-click **New Union**, then drag tables into the **Union** dialog, or drag a table "directly below the first table" on the canvas. A **Wildcard (automatic)** union picks up every table whose name matches a pattern, such as `sessions_*`.
+
+Rules and results:
+- The tables must come from the same connection, and their fields should match by name and data type.
+- Tableau adds fields that record where each row came from, such as **Sheet** and **Table Name**.
+- "When field names in the union do not match, fields in the union contain null values." Use **Merge mismatched fields** to combine two columns that hold the same thing under different names.
+
+Driftlight's sessions arrive as two files with the same columns: <Fact id="sessions-2024" /> sessions in `sessions_2024.csv` and <Fact id="sessions-2025" /> in `sessions_2025.csv`. A union makes them one table:
+
+<LessonViz id="union-years" />
+
+### When to use a join versus a relationship
+
+"The default method in Tableau Desktop is to use relationships", and the help calls them "the recommended method of combining data in most instances". The help's own rule of thumb:
+
+- **Relate**: "Use when combining data from different levels of detail." Driftlight's monthly targets per region and its individual sessions are a typical case.
+- **Join**: "Use when you want to add more columns of data across the same row structure." Choose a join when you want "control or … desired aspects of a join compared to a relationship, such as deliberate filtering or duplication", for example an inner join that deliberately drops unmatched rows, or when you need a single table.
+- **Union**: "Use when you want to add more rows of data with the same column structure."
+
+| | Relationship | Join |
+|---|---|---|
+| Layer | Logical (noodle) | Physical (Venn diagram), inside a logical table |
+| Join type | Chosen by Tableau per view | Fixed by you: inner, left, right or full outer |
+| Different levels of detail | Handled: no duplicated aggregates | May duplicate measure values |
+| Unmatched rows | Kept | May be dropped, depending on the join type |
+
+## At Driftlight
+
+Driftlight's main data source combines all three:
+
+- **Union:** `sessions_2024.csv` and `sessions_2025.csv` stack into one sessions table.
+- **Relationships:** sessions relate to titles (on Title ID) and to subscribers (on Subscriber ID). Subscribers relate to regions (on Country), plans (on Plan Code) and cancellations. Monthly **targets** per region relate on Region: they're at a completely different level of detail from individual sessions, so a join would repeat each target for every session.
+- **Join (deliberate):** for a one-off list of cancelled subscribers, an analyst inner-joins subscribers to cancellations to keep only subscribers who cancelled. A left join instead keeps everyone, with nulls in Cancel Date and Reason for subscribers who stayed.
+
+## Exam traps
+
+<Callout title="Noodle vs. Venn diagram">
+  <p>A line (noodle) between logical tables is a relationship. A Venn diagram icon between physical tables is a join. To see or add joins, double-click a logical table.</p>
+</Callout>
+
+<Callout title="Inflated totals point to a join">
+  <p>If a SUM is suddenly too large after a table was added, the cause is a join between tables at different levels of detail. The fix is usually a relationship instead of the join, not a different aggregation.</p>
+</Callout>
+
+<Callout title="Union adds rows, join adds columns">
+  <p>Monthly files with the same columns (January.csv, February.csv) need a union, often a wildcard union. A lookup table with extra attributes needs a relationship or a join.</p>
+</Callout>
+
+<Callout title="Blending is not a join">
+  <p>Blending combines a primary and a secondary data source in a single view. "The first data source used in the view becomes the primary data source", the linking fields can vary per sheet, the secondary's fields are aggregated, and it "simulates a traditional left join". It is the option for combining separate data sources (for example published ones) per sheet, not for building one data source.</p>
+</Callout>
+
+<Callout title="Superstore note">
+  <p>Superstore has Orders, People and Returns. Returns lists only returned orders, so a left join from Orders keeps all orders and shows nulls in Returned for orders that weren't returned; an inner join would keep only the returned ones. People maps each Region to a manager, much like Driftlight's regions table.</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
