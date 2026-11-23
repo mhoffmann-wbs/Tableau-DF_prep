@@ -1,0 +1,148 @@
+export const meta = {
+  taskId: '4.2',
+  updated: '2026-11-23',
+  tldr: 'Discrete fields are blue and draw headers: separate, distinct members. Continuous fields are green and draw an axis: an unbroken range. A date can be either: date parts such as `MONTH(Start)` are discrete and merge all years, while date values (truncated dates) are continuous and run along a timeline.',
+  objectivesCovered: ['4.2.1', '4.2.2', '4.2.3'],
+  links: [
+    { title: 'Dimensions and Measures, Blue and Green', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm' },
+    { title: 'Change Date Levels', url: 'https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm' },
+    { title: 'Dates and Times', url: 'https://help.tableau.com/current/pro/desktop/en-us/dates.htm' },
+    { title: 'Parts of the View', url: 'https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm' },
+  ],
+  vizzes: {
+    'discrete-genre': {
+      spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }] },
+      caption: 'Blue Genre on Rows draws a header per genre; green SUM(Minutes Watched) on Columns draws an axis.',
+    },
+    'color-discrete': {
+      spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }], marks: { color: { field: 'Type' } } },
+      caption: 'A discrete field on Color: a categorical palette, one colour per member.',
+    },
+    'color-continuous': {
+      spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }], marks: { color: { field: 'Minutes Watched' } } },
+      caption: 'A continuous field on Color: a gradient from low to high.',
+    },
+    'month-part': {
+      spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'part' } }], rows: [{ field: 'Minutes Watched' }] },
+      caption: 'MONTH(Start) as a date part: 12 headers, each adding up both years.',
+    },
+    'month-value': {
+      spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }], rows: [{ field: 'Minutes Watched' }] },
+      caption: 'MONTH(Start) as a date value: one point per month on a continuous timeline, 24 in all.',
+    },
+  },
+  facts: {
+    'top-month-part': {
+      kind: 'top',
+      says: 'December',
+      spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'part' } }], rows: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Start', date: { level: 'month', mode: 'part' } },
+      measure: { field: 'Minutes Watched' },
+    },
+    'top-genre': {
+      kind: 'top',
+      says: 'Comedy',
+      spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Genre' },
+      measure: { field: 'Minutes Watched' },
+    },
+  },
+}
+
+## Big idea
+
+Task 4.1 gave every field a role: dimension or measure. Every field on a shelf also has a second property, its **continuity**:
+
+- **Discrete** means "individually separate and distinct". Discrete fields are **blue**, and on Rows or Columns they draw **headers**: one label per member, like the row labels of a pivot table.
+- **Continuous** means "forming an unbroken whole, without interruption". Continuous fields are **green**, and on Rows or Columns they draw an **axis**: a number line or a timeline.
+
+The colour of a pill tells you which one you have, so you can read a view's structure from its shelves alone. Most dimensions are discrete and most measures are continuous, which is why people mix the two ideas up. They are separate: a date dimension can be continuous, and a measure can be made discrete.
+
+A pandas analogy: a discrete field behaves like a categorical index (`groupby` keys, each a separate bucket), while a continuous field behaves like a numeric x-axis in `matplotlib`, where 2.5 sits between 2 and 3.
+
+## How it works
+
+### How discrete fields are displayed
+
+Drag a discrete field to Rows or Columns and Tableau creates **headers**, one per member. Genre on Rows gives one row header for each genre, in a fixed order you can sort. The bars sit in separate panes, and there's no "in between" two genres. Driftlight's most-watched genre is <Fact id="top-genre" />:
+
+<LessonViz id="discrete-genre" />
+
+On the **Color** shelf, a discrete field gets a **categorical palette**: a distinct colour per member and a legend that lists them. Here each genre's bar is split by title type:
+
+<LessonViz id="color-discrete" />
+
+### How continuous fields are displayed
+
+Drag a continuous field to Rows or Columns and Tableau creates an **axis**: a range from a minimum to a maximum with tick marks, where any value in between has a place. `SUM(Minutes Watched)` above is green and runs along the horizontal axis.
+
+On **Color**, a continuous field gets a **quantitative legend**: a gradient with a continuous range of colours instead of one colour per member:
+
+<LessonViz id="color-continuous" />
+
+**Which fields can be which?** According to Tableau's help, "Date dimensions and numeric dimensions can be discrete or continuous, and all measures can be discrete or continuous". Dimensions with a data type of **String or Boolean can't be continuous**: there's no number line for "Drama" or "True".
+
+To switch, right-click the field in the Data pane and choose **Convert to Discrete** or **Convert to Continuous**, or make the same change on a single pill in the view. Converting a pill only affects that view: the pill turns green, but the field in the Data pane stays discrete. Two things don't change when you switch:
+- A measure made discrete is **still a measure**, so it is still aggregated. It just draws headers instead of an axis.
+- A dimension made continuous is still a dimension. Release Year in Driftlight's titles is a numeric dimension: discrete, it gives a header per year; continuous, it gives an axis of years.
+
+### Date parts and date values
+
+Dates are the field type where the difference matters most, and the exam asks about it often. When you drop a date on a shelf, the pill's menu offers each level twice, in two sections:
+
+| | Date **parts** | Date **values** (truncated dates) |
+|---|---|---|
+| What you get | One part of the date, aggregated across everything else: "the month of May for any year" | "The actual date, truncated to a specific level, such as May 2015 or May 8, 2015" |
+| Continuity | Discrete (blue): headers | Continuous (green): an axis, in the menu's lower, continuous section |
+| `MONTH(Start)` gives | 12 headers, January to December | A timeline with one point per month: January 2024, February 2024, … |
+| Typical chart | Seasonality, "which month is busiest in any year?" | Trend, "how did viewing change over time?" |
+
+Tableau's help also calls date values "truncated dates" or "Date Truncs". In SQL terms, a date part is `EXTRACT(MONTH FROM start)` and a date value is `DATE_TRUNC('month', start)`.
+
+Driftlight's sessions run over 2024 and 2025. As a **date part**, MONTH merges the two years, so each header adds up two Januaries, two Februaries and so on. The busiest month of the year is <Fact id="top-month-part" />:
+
+<LessonViz id="month-part" />
+
+As a **date value**, MONTH keeps the year, so the line runs through 24 months in order and shows the trend:
+
+<LessonViz id="month-value" />
+
+Three more date details:
+- **Default level.** When you drop a date on a shelf, Tableau picks the level "at which there are multiple instances". With several years of data that's YEAR; with a single year of data it's MONTH.
+- **Drilling.** A discrete date pill such as `YEAR(Start)` has a **+** control. Clicking it drills down: Tableau adds `QUARTER(Start)` next to it, then MONTH, and so on.
+- **Exact Date** gives the most granular level, one member per distinct date-time ("row-level or record-level data").
+
+## At Driftlight
+
+Two Driftlight questions show why the choice matters:
+
+- The marketing team asks *"Is there a season when people watch more?"* They want a **date part**: `MONTH(Start)` as a discrete pill, so that January 2024 and January 2025 fall into the same header and a seasonal pattern stands out.
+- The finance team asks *"Is viewing growing?"* They want a **date value**: the green `MONTH(Start)` on a continuous axis, so the two years run one after the other and the line shows the trend.
+
+The same field, `Start`, answers both questions. Only the pill's menu choice differs, and you can see the choice from the colour of the pill.
+
+## Exam traps
+
+<Callout title="Blue/green is not dimension/measure">
+  <p>Blue means discrete and green means continuous. Whether a field is a dimension or a measure is a different question. A green date pill is still a dimension, and a blue measure is still aggregated.</p>
+</Callout>
+
+<Callout title="Headers vs. axis">
+  <p>If a question describes headers (labels per member), the field is discrete. If it describes an axis (a range with tick marks), the field is continuous. A date shown as "Q1 Q2 Q3 Q4" headers is a discrete date part; a date shown as a timeline is a continuous date value.</p>
+</Callout>
+
+<Callout title="MONTH as a part merges years">
+  <p>A discrete MONTH date part adds up the same month of every year. If a question says the chart should show the trend across years month by month, the answer is the continuous date value (the lower section of the date menu), not the date part.</p>
+</Callout>
+
+<Callout title="Strings can't be continuous">
+  <p>Only dates, numbers and measures can be continuous. An option that converts a text field such as Category or Region to continuous is wrong.</p>
+</Callout>
+
+<Callout title="Superstore note">
+  <p>Superstore questions often use Order Date. YEAR(Order Date) drilled to QUARTER(Order Date) gives discrete headers, and the continuous MONTH(Order Date) gives a line over time. Sales and Profit on Color give a gradient, while Category or Segment on Color gives a categorical palette.</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
