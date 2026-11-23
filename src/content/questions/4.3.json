@@ -524,5 +524,562 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
     ]
+  },
+  {
+    "id": "4.3-015",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "The chart shows `AVG(Runtime)` for each `Genre`. Which statement about it is correct?",
+    "options": [
+      {
+        "text": "Documentary has the highest average `Runtime`, and each bar is the mean over that genre's titles.",
+        "correct": false,
+        "rationale": "The aggregation is read correctly, but Documentary's bar is not the longest on the chart."
+      },
+      {
+        "text": "Comedy has the highest average `Runtime`, and each bar is the mean over that genre's titles.",
+        "correct": true,
+        "rationale": "The bar length is the average of Runtime across all titles in the genre, and Comedy's is the longest."
+      },
+      {
+        "text": "Each bar adds up the `Runtime` of every title in the genre, so the genre with the most titles is longest.",
+        "correct": false,
+        "rationale": "That describes `SUM`. The pill name says AVG, so each bar is a mean."
+      },
+      {
+        "text": "Each bar shows the `Runtime` of a single title in the genre, and Thriller's title is the longest.",
+        "correct": false,
+        "rationale": "An aggregated measure combines all rows in the group, so a bar is never one title's value."
+      }
+    ],
+    "explanation": "The pill's name carries the aggregation: AVG means every title in the genre is averaged into one value per mark. Comparing bars then compares typical runtimes, not totals.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Runtime",
+            "agg": "avg"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ],
+    "checks": [
+      {
+        "kind": "top",
+        "says": "Comedy",
+        "spec": {
+          "source": "titles",
+          "rows": [
+            {
+              "field": "Genre"
+            }
+          ],
+          "columns": [
+            {
+              "field": "Runtime",
+              "agg": "avg"
+            }
+          ]
+        },
+        "dimension": {
+          "field": "Genre"
+        },
+        "measure": {
+          "field": "Runtime",
+          "agg": "avg"
+        }
+      }
+    ]
+  },
+  {
+    "id": "4.3-016",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "In this chart, the Premium bar reaches 616,750. What is that number?",
+    "options": [
+      {
+        "text": "The average `Minutes Watched` of one Premium session, taken over all Premium sessions in the data.",
+        "correct": false,
+        "rationale": "An average would appear as `AVG(Minutes Watched)` and would be far smaller than a total."
+      },
+      {
+        "text": "The number of Premium sessions in the data, because Tableau counts rows when a bar has no pill label.",
+        "correct": false,
+        "rationale": "Counting rows needs `Sessions (Count)` or a COUNT aggregation. This pill is a SUM."
+      },
+      {
+        "text": "The `Minutes Watched` of the single longest Premium session, since each bar shows its maximum.",
+        "correct": false,
+        "rationale": "Maximum is a different aggregation. Nothing on the shelves selects it."
+      },
+      {
+        "text": "The sum of `Minutes Watched` over every session in the data that belongs to the Premium plan.",
+        "correct": true,
+        "rationale": "`SUM` is the default aggregation, so the mark adds up all the rows in its group."
+      }
+    ],
+    "explanation": "A measure dropped on a shelf gets its default aggregation, usually SUM, and the pill name shows it. One mark per plan means one total per plan.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ],
+    "checks": [
+      {
+        "kind": "value",
+        "says": "616,750",
+        "spec": {
+          "columns": [
+            {
+              "field": "Plan"
+            }
+          ],
+          "rows": [
+            {
+              "field": "Minutes Watched"
+            }
+          ]
+        },
+        "measure": {
+          "field": "Minutes Watched"
+        },
+        "where": {
+          "Plan": "Premium"
+        }
+      }
+    ]
+  },
+  {
+    "id": "4.3-017",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "Look at the shelves. Which statements about this view are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The `AVG` on `Minutes Watched` means each bar is the mean over the sessions on that device.",
+        "correct": true,
+        "rationale": "The aggregation in the pill name decides how the rows of each device are combined."
+      },
+      {
+        "text": "`Minutes Watched` is a dimension here, because the pill is blue.",
+        "correct": false,
+        "rationale": "The pill is green: it is a measure aggregated into a continuous value."
+      },
+      {
+        "text": "`CNTD(Subscriber ID)` is a temporary measure made by aggregating a dimension with Count (Distinct).",
+        "correct": true,
+        "rationale": "Dimensions can be aggregated with Count, Count (Distinct), Minimum, Maximum or Attribute."
+      },
+      {
+        "text": "The view has one mark per session, because `Subscriber ID` is on the Marks card.",
+        "correct": false,
+        "rationale": "Both measures are aggregated, so there is one mark per device, not per row."
+      },
+      {
+        "text": "`Device` is aggregated by the view, so its pill shows the function `ATTR`.",
+        "correct": false,
+        "rationale": "`Device` is a plain dimension that defines the groups. It is not aggregated."
+      }
+    ],
+    "explanation": "Both pills show their aggregation in their names. `AVG(Minutes Watched)` is a measure averaged per device. `CNTD(Subscriber ID)` shows that a dimension can become a temporary measure through aggregation.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "agg": "avg"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Subscriber ID",
+            "agg": "countd"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-018",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "`Device` is on Columns, and `ATTR(Device)` is on Label. What does the label show on each bar?",
+    "options": [
+      {
+        "text": "The device's own name, because each bar's group has a single `Device` value.",
+        "correct": true,
+        "rationale": "ATTR returns the value when it is the same for all rows in the group. Each bar holds one device."
+      },
+      {
+        "text": "An asterisk on every bar, because ATTR always marks a dimension as aggregated.",
+        "correct": false,
+        "rationale": "The asterisk appears only when the group has more than one value."
+      },
+      {
+        "text": "The number of different devices in the group, since ATTR counts members.",
+        "correct": false,
+        "rationale": "Counting is `COUNT` or `COUNTD`. ATTR returns a value or an asterisk."
+      },
+      {
+        "text": "The first device in alphabetical order across all of Driftlight's sessions.",
+        "correct": false,
+        "rationale": "That would be the minimum. ATTR doesn't pick among several values."
+      }
+    ],
+    "explanation": "Attribute returns the value if all rows in the group share it, otherwise an asterisk. Because `Device` itself defines the groups, every group has exactly one value.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Device",
+            "agg": "attr"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-019",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "A bar chart showed `SUM(Minutes Watched)` for each `Plan`. Which change turned it into the chart shown?",
+    "options": [
+      {
+        "text": "Dropping `Device` on Color",
+        "correct": false,
+        "rationale": "Color would split each bar into segments and add a legend, with no new row headers."
+      },
+      {
+        "text": "Dropping `Device` on Detail",
+        "correct": false,
+        "rationale": "Detail adds marks without headers or colour, so the plan bars would keep the same layout."
+      },
+      {
+        "text": "Dropping `Device` on Rows, to the left of the measure pill",
+        "correct": true,
+        "rationale": "A discrete dimension on a shelf adds headers and splits the bars into one row of panes per device."
+      },
+      {
+        "text": "Changing `SUM(Minutes Watched)` to `AVG(Minutes Watched)`",
+        "correct": false,
+        "rationale": "That changes the values, not the number of panes."
+      }
+    ],
+    "explanation": "Every dimension in the view adds to the level of detail. On a shelf it also adds headers. On the Marks card it adds marks with no headers, which is how Color and Detail differ from Rows and Columns.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Device"
+          },
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-020",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "Look at the shelves. What sets the largest number of marks this view can contain?",
+    "options": [
+      {
+        "text": "The number of `Plan`, `Device` and `Country` combinations that occur in the data",
+        "correct": true,
+        "rationale": "Each combination of members of the dimensions in the view is one group, and each group is a mark."
+      },
+      {
+        "text": "The number of rows in the sessions table, since every session is its own group",
+        "correct": false,
+        "rationale": "That applies only if Aggregate Measures is cleared. Here the measure is aggregated."
+      },
+      {
+        "text": "The number of members of `Plan`, `Device` and `Country` added together",
+        "correct": false,
+        "rationale": "Members multiply as combinations; they don't add."
+      },
+      {
+        "text": "The number of pills on the Marks card, one mark for each pill",
+        "correct": false,
+        "rationale": "Pills on the Marks card describe the marks. They don't count them."
+      }
+    ],
+    "explanation": "Marks equal the number of member combinations of every dimension in the view, wherever the dimensions sit. Color and Detail add to this count just as Columns does.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          },
+          "detail": [
+            {
+              "field": "Country"
+            }
+          ]
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-021",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "The chart shows `SUM(Minutes Watched)` per `Plan`, with `Device` on Color. Which statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The Premium TV segment represents 258,237 minutes.",
+        "correct": true,
+        "rationale": "Each segment is the SUM for one Plan and Device combination."
+      },
+      {
+        "text": "Adding `Device` on Color added a header for each device.",
+        "correct": false,
+        "rationale": "Color adds marks and a legend. It doesn't add headers."
+      },
+      {
+        "text": "The segments of a bar add up to that plan's total, because `SUM` is additive.",
+        "correct": true,
+        "rationale": "Splitting a total by another dimension keeps the sum the same."
+      },
+      {
+        "text": "Each segment is the average over the devices, so the bars show typical values.",
+        "correct": false,
+        "rationale": "The aggregation is still SUM. Nothing averages the segments."
+      },
+      {
+        "text": "The bars are taller than before because `Device` was added to the view.",
+        "correct": false,
+        "rationale": "The bars keep their height. Only the split changes."
+      }
+    ],
+    "explanation": "A dimension on Color raises the level of detail without headers. SUM pieces add back up to the old total, so bar heights stay the same.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ],
+    "checks": [
+      {
+        "kind": "value",
+        "says": "258,237",
+        "spec": {
+          "columns": [
+            {
+              "field": "Plan"
+            }
+          ],
+          "rows": [
+            {
+              "field": "Minutes Watched"
+            }
+          ],
+          "marks": {
+            "color": {
+              "field": "Device"
+            }
+          }
+        },
+        "measure": {
+          "field": "Minutes Watched"
+        },
+        "where": {
+          "Plan": "Premium",
+          "Device": "TV"
+        }
+      }
+    ]
+  },
+  {
+    "id": "4.3-022",
+    "taskId": "4.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "This scatterplot has `Country` on Detail. How many circles does it contain?",
+    "options": [
+      {
+        "text": "1, a single circle for all of Driftlight",
+        "correct": false,
+        "rationale": "That is what the view shows without `Country` on Detail."
+      },
+      {
+        "text": "4, one for each plan",
+        "correct": false,
+        "rationale": "`Plan` is not in the view, so it doesn't split the marks."
+      },
+      {
+        "text": "25, one for each country that has sessions",
+        "correct": true,
+        "rationale": "Detail makes each member of the dimension a group, so there is one mark per country."
+      },
+      {
+        "text": "One for every session in the data, because Detail disaggregates the measures",
+        "correct": false,
+        "rationale": "Detail doesn't clear Aggregate Measures. The measures stay aggregated per country."
+      }
+    ],
+    "explanation": "Detail adds a dimension to the level of detail with no colour, size or headers. The view then has one mark per member, here one per country.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "detail": [
+            {
+              "field": "Country"
+            }
+          ]
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ],
+    "checks": [
+      {
+        "kind": "value",
+        "says": "25",
+        "spec": {
+          "rows": [
+            {
+              "field": "Country",
+              "agg": "countd"
+            }
+          ]
+        },
+        "measure": {
+          "field": "Country",
+          "agg": "countd"
+        }
+      }
+    ]
   }
 ]
