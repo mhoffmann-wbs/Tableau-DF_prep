@@ -769,5 +769,782 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
     ]
+  },
+  {
+    "id": "2.2-022",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "The analyst has a `Type` › `Genre` hierarchy in the Rows shelf. What does clicking the + icon on the hierarchy field do?",
+    "options": [
+      {
+        "text": "It adds the hierarchy to the Filters shelf as a context filter.",
+        "correct": false,
+        "rationale": "Filters are added by dragging a field to the Filters shelf, not through the hierarchy icons."
+      },
+      {
+        "text": "It drills down, adding the next field as nested headers.",
+        "correct": true,
+        "rationale": "The + icon expands the hierarchy by one level, so the Genre headers nest inside each Type."
+      },
+      {
+        "text": "It collapses the view back to the top level of the hierarchy.",
+        "correct": false,
+        "rationale": "Collapsing is the job of the - icon, the opposite of +."
+      },
+      {
+        "text": "It converts the hierarchy into a set of In and Out members.",
+        "correct": false,
+        "rationale": "Sets are created with Create Set or Create > Set, not from a hierarchy icon."
+      }
+    ],
+    "explanation": "Clicking + on a hierarchy field drills down: the next field in the hierarchy appears as nested headers. Clicking - drills back up.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-023",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "In which order should an analyst drag fields into a new hierarchy?",
+    "options": [
+      {
+        "text": "From detailed to general, so the finest field is at the top of the hierarchy.",
+        "correct": false,
+        "rationale": "The top of the hierarchy should be the most general field, because drilling adds detail below it."
+      },
+      {
+        "text": "In alphabetical order of the field names, whatever the fields mean.",
+        "correct": false,
+        "rationale": "The order sets the drill path, so it follows meaning, not the alphabet."
+      },
+      {
+        "text": "Measures first, then dimensions, so the numbers are at the top level.",
+        "correct": false,
+        "rationale": "A hierarchy stacks dimensions; measures are not part of it."
+      },
+      {
+        "text": "From general to detailed, such as `Type`, then `Genre`, then `Sub-Genre`.",
+        "correct": true,
+        "rationale": "The top level comes first, and each field below it adds more detail."
+      }
+    ],
+    "explanation": "A hierarchy is a drill path. Drag fields into it from the most general to the most detailed, so that each + click adds a finer level.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-024",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "The catalogue team has drilled the title hierarchy down to `Sub-Genre` and now wants to return to the `Genre` level. What should they do?",
+    "options": [
+      {
+        "text": "Delete the hierarchy from the Data pane and build it again from scratch.",
+        "correct": false,
+        "rationale": "Removing the hierarchy is not needed to move up a level; the icons do that."
+      },
+      {
+        "text": "Click the + icon on the hierarchy field a second time to undo the first drill.",
+        "correct": false,
+        "rationale": "The + icon drills further down; it never moves back up."
+      },
+      {
+        "text": "Click the - icon on the hierarchy field in the view.",
+        "correct": true,
+        "rationale": "The - icon drills up one level, which is the reverse of the + icon."
+      },
+      {
+        "text": "Select the headers and choose Exclude to hide the `Sub-Genre` level.",
+        "correct": false,
+        "rationale": "Exclude removes the selected members from the view; it does not drill up a level."
+      }
+    ],
+    "explanation": "The + and - icons on a hierarchy field move down and up the levels. Nothing has to be rebuilt to change the level of detail.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-025",
+    "taskId": "2.2",
+    "kind": "multi",
+    "objectives": [
+      "2.2.3"
+    ],
+    "select": 2,
+    "stem": "Which two statements about hierarchies are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A hierarchy lets the analyst drill from a general level to a more detailed one.",
+        "correct": true,
+        "rationale": "That is what a hierarchy is for."
+      },
+      {
+        "text": "A hierarchy merges several members of one field into a single new category.",
+        "correct": false,
+        "rationale": "That describes a group, not a hierarchy."
+      },
+      {
+        "text": "A hierarchy splits the members of a dimension into In and Out.",
+        "correct": false,
+        "rationale": "That describes a set."
+      },
+      {
+        "text": "Tableau automatically separates date fields into hierarchies.",
+        "correct": true,
+        "rationale": "A date field can be drilled, for example from year to quarter to month."
+      },
+      {
+        "text": "A hierarchy removes the rows that fail a condition on a measure.",
+        "correct": false,
+        "rationale": "Removing rows by a condition is the job of a filter."
+      }
+    ],
+    "explanation": "A hierarchy organizes related dimensions for drilling. Date fields come with built-in hierarchies. Merging members is a group, In and Out is a set, and removing rows is a filter.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-026",
+    "taskId": "2.2",
+    "kind": "multi",
+    "objectives": [
+      "2.2.3"
+    ],
+    "select": 2,
+    "stem": "Which two Driftlight requests are best served by a hierarchy? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Merge the Cologne and Köln spellings of a city into one member.",
+        "correct": false,
+        "rationale": "That is a group."
+      },
+      {
+        "text": "Let catalogue staff browse titles by `Type`, then `Genre`, then `Sub-Genre`, expanding only where needed.",
+        "correct": true,
+        "rationale": "Stacked dimensions that are explored from general to detailed are a hierarchy."
+      },
+      {
+        "text": "Mark the 20 titles with the most minutes as In and all others as Out.",
+        "correct": false,
+        "rationale": "That is a set."
+      },
+      {
+        "text": "Show only sessions that happened on a TV.",
+        "correct": false,
+        "rationale": "That is a filter on `Device`."
+      },
+      {
+        "text": "Drill a title report from `Type` down to `Genre` with the + icon, and back up with -.",
+        "correct": true,
+        "rationale": "Drilling up and down is the point of a hierarchy."
+      }
+    ],
+    "explanation": "Drilling between levels of detail calls for a hierarchy. Merging spellings is a group, top N by a measure is a set, and restricting rows is a filter.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-027",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "An analyst drags the `Device` field from the Data pane to the Filters shelf. What happens next?",
+    "options": [
+      {
+        "text": "The Filter dialog box opens.",
+        "correct": true,
+        "rationale": "When a field is added to the Filters shelf, the Filter dialog opens so you can define the filter."
+      },
+      {
+        "text": "A filter card appears on the sheet and the analyst cannot edit the filter.",
+        "correct": false,
+        "rationale": "A card appears only after Show Filter is chosen, and a card lets viewers change the filter."
+      },
+      {
+        "text": "The field is added to the view as a discrete header on Rows.",
+        "correct": false,
+        "rationale": "Dropping on Filters does not put the field into the view itself."
+      },
+      {
+        "text": "A set named `Device Set` is created automatically.",
+        "correct": false,
+        "rationale": "Sets are made with Create Set or Create > Set; adding a filter creates none."
+      }
+    ],
+    "explanation": "Dragging a field to the Filters shelf opens the Filter dialog. The field does not need to be in the view to filter it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-028",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "An analyst wants to keep only titles whose names contain the text \"Night\". Which tab of the dimension filter dialog fits?",
+    "options": [
+      {
+        "text": "General",
+        "correct": false,
+        "rationale": "The General tab is for ticking individual members, not for matching part of a name."
+      },
+      {
+        "text": "Condition",
+        "correct": false,
+        "rationale": "The Condition tab sets a rule on a measure, such as `SUM(Minutes Watched) > 20000`."
+      },
+      {
+        "text": "Wildcard",
+        "correct": true,
+        "rationale": "The Wildcard tab matches text, such as names that contain, start with or end with a string."
+      },
+      {
+        "text": "Top",
+        "correct": false,
+        "rationale": "The Top tab limits the filter to the top or bottom N members by a measure."
+      }
+    ],
+    "explanation": "The four tabs are General (pick members), Wildcard (match text), Condition (a rule on a measure) and Top (top or bottom N by a measure).",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-029",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "The analyst wants a dimension filter that keeps the ten titles with the highest `SUM(Minutes Watched)`. Which tab of the filter dialog defines this?",
+    "options": [
+      {
+        "text": "General",
+        "correct": false,
+        "rationale": "The General tab only lets you tick members one by one; it can't rank them by a measure."
+      },
+      {
+        "text": "Wildcard",
+        "correct": false,
+        "rationale": "The Wildcard tab matches text patterns in member names, not measure rankings."
+      },
+      {
+        "text": "Condition",
+        "correct": false,
+        "rationale": "The Condition tab sets a rule such as a minimum, not a count of the highest-ranked members."
+      },
+      {
+        "text": "Top",
+        "correct": true,
+        "rationale": "The Top tab keeps the top or bottom N members by a measure."
+      }
+    ],
+    "explanation": "The Top tab limits a dimension filter to the top or bottom N members by a measure, for example the top 10 titles by minutes watched.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-030",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "An analyst drags `Minutes Watched` to the Filters shelf, chooses Sum and clicks Next. The goal is to keep only marks whose summed minutes reach a minimum value. Which option is right?",
+    "options": [
+      {
+        "text": "Wildcard",
+        "correct": false,
+        "rationale": "Wildcard is a tab of dimension filters; a measure filter offers numeric choices."
+      },
+      {
+        "text": "At Least",
+        "correct": true,
+        "rationale": "At Least keeps the marks whose aggregated value is at or above the number entered."
+      },
+      {
+        "text": "Special, with Null values",
+        "correct": false,
+        "rationale": "Special only selects null values, non-null values or all values; it sets no minimum."
+      },
+      {
+        "text": "Individual dates",
+        "correct": false,
+        "rationale": "That is a choice for date fields, not for a measure."
+      }
+    ],
+    "explanation": "A measure filter offers Range of Values, At Least, At Most and Special. It works on the aggregated value of each mark, like `HAVING` in SQL.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-031",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "A view shows the top 10 titles by minutes watched, filtered with a Top 10 dimension filter. The analyst adds a `Device` filter for TV, but the Top 10 is still computed over all devices. What fixes this?",
+    "options": [
+      {
+        "text": "Right-click the `Device` filter and choose Add to Context.",
+        "correct": true,
+        "rationale": "A context filter runs before the other dimension filters, so the Top 10 is computed among TV sessions only."
+      },
+      {
+        "text": "Change the `Device` filter into a measure filter on `Sessions (Count)`.",
+        "correct": false,
+        "rationale": "Measure filters run after dimension filters, which makes the order problem worse, not better."
+      },
+      {
+        "text": "Turn the Top 10 filter into a wildcard filter on the title names.",
+        "correct": false,
+        "rationale": "Wildcard matches text and has no ranking; it would not make the `Device` filter run first."
+      },
+      {
+        "text": "Drag the `Device` pill to the Marks card as a detail.",
+        "correct": false,
+        "rationale": "Detail changes the level of detail of the marks; it doesn't change when filters are applied."
+      }
+    ],
+    "explanation": "Dimension filters, including Top N, run at the same stage. Add to Context on the other filter makes it run first, and the pill turns gray.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering_context.htm"
+    ]
+  },
+  {
+    "id": "2.2-032",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "The operations team wants viewers of a dashboard to choose the `Device` themselves, using a control on the sheet. Which step creates it?",
+    "options": [
+      {
+        "text": "Select the marks and choose Keep Only from the tooltip.",
+        "correct": false,
+        "rationale": "Keep Only filters the view for the author but gives viewers no control."
+      },
+      {
+        "text": "Create a fixed set from the `Device` marks and drag it to Rows.",
+        "correct": false,
+        "rationale": "A fixed set never changes and isn't a filter control."
+      },
+      {
+        "text": "Add the `Device` field to the Filters shelf and choose the General tab.",
+        "correct": false,
+        "rationale": "That sets the filter for the author; no card is shown until Show Filter is chosen."
+      },
+      {
+        "text": "Open the field's drop-down menu and select Show Filter.",
+        "correct": true,
+        "rationale": "Show Filter puts a filter card on the sheet, and its menu sets the mode, such as Multiple Values (Dropdown)."
+      }
+    ],
+    "explanation": "Show Filter adds a filter card to the sheet so viewers can filter themselves. The card has modes such as Single Value (List) or Multiple Values (Dropdown).",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-033",
+    "taskId": "2.2",
+    "kind": "multi",
+    "objectives": [
+      "2.2.4"
+    ],
+    "select": 2,
+    "stem": "Which two actions add a filter to a view? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Drag a field to the Filters shelf.",
+        "correct": true,
+        "rationale": "Dropping a field on Filters opens the Filter dialog."
+      },
+      {
+        "text": "Drag one field on top of another field in the Data pane.",
+        "correct": false,
+        "rationale": "That creates a hierarchy, not a filter."
+      },
+      {
+        "text": "Select marks and choose Exclude from the tooltip.",
+        "correct": true,
+        "rationale": "Keep Only and Exclude both filter the view."
+      },
+      {
+        "text": "Click the group icon after selecting headers.",
+        "correct": false,
+        "rationale": "That groups the selected members into one."
+      },
+      {
+        "text": "Right-click a mark and choose Create Set.",
+        "correct": false,
+        "rationale": "That creates a set; a set is not a filter by itself."
+      }
+    ],
+    "explanation": "Filters are added by dragging a field to the Filters shelf, or by selecting marks or headers and choosing Keep Only or Exclude.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-034",
+    "taskId": "2.2",
+    "kind": "multi",
+    "objectives": [
+      "2.2.4"
+    ],
+    "select": 2,
+    "stem": "Which two statements about context filters are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "They appear at the top of the Filters shelf.",
+        "correct": true,
+        "rationale": "Context filters are listed first on the shelf."
+      },
+      {
+        "text": "They run after filters on measures.",
+        "correct": false,
+        "rationale": "They run earlier than dimension and measure filters, not later."
+      },
+      {
+        "text": "They are identified by a gray color.",
+        "correct": true,
+        "rationale": "A filter added to context shows as a gray pill."
+      },
+      {
+        "text": "They can only be created on date fields.",
+        "correct": false,
+        "rationale": "Any dimension filter can be added to context, not only dates."
+      },
+      {
+        "text": "They are applied before extract filters.",
+        "correct": false,
+        "rationale": "Extract filters are the first stage of the order of operations."
+      }
+    ],
+    "explanation": "A context filter is created with Add to Context on a dimension filter. It runs before the other dimension filters, shows in gray and sits at the top of the Filters shelf.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering_context.htm"
+    ]
+  },
+  {
+    "id": "2.2-035",
+    "taskId": "2.2",
+    "kind": "multi",
+    "objectives": [
+      "2.2.4"
+    ],
+    "select": 2,
+    "stem": "Which two kinds of filter does Tableau apply before context filters? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Extract filters",
+        "correct": true,
+        "rationale": "They are first in the order of operations."
+      },
+      {
+        "text": "Filters on dimensions",
+        "correct": false,
+        "rationale": "These run after context filters."
+      },
+      {
+        "text": "Filters on measures",
+        "correct": false,
+        "rationale": "These run after dimension filters, so also after context filters."
+      },
+      {
+        "text": "Data source filters",
+        "correct": true,
+        "rationale": "They are applied second, right after extract filters."
+      },
+      {
+        "text": "Table calculation filters",
+        "correct": false,
+        "rationale": "These are applied last of all."
+      }
+    ],
+    "explanation": "The order is extract filters, data source filters, context filters, dimension filters, then measure filters. Table calculation filters are applied last.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-036",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "A Driftlight operations dashboard must always show the last 30 days, whenever a user opens it. Which kind of date filter fits?",
+    "options": [
+      {
+        "text": "Range of dates, with a fixed starting and ending date",
+        "correct": false,
+        "rationale": "A fixed range doesn't move; it shows the same days every time the view is opened."
+      },
+      {
+        "text": "Date part, with Days selected",
+        "correct": false,
+        "rationale": "A date part keeps specific numbered parts, which doesn't follow the current date."
+      },
+      {
+        "text": "Relative dates",
+        "correct": true,
+        "rationale": "A relative date filter updates based on the date and time the view is opened."
+      },
+      {
+        "text": "Individual dates, with the last 30 days ticked",
+        "correct": false,
+        "rationale": "Ticked individual dates are fixed and do not move as time passes."
+      }
+    ],
+    "explanation": "Relative dates cover a range that updates with the date and time you open the view, such as the last 30 days. A range of dates is fixed.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-037",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "The analyst needs sessions from 1 January 2025 to 31 March 2025 and nothing else. Which date filter type should they choose?",
+    "options": [
+      {
+        "text": "Range of dates",
+        "correct": true,
+        "rationale": "It is a fixed range with a starting and an ending date."
+      },
+      {
+        "text": "Relative dates, with the last 3 months",
+        "correct": false,
+        "rationale": "Relative dates move with the date you open the view, so they wouldn't stay on this fixed quarter."
+      },
+      {
+        "text": "Date part, with Quarters",
+        "correct": false,
+        "rationale": "A date-part filter would keep the same quarter of every year, not one specific range."
+      },
+      {
+        "text": "Special, with non-null dates",
+        "correct": false,
+        "rationale": "Special only selects null dates, non-null dates or all dates; it doesn't limit the range."
+      }
+    ],
+    "explanation": "A range of dates is \"a fixed range of dates\" with a start and an end. It is different from a relative date filter, which moves with today's date.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-038",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "A planner wants to compare every December across all years in the data. Which date filter does this?",
+    "options": [
+      {
+        "text": "Relative dates, with the last 12 months",
+        "correct": false,
+        "rationale": "This gives one moving 12-month window, not every December of every year."
+      },
+      {
+        "text": "Date part, with Months and December selected",
+        "correct": true,
+        "rationale": "A date-part filter keeps the chosen part of every year."
+      },
+      {
+        "text": "Range of dates, from 1 December to 31 December",
+        "correct": false,
+        "rationale": "A range of dates includes a year in its start and end, so it can't cover every year's December."
+      },
+      {
+        "text": "Special, with all dates",
+        "correct": false,
+        "rationale": "Special with all dates keeps everything, so nothing is filtered."
+      }
+    ],
+    "explanation": "A date-part filter picks specific parts, such as certain quarters or months, and applies them to every year in the data.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-039",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "The team wants all sessions from 1 June 2025 onward, with no end date, so that new data appears later without any change. Which setting fits a range of dates?",
+    "options": [
+      {
+        "text": "Set both a starting and an ending date, and leave the end at today's date.",
+        "correct": false,
+        "rationale": "The end date would be fixed and new data after it would not appear."
+      },
+      {
+        "text": "Choose Individual dates and tick every date since 1 June 2025.",
+        "correct": false,
+        "rationale": "Ticked dates are fixed; later dates are not included automatically."
+      },
+      {
+        "text": "Choose Date part with Years and select 2025.",
+        "correct": false,
+        "rationale": "This keeps the whole of 2025, including the months before June."
+      },
+      {
+        "text": "Choose a starting date only.",
+        "correct": true,
+        "rationale": "A range of dates can have only a Starting date, leaving the end open."
+      }
+    ],
+    "explanation": "A range of dates can be limited by a starting date only or an ending date only, as well as both.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-040",
+    "taskId": "2.2",
+    "kind": "single",
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "A relative date filter normally counts back from the date and time the view is opened. How can it be changed to count back from a different date?",
+    "options": [
+      {
+        "text": "It can be set relative to a specific anchor date instead of today.",
+        "correct": true,
+        "rationale": "A relative date filter can be anchored to a chosen date rather than the current date."
+      },
+      {
+        "text": "Not at all; relative dates always use today and cannot be changed.",
+        "correct": false,
+        "rationale": "Relative filters can use an anchor date, so this limit does not exist."
+      },
+      {
+        "text": "By converting the filter into a context filter first.",
+        "correct": false,
+        "rationale": "Context filters change the order of filtering, not the reference date."
+      },
+      {
+        "text": "By switching to a measure filter on the date field.",
+        "correct": false,
+        "rationale": "Measure filters work on aggregated numbers and don't set a reference date."
+      }
+    ],
+    "explanation": "A relative date filter works from today by default, but \"can also be relative to a specific anchor date rather than today\".",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-041",
+    "taskId": "2.2",
+    "kind": "multi",
+    "objectives": [
+      "2.2.5"
+    ],
+    "select": 2,
+    "stem": "Which two choices does Tableau offer when a date field is dragged to the Filters shelf? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Wildcard match on the date text",
+        "correct": false,
+        "rationale": "Wildcard matching is a tab of dimension filters, not an option for dates."
+      },
+      {
+        "text": "Relative dates",
+        "correct": true,
+        "rationale": "A range that updates with the date you open the view."
+      },
+      {
+        "text": "Top N by a measure",
+        "correct": false,
+        "rationale": "That is a Top tab choice for dimension filters, not a date filter type."
+      },
+      {
+        "text": "Condition on a measure",
+        "correct": false,
+        "rationale": "A condition is a tab of dimension filters, not a date filter type."
+      },
+      {
+        "text": "Individual dates",
+        "correct": true,
+        "rationale": "It lets you tick specific dates."
+      }
+    ],
+    "explanation": "The date filter dialog offers relative dates, a range of dates, a date part, individual dates and special choices (null, non-null or all dates).",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-042",
+    "taskId": "2.2",
+    "kind": "multi",
+    "objectives": [
+      "2.2.5"
+    ],
+    "select": 2,
+    "stem": "Which two Driftlight requests call for a date-part filter? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Show only the last 4 weeks, updated each time the dashboard opens.",
+        "correct": false,
+        "rationale": "That is a relative date filter."
+      },
+      {
+        "text": "Show only Q4 of each year in the data.",
+        "correct": true,
+        "rationale": "Selecting the Quarters part filters the same quarter of every year."
+      },
+      {
+        "text": "Show 1 January to 30 June 2025 only.",
+        "correct": false,
+        "rationale": "That is a range of dates."
+      },
+      {
+        "text": "Show only January and February of every year.",
+        "correct": true,
+        "rationale": "A date-part filter on Months keeps those months in every year."
+      },
+      {
+        "text": "Show only sessions on a TV.",
+        "correct": false,
+        "rationale": "That is a dimension filter on `Device`."
+      }
+    ],
+    "explanation": "A date-part filter keeps specific parts, such as quarters or months, across all years. Moving windows are relative dates and fixed stretches are ranges.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
   }
 ]
