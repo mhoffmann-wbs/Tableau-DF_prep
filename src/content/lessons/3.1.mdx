@@ -1,0 +1,164 @@
+export const meta = {
+  taskId: '3.1',
+  updated: '2026-11-23',
+  tldr: 'Formatting starts on the Marks card: Color (a palette for a discrete field, a gradient for a continuous one, Edit Colors to change it), Size (a slider for all marks, a legend for a field) and Shape (mark type Shape, a shape per member). Fonts are set for the whole workbook under Format > Workbook or for parts of a sheet under Format > Font. Format > Animations turns on transitions. Legends appear automatically for fields on Color, Size and Shape.',
+  objectivesCovered: ['3.1.1', '3.1.2', '3.1.3', '3.1.4', '3.1.5', '3.1.6'],
+  links: [
+    { title: 'Color palettes and effects', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm' },
+    { title: 'Control the appearance of marks (shape, size)', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm' },
+    { title: 'Format at the workbook level', url: 'https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm' },
+    { title: 'Format at the worksheet level', url: 'https://help.tableau.com/current/pro/desktop/en-us/formatting_worksheet.htm' },
+    { title: 'Animate visualizations', url: 'https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm' },
+    { title: 'Parts of the view (legends)', url: 'https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm' },
+    { title: 'Titles, captions, tooltips and legends', url: 'https://help.tableau.com/current/pro/desktop/en-us/formatting_specific_titlecaption.htm' },
+  ],
+  vizzes: {
+    'color-categorical': {
+      spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }], rows: [{ field: 'Minutes Watched' }], marks: { color: { field: 'Plan' } } },
+      caption: 'Plan on Color: a categorical palette and a legend listing each plan.',
+    },
+    'color-quantitative': {
+      spec: {
+        source: 'subscribers',
+        columns: [{ field: 'Longitude (generated)' }],
+        rows: [{ field: 'Latitude (generated)' }],
+        marks: { type: 'map', detail: [{ field: 'Country' }], color: { field: 'Monthly Price', agg: 'avg' } },
+      },
+      caption: 'AVG(Monthly Price) on Color: a quantitative legend with a continuous range of colours.',
+    },
+    shapes: {
+      spec: {
+        source: 'titles',
+        columns: [{ field: 'Titles (Count)' }],
+        rows: [{ field: 'Runtime', agg: 'avg' }],
+        marks: { type: 'shape', detail: [{ field: 'Genre' }], shape: { field: 'Type' } },
+      },
+      caption: 'Mark type Shape with Type on Shape: one shape per type, one mark per genre and type.',
+    },
+    size: {
+      spec: {
+        source: 'subscribers',
+        columns: [{ field: 'Longitude (generated)' }],
+        rows: [{ field: 'Latitude (generated)' }],
+        marks: { detail: [{ field: 'City' }], size: { field: 'Subscribers (Count)' } },
+      },
+      caption: 'A measure on Size: the smallest value gets the smallest mark, the largest the largest.',
+    },
+  },
+  facts: {
+    'top-plan': {
+      kind: 'top',
+      says: 'Standard',
+      spec: { rows: [{ field: 'Plan' }], columns: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Plan' },
+      measure: { field: 'Minutes Watched' },
+    },
+  },
+}
+
+## Big idea
+
+Task 2.1 built charts; task 3.1 makes them readable for someone else. Almost everything is on the **Marks card** (Color, Size, Shape) or the **Format** menu (fonts, animations). Two rules carry over from domain 4:
+
+- What you drop on Color, Size or Shape is **encoding**: it adds information, a legend and (for a dimension) more marks.
+- Clicking Color, Size or Shape **without** dropping a field is **formatting**: it changes how every mark looks, with no legend and no change to the data.
+
+## How it works
+
+### Use color from the marks card
+
+**Encode with a field.** Drag a field to **Color** on the Marks card:
+- "When you drop a field with discrete values (typically a dimension) on Color … Tableau uses a **categorical palette**", with a distinct colour and a legend entry per member.
+- "When you drop a field with continuous values … (typically a measure), Tableau displays a **quantitative legend** with a continuous range of colors."
+
+Here Plan is on Color, so each plan gets its own line. <Fact id="top-plan" /> is watched most:
+
+<LessonViz id="color-categorical" />
+
+<LessonViz id="color-quantitative" />
+
+**Change the colours.** "On the Marks card, click **Color > Edit Colors**", or use **Edit Colors** from the colour legend's menu.
+- For a discrete field: select a member, pick a colour, or choose a palette and click **Assign Palette**. Categorical palettes such as Tableau 10 are at the top of the list, ordinal ones such as Orange at the bottom.
+- For a continuous field: pick a **sequential** palette, or a **diverging** one (palettes "with Diverging in the name"); **Stepped Color** groups values "into uniform bins"; **Reversed** inverts the colours; with a diverging palette you can **Use Full Color Range**.
+
+**Format without a field.** "All marks have a default color … For most marks, blue is the default color; for text, black." "On the Marks card, click Color, and then select a color from the menu" to recolour every mark. The same menu sets **Opacity**, mark **borders** ("By default, Tableau displays all marks without a border") and **halos** (only with a background image or map).
+
+### Configure fonts
+
+- **The whole workbook:** "On the Format menu, select **Workbook**." The Format Workbook pane "replaces the Data pane" and lets you "change all font settings in a workbook, as well as the font settings for titles of worksheets, stories, and dashboards". Careful: changing the workbook font overwrites font changes you made at sheet level. **Reset to Defaults** undoes it.
+- **One sheet:** "From the Format menu, choose the part of the view that you want to format, such as **Font**, Borders, or Filters." "For a view, you can specify the font, style, size, and color for either the pane text or header text, or both."
+
+The usual order is workbook first, for a consistent look, then exceptions on individual sheets.
+
+### Format marks as shapes
+
+Set the mark type to **Shape** (it's also what Automatic picks when "measures are the inner most fields for both the Rows shelf and the Columns shelf"), then "drag a field to Shape on the Marks card":
+- "When you place a dimension on Shape … Tableau separates the marks according to the members in the dimension, and assigns a unique shape to each member."
+- "When you place a measure on Shape … the measure is converted to a discrete measure."
+- "By default, ten unique shapes are used to encode dimensions. If you have more than 10 members, the shapes repeat."
+
+<LessonViz id="shapes" />
+
+To pick different shapes, "click Shape on the Marks card, or select **Edit Shape** on the legend's card menu" and choose from palettes such as filled shapes, arrows and weather symbols. For **custom shapes**, copy image files (.png, .gif, .jpg, .bmp or .tiff) into a new folder in **My Tableau Repository\Shapes**; "the name of the folder will be used as the name of the palette". If Tableau was already running, click **Reload Shapes**.
+
+### Configure viz animations
+
+Animations make marks move smoothly when filters, sorts or the view change, so viewers can follow what happened.
+1. "Choose **Format > Animations**."
+2. Under **Workbook Default**, click **On** to animate every sheet. "For Duration, choose a preset, or specify a custom duration of up to 10 seconds."
+3. "For Style, choose **Simultaneous** to play all animations at once or **Sequential** to fade out marks, move and sort them, and then fade them in." Simultaneous is faster; sequential is easier to follow.
+4. "To override workbook defaults for a particular sheet, change the settings under **Selected Sheet**."
+
+**Reset All Sheets** returns every sheet to the workbook default.
+
+### Change size of marks
+
+- **All marks:** "On the Marks card, click Size, and then move the slider to the left or right." This changes the marks only: "The size of your data view is not modified."
+- **Encode with a field:** "drag a field to Size on the Marks card." For a continuous field, "the smallest value is assigned the smallest sized mark and the largest value is represented by the largest mark"; a discrete field gets "a unique size to each member".
+- **Edit Sizes** from the size legend's menu: sizes vary **Automatically**, **By range** or **From zero**, **Reversed** gives the biggest mark to the smallest value, and you can fix the start and end values.
+- **Bars of a fixed width:** click Size, choose **Fixed** and enter the **Width in axis units** (in days on a continuous date axis).
+
+<LessonViz id="size" />
+
+### Show and hide legends
+
+"When you add fields to Color, Size, and Shape on the Marks card, a legend displays to indicate how the view is encoded." A legend is a **card** on the sheet: you can hide it when the encoding is obvious (for example when the members are also labelled on the marks) and show it again when readers need the key. Each legend card has its own menu, which also holds Edit Colors, Edit Shape or Edit Sizes.
+
+Formatting a mark without a field (one colour, one size) creates no legend, because there's nothing to explain.
+
+## At Driftlight
+
+Driftlight's design team publishes a style guide for every dashboard:
+
+- **Color:** Plan always has the same four colours, set once as a default property (task 1.3) so every sheet agrees. Measures use a sequential palette; differences from target use a diverging one centred on zero.
+- **Fonts:** one font for the whole workbook, set under Format > Workbook, with larger titles.
+- **Shapes:** on scatterplots, title Type (Movie or Series) is shown as two shapes, so the colour stays free for Genre.
+- **Size:** the symbol map sizes cities by subscribers, and the bar charts use a fixed width.
+- **Animations:** on, Simultaneous, so filter changes glide rather than jump.
+- **Legends:** shown on every chart that encodes a field, hidden on charts where the marks are already labelled.
+
+## Exam traps
+
+<Callout title="Encoding vs. formatting">
+  <p>Dropping a field on Color, Size or Shape encodes data and creates a legend. Clicking Color, Size or Shape and picking a colour, a slider position or a shape formats every mark the same way, with no legend.</p>
+</Callout>
+
+<Callout title="Palette follows continuity">
+  <p>A discrete field on Color gets a categorical palette; a continuous field gets a sequential or diverging gradient. Stepped Color and Use Full Color Range only exist for continuous colour.</p>
+</Callout>
+
+<Callout title="Workbook vs. worksheet fonts">
+  <p>Format &gt; Workbook changes fonts everywhere (and overwrites sheet-level font changes). Format &gt; Font changes only the current sheet's pane and header text.</p>
+</Callout>
+
+<Callout title="Shape needs the Shape mark">
+  <p>Shapes on the Marks card only show with the Shape mark type. A measure on Shape becomes discrete, and after ten members the default shapes repeat.</p>
+</Callout>
+
+<Callout title="Animation settings">
+  <p>Animations are set under Format &gt; Animations: a workbook default plus per-sheet overrides, Simultaneous or Sequential, with a duration of up to 10 seconds.</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
