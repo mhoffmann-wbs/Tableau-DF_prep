@@ -1,0 +1,256 @@
+export const meta = {
+  taskId: '2.1',
+  updated: '2026-11-23',
+  tldr: 'Each basic chart is a recipe of shelves and a mark type: dimension + measure → bar; date + measure → line; measure × measure → scatterplot; a geographic field on Detail → map; a dimension on Color of a bar → stacked bar; Density mark on point data → density map; dimensions on Rows and Columns with a measure on Text → crosstab, and with Square + Color → highlight table. Two measures on one axis is a combined (blended) axis; on two axes it is a dual axis.',
+  objectivesCovered: ['2.1.1', '2.1.2', '2.1.3', '2.1.4', '2.1.5', '2.1.6', '2.1.7', '2.1.8', '2.1.9'],
+  links: [
+    { title: 'Build a bar chart', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm' },
+    { title: 'Build a line chart', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm' },
+    { title: 'Build a scatter plot', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm' },
+    { title: 'Build a map', url: 'https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm' },
+    { title: 'Create a proportional symbol map', url: 'https://help.tableau.com/current/pro/desktop/en-us/maps_howto_symbol.htm' },
+    { title: 'Compare multiple measures (blended and dual axes)', url: 'https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm' },
+    { title: 'Stack marks', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm' },
+    { title: 'Create a density map', url: 'https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm' },
+    { title: 'Build a text table', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_text.htm' },
+    { title: 'Build a highlight table or heat map', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm' },
+    { title: 'Mark types', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_marktypes.htm' },
+  ],
+  vizzes: {
+    bar: {
+      spec: { rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }], columns: [{ field: 'Minutes Watched' }] },
+      caption: 'Bar chart: Genre on Rows, SUM(Minutes Watched) on Columns gives horizontal bars.',
+    },
+    line: {
+      spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }], rows: [{ field: 'Minutes Watched' }] },
+      caption: 'Line chart: a continuous month on Columns and a measure on Rows.',
+    },
+    scatter: {
+      spec: { columns: [{ field: 'Sessions (Count)' }], rows: [{ field: 'Minutes Watched' }], marks: { detail: [{ field: 'Title' }] } },
+      caption: 'Scatterplot: a measure on each shelf, and Title on Detail for one mark per title.',
+    },
+    'symbol-map': {
+      spec: {
+        source: 'subscribers',
+        columns: [{ field: 'Longitude (generated)' }],
+        rows: [{ field: 'Latitude (generated)' }],
+        marks: { detail: [{ field: 'City' }], size: { field: 'Subscribers (Count)' } },
+      },
+      caption: 'Symbol map: City on Detail places a mark per city; a measure on Size scales it.',
+    },
+    'filled-map': {
+      spec: {
+        source: 'subscribers',
+        columns: [{ field: 'Longitude (generated)' }],
+        rows: [{ field: 'Latitude (generated)' }],
+        marks: { type: 'map', detail: [{ field: 'Country' }], color: { field: 'Subscribers (Count)' } },
+      },
+      caption: 'Filled map: mark type Map, Country on Detail and a measure on Color.',
+    },
+    stacked: {
+      spec: { columns: [{ field: 'Plan' }], rows: [{ field: 'Minutes Watched' }], marks: { color: { field: 'Device' } } },
+      caption: 'Stacked bar: a bar chart with Device on Color. Each bar stacks one segment per device.',
+    },
+    density: {
+      spec: {
+        source: 'subscribers',
+        columns: [{ field: 'Longitude' }],
+        rows: [{ field: 'Latitude' }],
+        marks: { type: 'density', detail: [{ field: 'Subscriber ID' }] },
+      },
+      caption: 'Density map: one point per subscriber (Subscriber ID on Detail) drawn with the Density mark.',
+    },
+    crosstab: {
+      spec: { rows: [{ field: 'Region' }], columns: [{ field: 'Start' }], marks: { label: { field: 'Minutes Watched' } } },
+      caption: 'Crosstab: Region on Rows, YEAR(Start) on Columns, SUM(Minutes Watched) as text.',
+    },
+    highlight: {
+      spec: {
+        rows: [{ field: 'Region' }],
+        columns: [{ field: 'Start' }],
+        marks: { type: 'square', color: { field: 'Minutes Watched' }, label: { field: 'Minutes Watched' } },
+      },
+      caption: 'Highlight table: the same crosstab with mark type Square and the measure on Color.',
+    },
+  },
+  facts: {
+    'top-genre': {
+      kind: 'top',
+      says: 'Comedy',
+      spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Genre' },
+      measure: { field: 'Minutes Watched' },
+    },
+    'top-city': {
+      kind: 'top',
+      says: 'Houston',
+      spec: { source: 'subscribers', rows: [{ field: 'City' }], columns: [{ field: 'Subscribers (Count)' }] },
+      dimension: { field: 'City' },
+      measure: { field: 'Subscribers (Count)' },
+    },
+    'top-title': {
+      kind: 'top',
+      says: 'The Restless Hive',
+      spec: { rows: [{ field: 'Title' }], columns: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Title' },
+      measure: { field: 'Minutes Watched' },
+    },
+    'europe-2025': {
+      kind: 'value',
+      says: '472,579',
+      spec: { rows: [{ field: 'Region' }], columns: [{ field: 'Start' }], marks: { label: { field: 'Minutes Watched' } } },
+      measure: { field: 'Minutes Watched' },
+      where: { Region: 'Europe', Start: '2025' },
+    },
+  },
+}
+
+## Big idea
+
+Tableau has no "insert chart" wizard at its core. A chart is the result of **what you put on which shelf**, plus the **mark type** on the Marks card. With the mark type left on **Automatic**, Tableau picks one from the fields: for example Bar "when there is a dimension and a measure as inner fields on Rows and Columns shelves", and Line "when there is a date field and a measure as the inner fields".
+
+So every chart in this task is a recipe. Learn the recipes and you can answer "which steps create this chart?" questions by reading the shelves. The recipes use the ideas from domain 4: dimensions slice, measures aggregate, blue draws headers and green draws axes.
+
+| Chart | Columns / Rows | Marks card |
+|---|---|---|
+| Bar | a dimension and a measure | Automatic (Bar) |
+| Line | a date and a measure | Automatic (Line) |
+| Scatterplot | a measure and a measure | Automatic; dimensions on Detail or Color for more marks |
+| Symbol map | Longitude / Latitude (generated) | a geographic field on Detail; a measure on Size |
+| Filled map | Longitude / Latitude (generated) | Map; a geographic field on Detail; a measure on Color |
+| Combined axis | two measures sharing one axis (Measure Values) | Measure Names on Color |
+| Dual axis | two measures, each with its own axis | one Marks card per measure |
+| Stacked bar | a dimension and a measure | a second dimension on Color |
+| Density map | Longitude / Latitude | Density; a detailed field on Detail |
+| Crosstab | dimensions on both | a measure on Text |
+| Highlight table | dimensions on both | Square; a measure on Color |
+
+## How it works
+
+### Create a bar chart
+
+"You create a bar chart by placing a dimension on the Rows shelf and a measure on the Columns shelf, or vice versa." A dimension on **Columns** and a measure on **Rows** gives vertical bars; the reverse gives horizontal bars. Sorting the dimension by the measure (task 2.3) makes the ranking easy to read. Driftlight's top genre is <Fact id="top-genre" />:
+
+<LessonViz id="bar" />
+
+### Create a line chart
+
+Put a date on Columns and a measure on Rows. With a date and a measure as the inner fields, Automatic chooses **Line**. Whether you get one long line or a line per header depends on the date pill (task 4.2):
+
+- A **continuous** date value draws a single line along a time axis: "Continuous dimensions visualize data with a linear, continuous axis."
+- A **discrete** date part, such as `YEAR(Start)` dropped on Columns, "creates headers rather than an axis", and the line runs across the headers.
+
+<LessonViz id="line" />
+
+### Create a scatterplot
+
+"You create a scatter plot by placing at least one measure on the Columns shelf and at least one measure on the Rows shelf." With nothing else in the view, both measures are aggregated over all the data and you get a single mark. Add a dimension to **Detail** (or Color) to get one mark per member. Below, each title is a mark: how often it was watched against total minutes. The most-watched title, <Fact id="top-title" />, sits at the top:
+
+<LessonViz id="scatter" />
+
+### Create a map using geographic data
+
+A field with a geographic role (task 1.3) gives Tableau the generated coordinates `Latitude (generated)` and `Longitude (generated)`.
+- **Symbol (point) map.** Put Longitude on Columns and Latitude on Rows (double-clicking them in the Data pane does this), and the geographic field on **Detail**: one mark per location. Add a measure to **Size** for a proportional symbol map. Driftlight's biggest city by subscribers is <Fact id="top-city" />.
+- **Filled map.** "You select Map from the Marks card drop-down menu": a geographic dimension on Detail fills each area, and "a measure or continuous dimension is added to Color".
+
+<LessonViz id="symbol-map" />
+
+<LessonViz id="filled-map" />
+
+### Create a combined axis chart
+
+A **combined axis**, which Tableau's help calls a **blended axis**, shows two or more measures on **one shared axis**. "To blend multiple measures, drag one measure or axis and drop it onto an existing axis." Tableau then replaces the measure with **Measure Values** (on the shelf) and adds **Measure Names** to Color, so each measure gets its own colour on the same scale.
+
+Use it for measures in the **same units**, such as Target Hours vs. Actual Hours: one axis lets you compare them directly.
+
+### Create a dual axis chart
+
+A **dual axis** chart layers two measures, each with **its own axis**: one on the left (or bottom) and one on the right (or top). Two ways to make one:
+- Drag the second measure "to the right side of the view and drop it when you see a black dashed line appear".
+- Or put both measures on Rows (or Columns), then "right-click … the measure … and select **Dual Axis**".
+
+Then:
+- "There is a Marks card for each measure", so each measure can have its own mark type: bars for minutes and a line for sessions is the classic combo chart.
+- The two axes are independent. To put them on the same scale, "right-click … the secondary axis, and select **Synchronize Axis**".
+- "You can add up to four layered axes: two on the Columns shelf and two on the Rows shelf."
+
+Use it for measures with **different units or scales**, such as minutes watched (in millions) and number of sessions (in thousands).
+
+| | Combined (blended) axis | Dual axis |
+|---|---|---|
+| Axes | One, shared | Two, independent (can be synchronized) |
+| How | Drop a measure onto an existing axis | Drop on the right edge, or pill menu > Dual Axis |
+| Fields used | Measure Values + Measure Names | The two measures themselves |
+| Mark types | One for both | One per measure |
+| Best for | Same units | Different units or scales |
+
+The app's sandbox draws one continuous pill per shelf for now, so these two charts aren't in the sandbox yet. Build them in Tableau Public with the Driftlight files.
+
+### Create a stacked bar
+
+Start with a bar chart and drag a second dimension to **Color**: "Marks are automatically stacked." Each bar splits into coloured segments that add up to the bar's total:
+
+<LessonViz id="stacked" />
+
+Stacking is controlled by **Analysis > Stack Marks**: "You can either allow Tableau to automatically select whether the marks are stacked or you can specify On or Off. The default setting is Automatic."
+
+### Create a density map
+
+A density map shows where points cluster, for data with many overlapping points. The recipe from Tableau's help:
+- Longitude on Columns and Latitude on Rows
+- on Detail, a field "with many underlying data points", such as an ID
+- the mark type set to **Density**: open the drop-down to the right of Automatic and select Density.
+
+You can then "choose from ten density color palettes", use the **Intensity** slider "to increase or decrease the vividness of your map", and adjust the mark size with Size:
+
+<LessonViz id="density" />
+
+### Create a chart to show specific values (crosstab, highlight table)
+
+When readers need exact numbers rather than shapes, use a table.
+- **Crosstab (text table).** Text tables, "also called cross-tabs or pivot tables", are built "by placing one dimension on the Rows shelf and another dimension on the Columns shelf", then "dragging one or more measures to Text on the Marks card". Europe's 2025 cell reads <Fact id="europe-2025" />:
+
+<LessonViz id="crosstab" />
+
+- **Highlight table.** "Place one or more dimensions on the Columns shelf and one or more dimensions on the Rows shelf. You then select **Square** as the mark type and place a measure of interest on the **Color** shelf." Keep the measure on Label too, and readers get both the exact value and a colour cue:
+
+<LessonViz id="highlight" />
+
+## At Driftlight
+
+Driftlight's weekly report uses one chart per question:
+
+- **Which genres do people watch?** A sorted horizontal bar chart.
+- **Is viewing growing?** A line of minutes over continuous months.
+- **Which titles are watched often but briefly?** A scatterplot of sessions vs. minutes with Title on Detail.
+- **Where are our subscribers?** A symbol map of cities for the marketing team, a filled map of countries for the board, and a density map when they want to see clusters.
+- **Minutes vs. sessions in one chart?** A dual axis, because the measures have different scales. **Target vs. actual hours?** A combined axis, because both are hours.
+- **How does each plan's viewing split by device?** A stacked bar.
+- **Exact minutes per region and year for finance?** A crosstab, upgraded to a highlight table to make the big cells stand out.
+
+## Exam traps
+
+<Callout title="Combined vs. dual axis">
+  <p>One shared axis with Measure Names on Color is a combined (blended) axis, made by dropping a measure on an existing axis. Two axes, one on each side, is a dual axis, made by dropping on the right edge or choosing Dual Axis on the pill. Only the dual axis lets each measure have its own mark type.</p>
+</Callout>
+
+<Callout title="Highlight table = Square + Color">
+  <p>A crosstab puts the measure on Text. A highlight table changes the mark type to Square and puts the measure on Color. A measure on Color alone, with the mark type left as Text, only colours the numbers.</p>
+</Callout>
+
+<Callout title="Filled map vs. symbol map">
+  <p>A filled map uses the Map mark type with the measure on Color. A symbol map uses a circle or shape per location, usually with the measure on Size. A density map uses the Density mark and many points.</p>
+</Callout>
+
+<Callout title="Scatterplot needs two measures">
+  <p>A scatterplot is measure × measure. With no dimension in the view it shows a single mark; add a dimension to Detail for more marks. A dimension on Columns or Rows would create panes of scatterplots, not more points in one.</p>
+</Callout>
+
+<Callout title="Superstore note">
+  <p>Classic exam setups: Sales by Sub-Category as a sorted bar chart, Sales by continuous MONTH(Order Date) as a line, Sales × Profit as a scatterplot with Customer Name on Detail, State as a filled map coloured by Profit, Sales and Profit on a dual axis, and Region × Category as a highlight table.</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
