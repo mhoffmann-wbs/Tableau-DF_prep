@@ -1,0 +1,185 @@
+export const meta = {
+  taskId: '2.3',
+  updated: '2026-11-23',
+  tldr: 'Sort by dragging headers (manual) or by a field’s value (computed). Drag Reference Line and Totals from the Analytics pane. A quick table calculation (running total, percent of total, rank…) is applied from a measure pill’s menu and marked with a delta. Bins turn a measure into a dimension of ranges, the basis of a histogram. Calculated fields add new fields from formulas, and a parameter is a single user-chosen value that calculations, filters and reference lines can use.',
+  objectivesCovered: ['2.3.1', '2.3.2', '2.3.3', '2.3.4', '2.3.5', '2.3.6', '2.3.7'],
+  links: [
+    { title: 'Sort data in a visualization', url: 'https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sorting_computed_howto.htm' },
+    { title: 'Reference lines, bands, distributions, and boxes', url: 'https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm' },
+    { title: 'Quick table calculations', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm' },
+    { title: 'Create bins from a continuous measure', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm' },
+    { title: 'Build a histogram', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_histogram.htm' },
+    { title: 'Get started with calculations', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm' },
+    { title: 'Aggregate calculations', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_aggregate_create.htm' },
+    { title: 'String functions', url: 'https://help.tableau.com/current/pro/desktop/en-us/functions_functions_string.htm' },
+    { title: 'Date functions', url: 'https://help.tableau.com/current/pro/desktop/en-us/functions_functions_date.htm' },
+    { title: 'Create parameters', url: 'https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm' },
+    { title: 'Swap measures using parameters', url: 'https://help.tableau.com/current/pro/desktop/en-us/parameters_swap.htm' },
+    { title: 'Show totals in a visualization', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm' },
+  ],
+  vizzes: {
+    'computed-sort': {
+      spec: { rows: [{ field: 'Plan', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }], columns: [{ field: 'Minutes Watched' }] },
+      caption: 'A computed sort: Plan sorted by SUM(Minutes Watched), descending. It re-sorts whenever the data changes.',
+    },
+    'manual-sort': {
+      spec: {
+        rows: [{ field: 'Plan', sort: { order: 'asc', manual: ['Basic with Ads', 'Basic', 'Standard', 'Premium'] } }],
+        columns: [{ field: 'Minutes Watched' }],
+      },
+      caption: 'A manual sort: plans in price order, cheapest first, whatever their minutes.',
+    },
+  },
+  facts: {
+    'top-plan': {
+      kind: 'top',
+      says: 'Standard',
+      spec: { rows: [{ field: 'Plan' }], columns: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Plan' },
+      measure: { field: 'Minutes Watched' },
+    },
+    'bottom-plan': {
+      kind: 'top',
+      says: 'Basic with Ads',
+      spec: { rows: [{ field: 'Plan' }], columns: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Plan' },
+      measure: { field: 'Minutes Watched' },
+      order: 'asc',
+    },
+  },
+}
+
+## Big idea
+
+A chart answers "what happened?". The tools in this task add analysis on top of it:
+
+| Tool | Answers | SQL / pandas analogy |
+|---|---|---|
+| **Sort** | What's biggest? In what order? | `ORDER BY` / `sort_values` |
+| **Reference line** | Above or below average? Over target? | a constant or `AVG()` drawn on the chart |
+| **Quick table calculation** | Running total, share, rank, change | window functions: `SUM() OVER`, `RANK()`, `LAG()` |
+| **Bins and histogram** | How are values distributed? | `pd.cut` + `value_counts` |
+| **Calculated field** | A new field from a formula | a computed column |
+| **Parameter** | What if the user picks the value? | a variable or function argument |
+| **Totals** | What's the grand total or subtotal? | `ROLLUP` / `margins=True` |
+
+Most of them are a drag from the **Analytics pane** (next to the Data pane) or a choice on a pill's menu.
+
+## How it works
+
+### Add a manual or a computed sort
+
+**Computed sorts** order members by a value and update when the data changes:
+- Click a **sort icon** on an axis, a header or a field label. "One click sorts descending, two clicks sorts ascending, and three clicks clear the sort."
+- Use the **sort buttons** (ascending or descending) on the toolbar.
+- Right-click the field on its shelf and select **Sort**. The Sort By options are **Data Source Order**, **Alphabetic**, **Field** ("the field value used to determine the sort order", with an aggregation such as Sum), **Manual** and **Nested**.
+
+Sorted by minutes, Driftlight's plans run from <Fact id="top-plan" /> down to <Fact id="bottom-plan" />:
+
+<LessonViz id="computed-sort" />
+
+**Manual sorts** fix an order you choose: "select a header in a viz or on a legend and drag it to the correct location", or choose **Manual** in the Sort dialog and move members up and down. A manual order doesn't react to the data, which is what you want for a natural order such as plan tiers or weekdays:
+
+<LessonViz id="manual-sort" />
+
+Two more details: "Sorting from an axis gives a nested sort by default", which sorts within each pane, while sorting from a field label doesn't. To undo, right-click the field and choose **Clear Sort**, or clear every sort with **Clear Sorts** from the toolbar's clear sheet menu.
+
+### Add a reference line
+
+"Drag **Reference Line** from the Analytics pane into the view", and drop it on the scope you want, or "right-click … on a quantitative axis and select **Add Reference Line**".
+- **Scope:** "The terms Table, Pane, and Cell define the scope": one line for the whole table, one per pane, or one per cell.
+- **Value:** a **Constant** (a target, or a parameter), or a computation over the marks: **Total**, **Sum**, **Minimum**, **Maximum**, **Average** or **Median**.
+- **Label:** None, Value, Computation or Custom.
+
+The same dialog builds relatives of the line: **reference bands** "shade an area behind the marks in the view between two constant or computed values"; **distributions** use percentages, percentiles, quantiles or standard deviations; and **box plots** add quartiles and whiskers to a continuous axis. To remove one, click the line and select **Remove**.
+
+### Use a quick table calculation
+
+A table calculation computes over the marks already in the view, like a window function over an aggregated result. A **quick table calculation** applies one "using the most typical settings for that calculation type": right-click a measure pill, such as `SUM(Minutes Watched)`, and choose **Quick Table Calculation**, then:
+
+Running total · Difference · Percent difference · Percent of total · Rank · Percentile · Moving average · YTD total · Compound growth rate · Year over year growth · YTD growth
+
+- "You can only perform quick table calculations on measures in the view."
+- "A delta symbol appears on the field to indicate that a quick table calculation is being applied."
+- To change how it's computed, right-click the pill and choose **Edit Table Calculation**, where you set the calculation type and how to compute it: which direction and which marks it runs across (**Compute Using**).
+
+Example: a line of monthly minutes with **Running total** shows cumulative viewing; bars of minutes per genre with **Percent of total** show each genre's share.
+
+### Use bins and histograms
+
+**Bins** cut a continuous measure into equal ranges: "In the Data pane, right-click … a measure and select **Create > Bins**." Enter the **Size of bins** or let Tableau suggest one. "When you create bins from a measure you create a new dimension", named like `Minutes Watched (bin)`, and "the lower limit is inclusive". Bins only work with relational data sources, and binned fields can't be used in calculations.
+
+A **histogram** counts the marks in each bin. The quick way: select one measure and pick histogram in **Show Me**, which "is available in Show Me when the view contains a single measure and no dimensions". Tableau creates the bin field and puts it on Columns; the measure moves to Rows and "the aggregation changes from SUM to CNT (Count)". A histogram of Minutes Watched per session shows how long typical sessions are.
+
+### Create a calculated field (for example, string, date, simple arithmetic)
+
+"Select **Analysis > Create Calculated Field**", name the field and type a formula. The new field appears in the Data pane with an equal sign: "All calculated fields have equal signs (=) next to them in the Data pane." Tableau makes it a measure when it returns a number. Right-click it and select **Edit** to change it. Some Driftlight examples:
+
+| Kind | Formula | Result |
+|---|---|---|
+| String | `UPPER([Plan Code])`, `LEFT([Subscriber ID], 3)`, `[City] + ", " + [Country]` | text |
+| Date | `DATEDIFF('day', [Signup Date], [Cancel Date])`, `DATETRUNC('month', [Start])` | a number of days, a date |
+| Arithmetic | `[Minutes Watched] / 60` | hours per session |
+| Ratio | `SUM([Minutes Watched]) / COUNT([Session ID])` | average minutes per session |
+
+The first three kinds are **row-level**: computed for every row, then aggregated in the view. The ratio is an **aggregate calculation**: it aggregates first, then divides, so it gives the right value at any level of detail. Mixing the two in one formula, such as `[Minutes Watched] / COUNT([Session ID])`, is an error. (A table's `(Count)` field can't be used in calculations at all, so count an ID field instead.)
+
+### Explain when to use a parameter
+
+"A parameter is a workbook variable such as a number, date, or string that can replace a constant value in a calculation, filter, or reference line." It holds **one value**, which the viewer can change.
+
+To create one, open the menu at the top of the Data pane (the drop-down arrow) and select **Create Parameter**. Choose its data type and its **allowable values**:
+- **All**: the control is a free text field
+- **List**: the viewer picks from given values
+- **Range**: the viewer picks between a minimum and a maximum, in steps ("a string parameter doesn't support Range").
+
+A parameter does nothing until something uses it. Right-click it and select **Show Parameter** to give viewers a control, then use it in:
+- a **calculation**: `IF [Measure] = "Minutes" THEN SUM([Minutes Watched]) ELSE COUNT([Session ID]) END` lets the viewer **swap measures**
+- a **Top N filter**: show the top N titles, with N picked by the viewer
+- a **reference line**: a target the viewer can type in.
+
+"Parameters are global across the workbook and can be used in any worksheet." **Use a parameter when** the viewer should supply a single value (a threshold, a target, a choice of measure or dimension, a what-if rate) that one or more parts of the workbook react to. If they just need to pick members of a field to show, a filter is simpler.
+
+### Display totals on a worksheet
+
+Drag **Totals** from the Analytics pane into the **Add Totals** dialog and drop it on **Subtotals**, **Row Grand Totals** or **Column Grand Totals**. The **Analysis > Totals** menu offers totals too. To choose the aggregation a total uses for all measures, choose **Analysis > Totals > Total All Using** and pick an aggregation; for one field, right-click it in the view and select **Total using**.
+
+Limits: "The view must have at least one header", and "Grand totals cannot be applied to continuous dimensions". Totals can't be applied to table calculations.
+
+## At Driftlight
+
+The monthly content review uses every tool in this task:
+
+- Genres are **sorted** by minutes (computed). The plan table keeps a **manual** order by price.
+- A **reference line** at the average shows which genres are above it; a **constant** line marks the content team's target.
+- **Percent of total** gives each genre's share; **Running total** shows the year building up month by month; **Rank** feeds the "top 10 titles" table.
+- A **histogram** of session length (bins of 10 minutes) shows most sessions are short.
+- **Calculated fields** add Hours Watched (`[Minutes Watched] / 60`) and Days to Cancel (`DATEDIFF`).
+- A **parameter** "Measure" (List: Minutes, Sessions) lets the head of content swap the measure in every chart, and a "Top N" parameter sets the size of the top titles table.
+- A crosstab of regions by year shows **row and column grand totals**.
+
+## Exam traps
+
+<Callout title="Computed vs. manual sort">
+  <p>A sort by a field (Sort &gt; Field, or the sort icons) is computed and follows the data. Dragging headers or choosing Manual fixes the order. A question that says "the order must stay the same when the data changes" wants a manual sort; "always biggest first" wants a computed sort.</p>
+</Callout>
+
+<Callout title="Quick table calc vs. calculated field">
+  <p>A quick table calculation is applied to a measure already in the view, from the pill's menu, and shows a delta symbol. It computes over the marks in the view. A calculated field is a new field in the Data pane, created with Analysis &gt; Create Calculated Field, with an equal sign.</p>
+</Callout>
+
+<Callout title="Parameter vs. filter">
+  <p>A filter removes data based on a field's values. A parameter is one free-standing value with no effect until a calculation, filter or reference line uses it. "Let the user choose which measure to show" or "let the user enter a growth rate" calls for a parameter.</p>
+</Callout>
+
+<Callout title="Bins make a dimension">
+  <p>Create &gt; Bins on a measure makes a new dimension of ranges, "(bin)". A histogram counts records per bin, so the measure becomes CNT.</p>
+</Callout>
+
+<Callout title="Superstore note">
+  <p>Typical items: sort Sub-Category by SUM(Sales), add an average reference line per pane, use Percent of total on Sales by Region, make a histogram of Quantity or Sales, calculate Profit Ratio as SUM([Profit]) / SUM([Sales]), use a Top N parameter on Customer Name, and add grand totals to a Region × Category crosstab.</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
