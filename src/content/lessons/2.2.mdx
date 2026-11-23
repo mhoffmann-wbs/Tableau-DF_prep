@@ -1,0 +1,201 @@
+export const meta = {
+  taskId: '2.2',
+  updated: '2026-11-23',
+  tldr: 'A group combines members into bigger categories (paperclip icon, or Create > Group). A set splits a dimension into In and Out: fixed when picked from marks, dynamic when defined by a condition or a top N. A hierarchy lets you drill with + and -. Filters go on the Filters shelf: dimension filters (General, Wildcard, Condition, Top), measure filters on an aggregate, and date filters (relative, range, starting or ending date, or date parts), applied in a fixed order: extract, data source, context, dimension, measure.',
+  objectivesCovered: ['2.2.1', '2.2.2', '2.2.3', '2.2.4', '2.2.5'],
+  links: [
+    { title: 'Group your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm' },
+    { title: 'Create sets', url: 'https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm' },
+    { title: 'Create hierarchies', url: 'https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm' },
+    { title: 'Filter data from your views (includes dates)', url: 'https://help.tableau.com/current/pro/desktop/en-us/filtering.htm' },
+    { title: 'Use context filters', url: 'https://help.tableau.com/current/pro/desktop/en-us/filtering_context.htm' },
+  ],
+  vizzes: {
+    hierarchy: {
+      spec: { source: 'titles', rows: [{ field: 'Type' }, { field: 'Genre' }], columns: [{ field: 'Titles (Count)' }] },
+      caption: 'Drilled from Type down to Genre: the Genre headers nest inside each Type.',
+    },
+    'dimension-filter': {
+      spec: {
+        rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }],
+        columns: [{ field: 'Minutes Watched' }],
+        filters: [{ kind: 'values', field: 'Device', values: ['TV'] }],
+      },
+      caption: 'A dimension filter on Device, keeping only TV. Device isn’t in the view, but it still filters the rows.',
+    },
+    'measure-filter': {
+      spec: {
+        rows: [{ field: 'Title', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }],
+        columns: [{ field: 'Minutes Watched' }],
+        filters: [{ kind: 'range', field: 'Minutes Watched', agg: 'sum', min: 30000 }],
+      },
+      caption: 'A measure filter: SUM(Minutes Watched) at least 30,000, evaluated per title after aggregation.',
+    },
+    'date-range': {
+      spec: {
+        columns: [{ field: 'Start', date: { level: 'day', mode: 'value' } }],
+        rows: [{ field: 'Minutes Watched' }],
+        filters: [{ kind: 'dateRange', field: 'Start', from: '2025-01-01', to: '2025-06-30' }],
+      },
+      caption: 'A range-of-dates filter: the first half of 2025, day by day.',
+    },
+    'date-part': {
+      spec: {
+        columns: [{ field: 'Start' }],
+        rows: [{ field: 'Minutes Watched' }],
+        marks: { color: { field: 'Device' } },
+        filters: [{ kind: 'datePart', field: 'Start', level: 'quarter', values: [4] }],
+      },
+      caption: 'A date-part filter: only Q4, in both years.',
+    },
+  },
+  facts: {
+    'tv-top-genre': {
+      kind: 'top',
+      says: 'Comedy',
+      spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }], filters: [{ kind: 'values', field: 'Device', values: ['TV'] }] },
+      dimension: { field: 'Genre' },
+      measure: { field: 'Minutes Watched' },
+    },
+    'tv-minutes': {
+      kind: 'value',
+      says: '1,187,645',
+      spec: { rows: [{ field: 'Minutes Watched' }], filters: [{ kind: 'values', field: 'Device', values: ['TV'] }] },
+      measure: { field: 'Minutes Watched' },
+    },
+    'movie-count': {
+      kind: 'value',
+      says: '217',
+      spec: { source: 'titles', rows: [{ field: 'Type' }], columns: [{ field: 'Titles (Count)' }] },
+      measure: { field: 'Titles (Count)' },
+      where: { Type: 'Movie' },
+    },
+  },
+}
+
+## Big idea
+
+Once a chart exists, you organize what it shows. This task covers two kinds of tools:
+
+- **Organizing members**: a **group** merges members into bigger categories, a **set** marks a subset of members as In or Out, and a **hierarchy** stacks related dimensions so you can drill from general to detailed.
+- **Filtering**: removing rows or marks you don't want, by dimension values, measure values or dates.
+
+In pandas terms: a group is a `.replace()` or `.map()` onto a coarser category, a set is a Boolean column (`df["in_set"] = cond`), a hierarchy is a multi-level index you can expand, and filters are `df[mask]`, applied before (`WHERE`) or after aggregation (`HAVING`).
+
+## How it works
+
+### Create groups by using marks, headers, and the data pane
+
+"You can create a group to combine related members in a field." Three ways to make one:
+- **Marks or headers in the view:** select one or more marks or headers, then "on the tooltip that appears, click the group icon" (a paperclip). "You can also select the group icon on the toolbar."
+- **Data pane:** "In the Data pane, right-click a field and select **Create > Group**", then select the members to combine.
+
+"The selected members are combined into a single group. A default name is created using the combined member names." Click **Rename** to give it a better name. To edit later, right-click the group field and choose **Edit Group**; select members and click **Ungroup** to take them out again.
+
+**Include 'Other'.** "You have the option to group all remaining, or non-grouped members in an Other group": select **Include 'Other'** in the Edit Group dialog. Use it to keep a few named groups and lump the long tail together.
+
+Driftlight uses groups to merge city spellings (Cologne and Köln) and to bundle genres into broader categories for the board.
+
+### Create sets by using marks and the data pane
+
+"Sets are custom fields that define a subset of data based on some conditions." Every member is either **In** the set or **Out** of it. Sets come in two kinds:
+
+| | Fixed set | Dynamic set |
+|---|---|---|
+| Members | "do not change, even if the underlying data changes" | "change when the underlying data changes" |
+| Made from | Marks: "Right-click the mark(s) and select **Create Set**" | The Data pane: "right-click a dimension and select **Create > Set**" |
+| Based on | One or several dimensions | A single dimension |
+| Defined by | The marks you selected (or "Exclude these members instead") | The **General**, **Condition** or **Top** tab |
+
+The three tabs of the dynamic set dialog:
+- **General:** "select one or more values" (or **Use all**)
+- **Condition:** "define rules that determine which members to include", for example `SUM(Minutes Watched) > 20000`
+- **Top:** "define limits on what members to include", for example the top 10 titles by minutes.
+
+In the view, a set can show its members, or "aggregate the members into In/Out categories": right-click the set and choose **Show In/Out of Set** or **Show Members in Set**. Sets can also be combined into a **Combined Set** (all members in both, shared members, or except shared members) when they're based on the same dimensions.
+
+### Organize dimensions into a hierarchy
+
+"In the Data pane, drag a field and drop it directly on top of another field", then name the hierarchy. Drag more fields into it in order, from general to detailed. For a field inside a folder, right-click it and select **Create Hierarchy**.
+
+In the view, "click the + or - icon on the hierarchy field" to drill down or up. Drilling adds the next field as nested headers, as with dates (task 4.2): "Tableau automatically separates date fields into hierarchies."
+
+Driftlight's titles have a natural hierarchy: **Type › Genre › Sub-Genre**. There are <Fact id="movie-count" /> movies; drill down to see them by genre:
+
+<LessonViz id="hierarchy" />
+
+### Add a filter to a view
+
+Ways to add a filter:
+- Drag a field to the **Filters** shelf: "When you add a field to the Filters shelf, the Filter dialog box opens."
+- Select marks or headers and choose **Keep Only** or **Exclude** on the tooltip or the right-click menu.
+- **Show Filter**: "click the field drop-down menu and select Show Filter" to put a filter card on the sheet, so viewers can filter themselves. Its menu offers modes such as Single Value (List), Single Value (Dropdown), Single Value (Slider), Multiple Values (List), Multiple Values (Dropdown), Multiple Values (Custom List) and Wildcard Match.
+
+**Dimension filters** have four tabs, and "each tab adds additional definitions to your filter":
+- **General:** tick the members to keep (or exclude)
+- **Wildcard:** match text, such as names that contain "Night"
+- **Condition:** a rule on a measure, such as `SUM(Minutes Watched) > 20000`
+- **Top:** the top or bottom N by a measure.
+
+A field doesn't need to be in the view to filter it. Filtering Device to TV keeps only the TV sessions: <Fact id="tv-minutes" /> minutes, and the top genre on TV is <Fact id="tv-top-genre" />:
+
+<LessonViz id="dimension-filter" />
+
+**Measure filters.** Drag a measure to Filters, choose the aggregation (such as Sum), click **Next**, then choose **Range of Values**, **At Least**, **At Most** or **Special** (Null, Non-null or all values). A measure filter is applied to the aggregated value of each mark, like SQL's `HAVING`:
+
+<LessonViz id="measure-filter" />
+
+**Order of operations.** Tableau applies filters in a fixed order: "1. Extract filters 2. Data source filters 3. Context filters 4. Filters on dimensions… 5. Filters on measures", with table calculation filters "applied last". To force a dimension filter to run first, right-click it and choose **Add to Context**. Context filters "appear at the top of the Filters shelf" and are "identified by a gray color". The classic use: a Top 10 filter normally runs over all the data, so to get the top 10 titles *on TV* you put the Device filter in context.
+
+A filter normally applies to its own sheet. Its menu has **Apply to Worksheets** to share it across several sheets.
+
+### Add a date filter
+
+Drag a date to Filters and Tableau asks what kind of filter you want:
+- **Relative dates**: "a range of dates that updates based on the date and time you open the view", such as the last 3 months. It "can also be relative to a specific anchor date rather than today".
+- **Range of dates**: "a fixed range of dates", or only a **Starting date** or an **Ending date**.
+- A **date part**: "if you select Quarters, you can choose to filter specific quarters".
+- **Individual dates**: specific dates.
+- **Special**: "null dates, non-null dates, or all dates".
+
+A range of dates keeps a stretch of the timeline:
+
+<LessonViz id="date-range" />
+
+A date-part filter keeps the same part of every year, here every fourth quarter:
+
+<LessonViz id="date-part" />
+
+## At Driftlight
+
+- The content team **groups** genres into "Scripted" and "Unscripted", with **Include 'Other'** for the rest.
+- Marketing builds a **set** of the top 20 titles by minutes (dynamic, Top tab). It updates every week as viewing changes. **Show In/Out of Set** on Color then compares the top titles with everything else.
+- The catalogue team browses with the **Type › Genre › Sub-Genre** hierarchy, drilling down only where they need detail.
+- The operations dashboard shows a **relative date** filter (last 4 weeks) and a **Device** filter card in Multiple Values (Dropdown) mode.
+- For "top 10 titles on TV", the analyst puts Device = TV **in context** first, so the Top 10 is computed among TV sessions only.
+
+## Exam traps
+
+<Callout title="Group vs. set vs. hierarchy">
+  <p>A group merges members into new categories (paperclip, Create &gt; Group). A set divides members into In and Out of a subset (Create &gt; Set or Create Set from marks). A hierarchy organizes several dimensions for drilling (drag one field onto another). Merging spellings is a group; "top 10 customers" is a set (or a Top filter); Category › Sub-Category is a hierarchy.</p>
+</Callout>
+
+<Callout title="Fixed vs. dynamic sets">
+  <p>A set made by selecting marks is fixed: its members never change. A set defined with the Condition or Top tab is dynamic and follows the data. Only dynamic sets can have a set control.</p>
+</Callout>
+
+<Callout title="Top N needs context">
+  <p>Dimension filters, including Top N, run at the same stage. If a Top N result ignores another filter, the fix is Add to Context on the other filter, so it runs first. Context filters show as gray pills.</p>
+</Callout>
+
+<Callout title="Relative vs. range of dates">
+  <p>"Always show the last 30 days" is a relative date filter. "Show 1 January to 31 March 2025" is a range of dates. "Show every December" is a date-part filter (Months).</p>
+</Callout>
+
+<Callout title="Superstore note">
+  <p>Typical items: group a handful of States into a sales territory, create a set of the top customers by Sales, drill the Category › Sub-Category › Product Name hierarchy, filter to Top 10 products by Profit within a Region (context filter), and add a relative date filter on Order Date.</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
