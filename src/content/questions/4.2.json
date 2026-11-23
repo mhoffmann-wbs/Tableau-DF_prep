@@ -673,5 +673,911 @@
       "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
       "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
     ]
+  },
+  {
+    "id": "4.2-019",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "In the chart, `Genre` is on Rows and `SUM(Minutes Watched)` is on Columns. How are the two fields drawn?",
+    "options": [
+      {
+        "text": "`Genre` gets an axis with tick marks, and `SUM(Minutes Watched)` gets one header per value",
+        "correct": false,
+        "rationale": "The roles are reversed. A string field has no number line, so it cannot draw an axis."
+      },
+      {
+        "text": "Both fields get headers, because every pill on Rows or Columns draws headers",
+        "correct": false,
+        "rationale": "Only discrete fields draw headers. A continuous pill draws an axis."
+      },
+      {
+        "text": "`Genre` gets a header for each member, and `SUM(Minutes Watched)` gets an axis",
+        "correct": true,
+        "rationale": "`Genre` is discrete (blue), so it draws headers. The summed measure is continuous (green), so it draws a numeric axis."
+      },
+      {
+        "text": "Both fields get axes, because the bars need a number line in both directions",
+        "correct": false,
+        "rationale": "A discrete field never draws an axis. The bars sit in one pane per genre instead."
+      }
+    ],
+    "explanation": "Discrete (blue) fields draw headers with a separate label per member. Continuous (green) fields draw an axis with a continuous range. Here the string `Genre` is discrete and the summed measure is continuous.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-020",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "The shelves show two blue pills on Rows, `Genre` and `Type`. What will Tableau draw for them?",
+    "options": [
+      {
+        "text": "Header labels for both fields, with the `Type` headers sitting inside each `Genre` header",
+        "correct": true,
+        "rationale": "Both pills are discrete, so both draw headers. The pill listed second is nested inside the first."
+      },
+      {
+        "text": "A numeric axis for `Genre` and a separate set of headers for `Type`",
+        "correct": false,
+        "rationale": "A string field cannot draw an axis. Both pills are blue and draw headers."
+      },
+      {
+        "text": "A single axis for the two fields, with the genres and types shown as tick marks",
+        "correct": false,
+        "rationale": "Tick marks on an axis belong to continuous fields. Discrete members get header labels."
+      },
+      {
+        "text": "Header labels for `Genre` only, because Tableau draws headers for just the first discrete pill",
+        "correct": false,
+        "rationale": "Every discrete pill on Rows or Columns draws its own headers."
+      }
+    ],
+    "explanation": "Each discrete pill on Rows or Columns draws headers, one per member. With two discrete pills the headers nest, much like the row labels of a pivot table.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          },
+          {
+            "field": "Type"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-021",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "The chart shows `SUM(Minutes Watched)` by `Genre`, with `Type` on Color. Which statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Genre` is discrete, so there is one header per genre",
+        "correct": true,
+        "rationale": "A string dimension on Rows is blue and draws headers."
+      },
+      {
+        "text": "`Type` on Color is drawn as a gradient from low to high",
+        "correct": false,
+        "rationale": "A gradient is for continuous fields. `Type` is a discrete string field."
+      },
+      {
+        "text": "`SUM(Minutes Watched)` is discrete, so it draws a header for every value",
+        "correct": false,
+        "rationale": "The summed measure is continuous here, so it draws an axis."
+      },
+      {
+        "text": "The legend lists a separate color for each member of `Type`",
+        "correct": true,
+        "rationale": "A discrete field on Color gets a categorical palette with one entry per member."
+      },
+      {
+        "text": "Moving `Genre` to Color would give it a gradient legend",
+        "correct": false,
+        "rationale": "`Genre` is still discrete on Color. It would get a color per genre, not a gradient."
+      }
+    ],
+    "explanation": "Discrete fields draw headers on Rows and Columns and a categorical palette on Color. Gradients and axes belong to continuous fields.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Type"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-022",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "The shelves show `Plan` on Columns and a blue `SUM(Minutes Watched)` pill on Rows. What does the blue pill mean for the view?",
+    "options": [
+      {
+        "text": "The measure becomes a dimension and is no longer summed",
+        "correct": false,
+        "rationale": "Making a measure discrete does not change its role. It is still aggregated."
+      },
+      {
+        "text": "Tableau draws a numeric axis with a continuous range of summed values",
+        "correct": false,
+        "rationale": "An axis belongs to continuous pills. A blue pill draws headers."
+      },
+      {
+        "text": "Tableau hides the field and draws only the `Plan` headers",
+        "correct": false,
+        "rationale": "A blue pill is still part of the view. It just uses headers instead of an axis."
+      },
+      {
+        "text": "It is still summed, but each distinct sum gets a header",
+        "correct": true,
+        "rationale": "Discrete is a display property. The aggregation stays, and each separate value becomes a header label."
+      }
+    ],
+    "explanation": "Discrete versus continuous is separate from dimension versus measure. A measure converted to discrete is still a measure and is still aggregated, but it draws headers instead of an axis.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "as": "discrete"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-023",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.1"
+    ],
+    "stem": "The chart shows one bar per `Genre`. What is true of the bars' positions across the view?",
+    "options": [
+      {
+        "text": "Each bar is placed along a number line according to the value of its genre",
+        "correct": false,
+        "rationale": "`Genre` is a string with no numeric value, so it has no place on a number line."
+      },
+      {
+        "text": "Each bar sits under its own header, and there is no position between two genres",
+        "correct": true,
+        "rationale": "Discrete members are separate and distinct, so the view has labelled headers with nothing in between."
+      },
+      {
+        "text": "The bars are placed on a continuous axis, with the genre names as its tick marks",
+        "correct": false,
+        "rationale": "Tick marks on a continuous axis mark values on an unbroken range, which genres do not have."
+      },
+      {
+        "text": "The bars are merged into one wide pane until the analyst adds a field to Color",
+        "correct": false,
+        "rationale": "Headers split the view by member already. Color is not needed for that."
+      }
+    ],
+    "explanation": "A discrete field makes separate, distinct members. Tableau draws one header per member, and the view has no in-between values.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-024",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "The chart counts titles by release year. The `Release Year` pill on Columns is green and the view shows an axis of years. What produced the axis?",
+    "options": [
+      {
+        "text": "`Release Year` was changed from a dimension to a measure in the view",
+        "correct": false,
+        "rationale": "The role is unchanged. Release Year stays a dimension, and only its continuity changed."
+      },
+      {
+        "text": "`Release Year` was aggregated with `SUM`, which makes a pill green",
+        "correct": false,
+        "rationale": "The pill reads `Release Year`, not `SUM(Release Year)`, so nothing was aggregated. Its colour comes from its continuity."
+      },
+      {
+        "text": "The pill was converted to continuous, so it draws an axis",
+        "correct": true,
+        "rationale": "A numeric dimension can be discrete or continuous. Continuous pills are green and draw an axis."
+      },
+      {
+        "text": "`Titles (Count)` was moved from Rows over to the Columns shelf",
+        "correct": false,
+        "rationale": "Moving a different pill would not change how `Release Year` is drawn."
+      }
+    ],
+    "explanation": "Numeric and date dimensions can be discrete or continuous. Converting `Release Year` to continuous gives a green pill and an axis of years, but the field stays a dimension.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Release Year",
+            "as": "continuous"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Titles (Count)"
+          }
+        ],
+        "source": "titles"
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-025",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "The shelves show a continuous `Release Year` pill on Columns and `AVG(Runtime)` on Rows. Which statement is correct?",
+    "options": [
+      {
+        "text": "Both are green and draw axes, though `Release Year` is a dimension",
+        "correct": true,
+        "rationale": "Continuity and role are separate. A numeric dimension can be continuous."
+      },
+      {
+        "text": "`Release Year` must be a measure now, because only measures are green",
+        "correct": false,
+        "rationale": "Colour shows continuity, not role. A dimension can be green."
+      },
+      {
+        "text": "Only `AVG(Runtime)` draws an axis, because `Release Year` is a dimension",
+        "correct": false,
+        "rationale": "A continuous dimension draws an axis too, like any green pill."
+      },
+      {
+        "text": "Both pills draw headers, because an average is a discrete value",
+        "correct": false,
+        "rationale": "Averages of numbers are continuous by default and draw an axis."
+      }
+    ],
+    "explanation": "Green pills draw axes, whether the field is a dimension or a measure. A numeric dimension such as `Release Year` can be converted to continuous without becoming a measure.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Release Year",
+            "as": "continuous"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Runtime",
+            "agg": "avg"
+          }
+        ],
+        "source": "titles"
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-026",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "The chart shows `Genre` on Rows and `SUM(Minutes Watched)` on Columns, with `SUM(Minutes Watched)` also on Color. Which statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The Color legend shows a distinct color for each genre",
+        "correct": false,
+        "rationale": "Genre is on Rows, not Color. The legend belongs to the continuous measure."
+      },
+      {
+        "text": "The Color legend is a gradient from low to high values",
+        "correct": true,
+        "rationale": "A continuous field on Color gets a quantitative legend."
+      },
+      {
+        "text": "The Color pill is blue, because it is a measure",
+        "correct": false,
+        "rationale": "Measures are green by default, and colour shows continuity, not role."
+      },
+      {
+        "text": "`Minutes Watched` on Color turned into a dimension",
+        "correct": false,
+        "rationale": "Putting a measure on Color doesn't change its role. It is still an aggregated measure."
+      },
+      {
+        "text": "The color of each bar follows its summed value",
+        "correct": true,
+        "rationale": "The shading steps through the range, so bars with larger sums get a different shade than smaller ones."
+      }
+    ],
+    "explanation": "A continuous field on Color is shown as a gradient, so each mark is shaded according to its value. A discrete field would get a separate color per member instead.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Minutes Watched"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-027",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "The chart shows a continuous timeline with `YEAR(Start)` as a date value. The analyst wants one header per year instead of an axis. What should they change?",
+    "options": [
+      {
+        "text": "Convert `Minutes Watched` on Rows to a discrete pill",
+        "correct": false,
+        "rationale": "That changes the Rows pill. The Columns pill would still draw an axis."
+      },
+      {
+        "text": "Drag `Start` from Columns to the Color shelf instead",
+        "correct": false,
+        "rationale": "Color doesn't add headers, and the timeline would be removed."
+      },
+      {
+        "text": "Change `Start` from a dimension to a measure",
+        "correct": false,
+        "rationale": "Role doesn't decide between headers and an axis; continuity does, and the date part or value choice sets it."
+      },
+      {
+        "text": "Pick the discrete date part `YEAR(Start)` in the menu",
+        "correct": true,
+        "rationale": "Date parts are discrete and draw headers, one per year. Date values are continuous and draw an axis."
+      }
+    ],
+    "explanation": "The date menu offers each level as a discrete part and a continuous value. Choosing the part turns the pill blue and draws headers instead of a timeline.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "year",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm"
+    ]
+  },
+  {
+    "id": "4.2-028",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.2"
+    ],
+    "stem": "The shelves show `Genre` on Rows, `Titles (Count)` on Columns, and a green `Release Year` pill on Color. What will the Color legend look like?",
+    "options": [
+      {
+        "text": "A list with a separate color for each release year",
+        "correct": false,
+        "rationale": "That is what a discrete pill on Color gets. This pill is green."
+      },
+      {
+        "text": "A gradient running from earlier to later years",
+        "correct": true,
+        "rationale": "A continuous field on Color gets a quantitative legend, even though `Release Year` is a dimension."
+      },
+      {
+        "text": "No legend, because a dimension on Color doesn't get one",
+        "correct": false,
+        "rationale": "Any field on Color gets a legend. Dimensions get one too."
+      },
+      {
+        "text": "A gradient of counts, because Color always shows the measure",
+        "correct": false,
+        "rationale": "Color shows the field placed on it. Here that is `Release Year`, not the count."
+      }
+    ],
+    "explanation": "The legend follows the pill's continuity. A green `Release Year` gets a gradient, and a blue one would get a color per year.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Titles (Count)"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Release Year",
+            "as": "continuous"
+          }
+        },
+        "source": "titles"
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.2-029",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "The chart shows a timeline with one point per month across the two years. The analyst wants 12 headers, January to December, to look for seasonality. What should they change?",
+    "options": [
+      {
+        "text": "Switch `MONTH(Start)` to the discrete date part",
+        "correct": true,
+        "rationale": "A date part is discrete, so the headers appear and each month's two years add together."
+      },
+      {
+        "text": "Convert `Minutes Watched` on Rows to a discrete pill",
+        "correct": false,
+        "rationale": "That changes the Rows pill. The Columns pill would still be a timeline."
+      },
+      {
+        "text": "Replace the field `Start` with `Sessions (Count)`",
+        "correct": false,
+        "rationale": "That removes the date from the view, so there is no seasonality to compare."
+      },
+      {
+        "text": "Add `YEAR(Start)` to Color, which splits the lines by year",
+        "correct": false,
+        "rationale": "Color splits the lines by year, but the axis stays a timeline with all months in it."
+      }
+    ],
+    "explanation": "Date values are continuous and keep the year. Date parts are discrete and merge the same month of every year, which suits seasonality.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  },
+  {
+    "id": "4.2-030",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "Finance wants to see whether viewing is growing across 2024 and 2025. Why doesn't this chart answer that?",
+    "options": [
+      {
+        "text": "`SUM(Minutes Watched)` should be an average so that growth shows up",
+        "correct": false,
+        "rationale": "The aggregation isn't the problem. Averaging wouldn't restore the years."
+      },
+      {
+        "text": "Month headers are only suited to bar charts, never to trends",
+        "correct": false,
+        "rationale": "Headers can be shown in any chart. The issue is what the date pill does to the years."
+      },
+      {
+        "text": "The pill is a date value, so it hides the difference between months",
+        "correct": false,
+        "rationale": "A date value would keep every month in order. This pill is a blue part."
+      },
+      {
+        "text": "`MONTH(Start)` is a date part, so each month adds up both years",
+        "correct": true,
+        "rationale": "A date part merges the years. A continuous date value would keep a timeline."
+      }
+    ],
+    "explanation": "A discrete date part such as `MONTH(Start)` combines all years into 12 headers. For a trend over time, use the continuous date value so the two years run one after the other.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "part"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  },
+  {
+    "id": "4.2-031",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "The shelves show a blue `MONTH(Start)` pill on Columns. Which statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Each header adds up that month across every year in the data",
+        "correct": true,
+        "rationale": "A date part keeps only the month, so the same month of different years falls together."
+      },
+      {
+        "text": "The view draws a continuous timeline in month order",
+        "correct": false,
+        "rationale": "A timeline comes from a green date value. This pill is blue."
+      },
+      {
+        "text": "The pill is a date part, listed in the upper, discrete section of its menu",
+        "correct": true,
+        "rationale": "Date parts are the discrete choices, and date values are in the continuous section."
+      },
+      {
+        "text": "The pill is a date value that truncates the date to the month",
+        "correct": false,
+        "rationale": "Date values, or truncated dates, are green."
+      },
+      {
+        "text": "The view has a separate point for January 2024 and January 2025",
+        "correct": false,
+        "rationale": "That needs a date value. A date part gives one header for January."
+      }
+    ],
+    "explanation": "Blue date pills are date parts: discrete headers that merge years. Green date pills are date values: a continuous timeline.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "part"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm"
+    ]
+  },
+  {
+    "id": "4.2-032",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "The chart shows `SUM(Minutes Watched)` with the date parts `YEAR(Start)` and `QUARTER(Start)` on Columns. Which statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Both date pills are discrete, so they draw headers",
+        "correct": true,
+        "rationale": "Date parts are blue and draw headers."
+      },
+      {
+        "text": "Both date pills are continuous, so they draw one shared axis",
+        "correct": false,
+        "rationale": "An axis needs green date values. These are discrete parts."
+      },
+      {
+        "text": "The quarter headers repeat under each year",
+        "correct": true,
+        "rationale": "The year is the first header, so the quarters are listed again inside each of them."
+      },
+      {
+        "text": "Tableau merges the quarters into four headers shared by all years",
+        "correct": false,
+        "rationale": "That happens only when `YEAR(Start)` isn't in the view."
+      },
+      {
+        "text": "Replacing both with date values would still draw headers",
+        "correct": false,
+        "rationale": "Date values are continuous and draw an axis instead."
+      }
+    ],
+    "explanation": "Discrete date parts draw nested headers, like any discrete fields. The quarter part is split by year only because the year is also in the view.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "year",
+              "mode": "part"
+            }
+          },
+          {
+            "field": "Start",
+            "date": {
+              "level": "quarter",
+              "mode": "part"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm"
+    ]
+  },
+  {
+    "id": "4.2-033",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "The shelves show a green `QUARTER(Start)` pill on Columns. How does it differ from the blue date part `QUARTER(Start)`?",
+    "options": [
+      {
+        "text": "It is a date part, so it draws four headers instead of an axis",
+        "correct": false,
+        "rationale": "Date parts are blue. A green date pill is a date value."
+      },
+      {
+        "text": "It keeps the year, so quarters run in time order",
+        "correct": true,
+        "rationale": "A date value is truncated to the quarter and stays continuous, so each year has its own quarters."
+      },
+      {
+        "text": "It adds the same quarter of every year, giving four marks",
+        "correct": false,
+        "rationale": "That is what the discrete date part does, not the date value."
+      },
+      {
+        "text": "It is a measure, so Tableau sums its values for each mark",
+        "correct": false,
+        "rationale": "The pill is still a date dimension, and colour shows continuity, not role."
+      }
+    ],
+    "explanation": "A date value is the actual date truncated to a level, such as Q1 2024. It is continuous and ordered in time, while the date part merges years.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "quarter",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
+  },
+  {
+    "id": "4.2-034",
+    "taskId": "4.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.2.3"
+    ],
+    "stem": "The chart shows `SUM(Minutes Watched)` by the green date value `QUARTER(Start)`. Which statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The quarters of both years run in sequence along one timeline",
+        "correct": true,
+        "rationale": "A date value is truncated to the quarter, so each year keeps its own quarters."
+      },
+      {
+        "text": "All first quarters are merged into a single point",
+        "correct": false,
+        "rationale": "Merging is what a discrete date part does."
+      },
+      {
+        "text": "The pill is a dimension, even though it is green",
+        "correct": true,
+        "rationale": "Colour shows continuity. The date field stays a dimension."
+      },
+      {
+        "text": "The view shows a header for each quarter",
+        "correct": false,
+        "rationale": "Headers come from discrete pills. This pill draws an axis."
+      },
+      {
+        "text": "The pill changed `Start` into a measure",
+        "correct": false,
+        "rationale": "Choosing a date value changes continuity and level. It doesn't change the role."
+      }
+    ],
+    "explanation": "Green date values form a continuous, ordered timeline. They are still dimensions, and they keep the year, unlike discrete date parts.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "quarter",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dates.htm"
+    ]
   }
 ]
