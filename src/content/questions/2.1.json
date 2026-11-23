@@ -884,5 +884,923 @@
       "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm",
       "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_symbol.htm"
     ]
+  },
+  {
+    "id": "2.1-025",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "Target Hours and Actual Hours must share one axis so they can be compared directly. What creates this combined axis chart?",
+    "options": [
+      {
+        "text": "Drag the second measure to the right side of the view until a black dashed line appears",
+        "correct": false,
+        "rationale": "That gesture creates a second axis, which is a dual axis."
+      },
+      {
+        "text": "Put both measures on Rows, then right-click one of them and choose Dual Axis",
+        "correct": false,
+        "rationale": "Dual Axis gives each measure its own axis, so the axis is not shared."
+      },
+      {
+        "text": "Drag one measure or axis and drop it onto the existing axis",
+        "correct": true,
+        "rationale": "Dropping onto an existing axis blends the measures into one shared axis."
+      },
+      {
+        "text": "Drag the second measure to Color on the Marks card",
+        "correct": false,
+        "rationale": "A measure on Color shades marks; it does not put two measures on one axis."
+      }
+    ],
+    "explanation": "A combined axis, called a blended axis in Tableau help, is made by dropping one measure or axis onto an existing axis. The measures then share one axis and can be compared directly.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-026",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "In a combined axis chart, which field is on Color so that each measure gets its own colour?",
+    "options": [
+      {
+        "text": "`Measure Names`",
+        "correct": true,
+        "rationale": "Tableau adds Measure Names to Color when measures are blended, one colour per measure."
+      },
+      {
+        "text": "`Measure Values`",
+        "correct": false,
+        "rationale": "Measure Values replaces the measures on the axis shelf; it is not the field on Color."
+      },
+      {
+        "text": "`Genre`",
+        "correct": false,
+        "rationale": "A dimension on Color would split the marks by genre instead of telling the measures apart."
+      },
+      {
+        "text": "`Sessions (Count)`",
+        "correct": false,
+        "rationale": "This is one of the measures, and it is merged into Measure Values rather than placed on Color."
+      }
+    ],
+    "explanation": "Blending replaces the measures on the shelf with Measure Values and adds Measure Names to Color. The colours then say which measure each mark shows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-027",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "Which pair of measures is the best candidate for a combined axis?",
+    "options": [
+      {
+        "text": "`Minutes Watched` in millions and `Sessions (Count)` in thousands",
+        "correct": false,
+        "rationale": "The scales differ a lot, so a dual axis suits these better."
+      },
+      {
+        "text": "`Monthly Price` in currency and `Runtime` in minutes",
+        "correct": false,
+        "rationale": "Different units belong on separate axes, as in a dual axis."
+      },
+      {
+        "text": "`Genre` and `Minutes Watched`",
+        "correct": false,
+        "rationale": "`Genre` is a dimension, and only measures are blended onto an axis."
+      },
+      {
+        "text": "Target Hours and Actual Hours, both measured in hours",
+        "correct": true,
+        "rationale": "Measures in the same units can share one axis and be compared directly."
+      }
+    ],
+    "explanation": "Use a combined axis for measures in the same units, because one shared axis lets the reader compare them directly. Use a dual axis when the units or scales differ.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-028",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "Which two statements about a combined axis chart are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Both measures share a single axis",
+        "correct": true,
+        "rationale": "That is what makes the axis combined, or blended."
+      },
+      {
+        "text": "Each measure can have its own mark type",
+        "correct": false,
+        "rationale": "Separate mark types per measure belong to a dual axis; a combined axis has one."
+      },
+      {
+        "text": "`Measure Names` on Color tells the measures apart",
+        "correct": true,
+        "rationale": "Each measure gets its own colour through Measure Names."
+      },
+      {
+        "text": "It is the better choice when the measures have very different scales",
+        "correct": false,
+        "rationale": "A shared axis would squash the smaller measure; a dual axis suits different scales."
+      },
+      {
+        "text": "It is created with the Dual Axis command",
+        "correct": false,
+        "rationale": "Dual Axis creates two axes, not a shared one."
+      }
+    ],
+    "explanation": "A combined axis puts several measures on one shared axis, with Measure Names on Color to distinguish them. It has one set of marks, so it suits measures in the same units.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-029",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "A chart shows Target Hours and Actual Hours on one shared axis, coloured by `Measure Names`. Which two statements describe how it was built? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The analyst chose Dual Axis from the pill menu",
+        "correct": false,
+        "rationale": "That would have produced two axes."
+      },
+      {
+        "text": "One measure was dropped onto the axis of the other",
+        "correct": true,
+        "rationale": "Dropping a measure onto an existing axis is how the axis is blended."
+      },
+      {
+        "text": "`Measure Values` replaced the individual measures on the shelf",
+        "correct": true,
+        "rationale": "Blending swaps the measures for Measure Values."
+      },
+      {
+        "text": "Synchronize Axis was applied to the secondary axis",
+        "correct": false,
+        "rationale": "Synchronize Axis aligns two axes; this chart has only one."
+      },
+      {
+        "text": "A second Marks card was added for the new measure",
+        "correct": false,
+        "rationale": "A Marks card per measure appears with a dual axis, not with a blended axis."
+      }
+    ],
+    "explanation": "To blend measures, drag one measure or axis and drop it onto an existing axis. Tableau then uses Measure Values on the shelf and Measure Names on Color.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-030",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "`Minutes Watched` and `Sessions (Count)` are both on Rows. Which right-click command on one of the pills makes a dual axis chart?",
+    "options": [
+      {
+        "text": "Synchronize Axis",
+        "correct": false,
+        "rationale": "That command sets the two axes to the same scale after a dual axis exists."
+      },
+      {
+        "text": "Dual Axis",
+        "correct": true,
+        "rationale": "Choosing Dual Axis layers the two measures, each with its own axis."
+      },
+      {
+        "text": "Edit Axis",
+        "correct": false,
+        "rationale": "This changes the range or title of an axis, not the number of axes."
+      },
+      {
+        "text": "Add Reference Line",
+        "correct": false,
+        "rationale": "A reference line is an overlay on one axis; it does not layer a second measure."
+      }
+    ],
+    "explanation": "Put both measures on Rows or Columns, then right-click one and select Dual Axis. Tableau layers the measures with an axis on each side.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-031",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "The two axes of a dual axis chart have different ranges. How does the analyst put them on the same scale?",
+    "options": [
+      {
+        "text": "Drag one measure onto the other axis to blend them",
+        "correct": false,
+        "rationale": "Blending replaces the dual axis with one combined axis rather than aligning the two."
+      },
+      {
+        "text": "Set Stack Marks to Off in the Analysis menu",
+        "correct": false,
+        "rationale": "Stack Marks controls stacking, which has no effect on axis scales."
+      },
+      {
+        "text": "Change the mark type on the second Marks card",
+        "correct": false,
+        "rationale": "Mark types change the drawing, not the axis range."
+      },
+      {
+        "text": "Right-click the secondary axis and select Synchronize Axis",
+        "correct": true,
+        "rationale": "Synchronize Axis makes both axes use the same range."
+      }
+    ],
+    "explanation": "The two axes of a dual axis chart are independent. To put them on the same scale, right-click the secondary axis and select Synchronize Axis.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-032",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "What lets a dual axis chart show bars for `Minutes Watched` and a line for `Sessions (Count)`?",
+    "options": [
+      {
+        "text": "Each measure has its own Marks card, so each can have its own mark type",
+        "correct": true,
+        "rationale": "This is why bars and a line can be combined in one chart."
+      },
+      {
+        "text": "`Measure Names` on Color assigns a mark type to each measure",
+        "correct": false,
+        "rationale": "Measure Names only colours; mark types are set on Marks cards."
+      },
+      {
+        "text": "Synchronize Axis lets the two axes draw different mark types",
+        "correct": false,
+        "rationale": "Synchronizing aligns the scales but has no effect on mark types."
+      },
+      {
+        "text": "Automatic always draws the second measure as a line",
+        "correct": false,
+        "rationale": "Automatic follows the fields in the view and doesn't apply a fixed rule for second measures."
+      }
+    ],
+    "explanation": "A dual axis chart has a Marks card for each measure, so you can set each measure's mark type independently. Bars for one measure and a line for the other is the classic combo chart.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-033",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "Which two situations call for a dual axis rather than a combined axis? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Minutes watched in millions shown next to sessions in thousands",
+        "correct": true,
+        "rationale": "The scales differ, so each measure needs its own axis."
+      },
+      {
+        "text": "Target Hours and Actual Hours, both in hours",
+        "correct": false,
+        "rationale": "Same units suit a shared, combined axis."
+      },
+      {
+        "text": "A combo chart with bars for one measure and a line for another",
+        "correct": true,
+        "rationale": "Only a dual axis offers a mark type per measure."
+      },
+      {
+        "text": "Two measures that must share one axis and one mark type",
+        "correct": false,
+        "rationale": "That describes a combined axis."
+      },
+      {
+        "text": "A bar split into coloured segments by a dimension",
+        "correct": false,
+        "rationale": "That is a stacked bar, made with a dimension on Color."
+      }
+    ],
+    "explanation": "A dual axis suits measures with different units or scales, and it allows a different mark type per measure. A combined axis suits measures in the same units on one shared axis.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-034",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "Which two statements about building a dual axis chart are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The second measure can be dropped on the right side of the view when a black dashed line appears",
+        "correct": true,
+        "rationale": "That gesture creates the second axis."
+      },
+      {
+        "text": "Both measures must use the same mark type",
+        "correct": false,
+        "rationale": "Each measure has its own Marks card and mark type."
+      },
+      {
+        "text": "`Measure Names` is placed on Color automatically",
+        "correct": false,
+        "rationale": "That happens when axes are blended, not in a dual axis."
+      },
+      {
+        "text": "Up to four layered axes are possible, two on Columns and two on Rows",
+        "correct": true,
+        "rationale": "Tableau help states this limit."
+      },
+      {
+        "text": "Synchronize Axis has to be applied before the second axis appears",
+        "correct": false,
+        "rationale": "Synchronizing is an optional step after both axes exist."
+      }
+    ],
+    "explanation": "A dual axis can be made by dropping a measure on the right side of the view or by choosing Dual Axis on a pill. Tableau allows up to four layered axes: two on Columns and two on Rows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-035",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "A bar chart shows `Minutes Watched` by `Plan`. How does the analyst split each bar into device segments?",
+    "options": [
+      {
+        "text": "Drag `Device` to Columns next to `Plan`",
+        "correct": false,
+        "rationale": "A dimension on Columns adds a second level of headers, not segments inside one bar."
+      },
+      {
+        "text": "Right-click `Minutes Watched` and choose Dual Axis",
+        "correct": false,
+        "rationale": "Dual Axis layers two measures; it does not split a bar by a dimension."
+      },
+      {
+        "text": "Drag `Device` to Color",
+        "correct": true,
+        "rationale": "A dimension on Color stacks the bar into one segment per member."
+      },
+      {
+        "text": "Change the mark type to Density",
+        "correct": false,
+        "rationale": "Density draws clusters of points on a map, not stacked bars."
+      }
+    ],
+    "explanation": "A stacked bar is a bar chart with a second dimension on Color. Tableau stacks the marks automatically, so each bar splits into segments that add up to its total.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-036",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "Which menu controls whether marks are stacked, and what is its default setting?",
+    "options": [
+      {
+        "text": "Format > Stack Marks, with a default of On",
+        "correct": false,
+        "rationale": "Stack Marks is in the Analysis menu, and the default isn't On."
+      },
+      {
+        "text": "Analysis > Stack Marks, with a default of Automatic",
+        "correct": true,
+        "rationale": "Stack Marks offers Automatic, On and Off, and Automatic is the default."
+      },
+      {
+        "text": "Map > Stack Marks, with a default of Off",
+        "correct": false,
+        "rationale": "The Map menu holds map settings, and the default isn't Off."
+      },
+      {
+        "text": "Data > Stack Marks, with a default of Automatic",
+        "correct": false,
+        "rationale": "The setting is in the Analysis menu, not the Data menu."
+      }
+    ],
+    "explanation": "Analysis > Stack Marks lets Tableau decide whether to stack automatically, or you can specify On or Off. The default setting is Automatic.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-037",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "Which Driftlight question is best answered by a stacked bar?",
+    "options": [
+      {
+        "text": "How does each plan's viewing split by device?",
+        "correct": true,
+        "rationale": "Segments by a second dimension within each bar are a stacked bar."
+      },
+      {
+        "text": "Where are subscribers clustered?",
+        "correct": false,
+        "rationale": "Clusters of points are shown on a density map."
+      },
+      {
+        "text": "What are the exact minutes for each region and year?",
+        "correct": false,
+        "rationale": "Exact values call for a crosstab."
+      },
+      {
+        "text": "How do minutes and sessions compare in one chart?",
+        "correct": false,
+        "rationale": "Two measures with different scales suit a dual axis."
+      }
+    ],
+    "explanation": "Use a stacked bar to show how each bar's total splits among the members of another dimension. Here, each plan's bar is split by device.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-038",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "A bar chart has `Device` on Color but the bars are not stacked. How can the analyst force stacking?",
+    "options": [
+      {
+        "text": "Right-click an axis and select Synchronize Axis",
+        "correct": false,
+        "rationale": "Synchronize Axis aligns two axes and has no effect on stacking."
+      },
+      {
+        "text": "Change the mark type to Density",
+        "correct": false,
+        "rationale": "Density is for clusters on maps."
+      },
+      {
+        "text": "Move `Device` from Color to Rows",
+        "correct": false,
+        "rationale": "`Device` on Rows creates headers, not stacked segments."
+      },
+      {
+        "text": "Choose Analysis > Stack Marks > On",
+        "correct": true,
+        "rationale": "The Stack Marks setting can be set to On instead of Automatic."
+      }
+    ],
+    "explanation": "Stacking is governed by Analysis > Stack Marks. Automatic is the default, but On and Off can be specified.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-039",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "Which two steps build a stacked bar of `Minutes Watched` by `Plan` split by `Device`? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Set the mark type to Density",
+        "correct": false,
+        "rationale": "Density is for clusters of points."
+      },
+      {
+        "text": "Build a bar chart with `Plan` and `Minutes Watched` on the shelves",
+        "correct": true,
+        "rationale": "A stacked bar starts as an ordinary bar chart."
+      },
+      {
+        "text": "Right-click `Minutes Watched` and choose Dual Axis",
+        "correct": false,
+        "rationale": "Dual Axis layers two measures; it is not needed here."
+      },
+      {
+        "text": "Drag `Device` to Color",
+        "correct": true,
+        "rationale": "The second dimension on Color splits each bar into segments."
+      },
+      {
+        "text": "Set the mark type to Square",
+        "correct": false,
+        "rationale": "Square is part of a highlight table."
+      }
+    ],
+    "explanation": "Start with a bar chart and drag a second dimension to Color. Tableau stacks the marks automatically.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-040",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "Where does the analyst choose the Density mark type?",
+    "options": [
+      {
+        "text": "In the Analysis menu under Stack Marks",
+        "correct": false,
+        "rationale": "Stack Marks controls stacking, not the mark type."
+      },
+      {
+        "text": "In the mark type drop-down on the Marks card, next to Automatic",
+        "correct": true,
+        "rationale": "The Density mark type is chosen from this drop-down."
+      },
+      {
+        "text": "In the Map menu under Map Layers",
+        "correct": false,
+        "rationale": "Map Layers set background layers, not the mark type."
+      },
+      {
+        "text": "On the Intensity slider",
+        "correct": false,
+        "rationale": "The slider adjusts vividness once Density is selected."
+      }
+    ],
+    "explanation": "A density map uses the Density mark type. Open the mark type drop-down on the Marks card, to the right of Automatic, and select Density.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-041",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "A density map of subscribers has `Longitude` on Columns, `Latitude` on Rows and the Density mark. Which field on Detail provides many underlying points?",
+    "options": [
+      {
+        "text": "`Country`",
+        "correct": false,
+        "rationale": "One mark per country gives too few points for clusters to show."
+      },
+      {
+        "text": "`Region`",
+        "correct": false,
+        "rationale": "One mark per region gives too few points for clusters to show."
+      },
+      {
+        "text": "`Subscriber ID`",
+        "correct": true,
+        "rationale": "An ID has one value per subscriber, so there are many points to cluster."
+      },
+      {
+        "text": "`Device`",
+        "correct": false,
+        "rationale": "`Device` isn't unique per subscriber and has few members."
+      }
+    ],
+    "explanation": "A density map needs a field on Detail with many underlying data points, such as an ID. The Density mark then shows where those points cluster.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-042",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "What does the Intensity slider do on a density map?",
+    "options": [
+      {
+        "text": "It increases or decreases the vividness of the map",
+        "correct": true,
+        "rationale": "Intensity controls how vivid the density colours look."
+      },
+      {
+        "text": "It selects one of ten density colour palettes",
+        "correct": false,
+        "rationale": "Palettes are chosen separately in the Color settings."
+      },
+      {
+        "text": "It sets the number of points drawn",
+        "correct": false,
+        "rationale": "Points come from the field on Detail, not from the slider."
+      },
+      {
+        "text": "It switches the mark type between Density and Map",
+        "correct": false,
+        "rationale": "Mark types are chosen from the Marks card drop-down."
+      }
+    ],
+    "explanation": "Tableau offers ten density colour palettes and an Intensity slider that increases or decreases the vividness of the map. Size adjusts the mark size.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-043",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "Subscribers are drawn as individual points and many overlap. Which map shows where they cluster?",
+    "options": [
+      {
+        "text": "A filled map coloured by subscribers",
+        "correct": false,
+        "rationale": "It shades whole areas and shows no clustering inside them."
+      },
+      {
+        "text": "A symbol map with `City` on Detail",
+        "correct": false,
+        "rationale": "It draws one circle per location, and overlapping circles hide clusters."
+      },
+      {
+        "text": "A line chart by `Country`",
+        "correct": false,
+        "rationale": "A line needs a date and doesn't show locations."
+      },
+      {
+        "text": "A density map",
+        "correct": true,
+        "rationale": "The Density mark reveals where many points cluster."
+      }
+    ],
+    "explanation": "Use a density map for data with many overlapping points. The Density mark turns clusters into visible colour intensity.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-044",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "Which three steps build a density map of subscribers? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Put `Longitude` on Columns and `Latitude` on Rows",
+        "correct": true,
+        "rationale": "The coordinates give each point its position."
+      },
+      {
+        "text": "Set the mark type to Map and put a measure on Color",
+        "correct": false,
+        "rationale": "That is a filled map, not a density map."
+      },
+      {
+        "text": "Put `Subscriber ID` on Detail",
+        "correct": true,
+        "rationale": "A field with many data points gives the Density mark points to cluster."
+      },
+      {
+        "text": "Set the mark type to Density",
+        "correct": true,
+        "rationale": "The Density mark draws clusters instead of individual marks."
+      },
+      {
+        "text": "Right-click `Latitude` and choose Dual Axis",
+        "correct": false,
+        "rationale": "Dual Axis is not part of the density recipe."
+      }
+    ],
+    "explanation": "A density map needs the coordinates on Columns and Rows, a field with many data points on Detail, and the Density mark type.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-045",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "A crosstab has `Region` on Rows and `YEAR(Start)` on Columns. Where should the analyst drag `SUM(Minutes Watched)` to show the numbers in the cells?",
+    "options": [
+      {
+        "text": "Size on the Marks card",
+        "correct": false,
+        "rationale": "Size scales the marks and doesn't print values."
+      },
+      {
+        "text": "Text on the Marks card",
+        "correct": true,
+        "rationale": "Text prints the measure's value in each cell of the table."
+      },
+      {
+        "text": "Detail on the Marks card",
+        "correct": false,
+        "rationale": "Detail only adds a level of detail."
+      },
+      {
+        "text": "Rows, to the right of `Region`",
+        "correct": false,
+        "rationale": "A measure on Rows draws an axis, which turns the table into a chart."
+      }
+    ],
+    "explanation": "A crosstab (text table) has one dimension on Rows, another on Columns and one or more measures on Text on the Marks card.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_text.htm"
+    ]
+  },
+  {
+    "id": "2.1-046",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "Which mark type does a highlight table use?",
+    "options": [
+      {
+        "text": "Text",
+        "correct": false,
+        "rationale": "Text is the mark type of a crosstab."
+      },
+      {
+        "text": "Bar",
+        "correct": false,
+        "rationale": "Bar draws bars along an axis, not filled cells."
+      },
+      {
+        "text": "Square",
+        "correct": true,
+        "rationale": "Square marks fill the cells, and a measure on Color shades them."
+      },
+      {
+        "text": "Density",
+        "correct": false,
+        "rationale": "Density draws clusters of points."
+      }
+    ],
+    "explanation": "A highlight table places dimensions on Columns and Rows, selects Square as the mark type and puts a measure of interest on Color.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
+  },
+  {
+    "id": "2.1-047",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "In a crosstab with the measure on Text, the analyst also drags the measure to Color and leaves the mark type as Text. What is the result?",
+    "options": [
+      {
+        "text": "The numbers are coloured, but it is not a highlight table",
+        "correct": true,
+        "rationale": "Color alone only colours the numbers."
+      },
+      {
+        "text": "A highlight table, because Color is all it needs",
+        "correct": false,
+        "rationale": "A highlight table also needs the Square mark type."
+      },
+      {
+        "text": "Tableau switches the mark type to Square automatically",
+        "correct": false,
+        "rationale": "The mark type stays Text unless the analyst changes it."
+      },
+      {
+        "text": "A dual axis chart with two Marks cards",
+        "correct": false,
+        "rationale": "Dual Axis comes from a right-click command on a measure pill."
+      }
+    ],
+    "explanation": "A crosstab puts the measure on Text. A highlight table changes the mark type to Square and puts the measure on Color. Color alone with Text only colours the numbers.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
+  },
+  {
+    "id": "2.1-048",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "Finance needs the exact minutes for every region and year in one view. Which chart fits best?",
+    "options": [
+      {
+        "text": "A dual axis chart",
+        "correct": false,
+        "rationale": "It layers two measures and is read from axes, not from exact cell values."
+      },
+      {
+        "text": "A crosstab",
+        "correct": true,
+        "rationale": "A crosstab shows exact values in a table of dimensions by dimensions."
+      },
+      {
+        "text": "A density map",
+        "correct": false,
+        "rationale": "It shows clusters of points, not exact values."
+      },
+      {
+        "text": "A stacked bar",
+        "correct": false,
+        "rationale": "It shows segments, which are harder to read as exact values."
+      }
+    ],
+    "explanation": "Use a table when readers need exact numbers rather than shapes. A crosstab can be upgraded to a highlight table when the big cells should stand out.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_text.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
+  },
+  {
+    "id": "2.1-049",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "Which three steps build a highlight table of `Region` by `YEAR(Start)`? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Set the mark type to Density",
+        "correct": false,
+        "rationale": "Density is for clusters of points."
+      },
+      {
+        "text": "Put `Region` on Rows and `YEAR(Start)` on Columns",
+        "correct": true,
+        "rationale": "A highlight table has dimensions on both shelves."
+      },
+      {
+        "text": "Set the mark type to Square",
+        "correct": true,
+        "rationale": "Square is the mark type of a highlight table."
+      },
+      {
+        "text": "Right-click the measure and choose Dual Axis",
+        "correct": false,
+        "rationale": "A dual axis layers measures on axes; there are no axes in this table."
+      },
+      {
+        "text": "Put the measure on Color",
+        "correct": true,
+        "rationale": "The measure on Color shades the squares."
+      }
+    ],
+    "explanation": "A highlight table has dimensions on Rows and Columns, the Square mark type and a measure on Color. Keeping the measure on Label too shows the exact value.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
   }
 ]
