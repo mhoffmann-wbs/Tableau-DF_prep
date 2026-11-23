@@ -1,0 +1,1198 @@
+[
+  {
+    "id": "3.3-001",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "The finance team has Tableau Desktop but no access to Driftlight's file share. The analyst's workbook reads from local CSV files. How should the analyst save it so finance can open it with the data?",
+    "options": [
+      {
+        "text": "As a plain Tableau workbook (`.twb`) and email that one file to finance",
+        "correct": false,
+        "rationale": "A `.twb` holds only the workbook definition, so the recipient would still need access to the CSV files."
+      },
+      {
+        "text": "As a PDF through File > Print to PDF, so finance sees every sheet as pages",
+        "correct": false,
+        "rationale": "A PDF is a static picture; finance could not open it in Tableau or work with the data."
+      },
+      {
+        "text": "As a Tableau Packaged Workbook (`.twbx`) using File > Save As",
+        "correct": true,
+        "rationale": "A packaged workbook stores the workbook and its local file data sources in a single file."
+      },
+      {
+        "text": "As slides through File > Export as PowerPoint, with every sheet selected",
+        "correct": false,
+        "rationale": "The slides are static PNG images, not a workbook with data."
+      }
+    ],
+    "explanation": "A packaged workbook (`.twbx`) bundles the workbook with the local file data sources, extracts, images and shapes it references. That makes it the right file for a colleague who has Tableau but not your data files.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_savework_packagedworkbooks.htm"
+    ]
+  },
+  {
+    "id": "3.3-002",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "Which menu path exports the active worksheet as a picture file such as PNG or SVG?",
+    "options": [
+      {
+        "text": "Worksheet > Export > Image",
+        "correct": true,
+        "rationale": "This opens the Export Image dialog, where the analyst picks what to include and the file format."
+      },
+      {
+        "text": "File > Print to PDF, then choosing a picture format in the paper options",
+        "correct": false,
+        "rationale": "Print to PDF produces a PDF with a range and paper size; it is not a picture export."
+      },
+      {
+        "text": "Worksheet > Export > Crosstab to Excel, then saving the result as a picture",
+        "correct": false,
+        "rationale": "Crosstab to Excel exports the view as a table for Excel, not as an image."
+      },
+      {
+        "text": "Server > Publish Workbook, then downloading the preview from the browser",
+        "correct": false,
+        "rationale": "Publishing sends the workbook to a server; it does not write an image file from Desktop."
+      }
+    ],
+    "explanation": "The Export Image dialog under Worksheet > Export > Image saves the view as BMP, JPEG, PNG or SVG. Worksheet > Copy > Image puts the same picture on the clipboard instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-003",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "The head of content wants a document of selected sheets that anyone can open without Tableau. How does the analyst create it?",
+    "options": [
+      {
+        "text": "Choose File > Save As and pick Tableau Packaged Workbooks as the type",
+        "correct": false,
+        "rationale": "A packaged workbook still needs Tableau to open it, so it is not usable without Tableau."
+      },
+      {
+        "text": "Choose Worksheet > Export > Data, which writes each selected sheet to one file",
+        "correct": false,
+        "rationale": "Export > Data writes the data behind a view, not a readable document of the sheets."
+      },
+      {
+        "text": "Choose Worksheet > Copy > Image and paste each sheet into a new workbook",
+        "correct": false,
+        "rationale": "That copies a single sheet as a picture to the clipboard and produces no document."
+      },
+      {
+        "text": "Choose File > Print to PDF and set the range to Selected Sheets",
+        "correct": true,
+        "rationale": "The dialog offers Entire Workbook, Active Sheet and Selected Sheets as the range, and the result is a PDF."
+      }
+    ],
+    "explanation": "File > Print to PDF writes sheets to a PDF whose range can be the Entire Workbook, the Active Sheet or Selected Sheets. A PDF can be read by anyone, with no Tableau installed.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/printing.htm"
+    ]
+  },
+  {
+    "id": "3.3-004",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "Which action starts publishing a workbook to Tableau Server or Tableau Cloud?",
+    "options": [
+      {
+        "text": "Data > Export Data to CSV, from the Data Source page",
+        "correct": false,
+        "rationale": "That exports the data source to a CSV file and publishes nothing."
+      },
+      {
+        "text": "Server > Publish Workbook, from a worksheet or dashboard tab",
+        "correct": true,
+        "rationale": "This opens the Publish Workbook dialog after the analyst signs in to the server."
+      },
+      {
+        "text": "File > Save As, choosing Tableau Packaged Workbooks as the type",
+        "correct": false,
+        "rationale": "Save As writes a file on the analyst's computer; it does not put the workbook on a server."
+      },
+      {
+        "text": "Worksheet > Export > Data, then uploading the file to the server",
+        "correct": false,
+        "rationale": "That exports data behind a view, not the workbook with its sheets."
+      }
+    ],
+    "explanation": "Publishing starts from the Server menu with Publish Workbook, while a sheet tab (not the Data Source tab) is active. After sign-in, the Publish Workbook dialog asks for a project, a name and tags.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/publish_workbooks_howto.htm"
+    ]
+  },
+  {
+    "id": "3.3-005",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "Executives want to open a Driftlight dashboard in a web browser and see current data. None of them has Tableau Desktop installed. What should the analyst do?",
+    "options": [
+      {
+        "text": "Send a packaged workbook (`.twbx`) by email so they can open it",
+        "correct": false,
+        "rationale": "A `.twbx` needs Tableau to open, which the executives do not have, and its data is a frozen copy."
+      },
+      {
+        "text": "Export the dashboard sheets as a PDF each week with File > Print to PDF",
+        "correct": false,
+        "rationale": "A PDF is a static document; the executives could neither explore nor see current data in it."
+      },
+      {
+        "text": "Export the sheets with File > Export as PowerPoint and share the deck",
+        "correct": false,
+        "rationale": "A deck holds static PNG images, which do not update with the data."
+      },
+      {
+        "text": "Publish the workbook to Tableau Server or Tableau Cloud",
+        "correct": true,
+        "rationale": "Published workbooks open in a browser and, with a live connection or refreshed extract, show current data."
+      }
+    ],
+    "explanation": "Browser access with current data is what publishing is for. A `.twbx`, a PDF or a deck are files, so each is a snapshot (and a `.twbx` also requires Tableau).",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/publish_workbooks_howto.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/save_savework_packagedworkbooks.htm"
+    ]
+  },
+  {
+    "id": "3.3-006",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "Which file format can the analyst choose when saving a view in the Export Image dialog?",
+    "options": [
+      {
+        "text": "PDF",
+        "correct": false,
+        "rationale": "A PDF comes from File > Print to PDF, which has its own paper and range options."
+      },
+      {
+        "text": "XLSX",
+        "correct": false,
+        "rationale": "An Excel file comes from Crosstab to Excel; it holds a table, not a picture."
+      },
+      {
+        "text": "PNG",
+        "correct": true,
+        "rationale": "The dialog saves BMP, JPEG, PNG or SVG."
+      },
+      {
+        "text": "HYPER",
+        "correct": false,
+        "rationale": "`.hyper` is the extract file format for data, not an image format."
+      }
+    ],
+    "explanation": "Export Image writes picture files (BMP, JPEG, PNG or SVG). PDF, Excel and extract files each come from different commands.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-007",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "A workbook uses a server data source. The analyst wants the data stored inside the `.twbx` they save. What must they do first?",
+    "options": [
+      {
+        "text": "Save the workbook as a `.twb`, which always carries server data with it",
+        "correct": false,
+        "rationale": "A `.twb` contains only the workbook, never the data."
+      },
+      {
+        "text": "Create an extract of the data source, with Extract Data from its right-click menu",
+        "correct": true,
+        "rationale": "Data from a server is only packaged once it has been extracted, because the file then contains a local copy."
+      },
+      {
+        "text": "Turn on Show Sheets as Tabs in the Publish Workbook dialog",
+        "correct": false,
+        "rationale": "That option controls tab navigation on a published workbook; it does not pack data into a file."
+      },
+      {
+        "text": "Select Entire Workbook as the range in the Print to PDF dialog",
+        "correct": false,
+        "rationale": "That is a PDF range option and has nothing to do with packaging data."
+      }
+    ],
+    "explanation": "A packaged workbook stores local file data sources and extracts. Server data is not packaged unless it is extracted first, which the analyst does by right-clicking the data source in the Data pane and choosing Extract Data.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_savework_packagedworkbooks.htm"
+    ]
+  },
+  {
+    "id": "3.3-008",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.1"
+    ],
+    "stem": "Before publishing, an analyst hides a sheet that has salary details so nobody will see it. Which statement is correct?",
+    "options": [
+      {
+        "text": "Anyone with access to the workbook can still reach the hidden sheet, so permissions should control access",
+        "correct": true,
+        "rationale": "Hiding sheets only tidies the tabs; it is not a security measure."
+      },
+      {
+        "text": "Hidden sheets are removed from the published file, so only the analyst can see them",
+        "correct": false,
+        "rationale": "Hidden sheets stay in the workbook and remain reachable for people who can open it."
+      },
+      {
+        "text": "Hiding is secure as long as Show Sheets as Tabs is switched off in the dialog",
+        "correct": false,
+        "rationale": "Turning off tabs changes navigation only and does not protect any sheet."
+      },
+      {
+        "text": "Hidden sheets are secure only if the data source is embedded rather than published",
+        "correct": false,
+        "rationale": "Whether data is embedded or published separately does not make a hidden sheet secure."
+      }
+    ],
+    "explanation": "Hiding a sheet is cosmetic. To control who sees what, use permissions on the project and workbook (or leave the sheet out of the published workbook).",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/publish_workbooks_howto.htm"
+    ]
+  },
+  {
+    "id": "3.3-009",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.1"
+    ],
+    "select": 2,
+    "stem": "Which two items can a packaged workbook (`.twbx`) contain? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A local Excel file used as a data source",
+        "correct": true,
+        "rationale": "A packaged workbook saves referenced local file data sources such as Excel and text files."
+      },
+      {
+        "text": "Background images and custom shapes used in the workbook",
+        "correct": true,
+        "rationale": "Images and shapes are packaged along with the workbook."
+      },
+      {
+        "text": "The live connection to a server data source, with the server's data",
+        "correct": false,
+        "rationale": "Server data is not packaged unless it is extracted first."
+      },
+      {
+        "text": "The permissions of the Tableau Server project",
+        "correct": false,
+        "rationale": "Permissions belong to the server, not to a file saved on a computer."
+      },
+      {
+        "text": "A nightly refresh schedule for the data",
+        "correct": false,
+        "rationale": "Refresh schedules are set on the server for published content, not stored in a file."
+      }
+    ],
+    "explanation": "A `.twbx` is a single file with the workbook plus local file data, extracts, background images, shapes and custom geocoding. Server content and permissions stay on the server.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_savework_packagedworkbooks.htm"
+    ]
+  },
+  {
+    "id": "3.3-010",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.1"
+    ],
+    "select": 2,
+    "stem": "Which two file formats can Export Image save? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`.csv`",
+        "correct": false,
+        "rationale": "A CSV file holds data and comes from a data export."
+      },
+      {
+        "text": "JPEG",
+        "correct": true,
+        "rationale": "JPEG is one of the four formats of the Export Image dialog."
+      },
+      {
+        "text": "`.hyper`",
+        "correct": false,
+        "rationale": "`.hyper` is the extract format, which holds data."
+      },
+      {
+        "text": "`.twbx`",
+        "correct": false,
+        "rationale": "That is a packaged workbook, saved with File > Save As."
+      },
+      {
+        "text": "SVG",
+        "correct": true,
+        "rationale": "SVG is one of the four formats of the Export Image dialog."
+      }
+    ],
+    "explanation": "Export Image saves BMP, JPEG, PNG or SVG. CSV, `.hyper` and `.twbx` are data or workbook files.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-011",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.1"
+    ],
+    "select": 3,
+    "stem": "Which three things can the analyst set in the Publish Workbook dialog? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Show Sheets as Tabs",
+        "correct": true,
+        "rationale": "This switch turns tab navigation on or off for the published workbook."
+      },
+      {
+        "text": "Paper Size",
+        "correct": false,
+        "rationale": "Paper Size belongs to the Print to PDF dialog."
+      },
+      {
+        "text": "Whether the data is embedded in the workbook or published separately",
+        "correct": true,
+        "rationale": "The Data Sources area offers Edit to change exactly this."
+      },
+      {
+        "text": "Which fields to show in the (All) list",
+        "correct": false,
+        "rationale": "That list belongs to the View Data window."
+      },
+      {
+        "text": "Include External Files",
+        "correct": true,
+        "rationale": "This packages local files such as Excel or CSV with the published workbook."
+      },
+      {
+        "text": "The image format of a thumbnail",
+        "correct": false,
+        "rationale": "Image formats are chosen in Export Image, not when publishing."
+      }
+    ],
+    "explanation": "Besides project, name and tags, the dialog covers permissions, data sources, Show Sheets as Tabs, Show Selections and Include External Files. Paper size and picture formats belong to other exports.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/publish_workbooks_howto.htm"
+    ]
+  },
+  {
+    "id": "3.3-012",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "How can the analyst open the data behind one mark in a view?",
+    "options": [
+      {
+        "text": "Select Worksheet > Export > Crosstab to Excel while the mark is selected",
+        "correct": false,
+        "rationale": "That writes the view as a table to Excel; it does not open a data window in Tableau."
+      },
+      {
+        "text": "Right-click the data source in the Data pane and choose Extract Data",
+        "correct": false,
+        "rationale": "Extract Data creates a copy of the data and does not show the rows behind a mark."
+      },
+      {
+        "text": "Right-click the mark and select View Data",
+        "correct": true,
+        "rationale": "View Data is in the right-click menu of the view (except in text tables) and in the tooltip menu."
+      },
+      {
+        "text": "Select File > Print to PDF and choose Selected Sheets as the range",
+        "correct": false,
+        "rationale": "That writes a PDF of sheets and shows no underlying data."
+      }
+    ],
+    "explanation": "View Data shows the data behind a mark or view. Open it from the tooltip menu, by right-clicking the view, or from the Analysis menu.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm"
+    ]
+  },
+  {
+    "id": "3.3-013",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "In the View Data window, what does the Summary tab display?",
+    "options": [
+      {
+        "text": "Every record of the data source, one row per original session",
+        "correct": false,
+        "rationale": "Individual records are on the Full Data tab, not in the Summary."
+      },
+      {
+        "text": "The list of filters applied to the worksheet, with their selected members",
+        "correct": false,
+        "rationale": "View Data shows data, not the filter configuration."
+      },
+      {
+        "text": "Only the fields of the data source that are not used in the view",
+        "correct": false,
+        "rationale": "The Summary is built from the fields of the view itself."
+      },
+      {
+        "text": "The dimensions in the view and the aggregated measures behind the marks",
+        "correct": true,
+        "rationale": "The Summary tab shows what defines the marks, so there is roughly one row per mark."
+      }
+    ],
+    "explanation": "The Summary tab shows the aggregated values that make up the marks. The Full Data tab is where the underlying rows live.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm"
+    ]
+  },
+  {
+    "id": "3.3-014",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "The analyst wants to see each individual row behind a single bar, not the aggregated total. Which part of View Data should they use?",
+    "options": [
+      {
+        "text": "The Full Data tab",
+        "correct": true,
+        "rationale": "It lists the underlying rows (for single-table data sources)."
+      },
+      {
+        "text": "The Summary tab",
+        "correct": false,
+        "rationale": "The Summary shows one aggregated row per mark, not the individual rows."
+      },
+      {
+        "text": "The Download button on the Summary tab",
+        "correct": false,
+        "rationale": "Download exports the tab it is on, so it would write the aggregated rows."
+      },
+      {
+        "text": "Worksheet > Export > Crosstab to Excel",
+        "correct": false,
+        "rationale": "The crosstab is the view as laid out, with aggregated values."
+      }
+    ],
+    "explanation": "A question about the records behind a bar wants the Full Data tab. The Summary tab repeats the aggregated values of the marks.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm"
+    ]
+  },
+  {
+    "id": "3.3-015",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "The Full Data tab shows only some columns. How does the analyst see every field of the data source?",
+    "options": [
+      {
+        "text": "Open the Summary tab, which always lists every field in the data source",
+        "correct": false,
+        "rationale": "The Summary shows only the dimensions and measures that make up the marks."
+      },
+      {
+        "text": "Select (All) under Show Fields",
+        "correct": true,
+        "rationale": "The Show Fields setting includes all fields once (All) is chosen."
+      },
+      {
+        "text": "Drag every field onto the Detail button of the Marks card",
+        "correct": false,
+        "rationale": "That changes the view and its marks, but is not how the View Data window lists fields."
+      },
+      {
+        "text": "Right-click the view and choose Extract Data from the menu",
+        "correct": false,
+        "rationale": "Extract Data does not change which columns the View Data window shows."
+      }
+    ],
+    "explanation": "In View Data the Show Fields selector controls the columns, and choosing (All) lists every field.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm"
+    ]
+  },
+  {
+    "id": "3.3-016",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "The View Data window shows up to 10,000 rows in Tableau Desktop, but the analyst needs all rows behind a mark in a file. What should they do?",
+    "options": [
+      {
+        "text": "Export the view with Worksheet > Export > Image to keep the table",
+        "correct": false,
+        "rationale": "An image is a picture, not a file of data rows."
+      },
+      {
+        "text": "Select File > Export as PowerPoint so each row becomes a slide",
+        "correct": false,
+        "rationale": "The export makes a static PNG image per sheet, not per row."
+      },
+      {
+        "text": "Click Download in View Data, which writes the whole tab to CSV",
+        "correct": true,
+        "rationale": "Download is not limited to the rows currently displayed."
+      },
+      {
+        "text": "Use Worksheet > Copy > Image and paste it into a spreadsheet",
+        "correct": false,
+        "rationale": "That puts a picture on the clipboard, which a spreadsheet cannot read as rows."
+      }
+    ],
+    "explanation": "The Download button exports all data of the selected tab to a CSV file, and it is not limited by the rows the window shows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm"
+    ]
+  },
+  {
+    "id": "3.3-017",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "On Windows, the analyst chooses Worksheet > Export > Data. What does Tableau write?",
+    "options": [
+      {
+        "text": "A `.csv` file with one row per mark",
+        "correct": false,
+        "rationale": "The CSV output is what a Mac gives, not Windows."
+      },
+      {
+        "text": "An Excel workbook laid out like the view",
+        "correct": false,
+        "rationale": "That is what Worksheet > Export > Crosstab to Excel does."
+      },
+      {
+        "text": "A PNG picture of the sheet",
+        "correct": false,
+        "rationale": "Pictures come from Export Image."
+      },
+      {
+        "text": "An Access database file",
+        "correct": true,
+        "rationale": "On Windows the export is an Access database (on a Mac it is a `.csv`)."
+      }
+    ],
+    "explanation": "Worksheet > Export > Data exports the data behind the view, as an Access database on Windows and as a CSV on Mac. The fields come from the shelves of the sheet.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_data.htm"
+    ]
+  },
+  {
+    "id": "3.3-018",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "The analyst wants the table of a view, exactly as laid out, to continue working with in Excel. Which command do they use?",
+    "options": [
+      {
+        "text": "Worksheet > Export > Image",
+        "correct": false,
+        "rationale": "An image is a picture and cannot be worked with in Excel."
+      },
+      {
+        "text": "Worksheet > Export > Crosstab to Excel",
+        "correct": true,
+        "rationale": "It exports the view as a table for Excel."
+      },
+      {
+        "text": "File > Print to PDF with Active Sheet as the range",
+        "correct": false,
+        "rationale": "A PDF is a static document."
+      },
+      {
+        "text": "Server > Publish Workbook with Include External Files switched on",
+        "correct": false,
+        "rationale": "That publishes the workbook to a server rather than creating an Excel file."
+      }
+    ],
+    "explanation": "Crosstab to Excel gives the view as a table. Export > Data instead gives the data behind the view, in the format of the operating system.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_data.htm"
+    ]
+  },
+  {
+    "id": "3.3-019",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.2"
+    ],
+    "stem": "On the Data Source page, which command exports the whole data source to a CSV file?",
+    "options": [
+      {
+        "text": "Data > Export Data to CSV",
+        "correct": true,
+        "rationale": "This command is available on the Data Source page."
+      },
+      {
+        "text": "Worksheet > Export > Crosstab to Excel",
+        "correct": false,
+        "rationale": "That command exports a worksheet view, not the data source."
+      },
+      {
+        "text": "Analysis > View Data, then selecting the Summary tab",
+        "correct": false,
+        "rationale": "That opens a window; only its Download button writes a file, and the Summary tab holds aggregated rows."
+      },
+      {
+        "text": "File > Save As with Tableau Packaged Workbooks as the type",
+        "correct": false,
+        "rationale": "That saves a workbook, not a CSV."
+      }
+    ],
+    "explanation": "On the Data Source page, Data > Export Data to CSV exports the data source. Worksheet exports belong to the worksheets.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_data.htm"
+    ]
+  },
+  {
+    "id": "3.3-020",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.2"
+    ],
+    "select": 2,
+    "stem": "Which two ways open View Data in Tableau Desktop? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Select View Data from a tooltip menu, with command buttons on",
+        "correct": true,
+        "rationale": "The tooltip offers View Data when command buttons are on."
+      },
+      {
+        "text": "Select Worksheet > Export > Image",
+        "correct": false,
+        "rationale": "That exports a picture and shows no data."
+      },
+      {
+        "text": "Select File > Print to PDF",
+        "correct": false,
+        "rationale": "That prints sheets to a PDF."
+      },
+      {
+        "text": "Select View Data from the Analysis menu",
+        "correct": true,
+        "rationale": "The Analysis menu also includes View Data."
+      },
+      {
+        "text": "Select Server > Publish Workbook",
+        "correct": false,
+        "rationale": "That starts publishing and shows no data."
+      }
+    ],
+    "explanation": "View Data can be reached from the tooltip menu, a right-click on the view, the Analysis menu, or the View Data button next to Search in the Data pane.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm"
+    ]
+  },
+  {
+    "id": "3.3-021",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.2"
+    ],
+    "select": 2,
+    "stem": "Which two statements about the View Data window are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The Summary tab shows the aggregated measures that make up the marks",
+        "correct": true,
+        "rationale": "The Summary shows the dimensions of the view and the aggregated measures."
+      },
+      {
+        "text": "The Summary tab lists every row of the data source",
+        "correct": false,
+        "rationale": "Rows are on the Full Data tab."
+      },
+      {
+        "text": "Download writes all data of the selected tab, not just the displayed rows",
+        "correct": true,
+        "rationale": "Download is not limited to the number of rows displayed."
+      },
+      {
+        "text": "Download writes a PNG picture of the window",
+        "correct": false,
+        "rationale": "Download produces a CSV file."
+      },
+      {
+        "text": "The Full Data tab shows aggregated values only",
+        "correct": false,
+        "rationale": "The Full Data tab shows rows, not aggregates."
+      }
+    ],
+    "explanation": "Summary is the aggregated view of the marks and Full Data is the rows. Download exports the selected tab as CSV, beyond the rows shown.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm"
+    ]
+  },
+  {
+    "id": "3.3-022",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.2"
+    ],
+    "select": 3,
+    "stem": "Which three commands take a sheet's data out of Tableau as data (not as a picture or document)? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Worksheet > Copy > Data",
+        "correct": true,
+        "rationale": "It copies the data to the clipboard."
+      },
+      {
+        "text": "File > Print to PDF",
+        "correct": false,
+        "rationale": "It produces a PDF document."
+      },
+      {
+        "text": "Worksheet > Export > Crosstab to Excel",
+        "correct": true,
+        "rationale": "It exports the view as a table for Excel."
+      },
+      {
+        "text": "Worksheet > Export > Image",
+        "correct": false,
+        "rationale": "It produces a picture file."
+      },
+      {
+        "text": "Worksheet > Export > Data",
+        "correct": true,
+        "rationale": "It exports the data behind the view."
+      },
+      {
+        "text": "File > Export as PowerPoint",
+        "correct": false,
+        "rationale": "It produces slides made of static images."
+      }
+    ],
+    "explanation": "Export > Data, Export > Crosstab to Excel and Copy > Data all move data or a table. Print to PDF, Export Image and Export as PowerPoint produce documents or pictures.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_data.htm"
+    ]
+  },
+  {
+    "id": "3.3-023",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.3"
+    ],
+    "stem": "Which menu path exports a workbook's sheets to slides?",
+    "options": [
+      {
+        "text": "Worksheet > Export > Image",
+        "correct": false,
+        "rationale": "This writes one picture file for a worksheet, with no slides."
+      },
+      {
+        "text": "File > Export as PowerPoint",
+        "correct": true,
+        "rationale": "After this command the analyst chooses which sheets to include."
+      },
+      {
+        "text": "Server > Publish Workbook",
+        "correct": false,
+        "rationale": "That puts the workbook on a server and creates no slides."
+      },
+      {
+        "text": "File > Print to PDF",
+        "correct": false,
+        "rationale": "That writes a PDF; PowerPoint slides come from their own export."
+      }
+    ],
+    "explanation": "Slides come from File > Export as PowerPoint. Selected sheets are exported as slides in a presentation.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-024",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.3"
+    ],
+    "stem": "A colleague opens the exported PowerPoint file and tries to hover over a bar to see a tooltip. What happens?",
+    "options": [
+      {
+        "text": "The tooltip appears, because the slide keeps a live connection to the workbook",
+        "correct": false,
+        "rationale": "Slides are not connected to the workbook or its data."
+      },
+      {
+        "text": "The tooltip appears only if the analyst selected Show Selections during export",
+        "correct": false,
+        "rationale": "Show Selections is an option of Print to PDF and publishing; it does not make slides interactive."
+      },
+      {
+        "text": "The slide asks for a Tableau Server sign-in and then shows the tooltip",
+        "correct": false,
+        "rationale": "Exported slides never contact a server."
+      },
+      {
+        "text": "Nothing, because the sheet became a static PNG image",
+        "correct": true,
+        "rationale": "Exported sheets are static images, so no interactivity survives."
+      }
+    ],
+    "explanation": "Selected sheets become static PNG images on separate slides. Viewers can't interact with them.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-025",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.3"
+    ],
+    "stem": "The analyst filters a view to a single Country and then chooses File > Export as PowerPoint. What does the slide for that sheet show?",
+    "options": [
+      {
+        "text": "Only the filtered data, because filters in effect are reflected in the export",
+        "correct": true,
+        "rationale": "Filters currently applied in Tableau are reflected in the exported slides."
+      },
+      {
+        "text": "All countries, because the export ignores the filters of the view",
+        "correct": false,
+        "rationale": "The export reflects the filters that are applied in Tableau."
+      },
+      {
+        "text": "All countries, along with a filter card that the viewer can change",
+        "correct": false,
+        "rationale": "Slides are static images, so there is nothing for a viewer to change."
+      },
+      {
+        "text": "An empty slide, because exports need all filters cleared first",
+        "correct": false,
+        "rationale": "Filters do not block the export; they shape what is exported."
+      }
+    ],
+    "explanation": "Exported slides reflect the filters currently applied in Tableau. They are still static pictures of that state.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-026",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.3"
+    ],
+    "stem": "A Driftlight story has several story points. What does Export as PowerPoint produce for them?",
+    "options": [
+      {
+        "text": "One slide containing all story points as a single image",
+        "correct": false,
+        "rationale": "Each story point is a separate slide."
+      },
+      {
+        "text": "Only the first story point, since the rest need a separate export",
+        "correct": false,
+        "rationale": "All story points are exported, each on a slide."
+      },
+      {
+        "text": "A separate slide for each story point",
+        "correct": true,
+        "rationale": "Story points are exported as separate slides."
+      },
+      {
+        "text": "A slide per mark in each story point, with its data rows in the notes",
+        "correct": false,
+        "rationale": "The export works with sheets and story points as images, not marks or data rows."
+      }
+    ],
+    "explanation": "A story exports to a presentation with one slide per story point, which makes it a natural source for a review deck.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-027",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.3"
+    ],
+    "stem": "After exporting a deck, the underlying Driftlight data is refreshed. What happens to the slides?",
+    "options": [
+      {
+        "text": "They update the next time the deck is opened, if the workbook is still on the computer",
+        "correct": false,
+        "rationale": "There is no link between the deck and the workbook."
+      },
+      {
+        "text": "They stay as they were, because they are static images",
+        "correct": true,
+        "rationale": "The slides do not update with the data; the analyst must export again."
+      },
+      {
+        "text": "They update only if the workbook was published to Tableau Server before export",
+        "correct": false,
+        "rationale": "Publishing has no effect on a deck that holds static images."
+      },
+      {
+        "text": "They update, because each slide stores the query that built its chart",
+        "correct": false,
+        "rationale": "Slides store PNG images and no queries."
+      }
+    ],
+    "explanation": "Slides from Export as PowerPoint are pictures of the sheets at that moment. After new data arrives, export again.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-028",
+    "taskId": "3.3",
+    "kind": "single",
+    "objectives": [
+      "3.3.3"
+    ],
+    "stem": "The analyst wants only two of ten sheets in the exported deck. What should they do?",
+    "options": [
+      {
+        "text": "Hide the other eight sheets in the workbook, because hidden sheets are never exported",
+        "correct": false,
+        "rationale": "Hiding is not how the export is controlled; the sheets are chosen in the dialog."
+      },
+      {
+        "text": "Export all ten and then delete the eight slides, since the export has no sheet choice",
+        "correct": false,
+        "rationale": "The dialog does offer a choice of sheets."
+      },
+      {
+        "text": "Publish only those two sheets to Tableau Server and export from there",
+        "correct": false,
+        "rationale": "Publishing is a different task and not how this export works."
+      },
+      {
+        "text": "Choose just those two sheets in the Export as PowerPoint dialog",
+        "correct": true,
+        "rationale": "The dialog lets the analyst pick which sheets to export."
+      }
+    ],
+    "explanation": "Export as PowerPoint asks which sheets to include. The selected sheets become slides.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-029",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.3"
+    ],
+    "select": 2,
+    "stem": "Which two statements about slides created by File > Export as PowerPoint are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Each selected sheet becomes a static PNG image",
+        "correct": true,
+        "rationale": "Selected sheets are exported as static PNG images."
+      },
+      {
+        "text": "Viewers can use filter cards on the slides",
+        "correct": false,
+        "rationale": "Slides are static; nothing is interactive."
+      },
+      {
+        "text": "Filters applied in Tableau at export time are reflected",
+        "correct": true,
+        "rationale": "The export reflects the filters currently applied."
+      },
+      {
+        "text": "The slides refresh when the data source refreshes",
+        "correct": false,
+        "rationale": "Slides do not update with the data."
+      },
+      {
+        "text": "Each sheet becomes a native, editable PowerPoint chart",
+        "correct": false,
+        "rationale": "Sheets become images, not editable charts."
+      }
+    ],
+    "explanation": "The export gives static pictures in the state of the workbook at that moment. They are neither interactive nor live.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-030",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.3"
+    ],
+    "select": 2,
+    "stem": "Which two things does File > Export as PowerPoint turn into slides? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The selected sheets, each on its own slide",
+        "correct": true,
+        "rationale": "Selected sheets become images on separate slides."
+      },
+      {
+        "text": "The rows listed on the Full Data tab of View Data",
+        "correct": false,
+        "rationale": "View Data rows are not exported as slides."
+      },
+      {
+        "text": "The permissions of the project",
+        "correct": false,
+        "rationale": "Permissions live on a server and are not part of slides."
+      },
+      {
+        "text": "The story points of a story, each as a separate slide",
+        "correct": true,
+        "rationale": "Story points export as separate slides."
+      },
+      {
+        "text": "The data source connection",
+        "correct": false,
+        "rationale": "Connections are not exported to slides."
+      }
+    ],
+    "explanation": "Sheets and story points are exported as images on slides. Data rows, permissions and connections are not.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-031",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.3"
+    ],
+    "select": 3,
+    "stem": "Which three statements about exporting to PowerPoint are true? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "The command is File > Export as PowerPoint",
+        "correct": true,
+        "rationale": "That is the menu path."
+      },
+      {
+        "text": "Viewers can click marks on a slide to cross-filter other slides",
+        "correct": false,
+        "rationale": "Slides are static images."
+      },
+      {
+        "text": "A story point is exported as its own slide",
+        "correct": true,
+        "rationale": "Story points export as separate slides."
+      },
+      {
+        "text": "The slides update when the workbook's data changes",
+        "correct": false,
+        "rationale": "They are pictures, so they stay as exported."
+      },
+      {
+        "text": "The slides reflect the filters currently applied in Tableau",
+        "correct": true,
+        "rationale": "Applied filters are reflected."
+      },
+      {
+        "text": "Worksheet > Export > Image creates the slides",
+        "correct": false,
+        "rationale": "That writes a picture file and no slides."
+      }
+    ],
+    "explanation": "File > Export as PowerPoint turns sheets and story points into static slides that reflect the current filters.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  },
+  {
+    "id": "3.3-032",
+    "taskId": "3.3",
+    "kind": "multi",
+    "objectives": [
+      "3.3.3"
+    ],
+    "select": 2,
+    "stem": "For which two needs is Export as PowerPoint a better fit than publishing the workbook? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Viewers should explore live data in a web browser",
+        "correct": false,
+        "rationale": "That is what publishing to Tableau Server or Tableau Cloud is for."
+      },
+      {
+        "text": "A quarterly review deck with one slide per story point",
+        "correct": true,
+        "rationale": "Story points export as separate slides."
+      },
+      {
+        "text": "The recipients need the workbook and its local CSV data to continue the analysis in Tableau",
+        "correct": false,
+        "rationale": "A packaged workbook fits that need."
+      },
+      {
+        "text": "A meeting needs pictures of the current, filtered views as slides",
+        "correct": true,
+        "rationale": "Slides carry static images of the view with filters applied."
+      },
+      {
+        "text": "Finance needs the individual rows behind a bar as a file",
+        "correct": false,
+        "rationale": "That is the job of View Data and its download."
+      }
+    ],
+    "explanation": "Export as PowerPoint makes static slides for presenting. Exploration needs publishing, continuing in Tableau needs a `.twbx`, and rows need View Data.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm"
+    ]
+  }
+]
