@@ -1,0 +1,859 @@
+[
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "An analyst wants the `cust_sgnup_dt` field to read Signup Date everywhere in Tableau. What should the analyst do?",
+    "options": [
+      {
+        "text": "Select the field in the Data pane, press F2 and type the new name",
+        "correct": true,
+        "rationale": "F2 (or right-click > Rename) makes the field name editable in the Data pane."
+      },
+      {
+        "text": "Right-click the field and choose Aliases, then type Signup Date",
+        "correct": false,
+        "rationale": "Aliases relabel the members of a dimension, not the field itself."
+      },
+      {
+        "text": "Open the source CSV and change the column header, then reconnect",
+        "correct": false,
+        "rationale": "This edits the source, which is unnecessary. Tableau renames fields as metadata."
+      },
+      {
+        "text": "Right-click the field and choose Default Properties > Comment",
+        "correct": false,
+        "rationale": "A comment is a note in the field's tooltip. It doesn't change the name."
+      }
+    ],
+    "explanation": "Fields are renamed directly in the Data pane (F2, or right-click > Rename). Only what appears in Tableau changes. The source stays as it is.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-001",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "After renaming a field in the Data pane, what happens in the underlying data source?",
+    "options": [
+      {
+        "text": "The column header in the source file is rewritten to match the new name",
+        "correct": false,
+        "rationale": "Tableau never writes back to the source when a field is renamed."
+      },
+      {
+        "text": "The rename applies only until the workbook is closed",
+        "correct": false,
+        "rationale": "The new name is saved with the workbook."
+      },
+      {
+        "text": "Nothing: only the name shown in Tableau changes",
+        "correct": true,
+        "rationale": "Renaming is metadata. The source keeps its original column name."
+      },
+      {
+        "text": "Tableau stores the new name only if the data is first extracted",
+        "correct": false,
+        "rationale": "Renames are kept whether the source is live or an extract."
+      }
+    ],
+    "explanation": "A rename changes what appears in Tableau. It is saved with the workbook and when the data source is exported, but the source itself is untouched.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-002",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "An analyst renamed `Device` to Playback Device by mistake and wants the original name back. What is the quickest way?",
+    "options": [
+      {
+        "text": "Rename the field again and type the original name from memory",
+        "correct": false,
+        "rationale": "This can work, but it is the slow path and risks a typo."
+      },
+      {
+        "text": "Click the circular arrow in the edit box to restore the name",
+        "correct": true,
+        "rationale": "The restore arrow resets the field to its original data-source name."
+      },
+      {
+        "text": "Right-click the field and choose Clear Aliases",
+        "correct": false,
+        "rationale": "Clear Aliases resets member labels. It doesn't touch the field name."
+      },
+      {
+        "text": "Delete the field and reconnect to the data source",
+        "correct": false,
+        "rationale": "Nothing needs to be deleted. Reconnecting is unnecessary and can break views."
+      }
+    ],
+    "explanation": "While a name is being edited, a small circular arrow restores the original data-source field name. Reset Names does the same for several fields at once.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-003",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "An analyst has renamed eight fields in the Data pane and wants them all back to their source names. What should the analyst do?",
+    "options": [
+      {
+        "text": "Select the fields and choose Clear Aliases from the right-click menu",
+        "correct": false,
+        "rationale": "Aliases belong to members. They have nothing to do with field names."
+      },
+      {
+        "text": "Open each field's Default Properties and set the name there",
+        "correct": false,
+        "rationale": "Default Properties set number format, color, sort and so on, not the name."
+      },
+      {
+        "text": "Re-import the file as a new data source and republish",
+        "correct": false,
+        "rationale": "A new source is overkill and would discard the other work in the workbook."
+      },
+      {
+        "text": "Select the fields, right-click and choose Reset Names",
+        "correct": true,
+        "rationale": "Reset Names restores every selected field to its original name in one step."
+      }
+    ],
+    "explanation": "Select several fields, right-click and choose Reset Names to undo renames in bulk. For a single field, use the restore arrow in its edit box.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-004",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "A team lead exports a data source after renaming fields in it. A colleague opens the exported data source. Which field names does the colleague see?",
+    "options": [
+      {
+        "text": "The original source column names, because renames never leave the workbook",
+        "correct": false,
+        "rationale": "Renames are saved in the export too."
+      },
+      {
+        "text": "The renamed fields, but only if the data was extracted first",
+        "correct": false,
+        "rationale": "An extract is not required for names to be saved."
+      },
+      {
+        "text": "The renamed fields, because renames are saved with the export",
+        "correct": true,
+        "rationale": "The changed name is saved with the workbook and when you export the data source."
+      },
+      {
+        "text": "A prompt asking which version of each name to keep",
+        "correct": false,
+        "rationale": "Tableau doesn't ask. The exported source carries the new names."
+      }
+    ],
+    "explanation": "A field rename is stored as metadata, so it travels with the workbook and with an exported data source. That is why renaming is safe to do once for a whole team.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-005",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "Which change is a rename of a field rather than an alias, a data type change or a default property?",
+    "options": [
+      {
+        "text": "`Device` is shown as Playback Device in the Data pane and in every view",
+        "correct": true,
+        "rationale": "Only the field's own name changes. That is a rename."
+      },
+      {
+        "text": "The `PRM` plan code is displayed as Premium in every view",
+        "correct": false,
+        "rationale": "That relabels one member of a dimension. It is an alias."
+      },
+      {
+        "text": "`Postal Code` is converted from a number to a text string",
+        "correct": false,
+        "rationale": "That is a data type change."
+      },
+      {
+        "text": "`Monthly Price` always appears with a currency number format",
+        "correct": false,
+        "rationale": "That is a default property (number format)."
+      }
+    ],
+    "explanation": "Renaming changes the field's name. Aliases change member labels, data types change how values are read, and default properties set how a field behaves when used.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-006",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "Which two statements about renaming a field in the Data pane are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It changes only what appears in Tableau, not the underlying data source",
+        "correct": true,
+        "rationale": "The source column keeps its original name."
+      },
+      {
+        "text": "The field's name in the source database is renamed to match",
+        "correct": false,
+        "rationale": "Tableau never writes the new name back to the source."
+      },
+      {
+        "text": "The new name is saved with the workbook",
+        "correct": true,
+        "rationale": "Renames are stored with the workbook and with exported data sources."
+      },
+      {
+        "text": "It can only be done on the Data Source page",
+        "correct": false,
+        "rationale": "Fields are renamed right in the Data pane of a worksheet."
+      },
+      {
+        "text": "It also relabels every member of the field",
+        "correct": false,
+        "rationale": "Member labels are changed with aliases."
+      }
+    ],
+    "explanation": "A rename is workbook metadata: it changes the displayed field name, is saved with the workbook and never touches the source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-007",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "Which two actions let an analyst rename a field in the Data pane? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Select the field and press F2",
+        "correct": true,
+        "rationale": "F2 makes the name editable."
+      },
+      {
+        "text": "Right-click the field and choose Aliases",
+        "correct": false,
+        "rationale": "Aliases relabel members, not the field."
+      },
+      {
+        "text": "Right-click the field and choose Default Properties > Number Format",
+        "correct": false,
+        "rationale": "That sets how numbers display."
+      },
+      {
+        "text": "Right-click the field and choose Rename",
+        "correct": true,
+        "rationale": "Rename opens the name for editing."
+      },
+      {
+        "text": "Click the data type icon and choose Geographic Role",
+        "correct": false,
+        "rationale": "That assigns a map role."
+      }
+    ],
+    "explanation": "In the Data pane, select a field and press F2 or right-click and choose Rename, then type the new name. The other menus set member labels, formats or roles.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-008",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "1.3.1"
+    ],
+    "stem": "Which three statements about restoring renamed fields are true? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "The circular arrow in a field's edit box restores its original name",
+        "correct": true,
+        "rationale": "It brings back the original data-source name."
+      },
+      {
+        "text": "Reset Names restores the original names of several selected fields at once",
+        "correct": true,
+        "rationale": "Select the fields, right-click and choose Reset Names."
+      },
+      {
+        "text": "Resetting a name writes the old name back into the source file",
+        "correct": false,
+        "rationale": "Tableau never changes the source, so there is nothing to write back."
+      },
+      {
+        "text": "Clear Aliases restores renamed fields to their original names",
+        "correct": false,
+        "rationale": "Clear Aliases resets member labels only."
+      },
+      {
+        "text": "Resetting a name deletes the field from the workbook",
+        "correct": false,
+        "rationale": "The field stays. Only its displayed name returns to the original."
+      },
+      {
+        "text": "The original name that comes back is the field name from the data source",
+        "correct": true,
+        "rationale": "The restore uses the name from the underlying source."
+      }
+    ],
+    "explanation": "Tableau remembers the source field name, so you can restore it with the edit-box arrow or Reset Names. Neither affects aliases or the data itself.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm"
+    ],
+    "id": "1.3-009",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "Plan codes `BAS`, `STD` and `PRM` should read Basic, Standard and Premium in views. Where does the analyst set this?",
+    "options": [
+      {
+        "text": "Right-click `Plan Code` and choose Rename",
+        "correct": false,
+        "rationale": "Rename changes the field's name, not its members' labels."
+      },
+      {
+        "text": "Right-click `Plan Code` in the Data pane and choose Aliases",
+        "correct": true,
+        "rationale": "The Aliases dialog lists each member with a box for its new label."
+      },
+      {
+        "text": "Click the data type icon of `Plan Code` and choose a new data type",
+        "correct": false,
+        "rationale": "The data type controls how values are read, not how they are labeled."
+      },
+      {
+        "text": "Right-click `Plan Code` and choose Default Properties > Sort",
+        "correct": false,
+        "rationale": "Sort sets member order, not the labels."
+      }
+    ],
+    "explanation": "Aliases are alternate names for members of a dimension. They are edited in the Aliases dialog, opened from the dimension's right-click menu in the Data pane.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-010",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "Which of these fields can have aliases assigned to its members?",
+    "options": [
+      {
+        "text": "`Minutes Watched`, a measure",
+        "correct": false,
+        "rationale": "Measures can't be aliased, because that would modify data values."
+      },
+      {
+        "text": "`Start`, used as a continuous date",
+        "correct": false,
+        "rationale": "Aliases can't be created for dates or continuous fields."
+      },
+      {
+        "text": "`Device`, a discrete dimension",
+        "correct": true,
+        "rationale": "Aliases work on members of discrete dimensions."
+      },
+      {
+        "text": "`Monthly Price`, a measure",
+        "correct": false,
+        "rationale": "Measures can't be aliased."
+      }
+    ],
+    "explanation": "Only discrete dimensions have members that can be relabeled. Measures, dates and continuous fields can't be aliased.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-011",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "An analyst set aliases on `Plan Code` and now wants every member to show its original value again. What should the analyst do?",
+    "options": [
+      {
+        "text": "Choose Reset Names from the field's right-click menu",
+        "correct": false,
+        "rationale": "Reset Names restores field names, not member labels."
+      },
+      {
+        "text": "Edit the plan codes in the source file",
+        "correct": false,
+        "rationale": "The source was never changed by the aliases."
+      },
+      {
+        "text": "Change the field's data type to string and back",
+        "correct": false,
+        "rationale": "The data type has no effect on aliases."
+      },
+      {
+        "text": "Open the Aliases dialog and choose Clear Aliases",
+        "correct": true,
+        "rationale": "Clear Aliases sets the members back to their original names."
+      }
+    ],
+    "explanation": "Clear Aliases in the Aliases dialog removes the alternate labels. Reset Names is the equivalent for renamed fields.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-012",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "The `City` field lists both Cologne and Köln for the same place. The analyst wants one combined mark. What is the right approach?",
+    "options": [
+      {
+        "text": "Create a group of the two members",
+        "correct": true,
+        "rationale": "A group combines several members into one, which an alias can't do."
+      },
+      {
+        "text": "Give Köln the alias Cologne in the Aliases dialog",
+        "correct": false,
+        "rationale": "An alias only changes a label. The two members stay separate."
+      },
+      {
+        "text": "Rename the `City` field to Cologne",
+        "correct": false,
+        "rationale": "Renaming the field changes its name, not its members."
+      },
+      {
+        "text": "Assign the City geographic role to the field",
+        "correct": false,
+        "rationale": "The role maps values but doesn't merge spellings."
+      }
+    ],
+    "explanation": "Aliases relabel a single member and can't merge two of them. To combine spellings of one place, build a group on the field.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-013",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "A workbook connects to a published data source. What does Tableau allow regarding aliases there?",
+    "options": [
+      {
+        "text": "Aliases can be created, but only on measures",
+        "correct": false,
+        "rationale": "Measures can never be aliased."
+      },
+      {
+        "text": "Aliases can be created and are saved to the published source",
+        "correct": false,
+        "rationale": "They can't be created here at all."
+      },
+      {
+        "text": "Aliases can be created but only for continuous dimensions",
+        "correct": false,
+        "rationale": "Continuous fields can't be aliased."
+      },
+      {
+        "text": "Aliases can't be created or edited on a published data source",
+        "correct": true,
+        "rationale": "Aliases are a property of the data source definition, so a published one is locked."
+      }
+    ],
+    "explanation": "When using a published data source, you can't create or edit aliases there. Edits to member labels belong to whoever owns the published source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-014",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "What exactly does an alias change when `PRM` is given the alias Premium?",
+    "options": [
+      {
+        "text": "The name of the `Plan Code` field in the Data pane",
+        "correct": false,
+        "rationale": "That would be a rename."
+      },
+      {
+        "text": "The label that members of that dimension show in the view",
+        "correct": true,
+        "rationale": "An alias is a display label for one member."
+      },
+      {
+        "text": "The `PRM` value stored in the source data",
+        "correct": false,
+        "rationale": "Aliases never modify the data values."
+      },
+      {
+        "text": "The data type of every plan in the field",
+        "correct": false,
+        "rationale": "Data types are changed from the type icon."
+      }
+    ],
+    "explanation": "An alias relabels a member, not the field and not the data. The source still holds `PRM`.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-015",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "Which two Driftlight fields can have their members aliased? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Minutes Watched`, a measure",
+        "correct": false,
+        "rationale": "Measures can't be aliased."
+      },
+      {
+        "text": "`Plan Code`, a discrete dimension",
+        "correct": true,
+        "rationale": "Its members, codes such as `BAS` and `PRM`, can get readable labels."
+      },
+      {
+        "text": "`Start`, used as a continuous date",
+        "correct": false,
+        "rationale": "Continuous dates can't be aliased."
+      },
+      {
+        "text": "`Device`, a discrete dimension",
+        "correct": true,
+        "rationale": "Members such as TV and Web can be relabeled."
+      },
+      {
+        "text": "`Monthly Price`, a measure",
+        "correct": false,
+        "rationale": "Measures can't be aliased."
+      }
+    ],
+    "explanation": "Discrete dimensions have members that can be relabeled. Measures and continuous fields can't have aliases.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-016",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "Which two statements about aliases are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Right-click a dimension in the Data pane and choose Aliases to edit them",
+        "correct": true,
+        "rationale": "That opens the dialog listing the members."
+      },
+      {
+        "text": "An alias can be created for a measure",
+        "correct": false,
+        "rationale": "Aliasing would modify data values, which Tableau doesn't allow."
+      },
+      {
+        "text": "Two members can be merged into one by giving them the same alias",
+        "correct": false,
+        "rationale": "Merging members is done with a group."
+      },
+      {
+        "text": "Clear Aliases sets the members back to their original names",
+        "correct": true,
+        "rationale": "It removes the alternate labels."
+      },
+      {
+        "text": "Aliases can be edited in a published data source",
+        "correct": false,
+        "rationale": "They can't be created or edited there."
+      }
+    ],
+    "explanation": "Aliases are edited from the dimension's right-click menu and cleared with Clear Aliases. They are limited to discrete dimensions and unavailable in published sources.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-017",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "Which three fields are suitable for aliasing to make their members easier to read? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "`Device`",
+        "correct": true,
+        "rationale": "A discrete dimension, so its members can be relabeled."
+      },
+      {
+        "text": "`Monthly Price`",
+        "correct": false,
+        "rationale": "A measure, which can't be aliased."
+      },
+      {
+        "text": "`Latitude`",
+        "correct": false,
+        "rationale": "A measure by default, so it can't be aliased."
+      },
+      {
+        "text": "`Plan Code`",
+        "correct": true,
+        "rationale": "A discrete dimension whose codes benefit from readable labels."
+      },
+      {
+        "text": "`Channel`",
+        "correct": true,
+        "rationale": "A discrete dimension with text members."
+      },
+      {
+        "text": "`Minutes Watched`",
+        "correct": false,
+        "rationale": "A measure, which can't be aliased."
+      }
+    ],
+    "explanation": "Only discrete dimensions can be aliased. Text fields such as `Plan Code`, `Device` and `Channel` qualify. Numeric measures don't.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ],
+    "id": "1.3-018",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "How does an analyst assign a geographic role to the `Country` field?",
+    "options": [
+      {
+        "text": "Right-click the field and choose Aliases, then pick Country/Region",
+        "correct": false,
+        "rationale": "Aliases relabel members and have no roles."
+      },
+      {
+        "text": "Right-click the field and choose Default Properties > Shape on the menu",
+        "correct": false,
+        "rationale": "Shape sets member shapes, not a map role."
+      },
+      {
+        "text": "Click the data type icon, choose Geographic Role, then the role",
+        "correct": true,
+        "rationale": "The role lives in the same menu as the data type."
+      },
+      {
+        "text": "Drag the field to the Marks card and choose Geographic Role",
+        "correct": false,
+        "rationale": "The role is set in the Data pane. Dragging only places the field."
+      }
+    ],
+    "explanation": "In the Data pane, click the field's data type icon, select Geographic Role and choose the role. The field's icon then becomes a globe.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ],
+    "id": "1.3-019",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "After the Country/Region role is assigned to `Country`, which fields does Tableau add to the Data pane?",
+    "options": [
+      {
+        "text": "`Country (Map)` and `Country (Region)` in the dimensions area",
+        "correct": false,
+        "rationale": "Tableau adds no such fields."
+      },
+      {
+        "text": "`Latitude (generated)` and `Longitude (generated)` in the measures area",
+        "correct": true,
+        "rationale": "These generated measures hold the coordinates for the map."
+      },
+      {
+        "text": "`Latitude` and `Longitude` columns written into the source file",
+        "correct": false,
+        "rationale": "Tableau doesn't change the source. The coordinates are generated fields."
+      },
+      {
+        "text": "A new calculated field named `Country (Role)`",
+        "correct": false,
+        "rationale": "No calculated field is created."
+      }
+    ],
+    "explanation": "Assigning a geographic role makes Tableau generate Latitude and Longitude as measures, so the values can be placed on a map.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ],
+    "id": "1.3-020",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "A `Country` field already has the Country/Region role. How does the analyst get a map view?",
+    "options": [
+      {
+        "text": "Right-click the field and choose Convert to Map",
+        "correct": false,
+        "rationale": "There is no such command."
+      },
+      {
+        "text": "Add the field to Filters and choose Map",
+        "correct": false,
+        "rationale": "Filtering doesn't build a map."
+      },
+      {
+        "text": "Change the field's data type to Boolean",
+        "correct": false,
+        "rationale": "Types don't create views. A Boolean has nothing to place on a map."
+      },
+      {
+        "text": "Add the field to Detail on the Marks card",
+        "correct": true,
+        "rationale": "Tableau creates a map view when a geographic field goes on Detail."
+      }
+    ],
+    "explanation": "With a geographic role in place, adding the field to Detail on the Marks card produces a map view with the generated Latitude and Longitude.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ],
+    "id": "1.3-021",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "For which kind of field are the Latitude and Longitude geographic roles available?",
+    "options": [
+      {
+        "text": "Numeric fields",
+        "correct": true,
+        "rationale": "The Latitude and Longitude roles are only available for numeric fields."
+      },
+      {
+        "text": "Text fields only",
+        "correct": false,
+        "rationale": "A text field holds names such as cities and gets roles like City."
+      },
+      {
+        "text": "Date fields only",
+        "correct": false,
+        "rationale": "Dates have no coordinate meaning."
+      },
+      {
+        "text": "Any field that is a discrete dimension",
+        "correct": false,
+        "rationale": "Being discrete isn't the requirement. The values have to be numbers."
+      }
+    ],
+    "explanation": "Coordinates are numbers, so the Latitude and Longitude roles can only be assigned to numeric fields.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ],
+    "id": "1.3-022",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "Which two things happen after the Country/Region role is assigned to the `Country` field? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The field's icon changes to a globe",
+        "correct": true,
+        "rationale": "The globe marks geographic values used with maps."
+      },
+      {
+        "text": "The country names in the source file are replaced with ISO codes",
+        "correct": false,
+        "rationale": "Tableau never changes the source data."
+      },
+      {
+        "text": "`Latitude (generated)` and `Longitude (generated)` appear in the measures",
+        "correct": true,
+        "rationale": "These hold the generated coordinates."
+      },
+      {
+        "text": "The field is converted into a measure",
+        "correct": false,
+        "rationale": "It stays a dimension."
+      },
+      {
+        "text": "A map is drawn automatically on the Rows shelf",
+        "correct": false,
+        "rationale": "A map appears when the field is added to Detail on the Marks card."
+      }
+    ],
+    "explanation": "A geographic role changes the field's icon to a globe and generates Latitude and Longitude measures. A map appears once the field is placed on Detail.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ],
+    "id": "1.3-023",
+    "taskId": "1.3"
+  }
+]
