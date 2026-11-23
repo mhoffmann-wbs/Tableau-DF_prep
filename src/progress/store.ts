@@ -5,7 +5,7 @@ import { z } from 'zod'
 // migration in `load()` and keep ProgressSchema in step whenever the shape
 // changes; never read localStorage elsewhere.
 const STORAGE_KEY = 'tableau-df:progress'
-const VERSION = 1
+const VERSION = 2
 
 export interface ItemStat {
   attempts: number
@@ -36,17 +36,27 @@ export interface Progress {
   version: typeof VERSION
   items: Record<string, ItemStat>
   mockResults: MockResult[]
+  /** Sandbox "make this chart" challenges: id → when first completed. They don't count towards readiness. */
+  sandbox: Record<string, number>
 }
 
 function empty(): Progress {
-  return { version: VERSION, items: {}, mockResults: [] }
+  return { version: VERSION, items: {}, mockResults: [], sandbox: {} }
+}
+
+/** Brings stored or imported progress from an older version up to VERSION; other versions are returned unchanged. */
+function migrate(raw: { version?: unknown }): { version?: unknown } {
+  let doc: { version?: unknown; sandbox?: unknown } = raw
+  // v1 → v2: sandbox challenge completions.
+  if (doc.version === 1) doc = { ...doc, version: 2, sandbox: {} }
+  return doc
 }
 
 function load(): Progress {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return empty()
-    const parsed = JSON.parse(raw) as { version?: number }
+    const parsed = migrate(JSON.parse(raw) as { version?: number })
     if (parsed.version !== VERSION) return empty()
     return { ...empty(), ...parsed } as Progress
   } catch {
@@ -101,6 +111,11 @@ export function recordMockResult(result: MockResult) {
   commit({ ...state, mockResults: [...state.mockResults, result] })
 }
 
+export function recordSandboxChallenge(challengeId: string, at: number = Date.now()) {
+  if (state.sandbox[challengeId] !== undefined) return
+  commit({ ...state, sandbox: { ...state.sandbox, [challengeId]: at } })
+}
+
 // Imports come from files people pick, so they are validated in full before replacing anything.
 const count = z.number().int().nonnegative()
 const row = z.object({ id: z.string(), correct: count, total: count })
@@ -110,6 +125,7 @@ const ProgressSchema = z.object({
   mockResults: z.array(
     z.object({ at: z.number(), correct: count, total: count, percent: z.number(), passed: z.boolean(), domains: z.array(row), tasks: z.array(row) }),
   ),
+  sandbox: z.record(z.string(), z.number()),
 })
 
 const EXPORT_APP = 'tableau-df-prep'
@@ -137,7 +153,7 @@ export function importProgress(json: string) {
   if (typeof version === 'number' && version > VERSION) {
     throw new Error('This export comes from a newer version of the app. Reload the app, then import it again.')
   }
-  const result = ProgressSchema.safeParse({ ...empty(), ...doc.progress })
+  const result = ProgressSchema.safeParse({ ...empty(), ...migrate(doc.progress) })
   if (!result.success) throw new Error('This export is damaged or incomplete, so nothing was imported.')
   commit(result.data)
 }

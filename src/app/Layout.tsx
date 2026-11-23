@@ -7,6 +7,7 @@ const NAV: { to: string; label: string }[] = [
   { to: '/practice', label: 'Practice' },
   { to: '/questions', label: 'Questions' },
   { to: '/mock', label: 'Mock exam' },
+  { to: '/build', label: 'Build' },
   { to: '/progress', label: 'Progress' },
 ]
 

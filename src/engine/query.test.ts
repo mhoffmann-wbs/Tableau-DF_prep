@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { referenceData, testDataset } from '../test/dataset'
 import { EngineError } from './pills'
-import { columnOf, datePart, dateTrunc, query } from './query'
+import { columnOf, datePart, dateTrunc, partFromLabel, query } from './query'
 import { type VizSpec, vizSpecSchema } from './spec'
 
 const data = testDataset()
@@ -32,6 +32,12 @@ describe('dates', () => {
     expect(datePart(Date.UTC(2025, 0, 5), 'week')).toBe(2) // Sun 5 Jan starts week 2
     expect(dateTrunc(ms, 'quarter')).toBe(Date.UTC(2025, 6, 1))
     expect(dateTrunc(ms, 'week')).toBe(Date.UTC(2025, 7, 10))
+  })
+})
+
+describe('date part labels', () => {
+  it('map back to the canonical numbers datePart filters store', () => {
+    expect([partFromLabel('2025', 'year'), partFromLabel('Q3', 'quarter'), partFromLabel('March', 'month'), partFromLabel('Sunday', 'weekday'), partFromLabel('17', 'day')]).toEqual([2025, 3, 3, 1, 17])
   })
 })
 

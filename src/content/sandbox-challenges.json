@@ -1,0 +1,269 @@
+[
+  {
+    "id": "bar-genre-minutes",
+    "title": "Bar chart: minutes by genre",
+    "objectives": ["2.1.1", "2.3.1"],
+    "prompt": "Driftlight's content team wants to see which genres people watch most. Build horizontal bars of total minutes watched per genre, with the longest bar at the top.",
+    "accept": [
+      {
+        "rows": [{ "field": "Genre", "sort": { "order": "desc", "field": "Minutes Watched", "agg": "sum" } }],
+        "columns": [{ "field": "Minutes Watched" }]
+      }
+    ],
+    "hints": [
+      "Horizontal bars put the dimension on Rows and the measure on Columns.",
+      "Open the Genre pill's menu and sort it by the field Minutes Watched, descending."
+    ],
+    "debrief": "A discrete dimension on Rows gives one header per member, and a measure on Columns gives a continuous axis, so Automatic draws bars. Sorting by a measure is a computed sort: it keeps up when the data changes, unlike a manual order."
+  },
+  {
+    "id": "line-monthly-minutes",
+    "title": "Line chart: minutes per month",
+    "objectives": ["2.1.2", "4.2.2", "4.2.3"],
+    "prompt": "Show how total minutes watched moved month by month across 2024 and 2025 as one continuous line.",
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+        "rows": [{ "field": "Minutes Watched" }]
+      }
+    ],
+    "hints": [
+      "Start is a date. Dropped on a shelf it starts as YEAR(Start), a discrete date part.",
+      "In the pill's menu, pick Month under the date values, not the date parts."
+    ],
+    "debrief": "A date value (here, the month truncation) is continuous: it draws a green pill and a time axis, and Automatic picks a line. MONTH as a date part would instead be discrete and put January 2024 and January 2025 into the same header."
+  },
+  {
+    "id": "line-by-type",
+    "title": "Line chart: one line per title type",
+    "objectives": ["2.1.2", "3.1.1"],
+    "prompt": "Split the monthly line of total minutes watched into one coloured line for each title type.",
+    "start": {
+      "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+      "rows": [{ "field": "Minutes Watched" }]
+    },
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+        "rows": [{ "field": "Minutes Watched" }],
+        "marks": { "color": { "field": "Type" } }
+      }
+    ],
+    "hints": ["A dimension on Color splits the marks and gives each member its own colour."],
+    "debrief": "A discrete field on Color adds a level of detail to the view: SUM(Minutes Watched) is now computed per month and per type, and each type gets a colour from a categorical palette."
+  },
+  {
+    "id": "quarters-by-year",
+    "title": "Date parts: quarters inside years",
+    "objectives": ["4.2.1", "4.2.3"],
+    "prompt": "Compare the four quarters of each year: build bars of total minutes watched with a header per year and, inside it, one bar per quarter.",
+    "accept": [
+      {
+        "columns": [
+          { "field": "Start", "date": { "level": "year", "mode": "part" } },
+          { "field": "Start", "date": { "level": "quarter", "mode": "part" } }
+        ],
+        "rows": [{ "field": "Minutes Watched" }]
+      }
+    ],
+    "hints": [
+      "You need Start twice on Columns.",
+      "Keep the first one as YEAR and change the second one to the QUARTER date part."
+    ],
+    "debrief": "Date parts are discrete, so each one draws headers (blue pills) and the view splits into panes. Q1 means the first quarter of the year in its header, not one continuous stretch of time."
+  },
+  {
+    "id": "stacked-bar-region-device",
+    "title": "Stacked bar: devices in each region",
+    "objectives": ["2.1.7"],
+    "prompt": "Show total minutes watched per region as vertical bars, with each bar split into the devices people watched on.",
+    "accept": [
+      {
+        "columns": [{ "field": "Region" }],
+        "rows": [{ "field": "Minutes Watched" }],
+        "marks": { "color": { "field": "Device" } }
+      }
+    ],
+    "hints": ["Build the region bars first, then drop the dimension that should split each bar on Color."],
+    "debrief": "A dimension on Color of a bar chart stacks the bars: each segment is SUM(Minutes Watched) for one region and device, and the whole bar is the region's total."
+  },
+  {
+    "id": "crosstab-region-year",
+    "title": "Crosstab: minutes by region and year",
+    "objectives": ["2.1.9", "4.2.1"],
+    "prompt": "Finance wants the exact numbers, not bars: a text table with a row per region, a column per year and total minutes watched in each cell.",
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "year", "mode": "part" } }],
+        "rows": [{ "field": "Region" }],
+        "marks": { "label": { "field": "Minutes Watched" } }
+      }
+    ],
+    "hints": [
+      "Only discrete pills go on Columns and Rows here, so there is no axis.",
+      "Put the measure on Label (Tableau calls it Text in a text table)."
+    ],
+    "debrief": "With discrete pills on both shelves there are only headers, so Automatic picks the text mark and the measure is written into each cell. This is a crosstab, also called a text table."
+  },
+  {
+    "id": "highlight-weekday-device",
+    "title": "Highlight table: sessions by weekday and device",
+    "objectives": ["2.1.9", "3.1.1"],
+    "prompt": "Show the number of sessions for each device and weekday as a table whose cells are shaded by the count, with the count written in each cell.",
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "weekday", "mode": "part" } }],
+        "rows": [{ "field": "Device" }],
+        "marks": { "type": "square", "color": { "field": "Sessions (Count)" }, "label": { "field": "Sessions (Count)" } }
+      }
+    ],
+    "hints": [
+      "Weekday is a date part of Start.",
+      "A highlight table is a crosstab with the Square mark and the measure on Color as well as on Label."
+    ],
+    "debrief": "A continuous measure on Color shades each cell on a sequential scale, which turns a crosstab into a highlight table. The Square mark fills the cells."
+  },
+  {
+    "id": "scatter-subgenre",
+    "title": "Scatterplot: runtime against catalogue size",
+    "objectives": ["2.1.3", "4.3.1"],
+    "prompt": "Using the Titles data source, plot one mark per sub-genre: average runtime across, number of titles up, coloured by genre.",
+    "accept": [
+      {
+        "source": "titles",
+        "columns": [{ "field": "Runtime", "agg": "avg" }],
+        "rows": [{ "field": "Titles (Count)" }],
+        "marks": { "color": { "field": "Genre" }, "detail": [{ "field": "Sub-Genre" }] }
+      }
+    ],
+    "hints": [
+      "Runtime is summed by default. Change its aggregation to Average.",
+      "With two measures there is only one mark until a dimension on Detail splits it."
+    ],
+    "debrief": "Two continuous measures make a scatterplot. On their own they aggregate to a single mark for the whole data source; Sub-Genre on Detail sets the level of detail to one mark per sub-genre without adding headers."
+  },
+  {
+    "id": "symbol-map-cities",
+    "title": "Symbol map: subscribers per city",
+    "objectives": ["2.1.4", "3.1.5"],
+    "prompt": "Using the Subscribers data source, draw a world map with one circle per city, sized by the number of subscribers.",
+    "accept": [
+      {
+        "source": "subscribers",
+        "columns": [{ "field": "Longitude (generated)" }],
+        "rows": [{ "field": "Latitude (generated)" }],
+        "marks": { "detail": [{ "field": "City" }], "size": { "field": "Subscribers (Count)" } }
+      }
+    ],
+    "hints": [
+      "Longitude goes on Columns and Latitude on Rows: use the generated ones, which come from the geographic role.",
+      "City on Detail gives one mark per city; the count goes on Size."
+    ],
+    "debrief": "Fields with a geographic role give Tableau generated latitude and longitude. Each mark sits at the place named by the finest geographic field in the view, and a measure on Size scales the circles."
+  },
+  {
+    "id": "filled-map-countries",
+    "title": "Filled map: subscribers per country",
+    "objectives": ["2.1.4", "3.1.1"],
+    "prompt": "Using the Subscribers data source, shade each country by its number of subscribers.",
+    "accept": [
+      {
+        "source": "subscribers",
+        "columns": [{ "field": "Longitude (generated)" }],
+        "rows": [{ "field": "Latitude (generated)" }],
+        "marks": { "type": "map", "detail": [{ "field": "Country" }], "color": { "field": "Subscribers (Count)" } }
+      }
+    ],
+    "hints": ["Start like a symbol map with Country on Detail, then change the mark type to Map and colour by the count."],
+    "debrief": "The Map mark fills each country's shape. A continuous measure on Color shades the shapes on a sequential scale: this is a filled map (choropleth)."
+  },
+  {
+    "id": "density-subscribers",
+    "title": "Density map: where subscribers live",
+    "objectives": ["2.1.8"],
+    "prompt": "Using the Subscribers data source, plot every subscriber at their own latitude and longitude, drawn with the Density mark so clusters stand out.",
+    "accept": [
+      {
+        "source": "subscribers",
+        "columns": [{ "field": "Longitude" }],
+        "rows": [{ "field": "Latitude" }],
+        "marks": { "type": "density", "detail": [{ "field": "Subscriber ID" }] }
+      }
+    ],
+    "hints": [
+      "Here use the Latitude and Longitude fields from the data, not the generated ones.",
+      "Subscriber ID on Detail gives one mark per subscriber."
+    ],
+    "debrief": "A density map needs many overlapping marks, so the level of detail is one mark per subscriber. The Density mark blends overlapping marks into hot spots."
+  },
+  {
+    "id": "avg-minutes-by-plan",
+    "title": "Aggregation: average session length by plan",
+    "objectives": ["4.3.1", "4.1.2"],
+    "prompt": "Product wants to know how long a typical session lasts on each plan. Show the average minutes watched per session for each plan as horizontal bars.",
+    "accept": [
+      {
+        "rows": [{ "field": "Plan" }],
+        "columns": [{ "field": "Minutes Watched", "agg": "avg" }]
+      }
+    ],
+    "hints": ["Minutes Watched lands as SUM(Minutes Watched). Change the aggregation in its pill menu."],
+    "debrief": "A measure gets its default aggregation (here SUM) when it is dropped on a shelf. The question asks about a typical session, so the aggregation has to change to AVG: same field, different question."
+  },
+  {
+    "id": "subscribers-by-region",
+    "title": "Count distinct: active subscribers by region",
+    "objectives": ["4.1.3", "4.3.2"],
+    "prompt": "Using the Sessions data source, show how many different subscribers watched something in each region, as horizontal bars.",
+    "accept": [
+      {
+        "rows": [{ "field": "Region" }],
+        "columns": [{ "field": "Subscriber ID", "agg": "countd" }]
+      }
+    ],
+    "hints": [
+      "Subscriber ID is a dimension. On Columns it would give one header per subscriber.",
+      "Its pill menu can turn it into a measure: Count (Distinct)."
+    ],
+    "debrief": "A dimension can be aggregated into a measure. COUNTD counts each subscriber once per region, however many sessions they had; a plain count of sessions would be much larger."
+  },
+  {
+    "id": "tv-only-genres",
+    "title": "Dimension filter: genres on TV",
+    "objectives": ["2.2.4", "2.1.1"],
+    "prompt": "Show total minutes watched per genre as horizontal bars, counting only sessions watched on a TV.",
+    "accept": [
+      {
+        "rows": [{ "field": "Genre" }],
+        "columns": [{ "field": "Minutes Watched" }],
+        "filters": [{ "kind": "values", "field": "Device", "values": ["TV"] }]
+      }
+    ],
+    "hints": ["Drag Device to the Filters shelf and keep only TV."],
+    "debrief": "A dimension filter removes rows before anything is aggregated, so every bar now sums TV sessions only. Device doesn't have to be in the view to filter by it."
+  },
+  {
+    "id": "date-filter-2025",
+    "title": "Date filter: 2025 only",
+    "objectives": ["2.2.5", "2.1.2"],
+    "prompt": "Show total minutes watched month by month as a continuous line, for 2025 only.",
+    "start": {
+      "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+      "rows": [{ "field": "Minutes Watched" }]
+    },
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+        "rows": [{ "field": "Minutes Watched" }],
+        "filters": [{ "kind": "datePart", "field": "Start", "level": "year", "values": [2025] }]
+      },
+      {
+        "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+        "rows": [{ "field": "Minutes Watched" }],
+        "filters": [{ "kind": "dateRange", "field": "Start", "from": "2025-01-01", "to": "2025-12-31" }]
+      }
+    ],
+    "hints": ["Drag Start to Filters. Either keep the year 2025, or set a range of dates covering the whole year."],
+    "debrief": "A date filter can keep date parts (the year 2025) or a range of dates (1 January to 31 December 2025). Both give the same view here; relative dates are a third option in Tableau."
+  }
+]

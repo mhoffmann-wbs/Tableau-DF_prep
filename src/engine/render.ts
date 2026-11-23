@@ -31,8 +31,10 @@ const topLevel = (spec: Obj) => ({ $schema: SCHEMA, ...spec }) as unknown as Top
 const TIME_FORMAT: Record<string, string> = { year: '%Y', quarter: 'Q%q %Y', month: '%b %Y', week: '%b %d, %Y', day: '%b %d, %Y' }
 const NUMBER_FORMAT = ',.2~f'
 
-/** Which mark Tableau's Automatic would draw (PLAN.md §7a). */
-export function automaticMark(x: Column | undefined, y: Column | undefined): Exclude<MarkType, 'automatic'> {
+type AxisPill = Pick<Column, 'field' | 'continuous' | 'date'>
+
+/** Which mark Tableau's Automatic would draw (PLAN.md §7a), from the innermost pills on Columns and Rows. */
+export function automaticMark(x: AxisPill | undefined, y: AxisPill | undefined): Exclude<MarkType, 'automatic'> {
   if (x?.field.geo === 'longitude' && y?.field.geo === 'latitude') return 'circle'
   const xc = x?.continuous ?? false
   const yc = y?.continuous ?? false

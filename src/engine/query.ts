@@ -73,6 +73,14 @@ function partLabel(n: number, level: DateLevel): string {
   return String(n)
 }
 
+/** The canonical number of a date part's label (`Q3` → 3, `March` → 3, `Sunday` → 1), as `datePart` filters store it. */
+export function partFromLabel(label: string, level: DateLevel): number {
+  if (level === 'quarter') return Number(label.replace(/^Q/, ''))
+  if (level === 'month') return MONTHS.indexOf(label) + 1
+  if (level === 'weekday') return WEEKDAYS.indexOf(label) + 1
+  return Number(label)
+}
+
 function valueLabel(ms: number, level: DateLevel): string {
   const d = new Date(ms)
   const y = d.getUTCFullYear()
