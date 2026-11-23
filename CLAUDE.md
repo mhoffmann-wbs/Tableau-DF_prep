@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-Phases 0–1 are done: the scaffold, the blueprint, the item schema, the content tests and scripts, the Driftlight dataset, and the chart engine. The app has a home page showing the exam format and outline, plus an unlisted `/dev/charts` gallery. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
+Phases 0–2 are done: the scaffold, the blueprint, the item schema, the content tests and scripts, the Driftlight dataset, the chart engine and the quiz engine. The app has a home page showing the exam format and outline, Practice, the question bank, the mock exam and Progress (all waiting for the bank, which is still empty), plus an unlisted `/dev/charts` gallery. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
 
 ## Purpose
 
@@ -31,7 +31,7 @@ Every scenario uses one invented streaming service, **Driftlight**, and its gene
 - Draw the Tableau UI as schematic diagrams in our own style. Never use Tableau screenshots or copy its visual design. Don't redistribute Sample-Superstore: Superstore is mentioned in notes only.
 - Write every question for this app. Never reproduce live exam content or third-party question dumps.
 - The app is static: no backend, no accounts. Keep Vega-Lite and the engine lazy-loaded.
-- `src/progress/store.ts` (planned) is meant to be the only module that touches `localStorage`. It will be versioned: bump `VERSION`, add a migration and keep the Zod `ProgressSchema` in step when the shape changes.
+- `src/progress/store.ts` is the only module that touches `localStorage`. It is versioned: bump `VERSION`, add a migration in `load()` and keep the Zod `ProgressSchema` (used to validate imports) in step when the shape changes.
 
 ## Commands
 
@@ -104,7 +104,22 @@ GitHub Pages serves the app under `/Tableau-DF_prep/`. `.github/workflows/deploy
     - a few null `Minutes Watched` and blank `Device` values
     - union-compatible session files
   - `xlsx.ts` is a minimal deterministic `.xlsx` writer (fflate, fixed local-time mtime) for `targets.xlsx`. Monthly dates are stored as real Excel dates.
-  - `rng.ts` holds `seededRng` (mulberry32), `pick`, `weighted` and `randInt`. Never use `Math.random` for content or samplers.
+  - `rng.ts` holds `seededRng` (mulberry32), `pick`, `weighted`, `randInt`, `shuffle` and `sessionRng()` (a generator seeded from `crypto`, one per practice session or mock). Never use `Math.random` for content or samplers: samplers take an `Rng`, and tests pass a fixed seed.
 - `src/data/geography.ts`: the regions, countries (with ISO numeric ids for world-atlas) and cities with coordinates. Both the generator and the engine use it.
-- `src/app/`: `routes.tsx` (every page lazy-loaded; keep content imports out of it and `Layout`) and `Layout.tsx` (nav, a phone Menu button, the non-affiliation footer). `src/pages/`: `HomePage` (format and outline). `pages.test.tsx` renders real routes with `createMemoryRouter` and an async `renderAt()`.
+- **Quiz** (`src/quiz/`):
+  - `grade.ts`: a `Response` is the list of chosen option indexes, for every kind. `grade` is all or nothing; `isAnswered` means exactly `selectCount(item)` picks.
+  - `weights.ts`: `TASK_WEIGHTS`, each domain's weight shared among its tasks by objective count (the same split as the bank targets). Practice, readiness and mixed sets weigh by task.
+  - `sampler.ts`: `buildMockExam(bank, seen, rng)` takes each domain's `allocateMock()` share, splits it among the domain's tasks by objective count, makes up a short task from the rest of its domain, puts seen items last, and scales the minutes to the real pace when the bank is short. `buildMixedSet` (weighted by task, not pool size), `buildFocusSet` and `orderLeastMastered` (lowest streak first).
+  - `results.ts`: `scoreMock` (percent, pass at 48%, rows per domain and per task) and `taskRows`.
+  - `ItemView.tsx` renders every kind: a `viz` item draws `<Shelves>` and/or `<Viz>` per `show`. Revealed, it shows each rationale, the explanation, `sourceLinks` and the objectives. `showTask={false}` hides the task name (the mock does). `SessionReview` mounts an item only when its row is opened, so closed rows draw no charts. `shortcuts.ts` (`useShortcuts`), `ShortcutHint`, `ScoreTable`.
+- **Progress** (`src/progress/`): `store.ts` (above) keeps item stats with a streak and mock results, with export and import. `readiness.ts`: `taskReadiness` (coverage × accuracy), `weightedReadiness`, `weakSpotItems` (the 3 weakest tasks) and `masteryOf`/`MASTERY_LEVELS`.
+- `src/components/Inline.tsx` renders `` `backtick` `` spans in stems, options and rationales as code.
+- `src/app/`: `routes.tsx` (every page lazy-loaded; keep content imports out of it and `Layout`) and `Layout.tsx` (nav, a phone Menu button, the non-affiliation footer).
+- `src/pages/`:
+  - `HomePage` (format and outline).
+  - `PracticePage` (`?task=`, `?domain=`, `?mix=N`, `&focus=1` for least mastered, `?weak=1`).
+  - `QuestionsPage` (`/questions` with topic, kind and mastery filters in the URL; `/questions/:itemId`).
+  - `MockExamPage` (countdown, flags, review screen, results by domain and task).
+  - `ProgressPage` (readiness by domain, weakest tasks, export and import).
+  - `pages.test.tsx` renders real routes with `createMemoryRouter` and an async `renderAt()`. `quizPages.test.tsx` runs the quiz pages over a `vi.mock`ed bank built from `fakeBank()`/`fakeItem()` in `src/test/fixtures.ts`. Lesson links from items come with phase 4.
 - Theme tokens (`src/index.css`, `@theme`): `brand`, `brand-dark`, `accent`, `chalk`, `page`, `header`, and the pill colours `discrete` (blue) and `continuous` (green). Dark mode follows the OS by remapping the tokens and the slate scale once, so components don't use `dark:` variants.

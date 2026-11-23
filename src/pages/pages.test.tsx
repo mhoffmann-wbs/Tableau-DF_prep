@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react'
+import { cleanup, render, screen } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { routes } from '../app/routes'
@@ -25,6 +25,14 @@ describe('pages', () => {
     const rows = screen.getAllByRole('group', { name: 'Rows shelf' })[0]!
     expect(rows).toHaveTextContent('Genre (discrete)')
     expect(screen.getAllByText('Drawing the chart…').length).toBeGreaterThan(0)
+  })
+
+  it('says the quiz pages have no questions while the bank is empty', async () => {
+    await renderAt('/practice', 'Practice')
+    expect(screen.getAllByText('(no questions yet)')).toHaveLength(16)
+    cleanup()
+    await renderAt('/mock', 'Mock exam')
+    expect(screen.getByRole('button', { name: 'Start the mock exam' })).toBeDisabled()
   })
 
   it('shows the non-affiliation footer and a not-found page', async () => {

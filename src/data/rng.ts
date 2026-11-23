@@ -28,3 +28,16 @@ export function weighted<T>(rng: Rng, pairs: readonly (readonly [T, number])[]):
   }
   return pairs[pairs.length - 1]![0]
 }
+
+/** A shuffled copy (Fisher–Yates). */
+export function shuffle<T>(xs: readonly T[], rng: Rng): T[] {
+  const out = [...xs]
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1))
+    ;[out[i], out[j]] = [out[j]!, out[i]!]
+  }
+  return out
+}
+
+/** A fresh seeded generator for one practice session or mock; tests pass a fixed seed instead. */
+export const sessionRng = (): Rng => seededRng(crypto.getRandomValues(new Uint32Array(1))[0]!)

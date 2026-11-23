@@ -44,3 +44,18 @@ export const VIZ: Item = {
     },
   },
 }
+
+/** A copy of `base` filed under `taskId`, numbered `n`. */
+export const fakeItem = (taskId: string, n: number, base: Item = SINGLE): Item => ({
+  ...base,
+  id: `${taskId}-${String(n).padStart(3, '0')}`,
+  taskId,
+  objectives: [`${taskId}.1`],
+  stem: `${base.stem} (${taskId} #${n})`,
+})
+
+/** `perTask` single-answer items for every task in the guide. */
+export const fakeBank = (perTask: number): Item[] =>
+  ['1.1', '1.2', '1.3', '2.1', '2.2', '2.3', '3.1', '3.2', '3.3', '4.1', '4.2', '4.3'].flatMap((t) =>
+    Array.from({ length: perTask }, (_, i) => fakeItem(t, i + 1)),
+  )

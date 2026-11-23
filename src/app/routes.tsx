@@ -6,6 +6,10 @@ import { Layout } from './Layout'
 // content and, later, the chart engine) loads on first use. Keep content
 // imports out of this file and Layout.
 const HomePage = lazy(() => import('../pages/HomePage'))
+const PracticePage = lazy(() => import('../pages/PracticePage'))
+const QuestionsPage = lazy(() => import('../pages/QuestionsPage'))
+const MockExamPage = lazy(() => import('../pages/MockExamPage'))
+const ProgressPage = lazy(() => import('../pages/ProgressPage'))
 const ChartGalleryPage = lazy(() => import('../pages/ChartGalleryPage'))
 
 export const routes: RouteObject[] = [
@@ -13,6 +17,11 @@ export const routes: RouteObject[] = [
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'practice', element: <PracticePage /> },
+      { path: 'questions', element: <QuestionsPage /> },
+      { path: 'questions/:itemId', element: <QuestionsPage /> },
+      { path: 'mock', element: <MockExamPage /> },
+      { path: 'progress', element: <ProgressPage /> },
       { path: 'dev/charts', element: <ChartGalleryPage /> },
       { path: '*', element: <h1 className="text-2xl font-semibold">Page not found</h1> },
     ],

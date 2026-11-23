@@ -2,7 +2,13 @@ import { Suspense, useState } from 'react'
 import { Link, NavLink, Outlet } from 'react-router'
 
 // Links are added as their pages are built (PLAN.md §9).
-const NAV: { to: string; label: string }[] = [{ to: '/', label: 'Exam outline' }]
+const NAV: { to: string; label: string }[] = [
+  { to: '/', label: 'Exam outline' },
+  { to: '/practice', label: 'Practice' },
+  { to: '/questions', label: 'Questions' },
+  { to: '/mock', label: 'Mock exam' },
+  { to: '/progress', label: 'Progress' },
+]
 
 export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -30,7 +36,7 @@ export function Layout() {
               <li key={to}>
                 <NavLink
                   to={to}
-                  end
+                  end={to === '/'}
                   onClick={() => setMenuOpen(false)}
                   className={({ isActive }) => `block py-1 sm:py-0 ${isActive ? 'font-semibold underline underline-offset-4' : 'text-chalk/80'}`}
                 >
