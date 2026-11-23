@@ -1,0 +1,1016 @@
+[
+  {
+    "id": "1.1-001",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "On the Start page, where does an analyst pick the file type or server to connect to?",
+    "options": [
+      {
+        "text": "The Data pane on the left of a worksheet",
+        "correct": false,
+        "rationale": "The Data pane lists the fields of a data source that already exists; it is not where connections start."
+      },
+      {
+        "text": "The Marks card on a worksheet",
+        "correct": false,
+        "rationale": "The Marks card controls how marks look; it has nothing to do with connecting to data."
+      },
+      {
+        "text": "The Connect pane on the left",
+        "correct": true,
+        "rationale": "It lists the connectors for files and servers, with More for the full list."
+      },
+      {
+        "text": "The Extract Data dialog on the Data Source page",
+        "correct": false,
+        "rationale": "That dialog sets options for an extract of a source you have already connected to."
+      }
+    ],
+    "explanation": "The Connect pane on the Start page lists the connectors: files such as Microsoft Excel and Text file, and servers for databases and cloud services. After you pick one, Tableau opens the Data Source page.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm"
+    ]
+  },
+  {
+    "id": "1.1-002",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "Driftlight's sessions live in a busy production database. Which kind of connector does the analyst choose to reach it?",
+    "options": [
+      {
+        "text": "A server connector for the database",
+        "correct": true,
+        "rationale": "Databases and cloud services are listed under servers in the Connect pane."
+      },
+      {
+        "text": "A file connector such as Text file",
+        "correct": false,
+        "rationale": "File connectors read a local or shared file, not a database server."
+      },
+      {
+        "text": "The Extract Data dialog",
+        "correct": false,
+        "rationale": "That dialog configures an extract; it is not a connector."
+      },
+      {
+        "text": "The Data menu's Refresh command",
+        "correct": false,
+        "rationale": "Refresh updates an existing extract; it does not create a connection."
+      }
+    ],
+    "explanation": "The Connect pane splits connectors into files (Microsoft Excel, Text file and others) and servers (databases and cloud services). A production database is reached through a server connector.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm"
+    ]
+  },
+  {
+    "id": "1.1-003",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "An analyst connects to a table, drags it to the canvas and opens a sheet without touching the setting in the upper-right corner of the Data Source page. What kind of data source is it?",
+    "options": [
+      {
+        "text": "An extract with all rows",
+        "correct": false,
+        "rationale": "An extract is only created when Extract is selected and the settings are saved."
+      },
+      {
+        "text": "An extract with a sample of rows",
+        "correct": false,
+        "rationale": "Sampling is a Number of Rows option of the Extract Data dialog, which was never opened."
+      },
+      {
+        "text": "A saved .tdsx data source",
+        "correct": false,
+        "rationale": "A .tdsx is only created by saving the data source, which did not happen here."
+      },
+      {
+        "text": "A live connection",
+        "correct": true,
+        "rationale": "Unless Extract is selected, the source stays live and each view queries it directly."
+      }
+    ],
+    "explanation": "In the upper-right corner of the Data Source page you can select Extract. If you don't, the data source stays a live connection and every view queries the source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-004",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "A manager changes a filter on a dashboard that uses a live connection. What does Tableau do?",
+    "options": [
+      {
+        "text": "It reads the rows from a local .hyper file",
+        "correct": false,
+        "rationale": "A .hyper file exists only when an extract has been created."
+      },
+      {
+        "text": "It sends a new query to the original data source",
+        "correct": true,
+        "rationale": "With a live connection, every interaction is answered by the source."
+      },
+      {
+        "text": "It keeps showing the old rows until the next refresh",
+        "correct": false,
+        "rationale": "Refreshing applies to extracts; a live connection has no snapshot to refresh."
+      },
+      {
+        "text": "It rebuilds the data source as an extract first",
+        "correct": false,
+        "rationale": "Tableau never converts a live connection to an extract on its own."
+      }
+    ],
+    "explanation": "A live connection queries the original database or file whenever the view needs data, so the speed and the freshness are those of the source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm"
+    ]
+  },
+  {
+    "id": "1.1-005",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "An analyst needs a connector that is not shown in the Connect pane. What should they click to see the full list?",
+    "options": [
+      {
+        "text": "More",
+        "correct": true,
+        "rationale": "The More link expands the Connect pane to every available connector."
+      },
+      {
+        "text": "Add, next to the Connections heading",
+        "correct": false,
+        "rationale": "Add attaches a second connection inside a data source that already exists."
+      },
+      {
+        "text": "Extract, in the upper-right corner",
+        "correct": false,
+        "rationale": "That switches an existing connection to an extract."
+      },
+      {
+        "text": "Add to Saved Data Sources",
+        "correct": false,
+        "rationale": "That saves an existing data source as a file."
+      }
+    ],
+    "explanation": "The Connect pane shows the most common connectors. Clicking More opens the complete list of files and servers.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm"
+    ]
+  },
+  {
+    "id": "1.1-006",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "After connecting to a file, what happens on the Data Source page before the analyst starts building a view?",
+    "options": [
+      {
+        "text": "Tableau automatically builds a dashboard from the first table",
+        "correct": false,
+        "rationale": "Tableau does not build views for you; the analyst builds them on a sheet."
+      },
+      {
+        "text": "They must create an extract before any sheet can open",
+        "correct": false,
+        "rationale": "An extract is optional; without it the connection stays live."
+      },
+      {
+        "text": "They drag tables to the canvas and check the preview grid",
+        "correct": true,
+        "rationale": "Then they click a sheet tab to start building."
+      },
+      {
+        "text": "They must save the source as a .tds file",
+        "correct": false,
+        "rationale": "Saving a data source is optional and separate from connecting."
+      }
+    ],
+    "explanation": "Connecting opens the Data Source page, where you drag tables to the canvas and inspect the preview grid. Clicking a sheet tab then lets you build.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm"
+    ]
+  },
+  {
+    "id": "1.1-007",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "Which description of a live connection is accurate?",
+    "options": [
+      {
+        "text": "Tableau copies all rows into a .hyper file when you connect",
+        "correct": false,
+        "rationale": "That describes an extract, not a live connection."
+      },
+      {
+        "text": "Tableau stores the data inside the .tds file",
+        "correct": false,
+        "rationale": "A .tds never contains data, only connection details and metadata."
+      },
+      {
+        "text": "Tableau works only while the source is offline",
+        "correct": false,
+        "rationale": "A live connection needs the source to be reachable."
+      },
+      {
+        "text": "Tableau queries the original database or file each time it needs data",
+        "correct": true,
+        "rationale": "The data stays where it is."
+      }
+    ],
+    "explanation": "A live connection sends queries to the source. Nothing is copied, which is why it always shows current data but depends on the source being available.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm"
+    ]
+  },
+  {
+    "id": "1.1-008",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "Which two connectors are file connectors in the Connect pane? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A production database server",
+        "correct": false,
+        "rationale": "Databases are listed under servers."
+      },
+      {
+        "text": "Microsoft Excel",
+        "correct": true,
+        "rationale": "Excel is one of the file connectors."
+      },
+      {
+        "text": "A cloud service",
+        "correct": false,
+        "rationale": "Cloud services are listed under servers."
+      },
+      {
+        "text": "Text file",
+        "correct": true,
+        "rationale": "Text file, such as a CSV, is a file connector."
+      },
+      {
+        "text": "The Extract Data dialog",
+        "correct": false,
+        "rationale": "That is a dialog for extract settings, not a connector."
+      }
+    ],
+    "explanation": "Files such as Microsoft Excel and Text file are one group of connectors. Servers (databases and cloud services) are the other.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm"
+    ]
+  },
+  {
+    "id": "1.1-009",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "Which two actions are possible on the Data Source page of a new live connection? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Drag tables to the canvas",
+        "correct": true,
+        "rationale": "Tables are added to the canvas from the left pane."
+      },
+      {
+        "text": "Run Extract > Refresh on the extract",
+        "correct": false,
+        "rationale": "There is no extract yet, so there is nothing to refresh."
+      },
+      {
+        "text": "Check the data in the preview grid",
+        "correct": true,
+        "rationale": "The grid shows the rows of the tables you added."
+      },
+      {
+        "text": "Build a bar chart directly on the canvas",
+        "correct": false,
+        "rationale": "The canvas holds tables and their relationships; charts are built on a worksheet."
+      },
+      {
+        "text": "Remove the extract with Extract > Remove",
+        "correct": false,
+        "rationale": "A live connection has no extract to remove."
+      }
+    ],
+    "explanation": "The Data Source page is where you shape the connection: add tables to the canvas and check the preview grid. Extract commands apply only after an extract exists.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm"
+    ]
+  },
+  {
+    "id": "1.1-010",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "Which two statements describe a live connection? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Views show what the source holds right now",
+        "correct": true,
+        "rationale": "Each query runs against the original data."
+      },
+      {
+        "text": "The data is saved in a .hyper file",
+        "correct": false,
+        "rationale": "That describes an extract."
+      },
+      {
+        "text": "Query speed depends on the source system",
+        "correct": true,
+        "rationale": "Tableau waits for the database or file to answer."
+      },
+      {
+        "text": "New rows appear only after Extract > Refresh",
+        "correct": false,
+        "rationale": "Refresh applies to extracts."
+      },
+      {
+        "text": "The data works offline once the workbook is saved",
+        "correct": false,
+        "rationale": "A live connection needs the source to be reachable."
+      }
+    ],
+    "explanation": "Because a live connection queries the original data, it is always current and as fast as the source. Snapshots, refreshes and offline use belong to extracts.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm"
+    ]
+  },
+  {
+    "id": "1.1-011",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "1.1.1"
+    ],
+    "stem": "An analyst creates a live connection to a text file and starts building. Which three steps are part of that process? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Pick Text file in the Connect pane",
+        "correct": true,
+        "rationale": "The connector is the first choice."
+      },
+      {
+        "text": "Select Extract and click Save Settings",
+        "correct": false,
+        "rationale": "That creates an extract, not a live connection."
+      },
+      {
+        "text": "Point Tableau at the file",
+        "correct": true,
+        "rationale": "The file is chosen after the connector."
+      },
+      {
+        "text": "Right-click the source and choose Add to Saved Data Sources",
+        "correct": false,
+        "rationale": "That saves the source as a .tds or .tdsx; it is not needed to connect."
+      },
+      {
+        "text": "Click a sheet tab after dragging a table to the canvas",
+        "correct": true,
+        "rationale": "That starts the analysis."
+      },
+      {
+        "text": "Run Extract > Refresh",
+        "correct": false,
+        "rationale": "There is no extract to refresh."
+      }
+    ],
+    "explanation": "Choose the connector, point it at the file, add a table and open a sheet. Extracts and saved data sources are optional extra steps.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm"
+    ]
+  },
+  {
+    "id": "1.1-012",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "An analyst must keep working on a Driftlight workbook during a flight with no internet. Which data source type allows that?",
+    "options": [
+      {
+        "text": "A live connection to the production database",
+        "correct": false,
+        "rationale": "A live connection needs the source to be reachable."
+      },
+      {
+        "text": "An extract",
+        "correct": true,
+        "rationale": "Extracts allow for offline access to data."
+      },
+      {
+        "text": "A live connection to a reporting table",
+        "correct": false,
+        "rationale": "It is still a live connection and needs the server."
+      },
+      {
+        "text": "A cross-database join of two live connections",
+        "correct": false,
+        "rationale": "Both connections still query their sources live."
+      }
+    ],
+    "explanation": "An extract is a local copy in a .hyper file, so views can be built without reaching the original source. A live connection cannot work if the source is unreachable.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-013",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "The operations room needs a tile that shows today's sign-ups the moment they are stored in a reporting table. What should the data source be?",
+    "options": [
+      {
+        "text": "An extract refreshed every night",
+        "correct": false,
+        "rationale": "A nightly snapshot is up to a day old."
+      },
+      {
+        "text": "An extract with an incremental refresh",
+        "correct": false,
+        "rationale": "It still shows new rows only after a refresh runs."
+      },
+      {
+        "text": "A .tds file with the data stored inside",
+        "correct": false,
+        "rationale": "A .tds contains no data at all."
+      },
+      {
+        "text": "A live connection",
+        "correct": true,
+        "rationale": "Each query returns the rows the table holds now."
+      }
+    ],
+    "explanation": "When people need up-to-the-minute data and the source can answer fast enough, a live connection is the right choice. An extract is only as current as its last refresh.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm"
+    ]
+  },
+  {
+    "id": "1.1-014",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "The production database is slow during the day and every dashboard click adds to the load. Data that is one day old is fine. What is the best option?",
+    "options": [
+      {
+        "text": "Use an extract and refresh it every night",
+        "correct": true,
+        "rationale": "Queries hit the extract, sparing the database."
+      },
+      {
+        "text": "Keep the live connection and add more filters",
+        "correct": false,
+        "rationale": "The database is still queried on every click."
+      },
+      {
+        "text": "Save the live connection as a .tds file",
+        "correct": false,
+        "rationale": "A .tds stores no data, so queries still go to the database."
+      },
+      {
+        "text": "Connect to the same table twice",
+        "correct": false,
+        "rationale": "Both connections would query the busy database."
+      }
+    ],
+    "explanation": "Extracts prevent resource drains on database systems and usually give faster views. A nightly refresh keeps the snapshot fresh enough for this need.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-015",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "How does the data in an extract change after it is created?",
+    "options": [
+      {
+        "text": "Continuously, as the original source changes",
+        "correct": false,
+        "rationale": "That is how a live connection behaves."
+      },
+      {
+        "text": "Whenever the workbook is opened",
+        "correct": false,
+        "rationale": "Opening the workbook does not update the snapshot."
+      },
+      {
+        "text": "Only when the extract is refreshed",
+        "correct": true,
+        "rationale": "It is a snapshot until then."
+      },
+      {
+        "text": "Whenever someone filters a view",
+        "correct": false,
+        "rationale": "Filters change what is shown, not what the extract contains."
+      }
+    ],
+    "explanation": "An extract is a copy saved separately from the original data, so it differs from the source until you refresh it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-016",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "What does an extract use to store its data?",
+    "options": [
+      {
+        "text": "A .tds file",
+        "correct": false,
+        "rationale": "A .tds holds connection details and metadata but no data."
+      },
+      {
+        "text": "A .hyper file",
+        "correct": true,
+        "rationale": "The extract is a subset of the data saved separately from the original."
+      },
+      {
+        "text": "A .twb file",
+        "correct": false,
+        "rationale": "A .twb workbook holds worksheets and dashboards but no data."
+      },
+      {
+        "text": "A .twbx file",
+        "correct": false,
+        "rationale": "A .twbx packages a workbook with local files; it is not the extract format."
+      }
+    ],
+    "explanation": "An extract is saved as a .hyper file. Workbook and data source files (.twb, .twbx, .tds, .tdsx) are different things, though packaged ones can contain an extract.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm"
+    ]
+  },
+  {
+    "id": "1.1-017",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "The database behind a data source does not support a function the analyst wants to use in a calculation. Which approach can help?",
+    "options": [
+      {
+        "text": "Keep the live connection and refresh it",
+        "correct": false,
+        "rationale": "Live connections have nothing to refresh, and they depend on the source's own functions."
+      },
+      {
+        "text": "Save the data source as a .tds",
+        "correct": false,
+        "rationale": "A .tds saves metadata, not new functions."
+      },
+      {
+        "text": "Use an extract",
+        "correct": true,
+        "rationale": "Extracts can give access to functions the source does not support."
+      },
+      {
+        "text": "Add a second connection to the same database",
+        "correct": false,
+        "rationale": "The second connection is still limited by that database."
+      }
+    ],
+    "explanation": "With a live connection you use the source's own functions. An extract can give access to functions the source doesn't support.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-018",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "Which feature is an advantage of a live connection over an extract?",
+    "options": [
+      {
+        "text": "It allows offline access",
+        "correct": false,
+        "rationale": "Offline access is an advantage of extracts."
+      },
+      {
+        "text": "It lets you keep only the top N rows",
+        "correct": false,
+        "rationale": "Limiting rows is an extract setting."
+      },
+      {
+        "text": "It reduces the load on the database",
+        "correct": false,
+        "rationale": "Live connections query the database on every interaction."
+      },
+      {
+        "text": "It uses the source's own functions and collation",
+        "correct": true,
+        "rationale": "The query is answered by the source itself."
+      }
+    ],
+    "explanation": "A live connection hands the work to the source, so its own functions and collation apply. Offline access and lower load come with extracts.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-019",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "A Driftlight extract was fully refreshed at midnight. A new session row is stored in the database at 9 a.m. When does it show up in views on the extract?",
+    "options": [
+      {
+        "text": "After the next refresh of the extract",
+        "correct": true,
+        "rationale": "The extract is a snapshot until refreshed."
+      },
+      {
+        "text": "Immediately, because Tableau checks the database",
+        "correct": false,
+        "rationale": "That would be a live connection."
+      },
+      {
+        "text": "When a different analyst opens the workbook",
+        "correct": false,
+        "rationale": "Opening a workbook does not refresh the extract."
+      },
+      {
+        "text": "When the sheet tab is clicked again",
+        "correct": false,
+        "rationale": "Switching sheets redraws views from the same snapshot."
+      }
+    ],
+    "explanation": "Views on an extract query the .hyper file, so changes in the original source appear only after the extract is refreshed.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_refresh.htm"
+    ]
+  },
+  {
+    "id": "1.1-020",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "Which two situations favour an extract over a live connection? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The analyst must work offline",
+        "correct": true,
+        "rationale": "Extracts allow offline access."
+      },
+      {
+        "text": "Dashboards must show data from the last minute",
+        "correct": false,
+        "rationale": "Only a live connection gives up-to-the-minute data."
+      },
+      {
+        "text": "The database is busy and should not be queried on every click",
+        "correct": true,
+        "rationale": "Queries go to the extract instead."
+      },
+      {
+        "text": "The analyst needs the source's own collation",
+        "correct": false,
+        "rationale": "That is a reason to stay live."
+      },
+      {
+        "text": "The data may never be copied from the source",
+        "correct": false,
+        "rationale": "An extract is a copy of the data."
+      }
+    ],
+    "explanation": "Extracts help with offline work, speed and load on the source. A live connection is better for current data and the source's own features.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-021",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "Which two reasons support choosing a live connection? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The data must be as current as the source",
+        "correct": true,
+        "rationale": "Each query returns the present state."
+      },
+      {
+        "text": "The workbook must work without network access",
+        "correct": false,
+        "rationale": "That needs an extract."
+      },
+      {
+        "text": "The source is fast enough to answer interactively",
+        "correct": true,
+        "rationale": "Speed is that of the source, so a fast source suits live use."
+      },
+      {
+        "text": "The source is slow and busy",
+        "correct": false,
+        "rationale": "That points to an extract."
+      },
+      {
+        "text": "A packaged copy of the data must travel with the workbook",
+        "correct": false,
+        "rationale": "Packaging data is done with extracts or packaged files."
+      }
+    ],
+    "explanation": "Choose live when people need up-to-the-minute data and the database answers fast enough. Slow or busy sources and offline needs point to an extract.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm"
+    ]
+  },
+  {
+    "id": "1.1-022",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "1.1.2"
+    ],
+    "stem": "Which three statements about extracts compared with live connections are correct? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "An extract is stored in a .hyper file",
+        "correct": true,
+        "rationale": "It is saved separately from the original data."
+      },
+      {
+        "text": "Views on an extract can perform better than views on the original data",
+        "correct": true,
+        "rationale": "This is the performance benefit of extracts."
+      },
+      {
+        "text": "An extract can be refreshed on demand",
+        "correct": true,
+        "rationale": "Refresh updates it from the source."
+      },
+      {
+        "text": "A live connection keeps working with no access to its source",
+        "correct": false,
+        "rationale": "A live connection needs the source."
+      },
+      {
+        "text": "An extract updates itself each time a view is drawn",
+        "correct": false,
+        "rationale": "It changes only when refreshed."
+      },
+      {
+        "text": "A live connection stores a snapshot in a .hyper file",
+        "correct": false,
+        "rationale": "Snapshots belong to extracts."
+      }
+    ],
+    "explanation": "An extract is a .hyper snapshot that is usually faster and can be refreshed when you choose. A live connection has no local copy.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-023",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "Where does an analyst begin creating an extract in Tableau Desktop?",
+    "options": [
+      {
+        "text": "Right-click the data source and choose Add to Saved Data Sources",
+        "correct": false,
+        "rationale": "That saves a .tds or .tdsx; it does not create an extract."
+      },
+      {
+        "text": "Click Add next to the Connections heading",
+        "correct": false,
+        "rationale": "That adds another connection to the data source."
+      },
+      {
+        "text": "Select Extract in the upper-right corner of the Data Source page, then click Edit",
+        "correct": true,
+        "rationale": "This opens the Extract Data dialog."
+      },
+      {
+        "text": "Choose Data > Extract > Refresh",
+        "correct": false,
+        "rationale": "Refresh updates an existing extract; it cannot create one."
+      }
+    ],
+    "explanation": "On the Data Source page, select Extract in the upper-right corner and click Edit to open the Extract Data dialog and choose its settings.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-024",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "An analyst wants the extract to contain only Driftlight sessions from 2025. Which setting in the Extract Data dialog does this?",
+    "options": [
+      {
+        "text": "Filters",
+        "correct": true,
+        "rationale": "Filters keep only the rows you need."
+      },
+      {
+        "text": "Roll up dates to Year",
+        "correct": false,
+        "rationale": "That aggregates dates to a level such as month; it does not select a year."
+      },
+      {
+        "text": "Number of Rows set to Sample",
+        "correct": false,
+        "rationale": "A sample keeps rows chosen at random, not those of a year."
+      },
+      {
+        "text": "Hide All Unused Fields",
+        "correct": false,
+        "rationale": "That removes unused fields, not rows."
+      }
+    ],
+    "explanation": "An extract filter works on the data before any view sees it, so rows that fail the filter are not in the extract at all.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-025",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "After choosing settings in the Extract Data dialog and clicking Save Settings, what starts the creation of the extract?",
+    "options": [
+      {
+        "text": "Choosing Data > Extract > Refresh",
+        "correct": false,
+        "rationale": "Refresh is for updating an extract that already exists."
+      },
+      {
+        "text": "Closing and reopening Tableau Desktop",
+        "correct": false,
+        "rationale": "Nothing is built on restart."
+      },
+      {
+        "text": "Selecting Live in the upper-right corner",
+        "correct": false,
+        "rationale": "That would switch the data source back to a live connection."
+      },
+      {
+        "text": "Clicking a sheet tab",
+        "correct": true,
+        "rationale": "Tableau builds the extract when the analyst opens a sheet."
+      }
+    ],
+    "explanation": "Save Settings only stores the extract options. Clicking a sheet tab begins building the extract.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-026",
+    "taskId": "1.1",
+    "kind": "single",
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "An analyst hid several unneeded fields in the Data pane and wants them left out of the extract. Which option should be selected in the Extract Data dialog?",
+    "options": [
+      {
+        "text": "Aggregate data for visible dimensions",
+        "correct": false,
+        "rationale": "That stores pre-aggregated rows instead of every record; it is not about fields."
+      },
+      {
+        "text": "Hide All Unused Fields",
+        "correct": true,
+        "rationale": "Hidden fields are then left out of the extract."
+      },
+      {
+        "text": "Incremental refresh",
+        "correct": false,
+        "rationale": "That is a refresh method and says nothing about fields."
+      },
+      {
+        "text": "Physical Tables",
+        "correct": false,
+        "rationale": "That chooses how the extract stores tables, not which fields."
+      }
+    ],
+    "explanation": "Hide All Unused Fields leaves hidden fields out of the extract, which makes the file smaller.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  },
+  {
+    "id": "1.1-027",
+    "taskId": "1.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "1.1.3"
+    ],
+    "stem": "Which two settings can an analyst choose in the Extract Data dialog? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Filters",
+        "correct": true,
+        "rationale": "They limit the rows kept in the extract."
+      },
+      {
+        "text": "Add to Saved Data Sources",
+        "correct": false,
+        "rationale": "This is a command on the data source's right-click menu."
+      },
+      {
+        "text": "Number of Rows: All rows, Top, or Sample",
+        "correct": true,
+        "rationale": "It limits how many rows are extracted."
+      },
+      {
+        "text": "Extract > History",
+        "correct": false,
+        "rationale": "That is a command on the Data menu."
+      },
+      {
+        "text": "Add a connection",
+        "correct": false,
+        "rationale": "Connections are added from the Connections pane."
+      }
+    ],
+    "explanation": "The Extract Data dialog holds the options for the extract itself, such as filters and the number of rows. Saving sources and viewing history are separate commands.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm"
+    ]
+  }
+]
