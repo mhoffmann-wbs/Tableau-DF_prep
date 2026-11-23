@@ -1,0 +1,903 @@
+[
+  {
+    "id": "4.1-001",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "What kind of information do dimensions usually contain?",
+    "options": [
+      {
+        "text": "Numeric values that can be added up or averaged across many rows",
+        "correct": false,
+        "rationale": "That describes measures, not dimensions."
+      },
+      {
+        "text": "Only text values, because dates and numbers can never be dimensions",
+        "correct": false,
+        "rationale": "Dates are dimensions too, and numeric labels such as IDs are dimensions as well."
+      },
+      {
+        "text": "Qualitative values such as names, dates or geographical data",
+        "correct": true,
+        "rationale": "Tableau's help describes dimensions as holding qualitative values: names, dates and places."
+      },
+      {
+        "text": "Row counts that Tableau generates automatically for each table in a source",
+        "correct": false,
+        "rationale": "Those are count measures such as `Sessions (Count)`, not dimensions."
+      }
+    ],
+    "explanation": "Dimensions typically hold qualitative values: names, categories, dates and geographic data. They give the view its categories rather than its sizes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-002",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "Which of these Driftlight fields does Tableau put in the Data pane as a dimension?",
+    "options": [
+      {
+        "text": "`Device`",
+        "correct": true,
+        "rationale": "Device holds text values (TV, Mobile, Tablet and so on), so it is a dimension."
+      },
+      {
+        "text": "`Runtime`",
+        "correct": false,
+        "rationale": "Runtime is a number you can add or average, so it is a measure."
+      },
+      {
+        "text": "`Screens`",
+        "correct": false,
+        "rationale": "Screens is numeric and aggregable, so it is a measure."
+      },
+      {
+        "text": "`Monthly Price`",
+        "correct": false,
+        "rationale": "Monthly Price is an amount you can sum or average, so it is a measure."
+      }
+    ],
+    "explanation": "When Tableau connects, text, dates and true/false values become dimensions, while numbers become measures. Device holds text, so it is a dimension.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-003",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "`Start` holds the date and time each Driftlight session began. A learner asks why Tableau lists it among the dimensions. What is the correct answer?",
+    "options": [
+      {
+        "text": "Tableau treats every field that records time as a measure, so `Start` must have been moved by mistake",
+        "correct": false,
+        "rationale": "Dates are not measures. Time passing is not the same as a numeric quantity to aggregate."
+      },
+      {
+        "text": "`Start` is stored as a number internally, and Tableau gives every numeric field the dimension role",
+        "correct": false,
+        "rationale": "Numeric fields become measures; and dates are dimensions because of what they hold, not how they are stored."
+      },
+      {
+        "text": "Only date fields that are converted to text can be used as dimensions in a view",
+        "correct": false,
+        "rationale": "No conversion is needed; date fields are dimensions as they arrive."
+      },
+      {
+        "text": "Dates are qualitative values that categorize records, so Tableau treats them as dimensions",
+        "correct": true,
+        "rationale": "Dates and date-times are treated as dimensions, even though they can be drawn on a time axis."
+      }
+    ],
+    "explanation": "For relational data Tableau treats every date and date-time field as a dimension. Dimensions hold qualitative values: names, dates and places.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-004",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "`Postal Code` is made of digits. Why is it still a dimension rather than a measure?",
+    "options": [
+      {
+        "text": "Tableau only allows a field to be a measure if its name contains a unit such as minutes or price",
+        "correct": false,
+        "rationale": "Tableau assigns roles from the values, not from field names."
+      },
+      {
+        "text": "It labels a place, and adding or averaging postal codes would have no meaning",
+        "correct": true,
+        "rationale": "Postal codes are string-like labels that should not be added or averaged."
+      },
+      {
+        "text": "Dimensions can hold digits, but only if the field has first been converted to a date",
+        "correct": false,
+        "rationale": "No date conversion is involved; a label made of digits is simply a dimension."
+      },
+      {
+        "text": "Geographic fields are always measures until they are placed on the Rows shelf",
+        "correct": false,
+        "rationale": "Geographic data is dimension material, and the shelf a field sits on does not change its role."
+      }
+    ],
+    "explanation": "Tableau's help uses postal codes as the example of numbers that are really labels: they are string values that should not be added or averaged, so they belong with the dimensions.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-005",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "What can an analyst do with dimensions in a view?",
+    "options": [
+      {
+        "text": "Add up values to produce a total for each group in the view",
+        "correct": false,
+        "rationale": "Totals come from aggregating measures, not dimensions."
+      },
+      {
+        "text": "Change the aggregation of every field in the view at once",
+        "correct": false,
+        "rationale": "Dimensions have no such power; aggregation is set per pill."
+      },
+      {
+        "text": "Categorize and segment the data and reveal more detail",
+        "correct": true,
+        "rationale": "Dimensions split the data into groups and set the level of detail."
+      },
+      {
+        "text": "Generate a count of rows for each table in the data source",
+        "correct": false,
+        "rationale": "That count is a separate generated measure."
+      }
+    ],
+    "explanation": "Use dimensions to categorize, segment and reveal the details in your data. Each member of a discrete dimension on Rows or Columns creates a header.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-006",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "In Tableau's Sample-Superstore data, which pair of fields are dimensions?",
+    "options": [
+      {
+        "text": "`Customer Name` and `Order Date`",
+        "correct": true,
+        "rationale": "A name is a category and a date is a dimension, so both sit above the gray line."
+      },
+      {
+        "text": "`Sales` and `Profit`",
+        "correct": false,
+        "rationale": "Both hold numbers that can be summed, so they are measures."
+      },
+      {
+        "text": "`Quantity` and `Discount`",
+        "correct": false,
+        "rationale": "Both are numeric and aggregable, so they are measures."
+      },
+      {
+        "text": "`Profit` and `Order Date`",
+        "correct": false,
+        "rationale": "Order Date is a dimension, but Profit is a measure."
+      }
+    ],
+    "explanation": "In Superstore, Category, Sub-Category, Region, Segment, Customer Name and Order Date are dimensions. Sales, Profit, Quantity and Discount are measures.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-007",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "What kind of information do measures usually contain?",
+    "options": [
+      {
+        "text": "Names and categories that group the rows of a view",
+        "correct": false,
+        "rationale": "That describes dimensions."
+      },
+      {
+        "text": "Dates and geographic data that locate records in time and place",
+        "correct": false,
+        "rationale": "Dates and places are dimensions."
+      },
+      {
+        "text": "Text labels that appear as headers when placed on Rows or Columns",
+        "correct": false,
+        "rationale": "Headers come from discrete dimensions, not measures."
+      },
+      {
+        "text": "Numeric values that you can measure and aggregate",
+        "correct": true,
+        "rationale": "Measures hold quantitative values such as amounts and counts."
+      }
+    ],
+    "explanation": "Measures typically contain numeric, quantitative values you can measure, such as minutes watched or price. Tableau aggregates them when they are used in a view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-008",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "An analyst drags `Minutes Watched` into an empty view. What does Tableau do with the field?",
+    "options": [
+      {
+        "text": "It draws one mark for every row, without any aggregation",
+        "correct": false,
+        "rationale": "Tableau aggregates measures by default rather than plotting raw rows."
+      },
+      {
+        "text": "It aggregates the field and shows `SUM(Minutes Watched)` as a single total",
+        "correct": true,
+        "rationale": "Measures are aggregated automatically and SUM is the default."
+      },
+      {
+        "text": "It creates one header for each distinct value of `Minutes Watched`",
+        "correct": false,
+        "rationale": "Headers are made by discrete dimensions, not by measures."
+      },
+      {
+        "text": "It refuses the drop until the analyst picks an aggregation from a dialog",
+        "correct": false,
+        "rationale": "Tableau applies SUM straight away; the analyst can change it later."
+      }
+    ],
+    "explanation": "When a measure is dropped into the view Tableau aggregates it. The pill name shows the aggregation, here `SUM(Minutes Watched)`.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-009",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "A Driftlight analyst drags `Monthly Price` into a view. How does the pill read by default?",
+    "options": [
+      {
+        "text": "`AVG(Monthly Price)`",
+        "correct": false,
+        "rationale": "AVG is available from the pill menu but is not the default."
+      },
+      {
+        "text": "`Monthly Price`, with no aggregation shown",
+        "correct": false,
+        "rationale": "A measure in a view is aggregated, and the pill name says so."
+      },
+      {
+        "text": "`SUM(Monthly Price)`",
+        "correct": true,
+        "rationale": "SUM is the default aggregation for a measure."
+      },
+      {
+        "text": "`COUNT(Monthly Price)`",
+        "correct": false,
+        "rationale": "Counting is possible but is not what Tableau applies by default."
+      }
+    ],
+    "explanation": "A measure used in a view is aggregated, by default with SUM, and the pill shows the aggregation in its name. Other aggregations are chosen from the pill menu.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-010",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "Where does the Data pane show measures for a table?",
+    "options": [
+      {
+        "text": "Above the gray line, with the dimensions listed beneath it",
+        "correct": false,
+        "rationale": "That is where dimensions sit."
+      },
+      {
+        "text": "On a separate shelf named Measures next to the Filters shelf",
+        "correct": false,
+        "rationale": "There is no such shelf; measures are in the Data pane."
+      },
+      {
+        "text": "On the Marks card, where every measure is stored until it is used",
+        "correct": false,
+        "rationale": "The Marks card holds the fields already used for the marks, not the whole field list."
+      },
+      {
+        "text": "Below the gray line that separates them from the dimensions",
+        "correct": true,
+        "rationale": "Dimensions sit above the line and measures below it, for each table."
+      }
+    ],
+    "explanation": "In the Data pane, dimensions appear above a gray line and measures below it. Dragging a field across that line changes its role.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_understanddatawindow.htm"
+    ]
+  },
+  {
+    "id": "4.1-011",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "Which part of the question \"Which device do people watch on most?\" is the measure?",
+    "options": [
+      {
+        "text": "The groups being compared, as `Device`",
+        "correct": false,
+        "rationale": "Device is the \"by what?\" part, which is the dimension."
+      },
+      {
+        "text": "The amount of viewing, as `SUM(Minutes Watched)`",
+        "correct": true,
+        "rationale": "How much is watched is a numeric quantity, so it is the measure."
+      },
+      {
+        "text": "The person doing the watching, as `SUM(Subscriber ID)`",
+        "correct": false,
+        "rationale": "Subscriber ID is a label; summing it is meaningless."
+      },
+      {
+        "text": "The date of the viewing, as `Start`",
+        "correct": false,
+        "rationale": "Start is a date, which is a dimension."
+      }
+    ],
+    "explanation": "Analysts sort each question into \"by what\" (dimension) and \"how much\" (measure). Here Device is the dimension and the minutes watched are the measure.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-012",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "A data source has a table called Sessions. Which generated field counts its rows?",
+    "options": [
+      {
+        "text": "`Sessions (Count)`, a measure that is available only in aggregated form",
+        "correct": true,
+        "rationale": "Since 2020.2 each table gets a count measure named after the table."
+      },
+      {
+        "text": "`Number of Records`, the name Tableau 2022.3 gives to every table's count",
+        "correct": false,
+        "rationale": "That is the older name; current versions name the field after the table."
+      },
+      {
+        "text": "`Sessions Count`, a calculated field the analyst has to build first",
+        "correct": false,
+        "rationale": "The field is generated automatically, with no calculation needed."
+      },
+      {
+        "text": "`Row ID`, a dimension that Tableau adds to every table",
+        "correct": false,
+        "rationale": "Tableau does not add a Row ID field; the count is a measure."
+      }
+    ],
+    "explanation": "Every table in a data source has an automatically generated count measure named after the table, such as `Orders (Count)`. It can only be used aggregated.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.1-013",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "Which statement best describes the difference between dimensions and measures?",
+    "options": [
+      {
+        "text": "Dimensions slice the view into groups, and measures are aggregated within each group",
+        "correct": true,
+        "rationale": "The dimension sets how many marks there are, and the measure sets their size."
+      },
+      {
+        "text": "Dimensions always hold text and measures always hold numbers, with no exceptions",
+        "correct": false,
+        "rationale": "Dates are dimensions, and digit-only labels can be dimensions too."
+      },
+      {
+        "text": "Dimensions can only go on Columns and measures can only go on Rows",
+        "correct": false,
+        "rationale": "Either kind of field can be placed on either shelf."
+      },
+      {
+        "text": "Dimensions are summed by default and measures are counted by default",
+        "correct": false,
+        "rationale": "Measures are summed by default, and dimensions are not aggregated on their own."
+      }
+    ],
+    "explanation": "Dimensions categorize and set the level of detail, while measures are numbers aggregated for each slice. In SQL terms, a dimension is a `GROUP BY` column and a measure sits inside `SUM()`.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-014",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "A view shows one bar for `SUM(Minutes Watched)`. The analyst drags `Device` to Columns. What happens?",
+    "options": [
+      {
+        "text": "`Device` is summed too, and a single taller bar shows the combined result",
+        "correct": false,
+        "rationale": "Dimensions are not aggregated; they create separate members."
+      },
+      {
+        "text": "The measure is replaced by a count of how many devices exist",
+        "correct": false,
+        "rationale": "The measure stays; it is now calculated for each device."
+      },
+      {
+        "text": "The bar splits into one bar per device, each summed separately",
+        "correct": true,
+        "rationale": "A dimension decides how many marks there are."
+      },
+      {
+        "text": "The view keeps one bar and lists the device names only in its tooltip",
+        "correct": false,
+        "rationale": "A discrete dimension on Columns makes headers and separate marks."
+      }
+    ],
+    "explanation": "The dimension decides how many marks there are, and the measure decides how big each mark is. The per-device totals add up to the original total.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-015",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "`Order Number` is a numeric field that Tableau added as a measure, and `SUM(Order Number)` makes no sense. What should the analyst do?",
+    "options": [
+      {
+        "text": "Change the aggregation from `SUM` to `AVG` on the pill",
+        "correct": false,
+        "rationale": "An average of labels is just as meaningless as a sum."
+      },
+      {
+        "text": "Make the field discrete from the pill menu, leaving it a measure",
+        "correct": false,
+        "rationale": "Discrete or continuous is a separate property and does not change the role."
+      },
+      {
+        "text": "Rename the field so that Tableau treats it as text",
+        "correct": false,
+        "rationale": "Roles come from the values, not from field names."
+      },
+      {
+        "text": "Change its role to dimension, for example by dragging it above the gray line",
+        "correct": true,
+        "rationale": "It is a label, so it belongs with the dimensions."
+      }
+    ],
+    "explanation": "Digits do not make a measure. IDs, order numbers and postal codes are labels, so the fix is to change the field's role, not its aggregation.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-016",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "A Driftlight analyst builds `COUNTD(Subscriber ID)`. What happens to `Subscriber ID` in the Data pane?",
+    "options": [
+      {
+        "text": "It moves below the gray line and becomes a measure for good",
+        "correct": false,
+        "rationale": "The field keeps its role; only the aggregated result acts as a measure."
+      },
+      {
+        "text": "It stays a dimension, and the count is a temporary measure used in the view",
+        "correct": true,
+        "rationale": "Aggregating a dimension creates a temporary measure column."
+      },
+      {
+        "text": "It is replaced by a new calculated field saved in the Data pane",
+        "correct": false,
+        "rationale": "Nothing is saved to the Data pane by changing the pill's aggregation."
+      },
+      {
+        "text": "Tableau refuses the aggregation because dimensions cannot be aggregated",
+        "correct": false,
+        "rationale": "Dimensions can be counted, counted distinct, minimized, maximized or attributed."
+      }
+    ],
+    "explanation": "You can aggregate a dimension with Count, Count (Distinct), Minimum, Maximum or Attribute. Tableau says this creates a temporary measure column and the Data pane field stays a dimension.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.1-017",
+    "taskId": "4.1",
+    "kind": "single",
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "Which statement about role and continuity is correct?",
+    "options": [
+      {
+        "text": "Every dimension is discrete and every measure is continuous",
+        "correct": false,
+        "rationale": "These are the usual defaults but not rules."
+      },
+      {
+        "text": "A field becomes a measure as soon as the analyst makes it continuous",
+        "correct": false,
+        "rationale": "Changing continuity leaves the role alone."
+      },
+      {
+        "text": "They are separate properties, so a date dimension can be continuous and a measure can be discrete",
+        "correct": true,
+        "rationale": "Role and continuity are independent."
+      },
+      {
+        "text": "Role is set by the pill's colour, so a green pill is always a measure",
+        "correct": false,
+        "rationale": "Colour shows continuity, not role."
+      }
+    ],
+    "explanation": "Dimension or measure is about what the field contains. Discrete or continuous is about how it is shown, and the two are set separately. Task 4.2 covers that.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-018",
+    "taskId": "4.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "Which three of these Driftlight fields are dimensions? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "`Minutes Watched`",
+        "correct": false,
+        "rationale": "A number you can sum, so a measure."
+      },
+      {
+        "text": "`Genre`",
+        "correct": true,
+        "rationale": "A category, so a dimension."
+      },
+      {
+        "text": "`Runtime`",
+        "correct": false,
+        "rationale": "A number you can average, so a measure."
+      },
+      {
+        "text": "`Start`",
+        "correct": true,
+        "rationale": "A date, and dates are dimensions."
+      },
+      {
+        "text": "`Monthly Price`",
+        "correct": false,
+        "rationale": "An amount you can sum, so a measure."
+      },
+      {
+        "text": "`Country`",
+        "correct": true,
+        "rationale": "A geographic name, so a dimension."
+      }
+    ],
+    "explanation": "Names, categories, dates and places are dimensions. Numbers you can add up, like minutes, runtime and price, are measures.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-019",
+    "taskId": "4.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "Which two kinds of values would typically be stored in a dimension? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Profit amounts for each order",
+        "correct": false,
+        "rationale": "A numeric amount, so a measure."
+      },
+      {
+        "text": "Customer names",
+        "correct": true,
+        "rationale": "Names are qualitative values, so a dimension."
+      },
+      {
+        "text": "Quantity sold",
+        "correct": false,
+        "rationale": "A numeric quantity, so a measure."
+      },
+      {
+        "text": "Geographic data such as countries",
+        "correct": true,
+        "rationale": "Geographic data is qualitative, so a dimension."
+      },
+      {
+        "text": "Discount percentages",
+        "correct": false,
+        "rationale": "Numbers to aggregate, so a measure."
+      }
+    ],
+    "explanation": "Tableau's help says dimensions typically contain qualitative values such as names, dates or geographical data.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-020",
+    "taskId": "4.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "In Tableau's Sample-Superstore data, which three fields are measures? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "`Sub-Category`",
+        "correct": false,
+        "rationale": "A category, so a dimension."
+      },
+      {
+        "text": "`Sales`",
+        "correct": true,
+        "rationale": "A numeric amount, so a measure."
+      },
+      {
+        "text": "`Segment`",
+        "correct": false,
+        "rationale": "A category, so a dimension."
+      },
+      {
+        "text": "`Quantity`",
+        "correct": true,
+        "rationale": "A number you can add up, so a measure."
+      },
+      {
+        "text": "`Order Date`",
+        "correct": false,
+        "rationale": "A date, which is a dimension."
+      },
+      {
+        "text": "`Discount`",
+        "correct": true,
+        "rationale": "A numeric value, so a measure."
+      }
+    ],
+    "explanation": "In Superstore, Sales, Profit, Quantity and Discount are measures. Category, Sub-Category, Region, Segment, Customer Name and Order Date are dimensions.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-021",
+    "taskId": "4.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "Which two statements about measures in a view are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A measure creates one header for each of its distinct values",
+        "correct": false,
+        "rationale": "Headers come from discrete dimensions."
+      },
+      {
+        "text": "Tableau aggregates a measure when it is used in the view, by default with `SUM`",
+        "correct": true,
+        "rationale": "Aggregation is automatic and SUM is the default."
+      },
+      {
+        "text": "A measure can only ever be aggregated with `SUM`",
+        "correct": false,
+        "rationale": "Other aggregations such as `AVG` are available from the pill menu."
+      },
+      {
+        "text": "The pill name shows the aggregation, as in `SUM(Runtime)`",
+        "correct": true,
+        "rationale": "The aggregation is part of the pill's name."
+      },
+      {
+        "text": "A measure cannot be placed on the Rows shelf",
+        "correct": false,
+        "rationale": "Measures are placed on Rows or Columns all the time."
+      }
+    ],
+    "explanation": "Measures are numbers that Tableau aggregates in the view, and the pill name shows which aggregation is applied.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-022",
+    "taskId": "4.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "Which two statements correctly describe dimensions and measures? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A dimension sets how many marks the view has, and a measure sets how large each mark is",
+        "correct": true,
+        "rationale": "This is the working split between the two roles."
+      },
+      {
+        "text": "Dimensions are always aggregated with `COUNT` and measures with `SUM`",
+        "correct": false,
+        "rationale": "Dimensions are not aggregated on their own."
+      },
+      {
+        "text": "On connecting, Tableau makes number fields measures and fields holding anything else dimensions",
+        "correct": true,
+        "rationale": "Roles are assigned from the values when you connect."
+      },
+      {
+        "text": "Making a field continuous changes it from a dimension to a measure",
+        "correct": false,
+        "rationale": "Continuity does not change the role."
+      },
+      {
+        "text": "Dimensions are listed below the gray line in the Data pane",
+        "correct": false,
+        "rationale": "Dimensions are listed above the line."
+      }
+    ],
+    "explanation": "Tableau assigns roles from the values on connect, and in a view the dimension slices while the measure sizes each mark.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-023",
+    "taskId": "4.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "Tableau connects to a partner's CSV file and adds these numeric fields as measures. Which should the analyst change to dimensions? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Postal Code`",
+        "correct": true,
+        "rationale": "A label for a place that should not be added or averaged."
+      },
+      {
+        "text": "`Minutes Watched`",
+        "correct": false,
+        "rationale": "A quantity that is meant to be summed, so it should stay a measure."
+      },
+      {
+        "text": "`Customer ID`",
+        "correct": true,
+        "rationale": "An identifier made of digits, which should never be summed."
+      },
+      {
+        "text": "`Monthly Price`",
+        "correct": false,
+        "rationale": "An amount that can be summed or averaged."
+      },
+      {
+        "text": "`Runtime`",
+        "correct": false,
+        "rationale": "A quantity that can be averaged."
+      }
+    ],
+    "explanation": "IDs and postal codes are made of digits but are labels. Move them to the dimensions and keep true quantities as measures.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-024",
+    "taskId": "4.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "Which three statements are true when an analyst aggregates a dimension such as `Subscriber ID`? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Count (Distinct) can be applied to the dimension",
+        "correct": true,
+        "rationale": "Count, Count (Distinct), Minimum, Maximum and Attribute are all possible."
+      },
+      {
+        "text": "The dimension must first be converted to a measure",
+        "correct": false,
+        "rationale": "No conversion is needed."
+      },
+      {
+        "text": "The result is a temporary measure column",
+        "correct": true,
+        "rationale": "Tableau creates it for the view."
+      },
+      {
+        "text": "Only measures can use Count (Distinct)",
+        "correct": false,
+        "rationale": "Dimensions can too."
+      },
+      {
+        "text": "The field remains a dimension in the Data pane",
+        "correct": true,
+        "rationale": "Its role does not change."
+      },
+      {
+        "text": "Dimensions can only ever be aggregated with `SUM`",
+        "correct": false,
+        "rationale": "SUM works for numbers, and dimensions use count or min/max style aggregations."
+      }
+    ],
+    "explanation": "Aggregating a dimension creates a temporary measure column, and the Data pane field stays a dimension.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  }
+]

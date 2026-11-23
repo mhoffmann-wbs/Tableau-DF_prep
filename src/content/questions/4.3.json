@@ -1,0 +1,528 @@
+[
+  {
+    "id": "4.3-001",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "An analyst wants `Runtime` to use an average every time it is dropped into any new view of the workbook. Where should the default be changed?",
+    "options": [
+      {
+        "text": "In the `Runtime` pill's menu on the shelf, under Measure",
+        "correct": false,
+        "rationale": "This changes the aggregation for that one pill in that one view, not for future uses."
+      },
+      {
+        "text": "In the Analysis menu, by clearing Aggregate Measures",
+        "correct": false,
+        "rationale": "This switches the view to one mark per row. It doesn't set a default aggregation."
+      },
+      {
+        "text": "In the Data pane, right-click `Runtime` and choose Default Properties > Aggregation",
+        "correct": true,
+        "rationale": "The Data pane setting is the default that applies to every new use of the field in the workbook."
+      },
+      {
+        "text": "In the Marks card, by dragging `Runtime` to Detail",
+        "correct": false,
+        "rationale": "Detail adds a dimension to the level of detail; it doesn't change a measure's default aggregation."
+      }
+    ],
+    "explanation": "Each measure gets a default aggregation when you connect to the data. You change it for one view on the pill, or for the whole workbook in the Data pane under Default Properties > Aggregation.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_understanddatawindow.htm"
+    ]
+  },
+  {
+    "id": "4.3-002",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "After clearing Aggregate Measures on the Analysis menu, what does a view of `Minutes Watched` against `Runtime` show?",
+    "options": [
+      {
+        "text": "A separate mark for every row of data",
+        "correct": true,
+        "rationale": "A disaggregated view draws one mark per row, like a scatterplot of raw records."
+      },
+      {
+        "text": "One mark per member of every dimension in the Data pane",
+        "correct": false,
+        "rationale": "Marks follow the dimensions placed in the view, and none are needed here. Aggregation isn't involved in that rule."
+      },
+      {
+        "text": "A single mark that sums every row in the data source",
+        "correct": false,
+        "rationale": "That is what aggregation with no dimensions gives; clearing the option does the opposite."
+      },
+      {
+        "text": "The same marks as before, with `SUM` replaced by `AVG` on each pill",
+        "correct": false,
+        "rationale": "Clearing the option doesn't change a pill's aggregation; it removes aggregation altogether."
+      }
+    ],
+    "explanation": "Aggregate Measures controls whether Tableau combines rows into marks. When it is cleared, the view is disaggregated and each row of data gets its own mark.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-003",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "A view shows `SUM(Minutes Watched)` per `Plan`. A manager asks for the typical length of a session instead of the total. What is the simplest change?",
+    "options": [
+      {
+        "text": "Drag `Plan` from Columns to Detail so that the totals shrink",
+        "correct": false,
+        "rationale": "Moving a dimension changes the level of detail but the pill would still be summed."
+      },
+      {
+        "text": "Convert `Minutes Watched` to a dimension so that it is not summed",
+        "correct": false,
+        "rationale": "A dimension would no longer be a measure on the axis, and nothing would describe a typical session."
+      },
+      {
+        "text": "Clear Aggregate Measures so that the totals disappear",
+        "correct": false,
+        "rationale": "The view would then show one mark per session row, not a typical value per plan."
+      },
+      {
+        "text": "Change the aggregation of the pill to Average or Median",
+        "correct": true,
+        "rationale": "A sum grows with the number of sessions, whereas an average or median describes a typical one."
+      }
+    ],
+    "explanation": "Choose the aggregation to fit the question. SUM answers 'how much in total'; Average or Median answers 'how long is a typical session'. The pill's menu, under Measure, offers them.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-004",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "A header in a view shows an asterisk (*) next to a `Genre` value after `Genre` was aggregated as Attribute. What does the asterisk mean?",
+    "options": [
+      {
+        "text": "The field contains null values that were removed from the view",
+        "correct": false,
+        "rationale": "Nulls appear as Null members, not as an asterisk, and ATTR isn't about missing data."
+      },
+      {
+        "text": "The group contains more than one value for the field",
+        "correct": true,
+        "rationale": "ATTR returns a value only when the group has exactly one; otherwise it shows an asterisk."
+      },
+      {
+        "text": "The data source returned an error when the view was drawn",
+        "correct": false,
+        "rationale": "The asterisk is a normal result of ATTR and not an error."
+      },
+      {
+        "text": "The member was filtered out but kept in the view as a placeholder",
+        "correct": false,
+        "rationale": "Filtering removes members from the view; it doesn't create asterisks."
+      }
+    ],
+    "explanation": "Attribute (`ATTR`) returns a value only if it's the only one in the group. When the group has several values, Tableau shows an asterisk instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-005",
+    "taskId": "4.3",
+    "kind": "multi",
+    "objectives": [
+      "4.3.1"
+    ],
+    "select": 3,
+    "stem": "Which aggregations can an analyst apply to a dimension such as `Country`, creating a temporary measure? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Sum",
+        "correct": false,
+        "rationale": "Sum needs numbers, and `Country` holds text, so it isn't offered."
+      },
+      {
+        "text": "Count (Distinct)",
+        "correct": true,
+        "rationale": "Count (Distinct) is available for dimensions, as in `COUNTD(Country)`."
+      },
+      {
+        "text": "Average",
+        "correct": false,
+        "rationale": "Average needs numbers, and `Country` holds text, so it isn't offered."
+      },
+      {
+        "text": "Attribute",
+        "correct": true,
+        "rationale": "Attribute is one of the aggregations offered for dimensions."
+      },
+      {
+        "text": "Median",
+        "correct": false,
+        "rationale": "Median needs numbers, and `Country` holds text, so it isn't offered."
+      },
+      {
+        "text": "Maximum",
+        "correct": true,
+        "rationale": "Maximum is offered for dimensions, as is Minimum."
+      }
+    ],
+    "explanation": "A dimension can be aggregated with Minimum, Maximum, Count, Count (Distinct) or Attribute. Tableau then creates a temporary measure column.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-006",
+    "taskId": "4.3",
+    "kind": "multi",
+    "objectives": [
+      "4.3.1"
+    ],
+    "select": 3,
+    "stem": "Which statements about default aggregations are correct? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Changing a pill's aggregation updates the field's default for the whole workbook.",
+        "correct": false,
+        "rationale": "The workbook-wide default is set in the Data pane, not through a pill."
+      },
+      {
+        "text": "Tableau sets each measure's default aggregation when it connects to the data.",
+        "correct": true,
+        "rationale": "The default is set at connection time, and for numbers it is usually a sum."
+      },
+      {
+        "text": "Every measure uses `SUM` as its default, whatever its data.",
+        "correct": false,
+        "rationale": "SUM is the usual default for numbers, but it isn't the only one."
+      },
+      {
+        "text": "Changing the aggregation on a pill affects that pill in that view only.",
+        "correct": true,
+        "rationale": "A pill's menu change is local; other views and the Data pane default stay as they were."
+      },
+      {
+        "text": "Clearing Aggregate Measures resets every default aggregation to `SUM`.",
+        "correct": false,
+        "rationale": "It turns aggregation off for the view, but it doesn't alter defaults."
+      },
+      {
+        "text": "A published data source's default aggregations can't be changed in the workbook.",
+        "correct": true,
+        "rationale": "They are decided where the data source is published."
+      }
+    ],
+    "explanation": "Defaults are set by Tableau on connection and can be changed per pill or in the Data pane. They can't be changed for a published data source, because the publisher decides them.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_understanddatawindow.htm"
+    ]
+  },
+  {
+    "id": "4.3-007",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.1"
+    ],
+    "stem": "An analyst connects to a published data source and tries to change a measure's default aggregation in the Data pane. What is the situation?",
+    "options": [
+      {
+        "text": "It works, but only for the first worksheet in the workbook",
+        "correct": false,
+        "rationale": "Default Properties apply workbook-wide when they can be set, and not just to one sheet."
+      },
+      {
+        "text": "It works if the analyst first clears Aggregate Measures on the Analysis menu",
+        "correct": false,
+        "rationale": "Clearing the option disaggregates the view; it doesn't unlock default settings."
+      },
+      {
+        "text": "The default can't be set there, because the publisher decides it",
+        "correct": true,
+        "rationale": "Default aggregations of a published data source are controlled where it is published."
+      },
+      {
+        "text": "It works if the field is first converted from a measure to a dimension",
+        "correct": false,
+        "rationale": "A dimension has no default aggregation to set, and the restriction wouldn't change."
+      }
+    ],
+    "explanation": "Tableau doesn't let you set default aggregations for published data sources. The analyst can still change the aggregation on a pill in a view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-008",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "A view shows `SUM(Minutes Watched)` as one bar per `Plan`. An analyst drops `Device` on Color. What happens?",
+    "options": [
+      {
+        "text": "Each plan's bar splits into one segment per device, and the bar heights stay the same",
+        "correct": true,
+        "rationale": "The measure is computed for each plan and device, and the segments add up to the plan total."
+      },
+      {
+        "text": "Each plan's bar is replaced by one bar per device, side by side, and a header is added",
+        "correct": false,
+        "rationale": "Color adds marks without adding headers, so the bars are stacked and not split into new headers."
+      },
+      {
+        "text": "The bars become averages across devices because a second dimension is present",
+        "correct": false,
+        "rationale": "Adding a dimension doesn't change the aggregation; the pill is still `SUM`."
+      },
+      {
+        "text": "The bars shrink because `Device` filters out some sessions",
+        "correct": false,
+        "rationale": "A field on Color groups rows; it doesn't remove any."
+      }
+    ],
+    "explanation": "Every dimension in the view, including those on Color, increases the level of detail. Because SUM is additive, the segments add back up to the former bars.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-009",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "After a dimension was dropped on the Marks card, the numbers in a bar chart became smaller and no new headers appeared. Which concept explains it?",
+    "options": [
+      {
+        "text": "The default aggregation of the measure was changed to Average",
+        "correct": false,
+        "rationale": "Changing an aggregation is done on a pill or in the Data pane, not by dropping a field on the Marks card."
+      },
+      {
+        "text": "The view was disaggregated, so each mark shows one row",
+        "correct": false,
+        "rationale": "Disaggregation is set on the Analysis menu and doesn't come from adding a field."
+      },
+      {
+        "text": "A measure filter removed the rows with the largest values",
+        "correct": false,
+        "rationale": "Filters aren't involved; no field was added to the Filters shelf."
+      },
+      {
+        "text": "The level of detail increased, so each total was split into more groups",
+        "correct": true,
+        "rationale": "A dimension on Color, Size, Label or Detail adds groups without adding headers."
+      }
+    ],
+    "explanation": "Dimensions on the Marks card count towards the level of detail just like those on Rows or Columns. More groups means more marks and smaller values.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-010",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "A scatterplot of `Sessions (Count)` against `SUM(Minutes Watched)` shows a single circle for all of Driftlight. Where should the analyst drag `Country` to get one circle per country, without a legend or new headers?",
+    "options": [
+      {
+        "text": "Color on the Marks card",
+        "correct": false,
+        "rationale": "Color would split the marks, but it would also add a legend."
+      },
+      {
+        "text": "Detail on the Marks card",
+        "correct": true,
+        "rationale": "Detail adds a dimension to the level of detail without colour, size or headers."
+      },
+      {
+        "text": "The Filters shelf",
+        "correct": false,
+        "rationale": "A filter chooses which rows are kept; it doesn't split the marks per country."
+      },
+      {
+        "text": "The Columns shelf",
+        "correct": false,
+        "rationale": "Columns would turn `Country` into headers and replace the continuous axis with it."
+      }
+    ],
+    "explanation": "Detail is the Marks card property for adding a dimension to the level of detail without encoding it visually. Each member of the field then gets its own mark.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-011",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "An analyst removes `Device` from a view that shows `SUM(Minutes Watched)` per `Plan` and `Device`. What happens to the measure?",
+    "options": [
+      {
+        "text": "It is recomputed over the larger groups, one per plan",
+        "correct": true,
+        "rationale": "Removing a dimension merges groups again, and the aggregate is calculated over the merged rows."
+      },
+      {
+        "text": "It stays computed per device, which is simply hidden from the view",
+        "correct": false,
+        "rationale": "The level of detail follows the dimensions in the view, so nothing stays hidden."
+      },
+      {
+        "text": "It becomes an average of the earlier device values",
+        "correct": false,
+        "rationale": "Tableau recomputes from the underlying rows and doesn't average earlier results."
+      },
+      {
+        "text": "It becomes null until the analyst re-adds a dimension",
+        "correct": false,
+        "rationale": "A view with fewer dimensions is valid; with no dimension, it simply shows one overall mark."
+      }
+    ],
+    "explanation": "The marks follow the dimensions in the view. Take one away, and Tableau aggregates the measure over the bigger groups.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-012",
+    "taskId": "4.3",
+    "kind": "single",
+    "objectives": [
+      "4.3.2"
+    ],
+    "stem": "A hypothetical table has three sessions for one plan: two on Mobile with 10 and 20 minutes, and one on TV with 60 minutes. With `Plan` and `Device` in the view, `AVG(Minutes Watched)` shows 15 for Mobile and 60 for TV. What does it show when `Device` is removed and only `Plan` remains?",
+    "options": [
+      {
+        "text": "37.5",
+        "correct": false,
+        "rationale": "This averages the two device averages, but Tableau averages the underlying rows."
+      },
+      {
+        "text": "90",
+        "correct": false,
+        "rationale": "This adds up all three sessions' minutes, which is a `SUM`, not an `AVG`."
+      },
+      {
+        "text": "30",
+        "correct": true,
+        "rationale": "The average of all three rows is (10 + 20 + 60) / 3 = 30."
+      },
+      {
+        "text": "75",
+        "correct": false,
+        "rationale": "This adds the device averages, which isn't what any aggregation does here."
+      }
+    ],
+    "explanation": "An AVG isn't additive: the plan average comes from all rows in the larger group, not from the device averages. This is why SUM and COUNT split cleanly but AVG doesn't.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-013",
+    "taskId": "4.3",
+    "kind": "multi",
+    "objectives": [
+      "4.3.2"
+    ],
+    "select": 3,
+    "stem": "Which actions increase the number of marks in a bar chart of `SUM(Minutes Watched)` per `Plan`? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Drop `Country` on Detail",
+        "correct": true,
+        "rationale": "Detail adds a dimension to the level of detail and so more marks."
+      },
+      {
+        "text": "Change the `SUM` to `AVG` on the pill",
+        "correct": false,
+        "rationale": "This changes the calculation, but the number of marks stays the same."
+      },
+      {
+        "text": "Drop `Device` on Color",
+        "correct": true,
+        "rationale": "A dimension on Color adds a mark per device within each plan."
+      },
+      {
+        "text": "Set `Minutes Watched` to Average under Default Properties > Aggregation",
+        "correct": false,
+        "rationale": "This changes the default aggregation, not the dimensions that form the groups."
+      },
+      {
+        "text": "Drop `Genre` on Rows",
+        "correct": true,
+        "rationale": "A new dimension on a shelf multiplies the member combinations."
+      }
+    ],
+    "explanation": "Marks come from the combinations of members of the dimensions in the view. Changing an aggregation changes the values on the marks, not how many there are.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.3-014",
+    "taskId": "4.3",
+    "kind": "multi",
+    "objectives": [
+      "4.3.2"
+    ],
+    "select": 2,
+    "stem": "A view shows a measure per `Plan`. When `Device` is added on Color, for which aggregations do the per-device values add back up to the per-plan value? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`AVG(Minutes Watched)`",
+        "correct": false,
+        "rationale": "Averaging per-device averages doesn't give the plan average."
+      },
+      {
+        "text": "`SUM(Minutes Watched)`",
+        "correct": true,
+        "rationale": "The pieces of a sum add up to the former total."
+      },
+      {
+        "text": "`MEDIAN(Minutes Watched)`",
+        "correct": false,
+        "rationale": "A median of medians isn't the overall median."
+      },
+      {
+        "text": "`Sessions (Count)`",
+        "correct": true,
+        "rationale": "Row counts are additive, so the device counts add up to the plan count."
+      },
+      {
+        "text": "`COUNTD(Subscriber ID)`",
+        "correct": false,
+        "rationale": "A subscriber may watch on several devices, so the distinct counts can add up to more than the plan's."
+      }
+    ],
+    "explanation": "SUM and COUNT are additive, so splitting by a dimension gives parts that sum to the old total. AVG, MEDIAN and COUNTD aren't additive.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  }
+]
