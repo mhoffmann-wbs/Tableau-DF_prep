@@ -1,0 +1,1010 @@
+[
+  {
+    "id": "3.2-001",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.1"
+    ],
+    "stem": "How does the analyst start a new dashboard in a workbook?",
+    "options": [
+      {
+        "text": "Open the Dashboard menu and choose Actions, then Add Action.",
+        "correct": false,
+        "rationale": "Dashboard > Actions defines interactions between sheets that already sit on a dashboard; it does not create one."
+      },
+      {
+        "text": "Click the New Story tab and drag the worksheets into the first story point.",
+        "correct": false,
+        "rationale": "That builds a story, a sequence of points, not a dashboard that shows several views at once."
+      },
+      {
+        "text": "Click the New Dashboard icon at the bottom of the workbook.",
+        "correct": true,
+        "rationale": "The icon creates an empty dashboard sheet next to the worksheets."
+      },
+      {
+        "text": "Right-click a worksheet tab and choose Show Filter for every sheet.",
+        "correct": false,
+        "rationale": "Show Filter adds a filter card to a view; it creates no new sheet."
+      }
+    ],
+    "explanation": "A dashboard is its own sheet type. You create it with the New Dashboard icon at the bottom of the workbook and then fill it with views and objects.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-002",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.1"
+    ],
+    "stem": "Where does the analyst drag a finished view from to place it on a dashboard?",
+    "options": [
+      {
+        "text": "The Sheets list on the left of the dashboard",
+        "correct": true,
+        "rationale": "The Sheets list holds every worksheet in the workbook, ready to drag onto the dashboard."
+      },
+      {
+        "text": "The Data pane, by dragging a field onto the dashboard canvas",
+        "correct": false,
+        "rationale": "Fields belong to worksheets; the dashboard canvas takes sheets and objects, not raw fields."
+      },
+      {
+        "text": "The Objects section, by dragging the Horizontal container",
+        "correct": false,
+        "rationale": "The Objects section offers layout containers, text, images and similar items, but not the worksheets themselves."
+      },
+      {
+        "text": "The Marks card of the active worksheet, by dragging the Detail button",
+        "correct": false,
+        "rationale": "The Marks card shapes one view; it is not a source of sheets for a dashboard."
+      }
+    ],
+    "explanation": "In the dashboard workspace the Sheets list shows the workbook's worksheets. Dragging one into the dashboard on the right adds that view, while the Objects section supplies non-view items.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-003",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.1"
+    ],
+    "stem": "The head of content wants a title line above the charts on the Viewing at a glance dashboard. Which object fits best?",
+    "options": [
+      {
+        "text": "Blank",
+        "correct": false,
+        "rationale": "The Blank object only adds empty spacing; it shows no text."
+      },
+      {
+        "text": "Navigation",
+        "correct": false,
+        "rationale": "A Navigation object is a button that takes viewers to another sheet, dashboard or story."
+      },
+      {
+        "text": "Web Page",
+        "correct": false,
+        "rationale": "A Web Page object displays an external site, not typed text."
+      },
+      {
+        "text": "Text",
+        "correct": true,
+        "rationale": "A Text object holds free text such as a dashboard title."
+      }
+    ],
+    "explanation": "Text objects carry titles, notes and captions. Blank is for spacing, Navigation for jumping to other sheets, and Web Page for embedding a URL.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-004",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.1"
+    ],
+    "stem": "A team wants a button on the Overview dashboard that sends viewers to the Regions dashboard. Which object should they add?",
+    "options": [
+      {
+        "text": "Blank, sized to look like a button",
+        "correct": false,
+        "rationale": "A Blank object is only spacing and has no built-in link to another sheet."
+      },
+      {
+        "text": "Navigation",
+        "correct": true,
+        "rationale": "A Navigation object lets viewers move from one dashboard to other sheets, dashboards or stories."
+      },
+      {
+        "text": "Image, showing a screenshot of the Regions chart",
+        "correct": false,
+        "rationale": "An Image object displays a picture and does not open another sheet by itself."
+      },
+      {
+        "text": "Horizontal, holding the Regions worksheet",
+        "correct": false,
+        "rationale": "A layout container groups objects and does not navigate anywhere."
+      }
+    ],
+    "explanation": "Navigation objects exist for exactly this: letting an audience move from one dashboard to other sheets, dashboards or stories.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-005",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.1"
+    ],
+    "stem": "The analyst needs empty space between two charts so they do not touch. Which Objects item is meant for that?",
+    "options": [
+      {
+        "text": "Image",
+        "correct": false,
+        "rationale": "An Image object displays a picture, which is more than spacing and needs a file."
+      },
+      {
+        "text": "Web Page",
+        "correct": false,
+        "rationale": "A Web Page object loads a URL, so it would show content rather than empty space."
+      },
+      {
+        "text": "Navigation",
+        "correct": false,
+        "rationale": "A Navigation object draws a button for jumping to other sheets."
+      },
+      {
+        "text": "Blank",
+        "correct": true,
+        "rationale": "The Blank object adds spacing between items."
+      }
+    ],
+    "explanation": "Blank is the Objects item for padding and spacing. The other objects carry content such as pictures, pages or navigation buttons.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-006",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.1"
+    ],
+    "stem": "Driftlight wants its catalogue tool shown live inside a dashboard. Which object embeds that web page?",
+    "options": [
+      {
+        "text": "Navigation",
+        "correct": false,
+        "rationale": "A Navigation object moves viewers to other sheets, not to external sites."
+      },
+      {
+        "text": "Text",
+        "correct": false,
+        "rationale": "A Text object holds typed text, so the page would only appear as a visible link at best."
+      },
+      {
+        "text": "Image",
+        "correct": false,
+        "rationale": "An Image object shows a static picture file, not a live page."
+      },
+      {
+        "text": "Web Page",
+        "correct": true,
+        "rationale": "A Web Page object embeds the page at a URL on the dashboard."
+      }
+    ],
+    "explanation": "The Web Page object embeds a URL in the dashboard. Image shows a static file, Text shows typed text, and Navigation targets sheets, dashboards and stories.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-007",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.1"
+    ],
+    "stem": "What best describes a dashboard compared with a worksheet?",
+    "options": [
+      {
+        "text": "It holds one view built from fields on shelves and the Marks card.",
+        "correct": false,
+        "rationale": "That describes a worksheet, where the pills and marks live."
+      },
+      {
+        "text": "It is a sequence of story points that each show one sheet with a caption.",
+        "correct": false,
+        "rationale": "That describes a story, which walks the reader through points in order."
+      },
+      {
+        "text": "It arranges several worksheets, plus text, images and controls, on one screen.",
+        "correct": true,
+        "rationale": "That is the purpose of a dashboard: compare views side by side and let them interact."
+      },
+      {
+        "text": "It stores the data connection and the joins between tables.",
+        "correct": false,
+        "rationale": "Connections and joins belong to the data source, not to a dashboard."
+      }
+    ],
+    "explanation": "A worksheet holds a single view. A dashboard combines several of them with objects on one screen, and a story presents sheets or dashboards one point at a time.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-008",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.1"
+    ],
+    "select": 2,
+    "stem": "Which two items are found in the Objects section of the dashboard workspace? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Horizontal layout container",
+        "correct": true,
+        "rationale": "Horizontal and Vertical containers are Objects items."
+      },
+      {
+        "text": "Calculated field",
+        "correct": false,
+        "rationale": "Calculated fields live in the Data pane and are used in worksheets."
+      },
+      {
+        "text": "Story point",
+        "correct": false,
+        "rationale": "Story points belong to a story sheet, not to the dashboard Objects list."
+      },
+      {
+        "text": "Image",
+        "correct": true,
+        "rationale": "Image is an Objects item for pictures such as a logo."
+      },
+      {
+        "text": "Parameter",
+        "correct": false,
+        "rationale": "Parameters are created from the Data pane, not placed as dashboard objects."
+      }
+    ],
+    "explanation": "The Objects section includes layout containers, Text, Image, Web Page, Blank and Navigation. Fields, calculations and parameters are worksheet-level concepts.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-009",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.1"
+    ],
+    "select": 3,
+    "stem": "Which three can the analyst add to a dashboard from the Objects section? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Parameter control card",
+        "correct": false,
+        "rationale": "A parameter control is shown through the parameter, not dragged as an Objects item."
+      },
+      {
+        "text": "Text",
+        "correct": true,
+        "rationale": "Text is an Objects item."
+      },
+      {
+        "text": "Bin",
+        "correct": false,
+        "rationale": "A bin is a field type made in the Data pane."
+      },
+      {
+        "text": "Web Page",
+        "correct": true,
+        "rationale": "Web Page is an Objects item that embeds a URL."
+      },
+      {
+        "text": "Marks card",
+        "correct": false,
+        "rationale": "The Marks card is part of a worksheet, not an object."
+      },
+      {
+        "text": "Navigation",
+        "correct": true,
+        "rationale": "Navigation is an Objects item for buttons to other sheets."
+      }
+    ],
+    "explanation": "Objects such as Text, Web Page and Navigation go on the dashboard from the Objects section. Bins and the Marks card belong to worksheet building.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-010",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.1"
+    ],
+    "select": 2,
+    "stem": "Which two actions build a dashboard that shows two existing worksheets? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Click the New Story tab",
+        "correct": false,
+        "rationale": "This creates a story, not a dashboard."
+      },
+      {
+        "text": "Choose Insert > Sheets in the Tooltip editor",
+        "correct": false,
+        "rationale": "This places a sheet inside a tooltip, not on the dashboard canvas."
+      },
+      {
+        "text": "Click the New Dashboard icon",
+        "correct": true,
+        "rationale": "The icon at the bottom of the workbook creates the dashboard sheet."
+      },
+      {
+        "text": "Drag the two views from the Sheets list onto the dashboard",
+        "correct": true,
+        "rationale": "Dragging from the Sheets list places each view on the dashboard."
+      },
+      {
+        "text": "Open Dashboard > Actions and choose Add Action",
+        "correct": false,
+        "rationale": "Actions connect sheets already placed; they do not place them."
+      }
+    ],
+    "explanation": "First create the dashboard with the New Dashboard icon, then drag worksheets from the Sheets list. Actions and tooltips are refinements applied afterwards.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-011",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.1"
+    ],
+    "select": 2,
+    "stem": "A Navigation object can take viewers to which two kinds of destination? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A Tableau Prep flow",
+        "correct": false,
+        "rationale": "Navigation objects point to sheets, dashboards and stories, not to Prep flows."
+      },
+      {
+        "text": "Another dashboard",
+        "correct": true,
+        "rationale": "Navigation objects can lead to another dashboard."
+      },
+      {
+        "text": "A story",
+        "correct": true,
+        "rationale": "Navigation objects can lead to a story."
+      },
+      {
+        "text": "The definition of a calculated field",
+        "correct": false,
+        "rationale": "A Navigation object does not open field definitions."
+      },
+      {
+        "text": "A parameter's current value",
+        "correct": false,
+        "rationale": "A parameter has a value but is not a destination for navigation."
+      }
+    ],
+    "explanation": "Navigation objects let an audience move from one dashboard to other sheets, dashboards or stories.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-012",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "A Plan filter card is shown on a dashboard with three sheets, and it must filter all three. What should the analyst do?",
+    "options": [
+      {
+        "text": "Turn on Use as Filter in the corner of the map sheet.",
+        "correct": false,
+        "rationale": "Use as Filter turns selected marks into filters; it does not change which sheets a filter card applies to."
+      },
+      {
+        "text": "Open the card menu, choose Apply to Worksheets > Selected Worksheets and click All on dashboard.",
+        "correct": true,
+        "rationale": "This makes the one card filter every sheet on the dashboard."
+      },
+      {
+        "text": "Open the card menu, choose Apply to Worksheets > Only This Worksheet.",
+        "correct": false,
+        "rationale": "That limits the filter to the one sheet it was created on, which is the opposite of the goal."
+      },
+      {
+        "text": "Add a highlight action from the filter sheet to the other sheets.",
+        "correct": false,
+        "rationale": "A highlight action dims marks instead of filtering them, and it is not a filter card setting."
+      }
+    ],
+    "explanation": "The Apply to Worksheets menu on a filter card controls its scope. Choosing Selected Worksheets and then All on dashboard applies it to every sheet on the dashboard.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering_global.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-013",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "Viewers should be able to click a bar in the genre chart and have the other sheets on the dashboard filter to that genre, with minimal setup. What is the quickest way?",
+    "options": [
+      {
+        "text": "Add a Show/Hide button to the genre sheet.",
+        "correct": false,
+        "rationale": "A Show/Hide button folds an object away; it creates no filtering."
+      },
+      {
+        "text": "Insert a sheet into the tooltip with Insert > Sheets.",
+        "correct": false,
+        "rationale": "A Viz in Tooltip shows a chart on hover; it does not filter other sheets."
+      },
+      {
+        "text": "Choose Only This Worksheet on every filter card.",
+        "correct": false,
+        "rationale": "That restricts filter cards to single sheets and does nothing with clicked marks."
+      },
+      {
+        "text": "Enable Use as Filter on the genre sheet.",
+        "correct": true,
+        "rationale": "This turns selected marks into filters for the other sheets on the dashboard in one click."
+      }
+    ],
+    "explanation": "Use as Filter is the one-click filter action: selected marks in the sheet filter the other sheets. Custom behaviour is then set in Dashboard > Actions.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm"
+    ]
+  },
+  {
+    "id": "3.2-014",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "Which feature lets viewers type a keyword and make the matching marks stand out while the rest fade?",
+    "options": [
+      {
+        "text": "Use as Filter on the source sheet",
+        "correct": false,
+        "rationale": "Use as Filter removes non-selected data in other sheets and is not a keyword search."
+      },
+      {
+        "text": "Include command buttons in the tooltip",
+        "correct": false,
+        "rationale": "Command buttons give filter and View Data options on hover, not a keyword search."
+      },
+      {
+        "text": "Add Show/Hide Button on a container",
+        "correct": false,
+        "rationale": "A Show/Hide button collapses an object and does not highlight marks."
+      },
+      {
+        "text": "A data highlighter",
+        "correct": true,
+        "rationale": "A highlighter lets viewers search by keyword or pick from a list; matching marks stand out and the rest fade."
+      }
+    ],
+    "explanation": "A data highlighter highlights matching marks and fades the others. It also appears on dashboards and stories once it is added to a worksheet.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_highlight.htm"
+    ]
+  },
+  {
+    "id": "3.2-015",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "Where does the analyst edit the text that appears when a viewer hovers over a mark?",
+    "options": [
+      {
+        "text": "The Tooltip button on the Marks card",
+        "correct": true,
+        "rationale": "Clicking Tooltip on the Marks card opens the editor for the hover text."
+      },
+      {
+        "text": "The Layout pane of the dashboard",
+        "correct": false,
+        "rationale": "The Layout pane sets position, size and title visibility of dashboard items, not tooltip text."
+      },
+      {
+        "text": "The Dashboard menu under Actions",
+        "correct": false,
+        "rationale": "Actions define interactions between sheets, not the hover text itself."
+      },
+      {
+        "text": "The Analytics pane of the worksheet",
+        "correct": false,
+        "rationale": "The Analytics pane holds items like reference lines, not tooltip text."
+      }
+    ],
+    "explanation": "Tooltips are edited per worksheet by selecting Tooltip on the Marks card. The dialog then lets the analyst type text and insert dynamic content.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viz_in_tooltip.htm"
+    ]
+  },
+  {
+    "id": "3.2-016",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "The analyst edits a tooltip and wants it to show each mark's own Genre, not a fixed word. What should they do?",
+    "options": [
+      {
+        "text": "Turn on Allow selection by category for the tooltip.",
+        "correct": false,
+        "rationale": "This option selects all marks with the same value; it does not add field values to the text."
+      },
+      {
+        "text": "Use the Insert menu at the top of the Tooltip dialog and pick the field.",
+        "correct": true,
+        "rationale": "Insert adds dynamic text such as field values, which change with each mark."
+      },
+      {
+        "text": "Type the genre name into the tooltip text once for all marks.",
+        "correct": false,
+        "rationale": "Typed text is static and would read the same on every mark."
+      },
+      {
+        "text": "Drag Genre onto the Filters shelf.",
+        "correct": false,
+        "rationale": "A filter limits which data is shown; it does not write the mark's value into a tooltip."
+      }
+    ],
+    "explanation": "The Insert menu in the Tooltip editor adds dynamic text, such as field values, so every mark shows its own value.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viz_in_tooltip.htm"
+    ]
+  },
+  {
+    "id": "3.2-017",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "Driftlight wants a small chart of a genre's top titles to appear when viewers hover a genre bar. How does the analyst set it up?",
+    "options": [
+      {
+        "text": "On the dashboard, choose Add Show/Hide Button on the bar chart.",
+        "correct": false,
+        "rationale": "A Show/Hide button toggles an object and does not embed a chart in a tooltip."
+      },
+      {
+        "text": "In Dashboard > Actions, add a Go to Sheet action that runs on Hover.",
+        "correct": false,
+        "rationale": "Go to Sheet opens another sheet instead of embedding it in a tooltip."
+      },
+      {
+        "text": "In the Tooltip editor, choose Insert > Sheets and pick the sheet.",
+        "correct": true,
+        "rationale": "This creates a Viz in Tooltip: a whole sheet is shown inside the tooltip."
+      },
+      {
+        "text": "Turn on Include command buttons in the Tooltip dialog.",
+        "correct": false,
+        "rationale": "Command buttons add filter and View Data links; they do not embed a sheet."
+      }
+    ],
+    "explanation": "A Viz in Tooltip puts a sheet inside the tooltip, inserted with Insert > Sheets in the Tooltip editor.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viz_in_tooltip.htm"
+    ]
+  },
+  {
+    "id": "3.2-018",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "A dashboard has a large panel of filter cards that clutters the screen. The analyst wants viewers to fold it away with a button. What should they use?",
+    "options": [
+      {
+        "text": "Use as Filter on the sheet that holds the panel",
+        "correct": false,
+        "rationale": "Use as Filter converts marks into filters and does not hide objects."
+      },
+      {
+        "text": "A data highlighter placed on the panel",
+        "correct": false,
+        "rationale": "A highlighter searches marks and does not fold away objects."
+      },
+      {
+        "text": "Add Show/Hide Button from the object's pop-up menu",
+        "correct": true,
+        "rationale": "The pop-up menu in the object's corner offers Add Show/Hide Button to show or hide it."
+      },
+      {
+        "text": "Apply to Worksheets > Only This Worksheet on each filter",
+        "correct": false,
+        "rationale": "This changes which sheets a filter affects; it does not hide the panel."
+      }
+    ],
+    "explanation": "Show/Hide buttons let viewers collapse and expand an object such as a container of filters. They are added from the pop-up menu in the object's upper corner.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm"
+    ]
+  },
+  {
+    "id": "3.2-019",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.2"
+    ],
+    "stem": "A tooltip should offer viewers links to filter the view and to open View Data without leaving the dashboard. Which tooltip option provides them?",
+    "options": [
+      {
+        "text": "Include command buttons",
+        "correct": true,
+        "rationale": "Command buttons add filtering options and View Data to the tooltip."
+      },
+      {
+        "text": "Allow selection by category",
+        "correct": false,
+        "rationale": "This selects all marks with the same value; it does not add buttons."
+      },
+      {
+        "text": "Insert > Sheets",
+        "correct": false,
+        "rationale": "This embeds a sheet in the tooltip rather than adding command buttons."
+      },
+      {
+        "text": "Add Show/Hide Button",
+        "correct": false,
+        "rationale": "This belongs to dashboard objects, not to tooltip settings."
+      }
+    ],
+    "explanation": "Include command buttons shows filtering and View Data options in the tooltip. Allow selection by category is a separate option that selects marks sharing a value.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viz_in_tooltip.htm"
+    ]
+  },
+  {
+    "id": "3.2-020",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.2"
+    ],
+    "select": 2,
+    "stem": "Which two statements about tooltip settings are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Include command buttons adds filtering and View Data options to the tooltip.",
+        "correct": true,
+        "rationale": "This is what the option provides."
+      },
+      {
+        "text": "Include command buttons makes the tooltip open a Go to URL action.",
+        "correct": false,
+        "rationale": "URL actions are defined under Dashboard > Actions."
+      },
+      {
+        "text": "Allow selection by category applies a filter to every sheet on the dashboard.",
+        "correct": false,
+        "rationale": "It selects marks; the scope of filtering is set by actions or filter cards."
+      },
+      {
+        "text": "Allow selection by category selects all marks with the same value.",
+        "correct": true,
+        "rationale": "This is what the option provides."
+      },
+      {
+        "text": "A tooltip can only contain text, never a chart.",
+        "correct": false,
+        "rationale": "A Viz in Tooltip places a whole sheet in the tooltip."
+      }
+    ],
+    "explanation": "Both options live in the Tooltip editor: command buttons for filter and View Data options, and category selection for choosing all marks with the same value. Tooltips can also hold a sheet.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viz_in_tooltip.htm"
+    ]
+  },
+  {
+    "id": "3.2-021",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.2"
+    ],
+    "select": 2,
+    "stem": "Which two are controls a viewer can use directly on a dashboard to explore the data? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A data highlighter",
+        "correct": true,
+        "rationale": "Viewers search or pick values to make matching marks stand out."
+      },
+      {
+        "text": "The Fixed size setting",
+        "correct": false,
+        "rationale": "Size is a layout choice for the author, not a control for exploring data."
+      },
+      {
+        "text": "A filter card",
+        "correct": true,
+        "rationale": "Show Filter adds a card the viewer uses to restrict the data."
+      },
+      {
+        "text": "The Device Preview button",
+        "correct": false,
+        "rationale": "Device Preview is an authoring tool for layouts."
+      },
+      {
+        "text": "The story navigator style",
+        "correct": false,
+        "rationale": "The navigator style belongs to stories, not dashboards."
+      }
+    ],
+    "explanation": "Filter cards and highlighters give viewers interactive control. Fixed size, Device Preview and navigator style are authoring and story settings.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_highlight.htm"
+    ]
+  },
+  {
+    "id": "3.2-022",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.2"
+    ],
+    "select": 3,
+    "stem": "Which three are options in the Apply to Worksheets submenu of a filter card? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Selected Worksheets",
+        "correct": true,
+        "rationale": "This opens the list of sheets, with an All on dashboard button."
+      },
+      {
+        "text": "Add to Context",
+        "correct": false,
+        "rationale": "Add to Context is on the filter's own menu and changes when it runs, not which sheets it applies to."
+      },
+      {
+        "text": "All Using This Data Source",
+        "correct": true,
+        "rationale": "The filter applies to every sheet that uses the same data source."
+      },
+      {
+        "text": "Use as Filter",
+        "correct": false,
+        "rationale": "Use as Filter is in the upper corner of a sheet on the dashboard, not in the filter card's menu."
+      },
+      {
+        "text": "Only This Worksheet",
+        "correct": true,
+        "rationale": "This keeps the filter local to the current sheet."
+      },
+      {
+        "text": "Add Show/Hide Button",
+        "correct": false,
+        "rationale": "Show/Hide buttons come from an object's pop-up menu and fold the object away."
+      }
+    ],
+    "explanation": "The submenu offers Selected Worksheets, All Using Related Data Sources, All Using This Data Source and Only This Worksheet.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering_global.htm"
+    ]
+  },
+  {
+    "id": "3.2-023",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "On a dashboard, clicking a country on the map should dim the other values in the line chart instead of removing them. Which action type fits?",
+    "options": [
+      {
+        "text": "Highlight",
+        "correct": true,
+        "rationale": "A highlight action keeps all marks and dims those that do not match."
+      },
+      {
+        "text": "Filter",
+        "correct": false,
+        "rationale": "A filter action removes marks that do not match from the target sheets."
+      },
+      {
+        "text": "Go to Sheet",
+        "correct": false,
+        "rationale": "Go to Sheet opens another sheet; it neither filters nor highlights."
+      },
+      {
+        "text": "Change Set Values",
+        "correct": false,
+        "rationale": "This changes the members of a set and does not dim marks on its own."
+      }
+    ],
+    "explanation": "Filter actions remove non-matching marks, while highlight actions keep every mark and dim the rest. When other values must stay visible, use highlight.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_highlight.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/actions.htm"
+    ]
+  },
+  {
+    "id": "3.2-024",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "From which menu does the analyst add a filter action to a dashboard?",
+    "options": [
+      {
+        "text": "The Tooltip dialog on the Marks card",
+        "correct": false,
+        "rationale": "The Tooltip dialog edits hover text and has no action list."
+      },
+      {
+        "text": "Dashboard > Actions, then Add Action",
+        "correct": true,
+        "rationale": "This is where actions of every type are created and edited."
+      },
+      {
+        "text": "The Layout pane",
+        "correct": false,
+        "rationale": "The Layout pane sets item position and size."
+      },
+      {
+        "text": "The Analytics pane",
+        "correct": false,
+        "rationale": "The Analytics pane holds items like reference lines."
+      }
+    ],
+    "explanation": "Dashboard > Actions lists a dashboard's actions; Add Action lets the analyst choose a type such as Filter or Highlight.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm"
+    ]
+  },
+  {
+    "id": "3.2-025",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "Which Run action on setting fires an action as soon as the viewer moves the pointer over a mark, without clicking?",
+    "options": [
+      {
+        "text": "Select",
+        "correct": false,
+        "rationale": "Select needs the viewer to click a mark."
+      },
+      {
+        "text": "Hover",
+        "correct": true,
+        "rationale": "Hover triggers the action when the pointer is over a mark."
+      },
+      {
+        "text": "Menu",
+        "correct": false,
+        "rationale": "Menu puts a link in the tooltip that the viewer must click."
+      },
+      {
+        "text": "Show all values",
+        "correct": false,
+        "rationale": "This controls what happens when a filter selection is cleared; it is not a trigger."
+      }
+    ],
+    "explanation": "Run action on offers Hover, Select and Menu. Hover reacts to the pointer, Select to a click and Menu to a link in the tooltip.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm"
+    ]
+  },
+  {
+    "id": "3.2-026",
+    "taskId": "3.2",
+    "kind": "single",
+    "objectives": [
+      "3.2.3"
+    ],
+    "stem": "A filter action runs from the map. When the viewer clears the selection, the other sheets should show all members again. Which setting is needed?",
+    "options": [
+      {
+        "text": "Leave the filter",
+        "correct": false,
+        "rationale": "The sheets would stay filtered to the last selection."
+      },
+      {
+        "text": "Exclude all values",
+        "correct": false,
+        "rationale": "The target sheets would show no marks."
+      },
+      {
+        "text": "Show all values",
+        "correct": true,
+        "rationale": "This restores every member in the target sheets when the selection is cleared."
+      },
+      {
+        "text": "Keep current value",
+        "correct": false,
+        "rationale": "This setting belongs to parameter actions and does not apply to a filter action."
+      }
+    ],
+    "explanation": "A filter action offers Leave the filter, Show all values or Exclude all values when the selection is cleared. Keep current value is for parameter actions.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm"
+    ]
+  },
+  {
+    "id": "3.2-027",
+    "taskId": "3.2",
+    "kind": "multi",
+    "objectives": [
+      "3.2.3"
+    ],
+    "select": 2,
+    "stem": "Which two are choices for what a filter action does when the selection is cleared? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Keep current value",
+        "correct": false,
+        "rationale": "This option is offered by parameter actions."
+      },
+      {
+        "text": "Leave the filter",
+        "correct": true,
+        "rationale": "The target sheets keep the previous filter."
+      },
+      {
+        "text": "Set value to",
+        "correct": false,
+        "rationale": "This option is offered by parameter actions."
+      },
+      {
+        "text": "Run action on Menu",
+        "correct": false,
+        "rationale": "That decides how the action starts, not what happens on clearing."
+      },
+      {
+        "text": "Exclude all values",
+        "correct": true,
+        "rationale": "The target sheets show no marks."
+      }
+    ],
+    "explanation": "For filter actions the clear-selection choices are Leave the filter, Show all values and Exclude all values. Parameter actions have their own pair of options.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm"
+    ]
+  }
+]
