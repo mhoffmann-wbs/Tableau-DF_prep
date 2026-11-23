@@ -1043,5 +1043,1004 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
     ]
+  },
+  {
+    "id": "3.1-029",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.4"
+    ],
+    "stem": "The analyst wants marks to move smoothly on every sheet of the workbook when a filter changes. Where do they turn this on?",
+    "options": [
+      {
+        "text": "Format > Animations, then On under Workbook Default",
+        "correct": true,
+        "rationale": "The Workbook Default setting applies animation to every sheet."
+      },
+      {
+        "text": "Format > Workbook, then a switch in the Format Workbook pane",
+        "correct": false,
+        "rationale": "That pane holds font settings for the whole workbook, not animation."
+      },
+      {
+        "text": "The Marks card, by clicking Size and choosing a transition",
+        "correct": false,
+        "rationale": "Size controls how big marks are; animation is not a Marks card property."
+      },
+      {
+        "text": "Format > Font, then a transition option for pane text",
+        "correct": false,
+        "rationale": "Format > Font sets font, style, size and color of text, not animation."
+      }
+    ],
+    "explanation": "Animations are configured under Format > Animations. The Workbook Default section turns them on for all sheets, and Selected Sheet overrides it for one.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-030",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.4"
+    ],
+    "stem": "What is the longest custom duration that can be set for a viz animation?",
+    "options": [
+      {
+        "text": "1 second",
+        "correct": false,
+        "rationale": "Presets are short, but a custom duration can be longer than this."
+      },
+      {
+        "text": "30 seconds",
+        "correct": false,
+        "rationale": "This is more than the limit Tableau allows."
+      },
+      {
+        "text": "10 seconds",
+        "correct": true,
+        "rationale": "A custom duration can be up to 10 seconds; presets are also available."
+      },
+      {
+        "text": "60 seconds",
+        "correct": false,
+        "rationale": "This is far beyond the allowed maximum."
+      }
+    ],
+    "explanation": "Under Format > Animations, Duration offers a preset or a custom duration of up to 10 seconds.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-031",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.4"
+    ],
+    "stem": "The analyst sets the animation Style to Sequential. What does Tableau do when the view changes?",
+    "options": [
+      {
+        "text": "It plays all the animations at the same time",
+        "correct": false,
+        "rationale": "This describes Simultaneous, which is faster but harder to follow."
+      },
+      {
+        "text": "It fades out marks, moves and sorts them, then fades them in",
+        "correct": true,
+        "rationale": "This is the Sequential style: one step after another, easier to follow."
+      },
+      {
+        "text": "It animates only the sheet that is currently selected",
+        "correct": false,
+        "rationale": "Which sheets animate depends on Workbook Default and Selected Sheet, not on Style."
+      },
+      {
+        "text": "It holds each mark on screen for the full 10 seconds",
+        "correct": false,
+        "rationale": "Duration is a separate setting; Style controls the order of the steps."
+      }
+    ],
+    "explanation": "Style has two choices. Simultaneous plays every animation at once and is faster; Sequential fades out marks, moves and sorts them, then fades them in, which is easier to follow.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-032",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.4"
+    ],
+    "stem": "Animations are on for the whole workbook, but one dashboard sheet should use the Sequential style. What should the analyst do?",
+    "options": [
+      {
+        "text": "Change the Style under Workbook Default",
+        "correct": false,
+        "rationale": "This would change the style of every sheet, not just one."
+      },
+      {
+        "text": "Click Reset All Sheets",
+        "correct": false,
+        "rationale": "This returns every sheet to the workbook default, so the exception would be lost."
+      },
+      {
+        "text": "Use Format > Workbook and pick a different title font",
+        "correct": false,
+        "rationale": "Fonts have nothing to do with how marks animate."
+      },
+      {
+        "text": "Change the settings under Selected Sheet",
+        "correct": true,
+        "rationale": "Selected Sheet overrides the workbook defaults for that one sheet."
+      }
+    ],
+    "explanation": "Workbook Default sets the animation for all sheets. To deviate on a particular sheet, change the settings under Selected Sheet.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-033",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.4"
+    ],
+    "stem": "Several sheets have their own animation overrides, and the analyst wants all of them to follow the workbook default again. Which command does that?",
+    "options": [
+      {
+        "text": "Reset to Defaults in the Format Workbook pane",
+        "correct": false,
+        "rationale": "That command undoes font changes made in the Format Workbook pane, not animation overrides."
+      },
+      {
+        "text": "Turning Selected Sheet off on each sheet in turn",
+        "correct": false,
+        "rationale": "This is slower and not how the overrides are cleared in one step."
+      },
+      {
+        "text": "Reset All Sheets",
+        "correct": true,
+        "rationale": "It returns every sheet to the workbook default."
+      },
+      {
+        "text": "Setting the duration to 0 seconds",
+        "correct": false,
+        "rationale": "A different duration is still an override, and it does not restore the default."
+      }
+    ],
+    "explanation": "Format > Animations includes Reset All Sheets, which removes the per-sheet overrides so each sheet uses the workbook default.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-034",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.4"
+    ],
+    "stem": "What is the purpose of animating a viz?",
+    "options": [
+      {
+        "text": "Marks move smoothly when filters, sorts or the view change, so viewers can follow what happened",
+        "correct": true,
+        "rationale": "Smooth transitions help viewers track the change."
+      },
+      {
+        "text": "Each mark gets a legend entry that updates when the data changes",
+        "correct": false,
+        "rationale": "Legends come from fields on Color, Size and Shape, not from animation."
+      },
+      {
+        "text": "The data is refreshed automatically at set intervals",
+        "correct": false,
+        "rationale": "Animation changes how a change is shown, not when data updates."
+      },
+      {
+        "text": "The view shrinks so that more marks fit in the pane",
+        "correct": false,
+        "rationale": "Animation does not change the size of the view."
+      }
+    ],
+    "explanation": "Animations show a change as motion instead of a jump. A viewer can follow where marks went after a filter, a sort or a change to the view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-035",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.4"
+    ],
+    "select": 2,
+    "stem": "Which statements about the animation Style are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Simultaneous plays all the animations at once",
+        "correct": true,
+        "rationale": "This is the definition of Simultaneous, and it is the faster style."
+      },
+      {
+        "text": "Sequential plays all the animations at once",
+        "correct": false,
+        "rationale": "Sequential is the step-by-step style; Simultaneous plays everything at once."
+      },
+      {
+        "text": "Sequential fades out marks, moves and sorts them, then fades them in",
+        "correct": true,
+        "rationale": "That is the Sequential order, which is easier to follow."
+      },
+      {
+        "text": "The Style can only be chosen once per workbook",
+        "correct": false,
+        "rationale": "Selected Sheet lets a single sheet override the workbook default."
+      },
+      {
+        "text": "Simultaneous gives each mark its own legend while it moves",
+        "correct": false,
+        "rationale": "Style does not affect legends."
+      }
+    ],
+    "explanation": "Style chooses between two ways of playing a transition. Simultaneous is faster; Sequential steps through fade out, move and sort, and fade in.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-036",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.4"
+    ],
+    "select": 2,
+    "stem": "Which settings can be chosen under Format > Animations? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A Duration, either a preset or a custom value",
+        "correct": true,
+        "rationale": "Duration is one of the animation settings."
+      },
+      {
+        "text": "The font of the pane text",
+        "correct": false,
+        "rationale": "Fonts are set under Format > Font or Format > Workbook."
+      },
+      {
+        "text": "A Style, Simultaneous or Sequential",
+        "correct": true,
+        "rationale": "Style is the second animation setting."
+      },
+      {
+        "text": "The categorical palette for Color",
+        "correct": false,
+        "rationale": "Palettes belong to Color on the Marks card, under Edit Colors."
+      },
+      {
+        "text": "The width of fixed-width bars",
+        "correct": false,
+        "rationale": "Fixed bar width is set after clicking Size on the Marks card."
+      }
+    ],
+    "explanation": "Format > Animations holds a workbook default (on or off), the duration, the style and the Selected Sheet overrides. Colours, fonts and sizes are formatted elsewhere.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-037",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.4"
+    ],
+    "select": 2,
+    "stem": "Animations are on with the Simultaneous style for the workbook. The head of design wants the `Engagement` sheet to use Sequential, and every other sheet to stay as it is. Which steps achieve this? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Open Format > Animations",
+        "correct": true,
+        "rationale": "All animation settings, including sheet overrides, are on this menu path."
+      },
+      {
+        "text": "Change the Style under Workbook Default",
+        "correct": false,
+        "rationale": "This would switch every sheet to Sequential."
+      },
+      {
+        "text": "With the sheet selected, change the Style under Selected Sheet",
+        "correct": true,
+        "rationale": "The override applies to that sheet only."
+      },
+      {
+        "text": "Click Reset All Sheets",
+        "correct": false,
+        "rationale": "This removes overrides rather than creating one."
+      },
+      {
+        "text": "Change the workbook font under Format > Workbook",
+        "correct": false,
+        "rationale": "Fonts do not affect the animation style."
+      }
+    ],
+    "explanation": "Per-sheet exceptions are set under Selected Sheet in the Animations pane. The workbook default stays untouched, so the other sheets keep Simultaneous.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm"
+    ]
+  },
+  {
+    "id": "3.1-038",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "The analyst wants every mark on a sheet to be larger, without adding a field. What should they do?",
+    "options": [
+      {
+        "text": "Drag `Minutes Watched` onto Size on the Marks card",
+        "correct": false,
+        "rationale": "A field on Size encodes data, so marks would differ in size by value."
+      },
+      {
+        "text": "Click Size on the Marks card and move the slider to the right",
+        "correct": true,
+        "rationale": "The slider sets the size of all marks at once."
+      },
+      {
+        "text": "Choose Format > Workbook and increase the font size",
+        "correct": false,
+        "rationale": "Fonts affect text, not marks."
+      },
+      {
+        "text": "Use Edit Sizes in the Color legend menu",
+        "correct": false,
+        "rationale": "Edit Sizes belongs to a size legend, which only exists once a field is on Size."
+      }
+    ],
+    "explanation": "Clicking Size without a field formats all marks the same. Moving the slider changes their size, with no legend and no change to the data.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-039",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "After the analyst moves the Size slider on the Marks card, what has changed?",
+    "options": [
+      {
+        "text": "The data view is resized, and the marks keep their size",
+        "correct": false,
+        "rationale": "It is the other way round: the view stays the same."
+      },
+      {
+        "text": "The values of the measures are scaled up or down",
+        "correct": false,
+        "rationale": "Size is a visual property and never changes the data."
+      },
+      {
+        "text": "Each dimension member gets its own unique size",
+        "correct": false,
+        "rationale": "That happens when a discrete field is placed on Size, not with the slider."
+      },
+      {
+        "text": "The marks are drawn larger or smaller, but the size of the data view is not modified",
+        "correct": true,
+        "rationale": "The slider only affects the marks."
+      }
+    ],
+    "explanation": "The slider is formatting. It changes how big the marks are drawn, and Tableau states that the size of the data view is not modified.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-040",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "A continuous measure such as `AVG(Runtime)` is placed on Size. How does Tableau assign mark sizes?",
+    "options": [
+      {
+        "text": "The smallest value gets the smallest mark and the largest value the largest mark",
+        "correct": true,
+        "rationale": "This is how a continuous field is encoded on Size."
+      },
+      {
+        "text": "Every mark gets the same size, as the field only adds a legend",
+        "correct": false,
+        "rationale": "A field on Size changes the marks; it is not a legend-only change."
+      },
+      {
+        "text": "The marks are sorted by value, and sizes alternate small and large",
+        "correct": false,
+        "rationale": "Sizes follow the value, not an alternation."
+      },
+      {
+        "text": "The largest value gets the smallest mark, unless Reversed is cleared",
+        "correct": false,
+        "rationale": "Reversed is an option in Edit Sizes; by default, bigger values get bigger marks."
+      }
+    ],
+    "explanation": "A continuous field on Size maps the range of values to the range of mark sizes. Edit Sizes can reverse this.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-041",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "A discrete field is placed on Size. What does Tableau do?",
+    "options": [
+      {
+        "text": "It gives all members the largest size",
+        "correct": false,
+        "rationale": "Members are told apart by size, so they cannot all be the same."
+      },
+      {
+        "text": "It converts the field to a measure and sums it",
+        "correct": false,
+        "rationale": "Placing a field on Size does not aggregate a dimension that way."
+      },
+      {
+        "text": "It assigns a unique size to each member",
+        "correct": true,
+        "rationale": "Discrete members each get their own size."
+      },
+      {
+        "text": "It ignores the field until the mark type is Shape",
+        "correct": false,
+        "rationale": "Size works with any mark type; the Shape requirement belongs to Shape."
+      }
+    ],
+    "explanation": "The encoding follows the field's continuity: a continuous field maps its range to a range of sizes, and a discrete field gets a unique size per member.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-042",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "From which place does the analyst open Edit Sizes, to choose Automatic, By range or From zero?",
+    "options": [
+      {
+        "text": "The Format > Workbook pane",
+        "correct": false,
+        "rationale": "This pane sets fonts for the workbook."
+      },
+      {
+        "text": "The Format > Animations pane",
+        "correct": false,
+        "rationale": "That pane sets transitions between views, not how values map to mark sizes."
+      },
+      {
+        "text": "The Data pane, by right-clicking the field",
+        "correct": false,
+        "rationale": "The field's menu in the Data pane doesn't hold size ranges."
+      },
+      {
+        "text": "The menu of the size legend",
+        "correct": true,
+        "rationale": "Edit Sizes is on the size legend's menu."
+      }
+    ],
+    "explanation": "Each legend has a card menu with its own editing command: Edit Colors, Edit Shape or Edit Sizes. The size legend offers Edit Sizes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-043",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "The bars of a chart on a continuous date axis should all have the same fixed width. What should the analyst do?",
+    "options": [
+      {
+        "text": "Drag the date field to Size on the Marks card",
+        "correct": false,
+        "rationale": "This would encode the date in the mark size instead of fixing it."
+      },
+      {
+        "text": "Click Size, choose Fixed, then enter the Width in axis units",
+        "correct": true,
+        "rationale": "On a continuous date axis, the width is entered in days."
+      },
+      {
+        "text": "Move the Size slider to the far right",
+        "correct": false,
+        "rationale": "The slider changes the size of all marks but doesn't set a width in axis units."
+      },
+      {
+        "text": "Set the Style to Simultaneous under Format > Animations",
+        "correct": false,
+        "rationale": "Style is an animation setting and has no effect on bar width."
+      }
+    ],
+    "explanation": "Size has a Fixed option with a Width in axis units. When the axis is a continuous date axis, the unit is days.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-044",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.5"
+    ],
+    "select": 2,
+    "stem": "Which statements about Edit Sizes are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Reversed gives the biggest mark to the smallest value",
+        "correct": true,
+        "rationale": "Reversed flips the default assignment of sizes."
+      },
+      {
+        "text": "Edit Sizes opens from the Format menu",
+        "correct": false,
+        "rationale": "It opens from the size legend's menu."
+      },
+      {
+        "text": "Sizes can only vary Automatically",
+        "correct": false,
+        "rationale": "They can also vary By range or From zero."
+      },
+      {
+        "text": "The start and end values can be fixed",
+        "correct": true,
+        "rationale": "The range can be pinned instead of following the data."
+      },
+      {
+        "text": "Edit Sizes is only available for text marks",
+        "correct": false,
+        "rationale": "It belongs to the size legend of a field on Size, not to one mark type."
+      }
+    ],
+    "explanation": "Edit Sizes on the size legend controls how values map to mark sizes: Automatically, By range or From zero, optionally reversed, with fixed start and end values.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-045",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.5"
+    ],
+    "select": 2,
+    "stem": "Which actions change the size of marks? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Clicking Size on the Marks card and moving the slider",
+        "correct": true,
+        "rationale": "This sets the size of all marks."
+      },
+      {
+        "text": "Clicking Color and moving the Opacity slider",
+        "correct": false,
+        "rationale": "Opacity changes transparency, not size."
+      },
+      {
+        "text": "Dragging a field onto Size on the Marks card",
+        "correct": true,
+        "rationale": "The field's values decide each mark's size."
+      },
+      {
+        "text": "Choosing Format > Font and a larger pane font",
+        "correct": false,
+        "rationale": "This enlarges text, not marks."
+      },
+      {
+        "text": "Setting the Duration under Format > Animations",
+        "correct": false,
+        "rationale": "Duration only controls how long a transition lasts."
+      }
+    ],
+    "explanation": "There are two ways to size marks: format all of them with the slider, or encode with a field on Size.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-046",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.5"
+    ],
+    "select": 3,
+    "stem": "Which statements about a field on Size are true? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "With a continuous field, the smallest value gets the smallest mark",
+        "correct": true,
+        "rationale": "The range of values maps to the range of sizes."
+      },
+      {
+        "text": "The size legend, once the field is placed, lets the analyst open Edit Sizes",
+        "correct": true,
+        "rationale": "The legend's menu holds the editing command."
+      },
+      {
+        "text": "A discrete field gets a unique size for each member",
+        "correct": true,
+        "rationale": "Each member is told apart by size."
+      },
+      {
+        "text": "The field changes the size of the data view",
+        "correct": false,
+        "rationale": "Only the marks are affected; the view is not resized."
+      },
+      {
+        "text": "The field can only be a dimension",
+        "correct": false,
+        "rationale": "Continuous fields, typically measures, work on Size and are the usual choice."
+      }
+    ],
+    "explanation": "A field on Size encodes data: a continuous field maps its range of values to a range of mark sizes, a discrete field gives each member its own size, and a legend appears.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-047",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.6"
+    ],
+    "stem": "When does Tableau display a legend on a sheet?",
+    "options": [
+      {
+        "text": "Whenever the mark type is changed from Automatic",
+        "correct": false,
+        "rationale": "Changing the mark type does not by itself encode a field."
+      },
+      {
+        "text": "Whenever the analyst formats a font under Format > Font",
+        "correct": false,
+        "rationale": "Fonts are formatting and need no key."
+      },
+      {
+        "text": "When fields are added to Color, Size or Shape on the Marks card",
+        "correct": true,
+        "rationale": "A legend explains how the view is encoded."
+      },
+      {
+        "text": "Whenever a filter is added to the Filters shelf",
+        "correct": false,
+        "rationale": "A filter limits the data; it does not encode a mark property."
+      }
+    ],
+    "explanation": "Tableau shows a legend to indicate how the view is encoded. Fields on Color, Size and Shape produce one.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-048",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.6"
+    ],
+    "stem": "The analyst clicks Color on the Marks card and picks a green for all marks. Which legend appears?",
+    "options": [
+      {
+        "text": "None, because there is no field to explain",
+        "correct": true,
+        "rationale": "Formatting without a field creates no legend."
+      },
+      {
+        "text": "A categorical legend with one green entry",
+        "correct": false,
+        "rationale": "Categorical legends come from a discrete field on Color."
+      },
+      {
+        "text": "A quantitative legend with a range of greens",
+        "correct": false,
+        "rationale": "Quantitative legends come from a continuous field on Color."
+      },
+      {
+        "text": "A size legend with one entry",
+        "correct": false,
+        "rationale": "A size legend needs a field on Size."
+      }
+    ],
+    "explanation": "A legend is created by encoding. Choosing one colour for every mark is only formatting, so there is nothing to explain.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-049",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.6"
+    ],
+    "stem": "A bar chart already shows every `Genre` name as a label on its bars, and `Genre` is also on Color. Why might the analyst hide the legend?",
+    "options": [
+      {
+        "text": "A legend can only be hidden once the field is removed from Color",
+        "correct": false,
+        "rationale": "Hiding the card and removing the field are independent actions."
+      },
+      {
+        "text": "The legend would otherwise stop the bars from using a categorical palette",
+        "correct": false,
+        "rationale": "Showing a legend never changes the palette."
+      },
+      {
+        "text": "Tableau permits only one visible legend per workbook",
+        "correct": false,
+        "rationale": "There is no such limit; each legend is a card on its sheet."
+      },
+      {
+        "text": "The marks are already labelled, so the legend repeats what the labels say",
+        "correct": true,
+        "rationale": "A legend can be hidden when the encoding is obvious."
+      }
+    ],
+    "explanation": "Legends are cards on the sheet. When the marks are labelled, readers do not need a key, so the legend can be hidden to save space.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-050",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.6"
+    ],
+    "stem": "Where does the analyst find Edit Colors for a field that is on Color, apart from the Marks card button?",
+    "options": [
+      {
+        "text": "In the Format > Workbook pane",
+        "correct": false,
+        "rationale": "This pane is for fonts, not palettes."
+      },
+      {
+        "text": "In the menu of the color legend card",
+        "correct": true,
+        "rationale": "Each legend card has its own menu, which holds Edit Colors."
+      },
+      {
+        "text": "In the Filters card of the sheet",
+        "correct": false,
+        "rationale": "Filter cards have their own menus; palettes are not edited there."
+      },
+      {
+        "text": "In the Format > Animations pane, under Selected Sheet",
+        "correct": false,
+        "rationale": "Animations settings control transitions, not palettes."
+      }
+    ],
+    "explanation": "A legend is a card, and its menu holds the matching edit command: Edit Colors, Edit Shape or Edit Sizes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-051",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.6"
+    ],
+    "stem": "Which of these sheets most needs its legend kept visible?",
+    "options": [
+      {
+        "text": "A line chart with `Plan` on Color where the lines are not labelled",
+        "correct": true,
+        "rationale": "Readers need the key to know which colour is which plan."
+      },
+      {
+        "text": "A bar chart where every bar carries its own name as a label",
+        "correct": false,
+        "rationale": "The labels already tell the reader what each mark is."
+      },
+      {
+        "text": "A view in which no field is on Color, Size or Shape",
+        "correct": false,
+        "rationale": "There is no encoding, so no legend to show."
+      },
+      {
+        "text": "A sheet whose marks are all coloured orange through the Color menu",
+        "correct": false,
+        "rationale": "One colour for all marks encodes nothing."
+      }
+    ],
+    "explanation": "A legend explains an encoding. Hide it where the marks are already labelled or nothing is encoded; keep it where colour is the only way to tell the marks apart.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-052",
+    "taskId": "3.1",
+    "kind": "single",
+    "objectives": [
+      "3.1.6"
+    ],
+    "stem": "What kind of element on the sheet is a legend?",
+    "options": [
+      {
+        "text": "A pill on the Columns shelf",
+        "correct": false,
+        "rationale": "Pills represent fields on shelves; a legend is not one."
+      },
+      {
+        "text": "A mark type on the Marks card",
+        "correct": false,
+        "rationale": "Mark types are choices like Bar or Circle."
+      },
+      {
+        "text": "A card with its own menu",
+        "correct": true,
+        "rationale": "Legends, like filters, are cards that can be shown or hidden."
+      },
+      {
+        "text": "A sheet-level font setting",
+        "correct": false,
+        "rationale": "Fonts are formatted under the Format menu."
+      }
+    ],
+    "explanation": "A legend is a card. It can be hidden or shown, and its own menu offers Edit Colors, Edit Shape or Edit Sizes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-053",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.6"
+    ],
+    "select": 3,
+    "stem": "Which actions create a legend? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Dragging `Plan` onto Color",
+        "correct": true,
+        "rationale": "A field on Color is encoded and explained by a legend."
+      },
+      {
+        "text": "Clicking Size and moving the slider",
+        "correct": false,
+        "rationale": "This formats all marks without a field."
+      },
+      {
+        "text": "Dragging `Type` onto Shape",
+        "correct": true,
+        "rationale": "A field on Shape needs a shape legend."
+      },
+      {
+        "text": "Clicking Color and choosing one colour",
+        "correct": false,
+        "rationale": "A single colour for all marks has nothing to explain."
+      },
+      {
+        "text": "Dragging `AVG(Runtime)` onto Size",
+        "correct": true,
+        "rationale": "A field on Size gets a size legend."
+      }
+    ],
+    "explanation": "Legends appear for fields added to Color, Size and Shape. Formatting marks without a field creates none.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-054",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.6"
+    ],
+    "select": 2,
+    "stem": "Which statements about legends are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A legend can be hidden when the marks are already labelled",
+        "correct": true,
+        "rationale": "The encoding is obvious, so the key can go."
+      },
+      {
+        "text": "Hiding a legend removes its field from the Marks card",
+        "correct": false,
+        "rationale": "The field stays on the Marks card; only the legend card changes."
+      },
+      {
+        "text": "Each legend card has its own menu",
+        "correct": true,
+        "rationale": "That menu also holds Edit Colors, Edit Shape or Edit Sizes."
+      },
+      {
+        "text": "A legend must stay visible whenever a field is on Color",
+        "correct": false,
+        "rationale": "It can be hidden and shown again as readers need."
+      },
+      {
+        "text": "The legend of a field on Shape shows ten unique shapes at most",
+        "correct": false,
+        "rationale": "That is about the default shapes repeating; it doesn't say how legends are hidden."
+      }
+    ],
+    "explanation": "A legend is a card on the sheet. It can be hidden when it's redundant and shown again, and its menu holds the edit command for the encoding.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
+  },
+  {
+    "id": "3.1-055",
+    "taskId": "3.1",
+    "kind": "multi",
+    "objectives": [
+      "3.1.6"
+    ],
+    "select": 2,
+    "stem": "Which settings create no legend? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Clicking Color and choosing an orange for every mark",
+        "correct": true,
+        "rationale": "There is no field, so nothing to explain."
+      },
+      {
+        "text": "Dragging `Genre` onto Color",
+        "correct": false,
+        "rationale": "A discrete field on Color produces a categorical legend."
+      },
+      {
+        "text": "Clicking Size and moving the slider",
+        "correct": true,
+        "rationale": "It resizes all marks equally and encodes nothing."
+      },
+      {
+        "text": "Dragging `Device` onto Shape",
+        "correct": false,
+        "rationale": "A field on Shape produces a shape legend."
+      },
+      {
+        "text": "Dragging `Monthly Price` onto Size",
+        "correct": false,
+        "rationale": "A field on Size produces a size legend."
+      }
+    ],
+    "explanation": "A legend explains an encoding. When the Marks card is formatted without a field, every mark looks the same and no legend is needed.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
   }
 ]
