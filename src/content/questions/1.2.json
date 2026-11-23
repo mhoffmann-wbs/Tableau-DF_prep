@@ -1,0 +1,1187 @@
+[
+  {
+    "id": "1.2-001",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "On the Data Source page, how does an analyst relate the sessions table to the titles table?",
+    "options": [
+      {
+        "text": "Double-click the sessions logical table and click the join icon on its canvas",
+        "correct": false,
+        "rationale": "That path opens the physical layer and configures a join, which merges the tables into one fixed table."
+      },
+      {
+        "text": "Drag titles next to sessions and drop it when the noodle appears",
+        "correct": true,
+        "rationale": "This creates a relationship in the logical layer. Tableau then proposes matching fields."
+      },
+      {
+        "text": "Drag titles into a New Union dialog together with sessions",
+        "correct": false,
+        "rationale": "A union stacks rows of tables with matching columns. It does not add the titles columns beside sessions."
+      },
+      {
+        "text": "Use the Data menu to blend titles into a worksheet that uses sessions",
+        "correct": false,
+        "rationale": "Blending combines separate data sources inside a single view. It is not how tables in one data source are related."
+      }
+    ],
+    "explanation": "Relationships are created on the logical layer: you drag a table next to another and drop it at the noodle. Tableau tries to match fields automatically, and you can check them in the settings below the canvas.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/relate_tables.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_datamodel.htm"
+    ]
+  },
+  {
+    "id": "1.2-002",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "Which pair of matching fields correctly relates the Driftlight sessions table to the titles table?",
+    "options": [
+      {
+        "text": "`Session ID` in sessions and `Title ID` in titles",
+        "correct": false,
+        "rationale": "A session ID identifies a single viewing. It holds different values from a title ID, so almost nothing would match."
+      },
+      {
+        "text": "`Subscriber ID` in sessions and `Title` in titles",
+        "correct": false,
+        "rationale": "The Subscriber ID identifies a person and the Title field holds a name. Neither one links a session to the title it watched."
+      },
+      {
+        "text": "`Device` in sessions and `Genre` in titles",
+        "correct": false,
+        "rationale": "Both are descriptive text fields, but their members (such as TV and Drama) never correspond, so the relationship would be meaningless."
+      },
+      {
+        "text": "`Title ID` in sessions and `Title ID` in titles",
+        "correct": true,
+        "rationale": "Both tables carry the same text ID, so each session points at one title."
+      }
+    ],
+    "explanation": "A relationship needs fields on both sides that hold the same kind of key. Sessions and titles both have `Title ID`, which is the natural key for this relationship.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/relate_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-003",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "A relationship between two tables shows an error because the matching fields don't fit. One field is text and the other is a number. What has to be true of the fields?",
+    "options": [
+      {
+        "text": "Both fields must have the same data type",
+        "correct": true,
+        "rationale": "Tableau requires matching fields to share a data type, so one side has to be converted."
+      },
+      {
+        "text": "The two fields must have the same name",
+        "correct": false,
+        "rationale": "Names can differ. Only the data types must agree."
+      },
+      {
+        "text": "The relationship must use Many-to-Many cardinality",
+        "correct": false,
+        "rationale": "Cardinality describes how rows match. It doesn't fix a data type mismatch."
+      },
+      {
+        "text": "Referential integrity must be set to Some Records Match",
+        "correct": false,
+        "rationale": "That option tells Tableau whether every record has a match. It has no effect on data types."
+      }
+    ],
+    "explanation": "The fields on both sides of a relationship must have the same data type. Names are free, and cardinality and referential integrity are separate performance options.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/relate_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-004",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "Which part of the Data Source page shows the Relationships canvas, where tables are connected by noodles?",
+    "options": [
+      {
+        "text": "The physical layer",
+        "correct": false,
+        "rationale": "The physical layer is the Join/Union canvas, which you reach by opening a logical table."
+      },
+      {
+        "text": "The Marks card",
+        "correct": false,
+        "rationale": "The Marks card belongs to a worksheet, not to the Data Source page."
+      },
+      {
+        "text": "The logical layer",
+        "correct": true,
+        "rationale": "It is the first layer you see on the Data Source page. Each logical table sits on it as a container."
+      },
+      {
+        "text": "The Data pane",
+        "correct": false,
+        "rationale": "The Data pane lists fields in a worksheet. You don't draw table connections there."
+      }
+    ],
+    "explanation": "The data model has two layers. The logical layer holds relationships, drawn as noodles. The physical layer, one level down inside a logical table, holds joins and unions.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_datamodel.htm"
+    ]
+  },
+  {
+    "id": "1.2-005",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "A data source relates sessions to subscribers, and subscribers to plans. An analyst builds a view that uses only `Sessions (Count)` and `Device`. How does Tableau treat the plans table for this view?",
+    "options": [
+      {
+        "text": "It always joins every related table first, so unmatched sessions are dropped",
+        "correct": false,
+        "rationale": "That describes a fixed join. Relationships choose the join based on the fields in the view."
+      },
+      {
+        "text": "It merges plans into sessions permanently once the relationship exists",
+        "correct": false,
+        "rationale": "Relationships keep tables separate. Nothing is merged into one fixed table."
+      },
+      {
+        "text": "It leaves the plans table out and queries only what the view needs",
+        "correct": true,
+        "rationale": "Relationships defer the join to analysis time, so unused tables don't take part."
+      },
+      {
+        "text": "It asks the analyst to choose a join type for the plans table",
+        "correct": false,
+        "rationale": "Tableau selects join types automatically for relationships. The analyst doesn't pick one."
+      }
+    ],
+    "explanation": "With relationships, Tableau selects the join type and the tables involved from the fields used in each view. A view that needs only session fields doesn't touch the plans table.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_datamodel.htm"
+    ]
+  },
+  {
+    "id": "1.2-006",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "Tableau finds no key constraints between two tables that an analyst has related. Which performance options does it set?",
+    "options": [
+      {
+        "text": "Many-to-Many cardinality and Some Records Match",
+        "correct": true,
+        "rationale": "These are the cautious defaults when Tableau has no information about how rows match."
+      },
+      {
+        "text": "One-to-One cardinality and All Records Match",
+        "correct": false,
+        "rationale": "These assume the cleanest case. Tableau would only use them if it knew the keys were unique and complete."
+      },
+      {
+        "text": "Many-to-One cardinality and All Records Match",
+        "correct": false,
+        "rationale": "Tableau doesn't assume uniqueness or completeness without key constraints."
+      },
+      {
+        "text": "One-to-Many cardinality and Some Records Match",
+        "correct": false,
+        "rationale": "Tableau can't tell which side is unique without key constraints, so it assumes many on both sides."
+      }
+    ],
+    "explanation": "Cardinality (One or Many on each side) and referential integrity (Some or All Records Match) describe how tables match. Without key constraints Tableau uses Many-to-Many and Some Records Match.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_perfoptions.htm"
+    ]
+  },
+  {
+    "id": "1.2-007",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "An analyst is unsure which cardinality and referential integrity settings suit a new relationship. What does Tableau's help advise?",
+    "options": [
+      {
+        "text": "Set One-to-One and All Records Match to avoid any duplication",
+        "correct": false,
+        "rationale": "Choosing options that don't describe the data can produce wrong results, so you shouldn't guess a stricter setting."
+      },
+      {
+        "text": "Replace the relationship with an inner join, which needs no such settings",
+        "correct": false,
+        "rationale": "An inner join drops unmatched rows and is a fixed merge. It isn't a safer default."
+      },
+      {
+        "text": "Always set Many-to-Many and Some Records Match, whatever Tableau shows",
+        "correct": false,
+        "rationale": "Those are the defaults only when Tableau finds no constraints. The advice is to follow what Tableau indicates."
+      },
+      {
+        "text": "Use the recommended defaults that Tableau indicates",
+        "correct": true,
+        "rationale": "Tableau's guidance is to keep its recommended settings when you aren't sure."
+      }
+    ],
+    "explanation": "The performance options let you tell Tableau more about your data, but the help recommends the indicated defaults when you are unsure.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_perfoptions.htm"
+    ]
+  },
+  {
+    "id": "1.2-008",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.1"
+    ],
+    "stem": "Which statement about relationships in a Tableau data model is true?",
+    "options": [
+      {
+        "text": "The related tables are merged into one table with a fixed combination of data",
+        "correct": false,
+        "rationale": "That describes the result of a join in the physical layer."
+      },
+      {
+        "text": "Each table keeps its own level of detail, so aggregates aren't duplicated",
+        "correct": true,
+        "rationale": "This is the key difference from a join between tables at different levels of detail."
+      },
+      {
+        "text": "The analyst must pick inner, left, right or full outer when creating one",
+        "correct": false,
+        "rationale": "Relationships need no join type. Tableau picks it per view."
+      },
+      {
+        "text": "They can only combine tables that come from different data sources",
+        "correct": false,
+        "rationale": "Relationships connect tables within one data source. Combining separate sources is blending."
+      }
+    ],
+    "explanation": "Relationships maintain each table's level of detail, so they do not duplicate aggregate values and unmatched measure values aren't dropped. They arrived in Tableau 2020.2.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm"
+    ]
+  },
+  {
+    "id": "1.2-009",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.2"
+    ],
+    "stem": "An analyst has the Data Source page open on the logical layer and wants to add a join. How does the analyst reach the join canvas?",
+    "options": [
+      {
+        "text": "Click the noodle between two logical tables",
+        "correct": false,
+        "rationale": "The noodle is a relationship. Selecting it shows relationship settings, not the join canvas."
+      },
+      {
+        "text": "Drop another table onto the canvas until a noodle appears",
+        "correct": false,
+        "rationale": "Doing that creates a relationship rather than a join."
+      },
+      {
+        "text": "Double-click the logical table to open it",
+        "correct": true,
+        "rationale": "Opening a logical table shows its physical layer, where joins and unions live."
+      },
+      {
+        "text": "Click Add next to the Connections heading",
+        "correct": false,
+        "rationale": "Add brings in another connection, such as a second file or database. It doesn't open a logical table."
+      }
+    ],
+    "explanation": "A logical table is a container for physical tables. Double-click it (or choose Open from its menu) to see the join and union canvas, then drag in another table and click the join icon.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_datamodel.htm"
+    ]
+  },
+  {
+    "id": "1.2-010",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.2"
+    ],
+    "stem": "Driftlight wants a list of every subscriber, with the Cancel Date filled in only for those who cancelled and null for everyone else. Subscribers is the left table. Which join type fits?",
+    "options": [
+      {
+        "text": "Left join",
+        "correct": true,
+        "rationale": "It keeps every row of the left table and fills null where the right table has no match."
+      },
+      {
+        "text": "Inner join",
+        "correct": false,
+        "rationale": "An inner join keeps only subscribers who also appear in cancellations, so everyone who stayed disappears."
+      },
+      {
+        "text": "Right join",
+        "correct": false,
+        "rationale": "A right join keeps every row of cancellations and drops the subscribers who have no cancellation."
+      },
+      {
+        "text": "Union",
+        "correct": false,
+        "rationale": "A union stacks rows. It doesn't add the Cancel Date column next to each subscriber."
+      }
+    ],
+    "explanation": "A left join keeps all rows of the left table and shows nulls for unmatched rows from the right table. Inner keeps only matches, right is the mirror of left, and full outer keeps everything from both sides.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-011",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.2"
+    ],
+    "stem": "Which join type keeps all values from both tables, even when a row has no match on the other side?",
+    "options": [
+      {
+        "text": "Inner",
+        "correct": false,
+        "rationale": "It keeps only rows that match in both tables."
+      },
+      {
+        "text": "Left",
+        "correct": false,
+        "rationale": "It keeps all rows of the left table but loses unmatched rows of the right table."
+      },
+      {
+        "text": "Right",
+        "correct": false,
+        "rationale": "It keeps all rows of the right table but loses unmatched rows of the left table."
+      },
+      {
+        "text": "Full outer",
+        "correct": true,
+        "rationale": "It keeps every row of both tables and shows nulls on the side that has no match."
+      }
+    ],
+    "explanation": "Tableau offers four join types. Only the full outer join preserves unmatched rows from both tables.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-012",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.2"
+    ],
+    "stem": "Driftlight stores sessions in `sessions_2024.csv` and `sessions_2025.csv`, which have identical columns. How should the analyst combine them into one table?",
+    "options": [
+      {
+        "text": "Left join on `Session ID`",
+        "correct": false,
+        "rationale": "The two files hold different sessions, so almost nothing would match and the columns would just be repeated."
+      },
+      {
+        "text": "Union",
+        "correct": true,
+        "rationale": "A union appends the rows of the second file below the first."
+      },
+      {
+        "text": "Relationship on `Start`",
+        "correct": false,
+        "rationale": "A relationship is for tables with different columns. Two files with the same structure should be stacked."
+      },
+      {
+        "text": "Blend, with sessions_2024 as primary",
+        "correct": false,
+        "rationale": "Blending works per view across data sources and wouldn't build one table of all rows."
+      }
+    ],
+    "explanation": "A union appends rows from one table to another when the tables share the same column structure. Join and relationship add columns instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/union.htm"
+    ]
+  },
+  {
+    "id": "1.2-013",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.2"
+    ],
+    "stem": "New monthly session files with the same columns will keep arriving in the same folder. What lets the analyst pick them up without adding each by hand?",
+    "options": [
+      {
+        "text": "A left join to each new file as it arrives",
+        "correct": false,
+        "rationale": "Each file would need to be added manually, and a join adds columns rather than rows."
+      },
+      {
+        "text": "A relationship on `Subscriber ID` to each new file",
+        "correct": false,
+        "rationale": "That would connect tables at different levels instead of stacking rows."
+      },
+      {
+        "text": "A Wildcard (automatic) union with a name pattern",
+        "correct": true,
+        "rationale": "The pattern, such as `sessions_*`, matches every file whose name fits."
+      },
+      {
+        "text": "A full outer join with a wildcard in the join clause",
+        "correct": false,
+        "rationale": "Join clauses compare fields. They don't match file names."
+      }
+    ],
+    "explanation": "A wildcard union picks up every table whose name matches a pattern, so new files with the same structure join the union automatically.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/union.htm"
+    ]
+  },
+  {
+    "id": "1.2-014",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.2"
+    ],
+    "stem": "After a union, the `Subscriber ID` column is filled for rows from one file and null for rows from the other, because the second file calls it `Subscriber`. What fixes this?",
+    "options": [
+      {
+        "text": "Change the union to an inner join",
+        "correct": false,
+        "rationale": "A join doesn't align differently named columns, and it would change the result entirely."
+      },
+      {
+        "text": "Set referential integrity to All Records Match",
+        "correct": false,
+        "rationale": "That is a relationship option and doesn't affect union columns."
+      },
+      {
+        "text": "Blend the two files in the worksheet",
+        "correct": false,
+        "rationale": "Blending would add a separate data source, not repair the union."
+      },
+      {
+        "text": "Merge mismatched fields",
+        "correct": true,
+        "rationale": "This combines the two differently named columns into one."
+      }
+    ],
+    "explanation": "When field names in a union don't match, the fields hold nulls for the rows that lack them. Merge mismatched fields tells Tableau which columns hold the same thing.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/union.htm"
+    ]
+  },
+  {
+    "id": "1.2-015",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.2"
+    ],
+    "stem": "Which statement about join clauses is correct?",
+    "options": [
+      {
+        "text": "They can use operators such as `<` and `<>`, and can include calculations",
+        "correct": true,
+        "rationale": "The equality operator is the most common, but it isn't the only one."
+      },
+      {
+        "text": "They can only use the equality operator (=)",
+        "correct": false,
+        "rationale": "Equality is the usual choice, but other operators are allowed."
+      },
+      {
+        "text": "A join may have only one clause",
+        "correct": false,
+        "rationale": "A join can have one or more clauses."
+      },
+      {
+        "text": "The fields in a clause must have the same name",
+        "correct": false,
+        "rationale": "Names can differ. The clause compares the values of the chosen fields."
+      }
+    ],
+    "explanation": "A join is configured with one or more clauses. They most often use equality, but can also use other operators and calculations.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-016",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.3"
+    ],
+    "stem": "An analyst joins sessions to subscribers and subscribers to plans in the physical layer. `SUM(Monthly Price)` per plan is now far larger than expected. What is the most likely cause and fix?",
+    "options": [
+      {
+        "text": "Aggregates over a union are always doubled, so remove the union",
+        "correct": false,
+        "rationale": "The problem described comes from combining tables at different levels, not from a union."
+      },
+      {
+        "text": "The join repeats each price on every session row, so relate the tables instead",
+        "correct": true,
+        "rationale": "The tables are at different levels of detail and a relationship keeps each at its own."
+      },
+      {
+        "text": "The join type is wrong, so switch it to full outer",
+        "correct": false,
+        "rationale": "A different join type still merges sessions and plans into one table with repeated prices."
+      },
+      {
+        "text": "Monthly Price is a dimension, so convert it to a measure",
+        "correct": false,
+        "rationale": "The field is already being summed, so its role isn't the problem."
+      }
+    ],
+    "explanation": "A join merges tables into one, so a plan's price repeats on every session row and a SUM counts it many times. A relationship computes the price at the plans table's own level.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-017",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.3"
+    ],
+    "stem": "Driftlight has monthly targets per region and individual session rows. Which approach suits combining them?",
+    "options": [
+      {
+        "text": "Inner join targets to sessions, so each target repeats on every session row",
+        "correct": false,
+        "rationale": "Repeating each target per session would inflate any total of the targets."
+      },
+      {
+        "text": "Union targets with sessions",
+        "correct": false,
+        "rationale": "The tables have different columns, so a union would stack unrelated rows."
+      },
+      {
+        "text": "Relate the targets table on `Region`",
+        "correct": true,
+        "rationale": "The tables sit at very different levels of detail, which is what relationships handle."
+      },
+      {
+        "text": "Wildcard union on a `targets_*` pattern",
+        "correct": false,
+        "rationale": "A wildcard union stacks same-structure tables and doesn't add target columns beside sessions."
+      }
+    ],
+    "explanation": "Use a relationship when combining data from different levels of detail. Targets by region and sessions are such a case, so a join would repeat each target for every session.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm"
+    ]
+  },
+  {
+    "id": "1.2-018",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.3"
+    ],
+    "stem": "An analyst needs a one-off table that deliberately drops subscribers who never cancelled. Which approach fits?",
+    "options": [
+      {
+        "text": "A relationship between subscribers and cancellations",
+        "correct": false,
+        "rationale": "Relationships keep unmatched rows, so the non-cancelling subscribers would remain."
+      },
+      {
+        "text": "A union of subscribers and cancellations",
+        "correct": false,
+        "rationale": "The tables have different columns, so stacking them makes little sense."
+      },
+      {
+        "text": "A wildcard union on `subscribers*`",
+        "correct": false,
+        "rationale": "That could only stack files with matching names and columns, and wouldn't filter anything."
+      },
+      {
+        "text": "An inner join of subscribers to cancellations",
+        "correct": true,
+        "rationale": "An inner join keeps only the subscribers with a match in cancellations."
+      }
+    ],
+    "explanation": "Choose a join when you want control over details such as deliberate filtering. An inner join drops the unmatched rows on purpose.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-019",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.3"
+    ],
+    "stem": "Which is the default method of combining tables in Tableau Desktop?",
+    "options": [
+      {
+        "text": "Relationships",
+        "correct": true,
+        "rationale": "The help calls relationships the default and the recommended method in most instances."
+      },
+      {
+        "text": "Inner joins",
+        "correct": false,
+        "rationale": "Joins are available inside the physical layer, but they aren't the default."
+      },
+      {
+        "text": "Wildcard unions",
+        "correct": false,
+        "rationale": "Unions are for stacking same-structure tables and are chosen on purpose."
+      },
+      {
+        "text": "Blending",
+        "correct": false,
+        "rationale": "Blending combines separate data sources per view and isn't the default for tables in one source."
+      }
+    ],
+    "explanation": "Tableau's default is relationships. A join or union is chosen when you need the specific behaviour it provides.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm"
+    ]
+  },
+  {
+    "id": "1.2-020",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.3"
+    ],
+    "stem": "In Superstore, Returns lists only the orders that were returned. An analyst wants every order, with null in Returned for orders that were not returned. Which join does this?",
+    "options": [
+      {
+        "text": "An inner join of Orders and Returns",
+        "correct": false,
+        "rationale": "That keeps only the returned orders, so the other orders vanish."
+      },
+      {
+        "text": "A left join from Orders to Returns",
+        "correct": true,
+        "rationale": "The left table is Orders, so all its rows are kept and unmatched ones get nulls."
+      },
+      {
+        "text": "A union of Orders and Returns",
+        "correct": false,
+        "rationale": "The two tables have different structures, so stacking them doesn't connect each order to its return."
+      },
+      {
+        "text": "A right join from Orders to Returns",
+        "correct": false,
+        "rationale": "That keeps every row of Returns and drops the orders that were never returned."
+      }
+    ],
+    "explanation": "A left join keeps all rows of the left table, with null values where the right table has no match.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-021",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.3"
+    ],
+    "stem": "An analyst must combine a published data source with a separate extract, linking them by a field that can differ from sheet to sheet. Which option fits?",
+    "options": [
+      {
+        "text": "A union",
+        "correct": false,
+        "rationale": "Unions stack rows from tables of one connection and don't link two sources by a field."
+      },
+      {
+        "text": "A relationship",
+        "correct": false,
+        "rationale": "Relationships connect tables inside one data source."
+      },
+      {
+        "text": "Blending",
+        "correct": true,
+        "rationale": "Blending links separate data sources per sheet, with the first source used as primary."
+      },
+      {
+        "text": "An inner join",
+        "correct": false,
+        "rationale": "A join merges tables into one fixed table and can't change its link field per sheet."
+      }
+    ],
+    "explanation": "Blending is for combining separate data sources inside a single view. The first source used becomes primary and the secondary's fields are aggregated.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_connections.htm"
+    ]
+  },
+  {
+    "id": "1.2-022",
+    "taskId": "1.2",
+    "kind": "single",
+    "objectives": [
+      "1.2.3"
+    ],
+    "stem": "Which statement correctly contrasts a relationship with a join?",
+    "options": [
+      {
+        "text": "A relationship is fixed by the analyst, while a join adapts to each view",
+        "correct": false,
+        "rationale": "This swaps the two. The join is the fixed one."
+      },
+      {
+        "text": "A relationship is drawn in the physical layer, while a join is drawn in the logical layer",
+        "correct": false,
+        "rationale": "The layers are the other way round: noodles sit in the logical layer and the Venn diagram in the physical layer."
+      },
+      {
+        "text": "A relationship drops unmatched rows, while a join always keeps them",
+        "correct": false,
+        "rationale": "Relationships keep unmatched rows, while a join may drop them depending on its type."
+      },
+      {
+        "text": "Tableau chooses a relationship's join type per view, while a join's type is fixed",
+        "correct": true,
+        "rationale": "A join has its type set when you build it, and a relationship adapts to the view."
+      }
+    ],
+    "explanation": "A join fixes the combination of data in a single table, while a relationship defers the join to analysis time and selects the type automatically.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm"
+    ]
+  },
+  {
+    "id": "1.2-023",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.1"
+    ],
+    "select": 2,
+    "stem": "Which two statements about relationships are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Tableau defers the join to the time and context of analysis",
+        "correct": true,
+        "rationale": "The join is built for each view from the fields it uses."
+      },
+      {
+        "text": "The analyst chooses inner, left, right or full outer when creating the relationship",
+        "correct": false,
+        "rationale": "Join types are not set by the analyst for relationships, because Tableau selects them automatically."
+      },
+      {
+        "text": "The related tables are merged into one fixed table",
+        "correct": false,
+        "rationale": "A merged, fixed table is the outcome of a join."
+      },
+      {
+        "text": "Aggregate values are not duplicated, because each table keeps its level of detail",
+        "correct": true,
+        "rationale": "This is the main benefit over a join between tables at different levels of detail."
+      },
+      {
+        "text": "Matching fields must have identical names in both tables",
+        "correct": false,
+        "rationale": "Fields need the same data type, but names can differ."
+      }
+    ],
+    "explanation": "Relationships postpone the join until a view needs it and let Tableau choose the type, while each table stays at its own level of detail.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm"
+    ]
+  },
+  {
+    "id": "1.2-024",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.1"
+    ],
+    "select": 2,
+    "stem": "Which two settings are performance options of a relationship? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Join type",
+        "correct": false,
+        "rationale": "Join type belongs to joins in the physical layer."
+      },
+      {
+        "text": "Cardinality",
+        "correct": true,
+        "rationale": "It states whether each side has One or Many matching rows."
+      },
+      {
+        "text": "Wildcard pattern",
+        "correct": false,
+        "rationale": "That belongs to a wildcard union."
+      },
+      {
+        "text": "Merge mismatched fields",
+        "correct": false,
+        "rationale": "That is a union option."
+      },
+      {
+        "text": "Referential integrity",
+        "correct": true,
+        "rationale": "It states whether all records or only some records have a match."
+      }
+    ],
+    "explanation": "The performance options of a relationship are cardinality (One or Many) and referential integrity (Some Records Match or All Records Match).",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_perfoptions.htm"
+    ]
+  },
+  {
+    "id": "1.2-025",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.1"
+    ],
+    "select": 2,
+    "stem": "Which two things are part of adding a relationship between two tables? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Click the join icon and select a join type",
+        "correct": false,
+        "rationale": "That is how a join is configured in the physical layer."
+      },
+      {
+        "text": "Drop the second table when the noodle appears",
+        "correct": true,
+        "rationale": "The noodle shows that the drop creates a relationship."
+      },
+      {
+        "text": "Check the matching fields, which need the same data type",
+        "correct": true,
+        "rationale": "Tableau suggests matching fields, and you can review them in the settings below the canvas."
+      },
+      {
+        "text": "Add the tables to a Union dialog",
+        "correct": false,
+        "rationale": "A union stacks rows and is not a relationship."
+      },
+      {
+        "text": "Pick a primary data source",
+        "correct": false,
+        "rationale": "A primary data source is part of blending."
+      }
+    ],
+    "explanation": "To relate tables, drag the second table next to the first and drop it at the noodle, then review the matching fields, which must share a data type.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/relate_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-026",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.2"
+    ],
+    "select": 2,
+    "stem": "Which two results does a union produce? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Tableau adds fields such as Sheet and Table Name to record each row's origin",
+        "correct": true,
+        "rationale": "These fields show which table each row came from."
+      },
+      {
+        "text": "Rows that appear in both tables are removed",
+        "correct": false,
+        "rationale": "A union appends rows and doesn't remove repeats."
+      },
+      {
+        "text": "Fields with mismatched names contain null values for rows from the other table",
+        "correct": true,
+        "rationale": "A column only has values for the tables that have it."
+      },
+      {
+        "text": "The tables need a join clause on a shared key",
+        "correct": false,
+        "rationale": "Unions don't use join clauses."
+      },
+      {
+        "text": "The tables may come from different connections",
+        "correct": false,
+        "rationale": "The tables in a union must come from the same connection."
+      }
+    ],
+    "explanation": "A union appends rows. It adds fields that record the source table, and mismatched field names leave nulls unless the fields are merged.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/union.htm"
+    ]
+  },
+  {
+    "id": "1.2-027",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.2"
+    ],
+    "select": 2,
+    "stem": "Which two join types keep the rows of the left table that have no match in the right table? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Inner",
+        "correct": false,
+        "rationale": "It keeps only rows with matches in both tables."
+      },
+      {
+        "text": "Right",
+        "correct": false,
+        "rationale": "It keeps all rows of the right table, so unmatched left rows are lost."
+      },
+      {
+        "text": "Left",
+        "correct": true,
+        "rationale": "It keeps every row of the left table and shows nulls for the right table."
+      },
+      {
+        "text": "Full outer",
+        "correct": true,
+        "rationale": "It keeps all values from both tables."
+      },
+      {
+        "text": "Wildcard union",
+        "correct": false,
+        "rationale": "This is a union setting and not a join type."
+      }
+    ],
+    "explanation": "Left and full outer joins both keep unmatched rows of the left table. Inner keeps only matches and right keeps all rows of the right table.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm"
+    ]
+  },
+  {
+    "id": "1.2-028",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.2"
+    ],
+    "select": 2,
+    "stem": "Which two sets of Driftlight tables are suited to a union? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Sessions and titles, to add genres to each session",
+        "correct": false,
+        "rationale": "Adding columns calls for a relationship or a join."
+      },
+      {
+        "text": "`sessions_2024.csv` and `sessions_2025.csv`",
+        "correct": true,
+        "rationale": "They share the same columns and hold different rows."
+      },
+      {
+        "text": "Plans and subscribers, to add each subscriber's price",
+        "correct": false,
+        "rationale": "These tables have different columns and need a side by side combination."
+      },
+      {
+        "text": "Two further session exports with the same columns as the first two",
+        "correct": true,
+        "rationale": "Same-structure exports are stacked by a union."
+      },
+      {
+        "text": "Regions and cancellations, to show each cancelled subscriber's manager",
+        "correct": false,
+        "rationale": "This adds columns, so it isn't a union case."
+      }
+    ],
+    "explanation": "A union adds more rows with the same column structure. Tables with different columns that are linked by a key are combined side by side instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/union.htm"
+    ]
+  },
+  {
+    "id": "1.2-029",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.2"
+    ],
+    "select": 2,
+    "stem": "Which two ways add a union on the Data Source page? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Double-click New Union and drag tables into the Union dialog",
+        "correct": true,
+        "rationale": "This opens the Union dialog for adding tables."
+      },
+      {
+        "text": "Drop a table next to another until a noodle appears",
+        "correct": false,
+        "rationale": "That creates a relationship."
+      },
+      {
+        "text": "Drag a table directly below the first table on the canvas",
+        "correct": true,
+        "rationale": "Dropping below the first table stacks it as a union."
+      },
+      {
+        "text": "Click the join icon and choose Union as the type",
+        "correct": false,
+        "rationale": "Union isn't a join type."
+      },
+      {
+        "text": "Drag the table onto the worksheet's Marks card",
+        "correct": false,
+        "rationale": "The Marks card has nothing to do with combining tables."
+      }
+    ],
+    "explanation": "A union is created with New Union and the Union dialog, or by dragging a table directly below the first table on the canvas.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/union.htm"
+    ]
+  },
+  {
+    "id": "1.2-030",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.3"
+    ],
+    "select": 2,
+    "stem": "Which two reasons favor a join over a relationship? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The tables are at different levels of detail",
+        "correct": false,
+        "rationale": "That situation favors relationships."
+      },
+      {
+        "text": "The analyst needs a single merged table",
+        "correct": true,
+        "rationale": "A join merges tables into one logical table."
+      },
+      {
+        "text": "The analyst wants Tableau to pick the join type per view",
+        "correct": false,
+        "rationale": "That is the behavior of relationships."
+      },
+      {
+        "text": "The analyst wants to drop unmatched rows deliberately",
+        "correct": true,
+        "rationale": "An inner join, for instance, drops rows without a match."
+      },
+      {
+        "text": "The analyst wants to avoid duplicated aggregate values",
+        "correct": false,
+        "rationale": "Joins between different levels of detail may duplicate aggregates, which relationships avoid."
+      }
+    ],
+    "explanation": "A join suits cases where you want control, such as deliberate filtering or one fixed table. Relationships are the default and handle differing levels of detail.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm"
+    ]
+  },
+  {
+    "id": "1.2-031",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.3"
+    ],
+    "select": 3,
+    "stem": "Which three situations call for a relationship? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Combining tables at different levels of detail",
+        "correct": true,
+        "rationale": "Relationships keep each table's level of detail."
+      },
+      {
+        "text": "Stacking monthly files with the same columns",
+        "correct": false,
+        "rationale": "That calls for a union."
+      },
+      {
+        "text": "Keeping unmatched measure values in the view",
+        "correct": true,
+        "rationale": "Relationships don't drop unmatched measure values."
+      },
+      {
+        "text": "Letting Tableau choose the join type for each view",
+        "correct": true,
+        "rationale": "Tableau selects join types from the fields in the view."
+      },
+      {
+        "text": "Dropping every row without a match on purpose",
+        "correct": false,
+        "rationale": "An inner join does this on purpose, while a relationship keeps unmatched rows."
+      }
+    ],
+    "explanation": "Relationships suit tables at different levels, keep unmatched measure values, and let Tableau pick the join per view. Stacking files needs a union and deliberate filtering needs a join.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm"
+    ]
+  },
+  {
+    "id": "1.2-032",
+    "taskId": "1.2",
+    "kind": "multi",
+    "objectives": [
+      "1.2.3"
+    ],
+    "select": 3,
+    "stem": "Which three statements describe blending? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "The first data source used in the view becomes the primary one",
+        "correct": true,
+        "rationale": "The primary is simply the first source used."
+      },
+      {
+        "text": "The linking fields can differ from sheet to sheet",
+        "correct": true,
+        "rationale": "Links are defined per sheet."
+      },
+      {
+        "text": "The tables are merged into one logical table with a fixed combination of data",
+        "correct": false,
+        "rationale": "That describes a join."
+      },
+      {
+        "text": "The secondary source's fields are aggregated",
+        "correct": true,
+        "rationale": "Blending simulates a left join using aggregated secondary data."
+      },
+      {
+        "text": "It is the default way to combine tables in one data source",
+        "correct": false,
+        "rationale": "Relationships are the default for that."
+      }
+    ],
+    "explanation": "Blending combines a primary and a secondary data source inside a view. It is not a way to build one merged data source.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_connections.htm"
+    ]
+  }
+]
