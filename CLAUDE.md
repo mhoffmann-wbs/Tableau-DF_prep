@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-Phases 0–3 are done: the scaffold, the blueprint, the item schema, the content tests and scripts, the Driftlight dataset, the chart engine, the quiz engine and sandbox v1. The app has a home page showing the exam format and outline, Practice, the question bank, the mock exam and Progress (all waiting for the bank, which is still empty), Build (the viz builder sandbox and 15 "make this chart" challenges), plus an unlisted `/dev/charts` gallery. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
+Phases 0–4 are done: the scaffold, the blueprint, the item schema, the content tests and scripts, the Driftlight dataset, the chart engine, the quiz engine, sandbox v1 and the 12 lessons. The app has a home page showing the exam format, the lessons in learning order and the outline, Learn (12 lessons), Practice, the question bank, the mock exam and Progress (all waiting for the bank, which is still empty), Build (the viz builder sandbox and 15 "make this chart" challenges), plus an unlisted `/dev/charts` gallery. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
 
 ## Purpose
 
@@ -45,7 +45,7 @@ npx vitest run src/content/schema.test.ts   # single file; -t "<name>" for a sin
 npm run data:generate     # regenerate public/data/ from the seed
 npm run content:status    # items per task/objective vs. target, with the kind mix
 npm run content:quality [-- <file.json> ...]  # anti-giveaway checks, per file or whole bank
-npm run content:links     # fetch every cited URL (needs network; not part of npm test)
+npm run content:links     # fetch every cited URL, lesson links included (needs network; not part of npm test)
 ```
 
 Tests run in Node by default. Component tests start with `// @vitest-environment jsdom`. Vitest runs without globals, so `src/test/setup.ts` registers Testing Library's `cleanup`.

@@ -1,4 +1,5 @@
-import { DOMAINS, EXAM_FORMAT, allocateMock, tasksOf } from '../content/blueprint'
+import { Link } from 'react-router'
+import { DOMAINS, EXAM_FORMAT, LESSON_ORDER, TASK_BY_ID, allocateMock, tasksOf } from '../content/blueprint'
 
 const mock = allocateMock()
 
@@ -36,6 +37,21 @@ export default function HomePage() {
           </a>
           .
         </p>
+      </section>
+
+      <section className="space-y-3">
+        <h2 className="text-2xl font-semibold">Lessons in learning order</h2>
+        <p className="max-w-3xl text-slate-600">The concepts of domain 4 come first, because every other task builds on them.</p>
+        <ol className="grid gap-x-6 gap-y-1 rounded-lg border border-slate-200 bg-white p-4 text-sm sm:grid-cols-2">
+          {LESSON_ORDER.map((id, i) => (
+            <li key={id} className="flex gap-2">
+              <span className="w-5 shrink-0 text-right font-mono text-slate-400">{i + 1}</span>
+              <Link to={`/learn/${id}`} className="text-brand-dark hover:underline">
+                {id} {TASK_BY_ID.get(id)!.title}
+              </Link>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <section className="space-y-4">

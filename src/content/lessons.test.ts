@@ -25,8 +25,9 @@ const world = { type: 'Topology', objects: { countries: {} } } as const
 
 const idsUsed = (source: string, component: string) => [...source.matchAll(new RegExp(`<${component} id="([^"]+)"`, 'g'))].map((m) => m[1]!)
 
-it('loads one lesson per MDX file', () => {
+it('has one lesson per task, one per MDX file', () => {
   expect([...LESSONS.keys()].sort()).toEqual(Object.keys(SOURCES).sort())
+  expect([...TASK_BY_ID.keys()].filter((id) => !LESSONS.has(id))).toEqual([])
 })
 
 describe.each(Object.entries(SOURCES))('lesson %s', (fileId, source) => {

@@ -1,5 +1,5 @@
-// Fetches every URL cited in the content (blueprint sources, item sourceLinks,
-// and later lesson links) and reports broken ones. Needs network; not part of
+// Fetches every URL cited in the content (blueprint sources, item sourceLinks
+// and lesson links) and reports broken ones. Needs network; not part of
 // npm test. Run: npm run content:links
 import { readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
@@ -16,6 +16,12 @@ for (const file of readdirSync(qdir).filter((f) => f.endsWith('.json'))) {
   for (const item of JSON.parse(readFileSync(join(qdir, file), 'utf8')) as { id: string; sourceLinks?: string[] }[]) {
     for (const u of item.sourceLinks ?? []) add(u, item.id)
   }
+}
+
+// Lesson MDX can't be imported from Node, so read the `url:` entries from the source.
+const ldir = join(root, 'lessons')
+for (const file of readdirSync(ldir).filter((f) => f.endsWith('.mdx'))) {
+  for (const m of readFileSync(join(ldir, file), 'utf8').matchAll(/url: '([^']+)'/g)) add(m[1]!, `lesson ${file}`)
 }
 
 // help.salesforce.com and trailheadacademy render client-side, so a 200 is all
