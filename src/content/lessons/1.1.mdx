@@ -1,0 +1,161 @@
+export const meta = {
+  taskId: '1.1',
+  updated: '2026-11-23',
+  tldr: 'A data source is either a live connection, which queries the original data, or an extract, a `.hyper` snapshot that is faster, works offline and is refreshed on demand. A `.tds` file saves the connection and your metadata (calculations, groups, sets, default properties) but no data; a `.tdsx` adds the local data. One data source can hold several connections, which is how you join or relate tables from different databases or files.',
+  objectivesCovered: ['1.1.1', '1.1.2', '1.1.3', '1.1.4', '1.1.5'],
+  links: [
+    { title: 'Connect to your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm' },
+    { title: 'Plan the data source', url: 'https://help.tableau.com/current/pro/desktop/en-us/datasource_plan.htm' },
+    { title: 'Extract your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm' },
+    { title: 'Refresh extracts', url: 'https://help.tableau.com/current/pro/desktop/en-us/extracting_refresh.htm' },
+    { title: 'Save data sources', url: 'https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm' },
+    { title: 'Tableau file types and folders', url: 'https://help.tableau.com/current/pro/desktop/en-us/environ_filesandfolders.htm' },
+    { title: 'Join your data (cross-database joins)', url: 'https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm' },
+    { title: 'Tableau Public FAQ', url: 'https://help.tableau.com/current/pro/desktop/en-gb/public_faq.htm' },
+  ],
+  vizzes: {
+    'all-years': {
+      spec: { columns: [{ field: 'Start' }], rows: [{ field: 'Sessions (Count)' }] },
+      caption: 'Sessions per year over all the data.',
+    },
+    'extract-filter': {
+      spec: {
+        columns: [{ field: 'Start' }],
+        rows: [{ field: 'Sessions (Count)' }],
+        filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+      },
+      caption: 'The same view on an extract filtered to 2025: the 2024 rows are not in the extract at all.',
+    },
+  },
+  facts: {
+    'session-count': { kind: 'value', says: '32,000', spec: { rows: [{ field: 'Sessions (Count)' }] }, measure: { field: 'Sessions (Count)' } },
+    'sessions-2025': {
+      kind: 'value',
+      says: '17,000',
+      spec: { rows: [{ field: 'Sessions (Count)' }], filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }] },
+      measure: { field: 'Sessions (Count)' },
+    },
+  },
+}
+
+## Big idea
+
+Before you can build anything, Tableau needs a **data source**: a connection to your data plus everything you add on top of it (which tables, how they combine, field names, calculations). Tableau's help describes a data source as "the sum of your data (either as a live connection or an extract)" and its metadata.
+
+The first decision is how Tableau reaches the data:
+
+- A **live connection** sends every query to the original database or file, the way a SQL client does. You always see what is in the source, and the speed is the speed of that source.
+- An **extract** copies the data into Tableau's own fast file format (`.hyper`), like exporting a table into a local DuckDB or Parquet file and querying that. It's quick and works offline, but it's a snapshot until you refresh it.
+
+Everything else in this task builds on that: how to create each kind, how to save a data source so others can reuse it (`.tds`), and how one data source can combine several connections.
+
+## How it works
+
+### Create a live connection to a data source
+
+1. On the **Start** page, the **Connect** pane on the left lists the connectors: files (Microsoft Excel, Text file, …) and servers (databases and cloud services). Click **More** for the full list.
+2. Pick a connector and point it at your file or sign in to the server.
+3. Tableau opens the **Data Source page**. Drag tables to the canvas, check the preview grid, then click a sheet tab to start building.
+
+In the upper-right corner of the Data Source page you can select **Extract**. If you don't, the data source stays a live connection, and every view queries the source directly.
+
+### Live connections versus extracts
+
+| | Live connection | Extract |
+|---|---|---|
+| Where the data lives | In the original database or file | In a `.hyper` file, "a subset of information that is saved separately from the original dataset" |
+| Freshness | Always what the source holds right now | A snapshot: it changes only when you **refresh** it |
+| Speed | Depends on the source system | Usually faster: views on extracts give "better performance compared to views connected directly to the original data" |
+| Offline use | Needs the source to be reachable | "Extracts allow for offline access to data" |
+| Load on the source | Every interaction queries it | Queries hit the extract, which can "prevent resource drains against database systems" |
+| Extra options | The source's own functions and collation | Can be filtered, aggregated and limited to fewer rows; can give access to functions the source doesn't support |
+
+**Choose live** when people need up-to-the-minute data and the database is fast enough to answer interactively. **Choose an extract** when the source is slow or busy, when you need to work offline or share a packaged workbook, or when a snapshot (refreshed daily, say) is fresh enough.
+
+### Create an extract
+
+1. On the Data Source page, in the upper-right corner, select **Extract**, then click **Edit** to open the **Extract Data** dialog.
+2. Choose the settings (all optional):
+   - **Data Storage**: **Logical Tables** (one table per logical table) or **Physical Tables** (one table per physical table).
+   - **Filters**: keep only the rows you need, for example one year.
+   - **Aggregation**: **Aggregate data for visible dimensions** stores pre-aggregated rows instead of every record, and **Roll up dates** to a level such as month.
+   - **Number of Rows**: **All rows**, the **Top** N rows, or a **Sample**.
+   - **Incremental refresh** (needs All rows): name a column that identifies new rows.
+   - **Hide All Unused Fields** leaves hidden fields out of the extract.
+3. Choose **Save Settings**, then click a sheet tab. That starts building the extract.
+
+**Refreshing.** Select the data source on the **Data** menu, then **Extract > Refresh**. By default a refresh is **full**: "all the data in the extract is replaced with the latest information from the original data source". An **incremental refresh** "only includes new rows since the previous refresh", using the column you chose. You can't use incremental refresh together with aggregation. **Extract > History** lists past refreshes, and **Extract > Remove** removes the extract.
+
+An extract filter works on the data before any view sees it. Driftlight has <Fact id="session-count" /> sessions over 2024 and 2025:
+
+<LessonViz id="all-years" />
+
+An extract filtered to 2025 keeps only <Fact id="sessions-2025" /> of them. The rest are not just hidden, they aren't in the file:
+
+<LessonViz id="extract-filter" />
+
+### Save metadata properties in a .TDS
+
+A **Tableau data source file** (`.tds`) saves the work you did on top of the data so you or your team can reuse it in other workbooks. It contains the connection information and the metadata, such as:
+- groups, sets, calculated fields and bins
+- default field properties, for example number formats, aggregation and sort order
+- renamed fields.
+
+It does **not** contain the data: "Data source files do not contain the actual data but rather the information necessary to connect to the actual data".
+
+To save one: at the top of the **Data** pane, right-click the data source's name and select **Add to Saved Data Sources**. Enter a file name, choose `.tds` or `.tdsx`, and click **Save**. By default the file goes to the **Datasources** folder of your **My Tableau Repository**, which Tableau creates in your Documents folder.
+
+The file types to keep apart:
+
+| File | Contains |
+|---|---|
+| `.twb` workbook | "one or more worksheets, plus zero or more dashboards and stories". No data. |
+| `.twbx` packaged workbook | "a single zip file that contains a workbook along with any supporting local file data and background images" |
+| `.tds` data source | The connection and metadata. No data. |
+| `.tdsx` packaged data source | Everything in the `.tds`, "as well as a copy of any local file-based data or extracts" |
+| `.hyper` extract | The extracted data itself |
+
+### Create a data source that uses multiple connections
+
+One data source can draw on more than one connection: a CSV file and an Excel workbook, say, or two databases.
+
+1. Connect to the first source and drag a table to the canvas.
+2. Click **Add** to the right of the **Connections** heading in the left pane, and connect to the second source. "This creates a second connection rather than an entirely different data source."
+3. Drag a table from the new connection onto the canvas and relate or join it to the first.
+
+Tableau colours the tables in the canvas and the columns in the data grid "to show you which connection the data comes from". A join between tables from different connections is a **cross-database join**. Tables in different databases must be added as connections within one data source, not as separate data sources.
+
+Limits worth knowing: not every source supports cross-database joins, including cube data, most extract-only connectors and **published Tableau data sources**. Joins within a single database are usually faster.
+
+## At Driftlight
+
+Driftlight's analytics team sets up its standard data sources this way:
+
+- **Sessions** run on the production database, which is busy during the day. The team uses an **extract** with a full refresh every night. Analysts get fast dashboards, and the database isn't hit by every click.
+- The **subscriber count tile** for the operations room needs today's sign-ups, so it uses a **live connection** to a small reporting table.
+- After renaming fields, setting default number formats and adding a few calculated fields, the lead analyst saves the source with **Add to Saved Data Sources**. Colleagues open the `.tds` and get the same names and calculations, connected to the same data. To send a self-contained copy, including the extract, they'd use a `.tdsx` instead.
+- Monthly **targets** live in an Excel file (`targets.xlsx`) maintained by finance, while the actuals come from CSV files. Using **Add** in the Connections pane, both connections sit in one data source.
+
+> **Tableau Public:** it "only supports extracted data sources and does not support live connections to data", and a workbook is limited to 15M rows. When you connect to the Driftlight CSV files in Tableau Public, you are always working with an extract.
+
+## Exam traps
+
+<Callout title=".tds has no data">
+  <p>A .tds holds connection details and metadata (calculations, groups, sets, bins, default properties), never the rows. If the file must travel with its local data or extract, the answer is .tdsx (for a data source) or .twbx (for a workbook).</p>
+</Callout>
+
+<Callout title="Extract is a snapshot">
+  <p>Questions about "seeing changes made in the database a minute ago" point to a live connection or an extract refresh. Questions about speed, offline work or reducing load on the database point to an extract.</p>
+</Callout>
+
+<Callout title="Full vs. incremental refresh">
+  <p>A full refresh replaces everything and is the default. An incremental refresh adds only new rows, identified by a column you choose, so it won't pick up changes to rows already in the extract.</p>
+</Callout>
+
+<Callout title="Multiple connections vs. multiple data sources">
+  <p>A cross-database join needs both tables in one data source, as two connections (Add in the Connections pane). Two separate data sources can't be joined; they can only be combined in a view by blending (task 1.2).</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
