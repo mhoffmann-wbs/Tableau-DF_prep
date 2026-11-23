@@ -923,5 +923,938 @@
       "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_histogram.htm",
       "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
     ]
+  },
+  {
+    "id": "2.3-026",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "Which setting in the Create Bins dialog controls how wide each range is?",
+    "options": [
+      {
+        "text": "Number of members",
+        "correct": false,
+        "rationale": "Bins are defined by their width, not by a member count."
+      },
+      {
+        "text": "Lower limit of bins",
+        "correct": false,
+        "rationale": "Each bin's lower limit is inclusive, but it follows from the size and is not the width setting."
+      },
+      {
+        "text": "Size of bins",
+        "correct": true,
+        "rationale": "It sets the width of every range, and Tableau can suggest a value."
+      },
+      {
+        "text": "Aggregation of bins",
+        "correct": false,
+        "rationale": "A bin field is a dimension of ranges, so no aggregation is chosen for it."
+      }
+    ],
+    "explanation": "Bins cut a continuous measure into equal ranges. The Size of bins value sets the width of each range, and Tableau suggests one if the analyst does not enter their own.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-027",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "An analyst cannot create bins on a measure from a multidimensional (cube) data source. Which limitation explains this?",
+    "options": [
+      {
+        "text": "Bins only work with relational data sources",
+        "correct": true,
+        "rationale": "Bin creation is limited to relational sources."
+      },
+      {
+        "text": "Bins only work on date fields",
+        "correct": false,
+        "rationale": "Bins are created from a continuous measure, not only from dates."
+      },
+      {
+        "text": "Bins only work in Tableau Public",
+        "correct": false,
+        "rationale": "They are not limited to one edition of Tableau."
+      },
+      {
+        "text": "Bins only work on measures that have been aggregated",
+        "correct": false,
+        "rationale": "Bins are created from the measure in the Data pane, before any aggregation in a view."
+      }
+    ],
+    "explanation": "The help for bins notes that they only work with relational data sources. Check the type of the data source first when the bin option is missing.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-028",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.4"
+    ],
+    "select": 2,
+    "stem": "Which two questions is a histogram of `Minutes Watched` per session suited to answer? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Do most sessions run short or long?",
+        "correct": true,
+        "rationale": "A histogram shows how values are distributed across the bins."
+      },
+      {
+        "text": "How many sessions fall into each range of minutes?",
+        "correct": true,
+        "rationale": "A histogram counts the marks in each bin."
+      },
+      {
+        "text": "How much has total viewing built up since January?",
+        "correct": false,
+        "rationale": "That is a running total over time, a quick table calculation."
+      },
+      {
+        "text": "Which plan is above its target value?",
+        "correct": false,
+        "rationale": "That needs a reference line on a chart by plan."
+      },
+      {
+        "text": "In what order should the plan tiers appear?",
+        "correct": false,
+        "rationale": "That is a sort, not a distribution."
+      }
+    ],
+    "explanation": "A histogram counts the marks in each bin of a binned measure, so it shows the distribution of values. Running totals, targets and ordering are done with other tools.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_histogram.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-029",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "Which menu command opens the editor for a new formula-based field?",
+    "options": [
+      {
+        "text": "Map > Create Calculated Field",
+        "correct": false,
+        "rationale": "The Map menu is for map settings, and the command is on the Analysis menu."
+      },
+      {
+        "text": "Dashboard > Create Calculated Field",
+        "correct": false,
+        "rationale": "The Dashboard menu is for dashboard layout, and the command is on the Analysis menu."
+      },
+      {
+        "text": "Format > Create Calculated Field",
+        "correct": false,
+        "rationale": "Format controls how a view looks, and the command is on the Analysis menu."
+      },
+      {
+        "text": "Analysis > Create Calculated Field",
+        "correct": true,
+        "rationale": "This opens the calculation editor, where the field is named and its formula typed."
+      }
+    ],
+    "explanation": "Calculated fields are created from the Analysis menu. After naming the field and typing the formula, the new field appears in the Data pane.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-030",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "How can an analyst tell in the Data pane that a field is a calculated field?",
+    "options": [
+      {
+        "text": "A delta symbol is shown on it",
+        "correct": false,
+        "rationale": "The delta marks a quick table calculation applied to a pill in the view."
+      },
+      {
+        "text": "An equal sign (=) is shown next to it",
+        "correct": true,
+        "rationale": "All calculated fields carry an equal sign in the Data pane."
+      },
+      {
+        "text": "It is listed under Parameters",
+        "correct": false,
+        "rationale": "Parameters live in their own section, apart from calculated fields."
+      },
+      {
+        "text": "It is always blue",
+        "correct": false,
+        "rationale": "Pill colour shows discrete or continuous, not whether a field is calculated."
+      }
+    ],
+    "explanation": "A calculated field is marked with an equal sign in the Data pane. The delta symbol is for quick table calculations on pills in a view, which is a different thing.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-031",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "A Driftlight analyst needs a field holding only the first three characters of each `Subscriber ID`. Which formula does that?",
+    "options": [
+      {
+        "text": "`UPPER([Subscriber ID])`",
+        "correct": false,
+        "rationale": "UPPER changes the text to capital letters and keeps all of it."
+      },
+      {
+        "text": "`[Subscriber ID] / 3`",
+        "correct": false,
+        "rationale": "Division is arithmetic and does not cut a string."
+      },
+      {
+        "text": "`DATETRUNC('month', [Subscriber ID])`",
+        "correct": false,
+        "rationale": "DATETRUNC works on dates, and an ID is text."
+      },
+      {
+        "text": "`LEFT([Subscriber ID], 3)`",
+        "correct": true,
+        "rationale": "LEFT returns the given number of characters from the start of a string."
+      }
+    ],
+    "explanation": "String functions such as `LEFT` and `UPPER` work on text. `LEFT` takes a part from the start of a string, while `UPPER` only changes its case.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/functions_functions_string.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-032",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "Which formula returns the number of days between a subscriber's `Signup Date` and `Cancel Date`?",
+    "options": [
+      {
+        "text": "`DATEDIFF('day', [Signup Date], [Cancel Date])`",
+        "correct": true,
+        "rationale": "DATEDIFF counts the date parts between two dates, here days."
+      },
+      {
+        "text": "`DATETRUNC('day', [Signup Date])`",
+        "correct": false,
+        "rationale": "DATETRUNC truncates one date to a level and returns a date, not a number of days."
+      },
+      {
+        "text": "`UPPER([Cancel Date])`",
+        "correct": false,
+        "rationale": "UPPER is a string function."
+      },
+      {
+        "text": "`LEFT([Signup Date], 3)`",
+        "correct": false,
+        "rationale": "LEFT is a string function and gives text."
+      }
+    ],
+    "explanation": "Date functions work with date fields. `DATEDIFF` gives a number of days between two dates, which suits a \"Days to Cancel\" measure, while `DATETRUNC` returns a date.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/functions_functions_date.htm"
+    ]
+  },
+  {
+    "id": "2.3-033",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "Which formula is an aggregate calculation rather than a row-level one?",
+    "options": [
+      {
+        "text": "`[Minutes Watched] / 60`",
+        "correct": false,
+        "rationale": "It is computed for every row and aggregated afterwards in the view."
+      },
+      {
+        "text": "`UPPER([Plan Code])`",
+        "correct": false,
+        "rationale": "A string function is computed row by row."
+      },
+      {
+        "text": "`SUM([Minutes Watched]) / COUNT([Session ID])`",
+        "correct": true,
+        "rationale": "It aggregates first and then divides, so it works at any level of detail."
+      },
+      {
+        "text": "`LEFT([Subscriber ID], 3)`",
+        "correct": false,
+        "rationale": "It is evaluated for each row."
+      }
+    ],
+    "explanation": "A row-level calculation is computed for every row and then aggregated in the view. An aggregate calculation uses aggregate functions such as `SUM` and `COUNT` and divides the totals.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_aggregate_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-034",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "An analyst wants the number of sessions in a calculated field. Which approach works?",
+    "options": [
+      {
+        "text": "Use `Sessions (Count)` in the formula",
+        "correct": false,
+        "rationale": "The (Count) field cannot be used in calculations."
+      },
+      {
+        "text": "Count an ID field, such as `COUNT([Session ID])`",
+        "correct": true,
+        "rationale": "A table's (Count) field cannot be used in calculations, so an ID field is counted instead."
+      },
+      {
+        "text": "Use `SUM([Sessions (Count)])`",
+        "correct": false,
+        "rationale": "Wrapping the field in an aggregation does not allow it in a calculation."
+      },
+      {
+        "text": "Drag `Sessions (Count)` into the formula as a parameter",
+        "correct": false,
+        "rationale": "Parameters hold a single value and do not supply counts."
+      }
+    ],
+    "explanation": "The generated (Count) measure of a table is not available in calculations. Counting an ID field, such as `Session ID`, gives the same result inside a formula.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_aggregate_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-035",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.5"
+    ],
+    "select": 2,
+    "stem": "Which two statements about calculated fields are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Tableau makes the field a measure when the formula returns a number",
+        "correct": true,
+        "rationale": "A numeric result gives a measure."
+      },
+      {
+        "text": "A quick table calculation is applied to them from the Analytics pane",
+        "correct": false,
+        "rationale": "Quick table calculations are applied from a measure pill's menu, not from the Analytics pane."
+      },
+      {
+        "text": "A formula can mix row-level values and aggregates, such as `[Minutes Watched] / COUNT([Session ID])`",
+        "correct": false,
+        "rationale": "Mixing the two in one formula is an error."
+      },
+      {
+        "text": "Right-clicking the field in the Data pane and choosing Edit changes its formula",
+        "correct": true,
+        "rationale": "Edit opens the calculation again."
+      },
+      {
+        "text": "They are created by dragging Reference Line into the view",
+        "correct": false,
+        "rationale": "A reference line draws a line and does not create a field."
+      }
+    ],
+    "explanation": "A calculated field is a new field in the Data pane. It can be edited from its right-click menu and becomes a measure when it returns a number. Mixing a row-level value with an aggregate in one formula gives an error.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_aggregate_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-036",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.5"
+    ],
+    "select": 2,
+    "stem": "Which two formulas are row-level calculations? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`SUM([Minutes Watched]) / COUNT([Session ID])`",
+        "correct": false,
+        "rationale": "It aggregates before dividing, so it is an aggregate calculation."
+      },
+      {
+        "text": "`[Minutes Watched] / 60`",
+        "correct": true,
+        "rationale": "It is computed for every row, giving hours per session."
+      },
+      {
+        "text": "`COUNT([Session ID])`",
+        "correct": false,
+        "rationale": "COUNT is an aggregate function."
+      },
+      {
+        "text": "`[City] + \", \" + [Country]`",
+        "correct": true,
+        "rationale": "String concatenation is evaluated for every row."
+      },
+      {
+        "text": "`SUM([Minutes Watched])`",
+        "correct": false,
+        "rationale": "SUM is an aggregate function."
+      }
+    ],
+    "explanation": "Row-level calculations are computed for every row and aggregated later in the view. Formulas built on `SUM` or `COUNT` aggregate first and are aggregate calculations.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_aggregate_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-037",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "Which description fits a parameter best?",
+    "options": [
+      {
+        "text": "A workbook variable that can replace a constant value in a calculation, filter or reference line",
+        "correct": true,
+        "rationale": "A parameter is one value, which the viewer can change."
+      },
+      {
+        "text": "A field that removes rows from the view based on its members",
+        "correct": false,
+        "rationale": "That describes a filter."
+      },
+      {
+        "text": "A formula that is computed for every row of a table",
+        "correct": false,
+        "rationale": "That describes a row-level calculated field."
+      },
+      {
+        "text": "A set of bins that groups a measure into ranges",
+        "correct": false,
+        "rationale": "That describes bins."
+      }
+    ],
+    "explanation": "A parameter is a workbook variable, such as a number, date or string. It holds one value, which can stand in for a constant in a calculation, a filter or a reference line.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-038",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "Where does an analyst start to create a parameter?",
+    "options": [
+      {
+        "text": "From the Analytics pane by dragging Parameter into the view",
+        "correct": false,
+        "rationale": "The Analytics pane holds items such as Reference Line and Totals."
+      },
+      {
+        "text": "From a measure pill's menu, under Quick Table Calculation",
+        "correct": false,
+        "rationale": "That menu applies table calculations."
+      },
+      {
+        "text": "From the Filters shelf by choosing Add Parameter",
+        "correct": false,
+        "rationale": "The Filters shelf does not create parameters."
+      },
+      {
+        "text": "From the drop-down arrow at the top of the Data pane, choosing Create Parameter",
+        "correct": true,
+        "rationale": "That menu offers Create Parameter."
+      }
+    ],
+    "explanation": "A parameter is created from the menu at the top of the Data pane. There the analyst chooses its data type and its allowable values.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-039",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "The head of content wants to switch every chart between minutes watched and number of sessions with one control. What should the analyst build?",
+    "options": [
+      {
+        "text": "A filter on `Minutes Watched`",
+        "correct": false,
+        "rationale": "A filter removes data by values and cannot swap one measure for another."
+      },
+      {
+        "text": "A manual sort of the measure pills",
+        "correct": false,
+        "rationale": "Sorting orders members and does not change the measure shown."
+      },
+      {
+        "text": "A parameter, used in a calculation that returns one measure or the other",
+        "correct": true,
+        "rationale": "A parameter holds the viewer's choice and the calculation reacts to it."
+      },
+      {
+        "text": "A reference line at the average",
+        "correct": false,
+        "rationale": "A line adds a value to the view and does not swap measures."
+      }
+    ],
+    "explanation": "Swapping measures is the typical use of a parameter. The parameter provides the choice, and a calculation such as an IF test picks the measure to return.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_swap.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-040",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "A viewer should be able to enter their own target and see a reference line move to it. What does the line need?",
+    "options": [
+      {
+        "text": "A quick table calculation of type Rank",
+        "correct": false,
+        "rationale": "Rank orders marks and gives no value to type in."
+      },
+      {
+        "text": "A parameter as its constant value",
+        "correct": true,
+        "rationale": "A parameter can replace the constant of a reference line."
+      },
+      {
+        "text": "A computed sort on the target field",
+        "correct": false,
+        "rationale": "A sort orders members and does not feed a line."
+      },
+      {
+        "text": "A bin field set to the target size",
+        "correct": false,
+        "rationale": "Bins group a measure into ranges, so they cannot be entered as a target."
+      }
+    ],
+    "explanation": "A parameter can replace a constant in a reference line. After Show Parameter is chosen, viewers can type a value and the line follows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-041",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "Viewers only need to choose which Genre members appear in a chart. Which is the simpler tool?",
+    "options": [
+      {
+        "text": "A parameter with a calculated field",
+        "correct": false,
+        "rationale": "It would also work but is more effort, since a parameter holds a single value."
+      },
+      {
+        "text": "A parameter with a reference line",
+        "correct": false,
+        "rationale": "A reference line does not decide which members show."
+      },
+      {
+        "text": "Totals set to Column Grand Totals",
+        "correct": false,
+        "rationale": "Totals add summary rows and do not select members."
+      },
+      {
+        "text": "A filter on `Genre`",
+        "correct": true,
+        "rationale": "Picking members of a field to show is what a filter is for."
+      }
+    ],
+    "explanation": "Use a filter when viewers pick members of a field. Use a parameter when they supply a single value, such as a threshold, a target or the choice of a measure.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-042",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.6"
+    ],
+    "select": 2,
+    "stem": "Which two statements about parameters are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It can be used in any worksheet of the workbook",
+        "correct": true,
+        "rationale": "Parameters are global across the workbook."
+      },
+      {
+        "text": "It removes rows from the view as soon as it is created",
+        "correct": false,
+        "rationale": "A parameter does nothing until a calculation, filter or reference line uses it."
+      },
+      {
+        "text": "A string parameter does not support Range as its allowable values",
+        "correct": true,
+        "rationale": "Range is not available for string parameters."
+      },
+      {
+        "text": "Viewers can select several values of it at once",
+        "correct": false,
+        "rationale": "A parameter holds one value."
+      },
+      {
+        "text": "Its control is shown to viewers automatically",
+        "correct": false,
+        "rationale": "Show Parameter must be chosen."
+      }
+    ],
+    "explanation": "A parameter is a single workbook-wide value. It has no effect until something uses it, and its allowable values can be All, List or Range, although a string parameter cannot use Range.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-043",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.6"
+    ],
+    "select": 3,
+    "stem": "Which three can use a parameter in place of a constant value? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "A calculation that swaps measures",
+        "correct": true,
+        "rationale": "A parameter can replace a constant in a calculation."
+      },
+      {
+        "text": "A Top N filter",
+        "correct": true,
+        "rationale": "The N can be picked by the viewer."
+      },
+      {
+        "text": "The connection to a data source",
+        "correct": false,
+        "rationale": "Connections are not values a parameter replaces."
+      },
+      {
+        "text": "A reference line",
+        "correct": true,
+        "rationale": "The line's value can be a parameter."
+      },
+      {
+        "text": "A bin's lower limit",
+        "correct": false,
+        "rationale": "Bin limits follow from the bin size and are not set by a parameter."
+      }
+    ],
+    "explanation": "Parameters can replace a constant in a calculation, a filter such as Top N, or a reference line. The viewer chooses the value, and every part that uses it reacts.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_swap.htm"
+    ]
+  },
+  {
+    "id": "2.3-044",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "Which Analysis menu command sets the aggregation that totals use for all measures in a view?",
+    "options": [
+      {
+        "text": "Analysis > Totals > Total All Using",
+        "correct": true,
+        "rationale": "It lets the analyst pick one aggregation for every measure's total."
+      },
+      {
+        "text": "Analysis > Create Calculated Field",
+        "correct": false,
+        "rationale": "It opens the calculation editor and does not set a total."
+      },
+      {
+        "text": "Data > New Data Source",
+        "correct": false,
+        "rationale": "It connects to data and has nothing to do with totals."
+      },
+      {
+        "text": "Format > Totals",
+        "correct": false,
+        "rationale": "Format controls how a view looks, and the aggregation of totals is not set there."
+      }
+    ],
+    "explanation": "Total All Using, under Analysis > Totals, picks the aggregation, such as Sum or Average, for all measures. For a single field the choice is made on the field itself.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-045",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "An analyst wants the total of one measure to use a different aggregation than the rest. What should they do?",
+    "options": [
+      {
+        "text": "Choose Analysis > Totals > Total All Using",
+        "correct": false,
+        "rationale": "Total All Using sets one aggregation for every measure's total, not for a single field."
+      },
+      {
+        "text": "Right-click the field in the view and select Total using",
+        "correct": true,
+        "rationale": "That sets the total aggregation for that field only."
+      },
+      {
+        "text": "Drag Totals again and drop it on Subtotals",
+        "correct": false,
+        "rationale": "That adds subtotals and does not change one field's aggregation."
+      },
+      {
+        "text": "Apply a quick table calculation of type Percent of total",
+        "correct": false,
+        "rationale": "That changes the measure into a percentage and does not set its total."
+      }
+    ],
+    "explanation": "Total using, found on a field's right-click menu in the view, sets the aggregation of the total for that field. Total All Using does the same for all measures.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-046",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "A crosstab shows `SUM(Minutes Watched)` with Running total applied. What is true about adding totals?",
+    "options": [
+      {
+        "text": "Totals can be applied, but only as subtotals",
+        "correct": false,
+        "rationale": "The limit covers table calculations whatever the kind of total."
+      },
+      {
+        "text": "Totals can be applied once the pill is made discrete",
+        "correct": false,
+        "rationale": "Changing the pill type does not lift the limit."
+      },
+      {
+        "text": "Totals cannot be applied to table calculations",
+        "correct": true,
+        "rationale": "This is a stated limit of totals."
+      },
+      {
+        "text": "Totals are applied to the running total as long as the view has a header",
+        "correct": false,
+        "rationale": "A header is needed, but totals still cannot be applied to table calculations."
+      }
+    ],
+    "explanation": "Totals need at least one header, and they cannot be applied to table calculations. A running total is a quick table calculation, so it gets no total.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-047",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "Which kind of field blocks grand totals when it is used in the view?",
+    "options": [
+      {
+        "text": "A continuous dimension",
+        "correct": true,
+        "rationale": "Grand totals cannot be applied to continuous dimensions."
+      },
+      {
+        "text": "A discrete dimension",
+        "correct": false,
+        "rationale": "Discrete dimensions give headers, which totals need."
+      },
+      {
+        "text": "A discrete measure",
+        "correct": false,
+        "rationale": "This is not one of the limits on grand totals."
+      },
+      {
+        "text": "A dimension on the Detail card",
+        "correct": false,
+        "rationale": "This is not one of the limits on grand totals."
+      }
+    ],
+    "explanation": "A view needs at least one header for totals, and grand totals cannot be applied to continuous dimensions.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-048",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.7"
+    ],
+    "select": 2,
+    "stem": "Which two are limits on showing totals? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The view must have at least one header",
+        "correct": true,
+        "rationale": "Without a header there is nothing to attach a total to."
+      },
+      {
+        "text": "The view must contain only one measure",
+        "correct": false,
+        "rationale": "Totals can be shown for several measures."
+      },
+      {
+        "text": "Totals work only for discrete measures",
+        "correct": false,
+        "rationale": "This is not a stated limit."
+      },
+      {
+        "text": "Grand totals cannot be applied to continuous dimensions",
+        "correct": true,
+        "rationale": "This is a stated limit."
+      },
+      {
+        "text": "Totals require a Top N parameter",
+        "correct": false,
+        "rationale": "Parameters are unrelated to totals."
+      }
+    ],
+    "explanation": "Totals need a header in the view and do not work for continuous dimensions. They cannot be applied to table calculations either.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-049",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.7"
+    ],
+    "select": 3,
+    "stem": "The Add Totals dialog offers drop targets when the analyst drags Totals from the Analytics pane. Which three are they? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Row Grand Totals",
+        "correct": true,
+        "rationale": "One of the three drop targets."
+      },
+      {
+        "text": "Pages",
+        "correct": false,
+        "rationale": "This is a shelf and not a totals target."
+      },
+      {
+        "text": "Subtotals",
+        "correct": true,
+        "rationale": "One of the three drop targets."
+      },
+      {
+        "text": "Detail",
+        "correct": false,
+        "rationale": "This is a card on Marks and not a totals target."
+      },
+      {
+        "text": "Column Grand Totals",
+        "correct": true,
+        "rationale": "One of the three drop targets."
+      },
+      {
+        "text": "Filters",
+        "correct": false,
+        "rationale": "This is a shelf and not a totals target."
+      }
+    ],
+    "explanation": "Dragging Totals into the view opens the Add Totals dialog, where the analyst drops it on Subtotals, Row Grand Totals or Column Grand Totals.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-050",
+    "taskId": "2.3",
+    "kind": "multi",
+    "objectives": [
+      "2.3.7"
+    ],
+    "select": 2,
+    "stem": "Which two ways display totals on a worksheet? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Drag Totals from the Analytics pane into the view",
+        "correct": true,
+        "rationale": "The Analytics pane holds Totals."
+      },
+      {
+        "text": "Right-click a measure pill and choose Quick Table Calculation > Totals",
+        "correct": false,
+        "rationale": "Quick table calculations do not include a Totals type."
+      },
+      {
+        "text": "Use the Analysis > Totals menu",
+        "correct": true,
+        "rationale": "The Analysis menu offers totals too."
+      },
+      {
+        "text": "Choose Create > Totals in the Data pane",
+        "correct": false,
+        "rationale": "Create offers fields such as bins, not totals."
+      },
+      {
+        "text": "Choose Edit Table Calculation on a pill",
+        "correct": false,
+        "rationale": "That changes how a table calculation is computed."
+      }
+    ],
+    "explanation": "Totals come from the Analytics pane or from the Analysis > Totals menu. Quick table calculations and the Data pane's Create menu do not add them.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
   }
 ]
