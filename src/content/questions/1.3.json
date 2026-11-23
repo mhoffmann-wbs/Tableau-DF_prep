@@ -855,5 +855,819 @@
     ],
     "id": "1.3-023",
     "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "A map of Driftlight subscribers shows a note in the lower right corner saying some values are unknown. What should the analyst do first?",
+    "options": [
+      {
+        "text": "Remove the geographic field from Detail on the Marks card",
+        "correct": false,
+        "rationale": "This hides the problem, and the map is lost. The unknown values still need a fix."
+      },
+      {
+        "text": "Click the note and choose Edit Locations",
+        "correct": true,
+        "rationale": "Edit Locations is where unrecognized values can be matched or given coordinates."
+      },
+      {
+        "text": "Assign the Latitude role to the field",
+        "correct": false,
+        "rationale": "The Latitude and Longitude roles are only for numeric fields and don't resolve unmatched text."
+      },
+      {
+        "text": "Create aliases for the unknown members in the Aliases dialog",
+        "correct": false,
+        "rationale": "Aliases only change display labels. They don't tell Tableau where a place is."
+      }
+    ],
+    "explanation": "When Tableau can't match some values to a location, it flags them as unknown on the map. The indicator opens Edit Locations (also under the Map menu), where the analyst can match values, add a field or enter coordinates.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_editlocation.htm"
+    ],
+    "id": "1.3-024",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "A `City` field contains the value Paris, and Tableau can't tell whether it means Paris, France or Paris, Texas. How can the analyst remove the ambiguity?",
+    "options": [
+      {
+        "text": "Rename the field to Paris City in the Data pane",
+        "correct": false,
+        "rationale": "Renaming changes only the field name, not how Tableau matches places."
+      },
+      {
+        "text": "Change the data type of `City` to Number",
+        "correct": false,
+        "rationale": "A place name is text. A number type would turn the values into Null."
+      },
+      {
+        "text": "In Edit Locations, add a Country or State field to the match",
+        "correct": true,
+        "rationale": "A parent field gives Tableau enough context to pick the right place."
+      },
+      {
+        "text": "Assign the Airport role to `City`",
+        "correct": false,
+        "rationale": "The role changes how values are matched, but it doesn't add the context that separates two Paris entries."
+      }
+    ],
+    "explanation": "Ambiguous place names are resolved in Edit Locations by adding a Country or State field. Tableau then matches each city within its country or state.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_editlocation.htm"
+    ],
+    "id": "1.3-025",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "Which two things can an analyst do in the Edit Locations dialog? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Match values Tableau doesn't recognize to known locations",
+        "correct": true,
+        "rationale": "Matching unrecognized values to known ones is a core use of the dialog."
+      },
+      {
+        "text": "Merge two spellings of a city into one member",
+        "correct": false,
+        "rationale": "Merging members needs a group, not Edit Locations."
+      },
+      {
+        "text": "Set the default sort order for the field",
+        "correct": false,
+        "rationale": "Sort is a default property in the Data pane."
+      },
+      {
+        "text": "Enter latitude and longitude for a value by hand",
+        "correct": true,
+        "rationale": "Manual coordinates are allowed for values that can't be matched."
+      },
+      {
+        "text": "Change the field's data type to string",
+        "correct": false,
+        "rationale": "Data types are changed from the type icon."
+      }
+    ],
+    "explanation": "Edit Locations handles unknown or ambiguous places: add a Country or State field, match unrecognized values, or type in coordinates. Merging members or changing types are separate tools.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_editlocation.htm"
+    ],
+    "id": "1.3-026",
+    "taskId": "1.3",
+    "select": 2
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "The `Postal Code` field has been changed to a string. What should the analyst do next so Tableau can place the codes on a map?",
+    "options": [
+      {
+        "text": "Assign the Longitude role from the data type icon",
+        "correct": false,
+        "rationale": "Longitude is for numeric fields and a postal code isn't a coordinate."
+      },
+      {
+        "text": "Set Default Properties > Number Format on the field",
+        "correct": false,
+        "rationale": "Number formats apply to numbers and don't tell Tableau where a code is."
+      },
+      {
+        "text": "Add an alias for each postal code",
+        "correct": false,
+        "rationale": "Aliases only relabel members and don't give them a location."
+      },
+      {
+        "text": "Assign the ZIP Code/Postcode geographic role from the data type icon",
+        "correct": true,
+        "rationale": "The role lets Tableau recognize the strings as postal codes."
+      }
+    ],
+    "explanation": "A string type keeps leading zeros intact, and the ZIP Code/Postcode role is what makes Tableau treat the values as places. Both steps are done from the data type icon.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-027",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "Where can an analyst change the data type of a field in the Data pane?",
+    "options": [
+      {
+        "text": "Click the icon to the left of the field name and pick a type from the list",
+        "correct": true,
+        "rationale": "The type icon opens the data type choices."
+      },
+      {
+        "text": "Right-click the field and choose Aliases",
+        "correct": false,
+        "rationale": "Aliases rename members and don't alter the type."
+      },
+      {
+        "text": "Right-click the field and choose Default Properties",
+        "correct": false,
+        "rationale": "Defaults cover formats and aggregation, not the data type."
+      },
+      {
+        "text": "Double-click the field name",
+        "correct": false,
+        "rationale": "Double-clicking doesn't offer type choices."
+      }
+    ],
+    "explanation": "The icon beside a field shows its type, and clicking it lists the other types. Changing the type is metadata, so the source stays as it is.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-028",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "An analyst is already looking at a worksheet and spots a numeric field that should be text. Which route changes the type from the view?",
+    "options": [
+      {
+        "text": "Drag the field onto the Detail card",
+        "correct": false,
+        "rationale": "Detail changes the level of detail and not the type."
+      },
+      {
+        "text": "Right-click the field and choose Change Data Type",
+        "correct": true,
+        "rationale": "The context menu on the field includes Change Data Type."
+      },
+      {
+        "text": "Open Analysis > Create Calculated Field and retype the name",
+        "correct": false,
+        "rationale": "A calculation creates a new field and doesn't convert the original."
+      },
+      {
+        "text": "Right-click the field and choose Clear Aliases",
+        "correct": false,
+        "rationale": "This resets member labels. It doesn't change a type."
+      }
+    ],
+    "explanation": "A field's data type can be changed in the Data pane, on the Data Source page, or by right-clicking a field and choosing Change Data Type.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-029",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "Newark's postal code `07106` was read from a file as a number. What is the result?",
+    "options": [
+      {
+        "text": "It stays 07106, but it can't be placed on a map",
+        "correct": false,
+        "rationale": "The leading zero is lost when the value is read as a number."
+      },
+      {
+        "text": "It becomes Null, because numbers can't hold five digits",
+        "correct": false,
+        "rationale": "Five digits fit in a number type, and the value is only reshaped."
+      },
+      {
+        "text": "It shows as 7106, and Tableau offers to aggregate the codes",
+        "correct": true,
+        "rationale": "A number drops the leading zero and behaves like a measure."
+      },
+      {
+        "text": "It is split into 07 and 106 as two fields",
+        "correct": false,
+        "rationale": "Tableau doesn't split values by type."
+      }
+    ],
+    "explanation": "Read as a number, a code loses its leading zero and Tableau treats it as something to sum. Postal codes should be strings.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-030",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "A column mixes numbers with a few text entries such as n/a, and the field's type is Number. How does Tableau treat the text entries?",
+    "options": [
+      {
+        "text": "As zero",
+        "correct": false,
+        "rationale": "Tableau doesn't convert text to zero."
+      },
+      {
+        "text": "As the largest number in the column",
+        "correct": false,
+        "rationale": "Tableau doesn't assign values to text this way."
+      },
+      {
+        "text": "As text, shown in the view next to the numbers",
+        "correct": false,
+        "rationale": "A number field can't hold text members, so they don't appear as text."
+      },
+      {
+        "text": "As Null",
+        "correct": true,
+        "rationale": "With a number type, text is treated as Null."
+      }
+    ],
+    "explanation": "Values that don't fit the field's type become Null. Changing a field to a type that can't hold its values loses them in the view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-031",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "An analyst needs to fix a wrong data type and also plans to create an extract. When should the type be changed?",
+    "options": [
+      {
+        "text": "Before creating the extract",
+        "correct": true,
+        "rationale": "Types should be right before the extract is built."
+      },
+      {
+        "text": "After creating the extract, from the extract's page",
+        "correct": false,
+        "rationale": "Changing types afterwards is the wrong order. Do it first."
+      },
+      {
+        "text": "It doesn't matter, because extracts always re-read types",
+        "correct": false,
+        "rationale": "Extracts store the data as prepared, so the order matters."
+      },
+      {
+        "text": "Only in the source file, never in Tableau",
+        "correct": false,
+        "rationale": "Tableau can change types itself as metadata."
+      }
+    ],
+    "explanation": "Change data types before creating an extract. It's the order Tableau's documentation recommends.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-032",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "On the Data Source page, how does an analyst change the type of a field in the grid?",
+    "options": [
+      {
+        "text": "Double-click a cell and type the new type name",
+        "correct": false,
+        "rationale": "Cells hold data and don't set the type."
+      },
+      {
+        "text": "Click the data type icon above the field and choose a type",
+        "correct": true,
+        "rationale": "The icon in the grid header opens the type list."
+      },
+      {
+        "text": "Open the Map menu and choose Edit Locations",
+        "correct": false,
+        "rationale": "Edit Locations handles map locations only."
+      },
+      {
+        "text": "Drag the field to the Filters shelf",
+        "correct": false,
+        "rationale": "Filters limit rows. They don't change the type."
+      }
+    ],
+    "explanation": "The Data Source page shows a type icon for every field. Click it to pick another type.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-033",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "Which two places let an analyst change a field's data type? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The Marks card",
+        "correct": false,
+        "rationale": "The Marks card holds encodings and doesn't offer data types."
+      },
+      {
+        "text": "The Data Source page grid",
+        "correct": true,
+        "rationale": "The icon above each column opens the type list."
+      },
+      {
+        "text": "The Aliases dialog",
+        "correct": false,
+        "rationale": "Aliases are for member labels."
+      },
+      {
+        "text": "The Data pane in a worksheet",
+        "correct": true,
+        "rationale": "The icon next to a field name offers the same choice."
+      },
+      {
+        "text": "The Format pane",
+        "correct": false,
+        "rationale": "Formatting changes appearance only."
+      }
+    ],
+    "explanation": "Types can be changed on the Data Source page, in the Data pane, or via right-click > Change Data Type in a view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-034",
+    "taskId": "1.3",
+    "select": 2
+  },
+  {
+    "kind": "multi",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "A source file contains postal codes such as `07106`. Which two steps should the analyst take? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Alias each code with its city",
+        "correct": false,
+        "rationale": "Aliases don't fix the type."
+      },
+      {
+        "text": "Set the aggregation to Sum",
+        "correct": false,
+        "rationale": "Postal codes shouldn't be added up."
+      },
+      {
+        "text": "Change the field to a string",
+        "correct": true,
+        "rationale": "A string keeps the leading zero."
+      },
+      {
+        "text": "Leave the type as Number so the codes sort correctly",
+        "correct": false,
+        "rationale": "A number drops the leading zero."
+      },
+      {
+        "text": "Give the field the ZIP Code/Postcode role",
+        "correct": true,
+        "rationale": "The role lets Tableau map the values."
+      }
+    ],
+    "explanation": "Postal codes are labels, not quantities. A string type protects the leading zero, and the ZIP Code/Postcode role makes them mappable.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ],
+    "id": "1.3-035",
+    "taskId": "1.3",
+    "select": 2
+  },
+  {
+    "kind": "multi",
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "Which three data types can the type icon of a field show in Tableau? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Date & time",
+        "correct": true,
+        "rationale": "Date & time is one of the types."
+      },
+      {
+        "text": "Currency",
+        "correct": false,
+        "rationale": "Currency is a number format, not a data type."
+      },
+      {
+        "text": "Boolean",
+        "correct": true,
+        "rationale": "True/false values have their own type."
+      },
+      {
+        "text": "Hyperlink",
+        "correct": false,
+        "rationale": "Hyperlinks aren't a data type in the Data pane."
+      },
+      {
+        "text": "Number (decimal)",
+        "correct": true,
+        "rationale": "Numbers are whole or decimal."
+      }
+    ],
+    "explanation": "Types are text (string), date, date & time, number, Boolean and geographic. Currency is a Default Property for formatting numbers.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ],
+    "id": "1.3-036",
+    "taskId": "1.3",
+    "select": 3
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "An analyst wants `Monthly Price` to show as currency with two decimals in every future view. Where should that be set?",
+    "options": [
+      {
+        "text": "Format the pill in one worksheet",
+        "correct": false,
+        "rationale": "That changes only the one sheet."
+      },
+      {
+        "text": "Create an alias for each price",
+        "correct": false,
+        "rationale": "Aliases don't apply to measures."
+      },
+      {
+        "text": "Right-click the field in the Data pane and choose Default Properties > Number Format",
+        "correct": true,
+        "rationale": "Default properties apply whenever the field is dragged into a view."
+      },
+      {
+        "text": "Rename the field to Monthly Price (USD)",
+        "correct": false,
+        "rationale": "The name changes, but the format doesn't."
+      }
+    ],
+    "explanation": "Defaults set in the Data pane apply to new views. Formatting a pill only affects the sheet in question.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-037",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "Which default property sets the colour of each `Plan` member whenever the field is placed on Color?",
+    "options": [
+      {
+        "text": "Default Properties > Aggregation",
+        "correct": false,
+        "rationale": "Aggregation is for measures."
+      },
+      {
+        "text": "Default Properties > Comment",
+        "correct": false,
+        "rationale": "A comment is just a tooltip note."
+      },
+      {
+        "text": "Default Properties > Number Format",
+        "correct": false,
+        "rationale": "Number formats are for numbers."
+      },
+      {
+        "text": "Default Properties > Color",
+        "correct": true,
+        "rationale": "The default colour assignment follows the field."
+      }
+    ],
+    "explanation": "A dimension's Color default fixes each member's colour so it stays the same everywhere the field is used on Color.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-038",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "An analyst wants a measure to be totalled with AVG instead of SUM the first time it is dragged into a view. Which default property does this?",
+    "options": [
+      {
+        "text": "Aggregation",
+        "correct": true,
+        "rationale": "The default aggregation is used when the measure is first totaled."
+      },
+      {
+        "text": "Number Format",
+        "correct": false,
+        "rationale": "This controls how the result looks."
+      },
+      {
+        "text": "Comment",
+        "correct": false,
+        "rationale": "This adds a note and doesn't change the calculation."
+      },
+      {
+        "text": "Sort",
+        "correct": false,
+        "rationale": "Sort orders dimension members."
+      }
+    ],
+    "explanation": "Aggregation is a default property for measures. It sets the aggregation used when the measure is first added.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-039",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "An analyst sets a default Sort on the `Genre` dimension. Besides how members are ordered in a view, what else does it control?",
+    "options": [
+      {
+        "text": "Which colour each member receives",
+        "correct": false,
+        "rationale": "Colours come from the Color default."
+      },
+      {
+        "text": "How the values are listed in a filter",
+        "correct": true,
+        "rationale": "The default sort also orders the filter's list."
+      },
+      {
+        "text": "Whether the field counts as a measure",
+        "correct": false,
+        "rationale": "The sort doesn't change a field's role."
+      },
+      {
+        "text": "The field's data type",
+        "correct": false,
+        "rationale": "Types are changed separately."
+      }
+    ],
+    "explanation": "The default sort controls member order in views and also how the field's values are listed in a filter.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-040",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "After an analyst formats a pill on one worksheet as a percentage, a colleague drags the same field into a new worksheet. What do they see?",
+    "options": [
+      {
+        "text": "The percentage format, because formatting follows the field everywhere",
+        "correct": false,
+        "rationale": "That only happens if it was set as a default property."
+      },
+      {
+        "text": "An error, until the formats are reconciled",
+        "correct": false,
+        "rationale": "Tableau doesn't raise errors for this."
+      },
+      {
+        "text": "The format from the field's default properties, not the pill's",
+        "correct": true,
+        "rationale": "Pill formatting stays on its sheet."
+      },
+      {
+        "text": "A blank pill, until a default is chosen",
+        "correct": false,
+        "rationale": "The field simply uses its defaults."
+      }
+    ],
+    "explanation": "Formatting in a view is local to that sheet. Defaults in the Data pane apply to every new view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-041",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "single",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "Where does an analyst leave a note that appears in the Data pane tooltip of a field?",
+    "options": [
+      {
+        "text": "Aliases",
+        "correct": false,
+        "rationale": "Aliases relabel members."
+      },
+      {
+        "text": "Rename",
+        "correct": false,
+        "rationale": "Rename changes the field name."
+      },
+      {
+        "text": "Default Properties > Sort",
+        "correct": false,
+        "rationale": "Sort orders members."
+      },
+      {
+        "text": "Default Properties > Comment",
+        "correct": true,
+        "rationale": "Comments are available for any field."
+      }
+    ],
+    "explanation": "The Comment property attaches a note to a field and shows it in the field's tooltip.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-042",
+    "taskId": "1.3"
+  },
+  {
+    "kind": "multi",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "Which three default properties are available for a measure like `Monthly Price`? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Shape",
+        "correct": false,
+        "rationale": "Shape is for dimensions."
+      },
+      {
+        "text": "Comment",
+        "correct": true,
+        "rationale": "Comments are available for any field."
+      },
+      {
+        "text": "Number Format",
+        "correct": true,
+        "rationale": "It applies to numbers."
+      },
+      {
+        "text": "Aggregation",
+        "correct": true,
+        "rationale": "The default aggregation is for measures."
+      },
+      {
+        "text": "Sort",
+        "correct": false,
+        "rationale": "Sort sets the default order of a dimension's members."
+      }
+    ],
+    "explanation": "Comment works on any field, Number Format on numbers and Aggregation on measures. Sort and Shape are set per member, so they belong to dimensions.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-043",
+    "taskId": "1.3",
+    "select": 3
+  },
+  {
+    "kind": "multi",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "Which two default properties does Tableau apply to the members of `Plan` when the field goes on the matching Marks card shelf? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Aggregation",
+        "correct": false,
+        "rationale": "Aggregation is for measures."
+      },
+      {
+        "text": "Number Format",
+        "correct": false,
+        "rationale": "Number formats are for numbers."
+      },
+      {
+        "text": "Color",
+        "correct": true,
+        "rationale": "A colour for each member."
+      },
+      {
+        "text": "Date Format",
+        "correct": false,
+        "rationale": "Date formats are for dates."
+      },
+      {
+        "text": "Shape",
+        "correct": true,
+        "rationale": "A shape for each member."
+      }
+    ],
+    "explanation": "Dimension defaults for Color and Shape take effect when the field is on Color or Shape.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-044",
+    "taskId": "1.3",
+    "select": 2
+  },
+  {
+    "kind": "multi",
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "Which two statements about default properties and formatting are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Default properties rewrite the values in the source file",
+        "correct": false,
+        "rationale": "Defaults are metadata."
+      },
+      {
+        "text": "Formatting a single pill on a shelf changes only that sheet",
+        "correct": true,
+        "rationale": "Local formatting stays local."
+      },
+      {
+        "text": "A default is applied only to the first view of a workbook",
+        "correct": false,
+        "rationale": "Defaults apply to every new view."
+      },
+      {
+        "text": "Colour encodings are shared across worksheets using the same data source",
+        "correct": true,
+        "rationale": "Colour defaults are shared."
+      },
+      {
+        "text": "Defaults can be set only for measures",
+        "correct": false,
+        "rationale": "They also cover dimensions and dates."
+      }
+    ],
+    "explanation": "Default Properties are stored in Tableau and shape each new view. Local formatting remains local.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ],
+    "id": "1.3-045",
+    "taskId": "1.3",
+    "select": 2
   }
 ]
