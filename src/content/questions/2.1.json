@@ -1,0 +1,888 @@
+[
+  {
+    "id": "2.1-001",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "Which pair of pills builds a bar chart?",
+    "options": [
+      {
+        "text": "`Minutes Watched` on Columns and `Sessions (Count)` on Rows",
+        "correct": false,
+        "rationale": "Two measures, one per shelf, make a scatterplot, not bars."
+      },
+      {
+        "text": "Continuous `MONTH(Start)` on Columns and `Minutes Watched` on Rows",
+        "correct": false,
+        "rationale": "A date with a measure draws a line under Automatic."
+      },
+      {
+        "text": "`Genre` on Rows and `Minutes Watched` on Columns",
+        "correct": true,
+        "rationale": "A dimension and a measure on the two shelves is the bar chart recipe; Automatic then picks the Bar mark."
+      },
+      {
+        "text": "`Genre` on Rows and `Device` on Columns, with nothing on the Marks card",
+        "correct": false,
+        "rationale": "Two dimensions and no measure give a table of headers, not bars."
+      }
+    ],
+    "explanation": "A bar chart needs a dimension on one of Rows or Columns and a measure on the other. The dimension supplies the headers, and the measure supplies the axis along which the bars grow.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-002",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "Driftlight wants to show which genres people watch most. Which chart fits best?",
+    "options": [
+      {
+        "text": "A sorted horizontal bar chart of `Minutes Watched` by `Genre`",
+        "correct": true,
+        "rationale": "Comparing one measure across the members of a dimension is the job of a bar chart."
+      },
+      {
+        "text": "A scatterplot with `Genre` on Columns and `Genre` on Rows",
+        "correct": false,
+        "rationale": "Scatterplots plot a measure against a measure; a dimension on each shelf only builds headers."
+      },
+      {
+        "text": "A line chart of `Minutes Watched` over continuous months",
+        "correct": false,
+        "rationale": "A line shows change over time, not a comparison across genres."
+      },
+      {
+        "text": "A filled map with `Genre` on Detail",
+        "correct": false,
+        "rationale": "A filled map needs a geographic field, and `Genre` has no geographic role."
+      }
+    ],
+    "explanation": "Use a bar chart when you compare a measure across the members of a dimension. Sorting the dimension by the measure makes the ranking easy to read.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-003",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "The Automatic mark type shows a Bar when which fields are the inner fields on Rows and Columns?",
+    "options": [
+      {
+        "text": "A date field and a measure",
+        "correct": false,
+        "rationale": "That combination makes Automatic choose Line."
+      },
+      {
+        "text": "A measure on each shelf",
+        "correct": false,
+        "rationale": "Two measures make a scatterplot, not bars."
+      },
+      {
+        "text": "`Longitude (generated)` and `Latitude (generated)`",
+        "correct": false,
+        "rationale": "Generated coordinates make a map, not bars."
+      },
+      {
+        "text": "A dimension and a measure",
+        "correct": true,
+        "rationale": "Automatic chooses Bar for a dimension and a measure as the inner fields."
+      }
+    ],
+    "explanation": "Mark type Automatic reads the fields and chooses for you: Bar for a dimension plus a measure, Line for a date plus a measure. You only change the mark type when you want something else.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_marktypes.htm"
+    ]
+  },
+  {
+    "id": "2.1-004",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "On a view, `Plan` is on Columns and `SUM(Minutes Watched)` is on Rows. What does Automatic draw?",
+    "options": [
+      {
+        "text": "Horizontal bars, one per plan",
+        "correct": false,
+        "rationale": "Horizontal bars need the dimension on Rows and the measure on Columns."
+      },
+      {
+        "text": "Vertical bars, one per plan",
+        "correct": true,
+        "rationale": "A dimension on Columns with a measure on Rows grows bars upward."
+      },
+      {
+        "text": "A single line across the plan headers",
+        "correct": false,
+        "rationale": "Line is chosen for a date and a measure, and `Plan` is not a date."
+      },
+      {
+        "text": "A single mark for all plans",
+        "correct": false,
+        "rationale": "One mark would appear only with no dimension in the view."
+      }
+    ],
+    "explanation": "The shelf of the dimension sets the bar direction. A dimension on Columns and a measure on Rows gives vertical bars; swapping them gives horizontal bars.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-005",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "An analyst wants horizontal bars of `Minutes Watched` per `Genre`. Which two steps build them? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Drag `Genre` to Rows",
+        "correct": true,
+        "rationale": "The dimension on Rows gives one horizontal bar per genre."
+      },
+      {
+        "text": "Drag `Genre` to Detail and `Minutes Watched` to Size",
+        "correct": false,
+        "rationale": "This draws marks sized by the measure, not bars along an axis."
+      },
+      {
+        "text": "Change the mark type to Density",
+        "correct": false,
+        "rationale": "Density is for clusters of points on a map."
+      },
+      {
+        "text": "Drag `Minutes Watched` to Columns",
+        "correct": true,
+        "rationale": "The measure on Columns provides the axis the bars extend along."
+      },
+      {
+        "text": "Right-click `Minutes Watched` and choose Dual Axis",
+        "correct": false,
+        "rationale": "Dual Axis layers two measures; it is not needed for a bar chart."
+      }
+    ],
+    "explanation": "For a bar chart place a dimension on one shelf and a measure on the other. With the dimension on Rows and the measure on Columns the bars are horizontal.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-006",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "Which two statements about building a bar chart are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "A bar chart needs two measures",
+        "correct": false,
+        "rationale": "Two measures make a scatterplot."
+      },
+      {
+        "text": "A dimension on Rows and a measure on Columns works, and so does the reverse",
+        "correct": true,
+        "rationale": "Either arrangement makes bars; only the direction changes."
+      },
+      {
+        "text": "Automatic never picks Bar; the mark type must be set by hand",
+        "correct": false,
+        "rationale": "Bar is one of the marks Automatic picks."
+      },
+      {
+        "text": "A date field must be on Columns",
+        "correct": false,
+        "rationale": "A date with a measure makes a line under Automatic."
+      },
+      {
+        "text": "Automatic can choose Bar from a dimension and a measure as inner fields",
+        "correct": true,
+        "rationale": "Automatic picks Bar for that field combination, so no manual mark choice is needed."
+      }
+    ],
+    "explanation": "A bar chart is a recipe of one dimension and one measure. Automatic recognises it and draws bars.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_marktypes.htm"
+    ]
+  },
+  {
+    "id": "2.1-007",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "Which fields make Automatic draw a line chart?",
+    "options": [
+      {
+        "text": "`Start` on Columns and `Minutes Watched` on Rows",
+        "correct": true,
+        "rationale": "A date with a measure as the inner fields gives Line."
+      },
+      {
+        "text": "`Genre` on Columns and `Minutes Watched` on Rows",
+        "correct": false,
+        "rationale": "A dimension that is not a date gives bars."
+      },
+      {
+        "text": "`Plan` on Rows and `Device` on Columns",
+        "correct": false,
+        "rationale": "Two dimensions give a table of headers."
+      },
+      {
+        "text": "`Sessions (Count)` on Columns and `Minutes Watched` on Rows",
+        "correct": false,
+        "rationale": "Two measures give a scatterplot."
+      }
+    ],
+    "explanation": "Line is the mark Automatic chooses when a date field and a measure are the inner fields. The date normally goes on Columns and the measure on Rows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_marktypes.htm"
+    ]
+  },
+  {
+    "id": "2.1-008",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "An analyst drops the discrete date part `YEAR(Start)` on Columns with `SUM(Minutes Watched)` on Rows. What does the view show?",
+    "options": [
+      {
+        "text": "A continuous time axis with one smooth line",
+        "correct": false,
+        "rationale": "A continuous axis needs a continuous date value."
+      },
+      {
+        "text": "Bars, because the date is discrete",
+        "correct": false,
+        "rationale": "Automatic still chooses Line for a date and a measure."
+      },
+      {
+        "text": "Headers for each year, with the line running across them",
+        "correct": true,
+        "rationale": "A discrete date part creates headers rather than an axis, and the line crosses the headers."
+      },
+      {
+        "text": "One separate chart for each year",
+        "correct": false,
+        "rationale": "The discrete part draws headers for the line to run across, not separate charts."
+      }
+    ],
+    "explanation": "Discrete dates draw blue headers; continuous dates draw a green axis. The mark type stays Line either way, but the look differs.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-009",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "Which Driftlight question is best answered by a line chart?",
+    "options": [
+      {
+        "text": "Which titles are watched often but briefly?",
+        "correct": false,
+        "rationale": "Comparing two measures per title calls for a scatterplot."
+      },
+      {
+        "text": "How does each plan split by device?",
+        "correct": false,
+        "rationale": "A split into parts per bar suits a stacked bar."
+      },
+      {
+        "text": "Where are subscribers located?",
+        "correct": false,
+        "rationale": "Locations are shown on a map."
+      },
+      {
+        "text": "Is viewing growing from month to month?",
+        "correct": true,
+        "rationale": "A line shows how a measure changes along a continuous time axis."
+      }
+    ],
+    "explanation": "Use a line chart for a measure over time. A continuous date lets Tableau draw one line along a linear time axis.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-010",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "On a line chart, the date pill on Columns is a continuous month value. How is it drawn?",
+    "options": [
+      {
+        "text": "Blue, creating headers",
+        "correct": false,
+        "rationale": "Blue pills are discrete and draw headers."
+      },
+      {
+        "text": "Green, creating an axis",
+        "correct": true,
+        "rationale": "Continuous pills are green and draw an axis."
+      },
+      {
+        "text": "Green, creating headers",
+        "correct": false,
+        "rationale": "Headers come from discrete pills, which are blue."
+      },
+      {
+        "text": "Blue, creating an axis",
+        "correct": false,
+        "rationale": "Axes come from continuous pills, which are green."
+      }
+    ],
+    "explanation": "Blue means discrete and draws headers; green means continuous and draws an axis. A continuous date draws a time axis, so the line is one unbroken line.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-011",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "Which two statements about a line chart on a continuous date are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Automatic chooses Line when a date and a measure are the inner fields",
+        "correct": true,
+        "rationale": "That is the rule Automatic follows."
+      },
+      {
+        "text": "It creates a header for each date part",
+        "correct": false,
+        "rationale": "Headers come from discrete date parts."
+      },
+      {
+        "text": "The mark type has to be set to Line by hand",
+        "correct": false,
+        "rationale": "Automatic already picks Line here."
+      },
+      {
+        "text": "It draws one line along a linear, continuous axis",
+        "correct": true,
+        "rationale": "Continuous dimensions use a continuous axis."
+      },
+      {
+        "text": "It needs two date fields",
+        "correct": false,
+        "rationale": "One date and one measure are enough."
+      }
+    ],
+    "explanation": "A continuous date value, such as a month, gives an axis. With a measure, Automatic draws one line along it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_marktypes.htm"
+    ]
+  },
+  {
+    "id": "2.1-012",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "Which two steps build a line chart of `Minutes Watched` over time? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Put `Sessions (Count)` on Columns",
+        "correct": false,
+        "rationale": "A measure on Columns would turn the view into a scatterplot."
+      },
+      {
+        "text": "Put `Minutes Watched` on Rows",
+        "correct": true,
+        "rationale": "The measure gives the vertical axis for the line."
+      },
+      {
+        "text": "Set the mark type to Map",
+        "correct": false,
+        "rationale": "Map needs geographic data."
+      },
+      {
+        "text": "Drag `Start` to Color",
+        "correct": false,
+        "rationale": "Color alone does not build a time axis."
+      },
+      {
+        "text": "Put the date `Start` on Columns as a continuous month",
+        "correct": true,
+        "rationale": "The continuous date provides the time axis."
+      }
+    ],
+    "explanation": "A line chart is a date plus a measure. Put the date on Columns, the measure on Rows, and let Automatic choose Line.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-013",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "What does a scatterplot require?",
+    "options": [
+      {
+        "text": "A dimension on each of Rows and Columns",
+        "correct": false,
+        "rationale": "Two dimensions only produce headers."
+      },
+      {
+        "text": "A date on Columns and a measure on Rows",
+        "correct": false,
+        "rationale": "That is the recipe for a line chart."
+      },
+      {
+        "text": "At least one measure on Columns and at least one on Rows",
+        "correct": true,
+        "rationale": "A scatterplot compares measure against measure."
+      },
+      {
+        "text": "A geographic field on Detail and a measure on Color",
+        "correct": false,
+        "rationale": "That describes a filled map."
+      }
+    ],
+    "explanation": "Scatterplots place measures on both axes. Each mark shows how the two measures relate for one member.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-014",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "A view has `Sessions (Count)` on Columns and `Minutes Watched` on Rows, and shows one mark. How do you get one mark per title?",
+    "options": [
+      {
+        "text": "Drag `Title` to Detail",
+        "correct": true,
+        "rationale": "Detail splits the aggregation per title without changing the axes."
+      },
+      {
+        "text": "Drag `Title` to Columns",
+        "correct": false,
+        "rationale": "A dimension on Columns creates panes, each with its own scatterplot."
+      },
+      {
+        "text": "Drag `Title` to Rows",
+        "correct": false,
+        "rationale": "A dimension on Rows creates panes, not more marks in one chart."
+      },
+      {
+        "text": "Change the mark type to Map",
+        "correct": false,
+        "rationale": "Map needs geographic fields."
+      }
+    ],
+    "explanation": "Detail adds a dimension to the level of detail without adding headers. That gives one mark per member in a single chart.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-015",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "Which Driftlight question suits a scatterplot of `Sessions (Count)` against `Minutes Watched`?",
+    "options": [
+      {
+        "text": "Which genre has the most minutes?",
+        "correct": false,
+        "rationale": "Ranking a dimension by one measure suits a bar chart."
+      },
+      {
+        "text": "Which titles are watched often but briefly?",
+        "correct": true,
+        "rationale": "Comparing two measures per title is a scatterplot."
+      },
+      {
+        "text": "What was the monthly trend?",
+        "correct": false,
+        "rationale": "A trend over time suits a line chart."
+      },
+      {
+        "text": "Which countries have subscribers?",
+        "correct": false,
+        "rationale": "Countries suit a map."
+      }
+    ],
+    "explanation": "Use a scatterplot to see how two measures relate and to spot outliers. A dimension on Detail provides one mark per member.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-016",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "`Minutes Watched` is on Columns and `Sessions (Count)` is on Rows, with no other fields. Why is there only one mark?",
+    "options": [
+      {
+        "text": "Scatterplots only show one mark unless the mark type is Circle",
+        "correct": false,
+        "rationale": "The mark type does not change how many marks appear."
+      },
+      {
+        "text": "`Sessions (Count)` is a dimension",
+        "correct": false,
+        "rationale": "It is a measure, which is why this is a scatterplot."
+      },
+      {
+        "text": "A scatterplot needs a date field to show more than one mark",
+        "correct": false,
+        "rationale": "Dates are not required."
+      },
+      {
+        "text": "Both measures are aggregated over all the data without a dimension",
+        "correct": true,
+        "rationale": "With nothing splitting the data, each measure is one total."
+      }
+    ],
+    "explanation": "Marks are created per combination of dimension members in the view. With none, there is one combination, so one mark.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-017",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "A scatterplot shows one mark. Which two changes add marks to the same chart? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Drag a dimension to Columns",
+        "correct": false,
+        "rationale": "This creates panes rather than more points in one chart."
+      },
+      {
+        "text": "Drag a dimension such as `Title` to Detail",
+        "correct": true,
+        "rationale": "Detail makes one mark per member."
+      },
+      {
+        "text": "Right-click a measure and choose Dual Axis",
+        "correct": false,
+        "rationale": "Dual Axis layers two measures; it adds no marks by member."
+      },
+      {
+        "text": "Drag a dimension such as `Plan` to Color",
+        "correct": true,
+        "rationale": "Color splits marks per member and colours them."
+      },
+      {
+        "text": "Change the mark type to Density",
+        "correct": false,
+        "rationale": "Density is for dense point maps."
+      }
+    ],
+    "explanation": "Detail and Color add dimensions to the level of detail inside the same pane. Dimensions on shelves create panes.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-018",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "Which two statements about building a scatterplot are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It needs at least one measure on Columns and one on Rows",
+        "correct": true,
+        "rationale": "This is the recipe from Tableau help."
+      },
+      {
+        "text": "It needs a date on Columns",
+        "correct": false,
+        "rationale": "Dates build a line chart."
+      },
+      {
+        "text": "The second measure has to go on Color",
+        "correct": false,
+        "rationale": "Measures go on the shelves."
+      },
+      {
+        "text": "Without other fields, both measures are aggregated over all the data into a single mark",
+        "correct": true,
+        "rationale": "No dimension splits the data."
+      },
+      {
+        "text": "A dimension on Rows adds marks within one pane",
+        "correct": false,
+        "rationale": "It adds panes."
+      }
+    ],
+    "explanation": "A scatterplot is measure by measure; dimensions on Detail or Color add marks.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-019",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "Which fields does Tableau generate for a field with a geographic role such as `Country`?",
+    "options": [
+      {
+        "text": "`Latitude (generated)` and `Longitude (generated)`",
+        "correct": true,
+        "rationale": "These coordinates are what you place on the shelves to draw a map."
+      },
+      {
+        "text": "`Latitude` and `Longitude` columns added to the data file",
+        "correct": false,
+        "rationale": "Tableau does not change the source; the generated fields exist only in the workbook."
+      },
+      {
+        "text": "A `Number of Records` measure",
+        "correct": false,
+        "rationale": "That counts rows and has nothing to do with location."
+      },
+      {
+        "text": "A second `Country` dimension on Color",
+        "correct": false,
+        "rationale": "No such field is created."
+      }
+    ],
+    "explanation": "A geographic role lets Tableau place locations. It gives you generated latitude and longitude fields that you put on Columns and Rows.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm"
+    ]
+  },
+  {
+    "id": "2.1-020",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "Where does an analyst select the Map mark type for a filled map?",
+    "options": [
+      {
+        "text": "In the Map menu under Background Maps",
+        "correct": false,
+        "rationale": "That menu sets the background map layers, not the mark type."
+      },
+      {
+        "text": "In the mark type drop-down on the Marks card",
+        "correct": true,
+        "rationale": "The Map mark type is chosen from the Marks card drop-down."
+      },
+      {
+        "text": "In the Analysis menu under Stack Marks",
+        "correct": false,
+        "rationale": "Stack Marks controls stacking of bars."
+      },
+      {
+        "text": "In the Format menu under Borders",
+        "correct": false,
+        "rationale": "Borders format view lines."
+      }
+    ],
+    "explanation": "Filled maps use the Map mark type, selected from the mark type drop-down on the Marks card.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm"
+    ]
+  },
+  {
+    "id": "2.1-021",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "A symbol map shows one circle per city. What turns it into a proportional symbol map?",
+    "options": [
+      {
+        "text": "Changing the mark type to Map",
+        "correct": false,
+        "rationale": "Map would fill areas instead."
+      },
+      {
+        "text": "Changing the mark type to Density",
+        "correct": false,
+        "rationale": "Density shows clusters of points."
+      },
+      {
+        "text": "Dragging a measure to Size",
+        "correct": true,
+        "rationale": "A measure on Size scales each symbol."
+      },
+      {
+        "text": "Moving `City` from Detail to Rows",
+        "correct": false,
+        "rationale": "`City` would then create headers, and the map would break."
+      }
+    ],
+    "explanation": "A symbol map places a mark per location. A measure on Size makes the symbols proportional to it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_symbol.htm"
+    ]
+  },
+  {
+    "id": "2.1-022",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "Which combination makes a filled map of `State` coloured by `Profit`?",
+    "options": [
+      {
+        "text": "Circle mark type, `State` on Detail, `Profit` on Size",
+        "correct": false,
+        "rationale": "That is a proportional symbol map."
+      },
+      {
+        "text": "Map mark type, `Profit` on Detail, `State` on Size",
+        "correct": false,
+        "rationale": "The geographic field belongs on Detail and the measure on Color."
+      },
+      {
+        "text": "Density mark type, `State` on Color, `Profit` on Detail",
+        "correct": false,
+        "rationale": "Density is not for filled areas."
+      },
+      {
+        "text": "Map mark type, `State` on Detail, `Profit` on Color",
+        "correct": true,
+        "rationale": "This is the filled map recipe."
+      }
+    ],
+    "explanation": "A filled map needs the Map mark type, a geographic dimension on Detail and a measure on Color.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm"
+    ]
+  },
+  {
+    "id": "2.1-023",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "The board wants each country shaded by its subscribers. Which map?",
+    "options": [
+      {
+        "text": "A filled map",
+        "correct": true,
+        "rationale": "Filled maps shade areas by a measure on Color."
+      },
+      {
+        "text": "A proportional symbol map of cities",
+        "correct": false,
+        "rationale": "It draws symbols sized by a measure, not shaded areas."
+      },
+      {
+        "text": "A scatterplot of `Latitude` against `Longitude`",
+        "correct": false,
+        "rationale": "It shows locations as points."
+      },
+      {
+        "text": "A line chart by `Country`",
+        "correct": false,
+        "rationale": "A line needs a date."
+      }
+    ],
+    "explanation": "Use a filled map to shade areas by a measure, and a symbol map for marks per location.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm"
+    ]
+  },
+  {
+    "id": "2.1-024",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "Which three steps build a symbol map of `City`? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Set the mark type to Map",
+        "correct": false,
+        "rationale": "Map is for filled maps."
+      },
+      {
+        "text": "Put `Longitude (generated)` on Columns",
+        "correct": true,
+        "rationale": "Longitude is the horizontal position."
+      },
+      {
+        "text": "Set the mark type to Density",
+        "correct": false,
+        "rationale": "Density shows clusters, not one symbol per city."
+      },
+      {
+        "text": "Put `Latitude (generated)` on Rows",
+        "correct": true,
+        "rationale": "Latitude is the vertical position."
+      },
+      {
+        "text": "Put `City` on Detail",
+        "correct": true,
+        "rationale": "Detail makes one mark per city."
+      }
+    ],
+    "explanation": "A symbol map needs generated coordinates on the shelves and a geographic field on Detail.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_symbol.htm"
+    ]
+  }
+]
