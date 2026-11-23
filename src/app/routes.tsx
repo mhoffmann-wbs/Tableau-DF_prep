@@ -6,6 +6,7 @@ import { Layout } from './Layout'
 // content and, later, the chart engine) loads on first use. Keep content
 // imports out of this file and Layout.
 const HomePage = lazy(() => import('../pages/HomePage'))
+const LearnPage = lazy(() => import('../pages/LearnPage'))
 const PracticePage = lazy(() => import('../pages/PracticePage'))
 const QuestionsPage = lazy(() => import('../pages/QuestionsPage'))
 const MockExamPage = lazy(() => import('../pages/MockExamPage'))
@@ -19,6 +20,8 @@ export const routes: RouteObject[] = [
     element: <Layout />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'learn', element: <LearnPage /> },
+      { path: 'learn/:taskId', element: <LearnPage /> },
       { path: 'practice', element: <PracticePage /> },
       { path: 'questions', element: <QuestionsPage /> },
       { path: 'questions/:itemId', element: <QuestionsPage /> },

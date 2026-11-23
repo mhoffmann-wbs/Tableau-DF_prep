@@ -1,0 +1,126 @@
+export const meta = {
+  taskId: '4.1',
+  updated: '2026-11-23',
+  tldr: 'Dimensions hold qualitative values (names, categories, dates, places) that slice the view; measures hold numbers you can add up, and Tableau aggregates them, `SUM` by default. Tableau sets the role when you connect: numbers become measures, everything else becomes a dimension.',
+  objectivesCovered: ['4.1.1', '4.1.2', '4.1.3'],
+  links: [
+    { title: 'Dimensions and Measures, Blue and Green', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm' },
+    { title: 'Data Aggregation in Tableau', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm' },
+    { title: 'The Data pane', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_understanddatawindow.htm' },
+    { title: 'Parts of the View', url: 'https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm' },
+  ],
+  vizzes: {
+    'one-measure': {
+      spec: { rows: [{ field: 'Minutes Watched' }] },
+      caption: 'A measure alone: every session is added up into a single mark.',
+    },
+    'by-device': {
+      spec: { columns: [{ field: 'Device' }], rows: [{ field: 'Minutes Watched' }] },
+      caption: 'Add the Device dimension: one header and one bar per device.',
+    },
+    'id-as-measure': {
+      spec: { rows: [{ field: 'Subscriber ID', agg: 'countd' }], columns: [{ field: 'Plan' }] },
+      caption: 'An ID is a dimension. Counting its distinct members turns it into a temporary measure.',
+    },
+  },
+  facts: {
+    'total-minutes': { kind: 'value', says: '2,859,617', spec: { rows: [{ field: 'Minutes Watched' }] }, measure: { field: 'Minutes Watched' } },
+    'session-count': { kind: 'value', says: '32,000', spec: { rows: [{ field: 'Sessions (Count)' }] }, measure: { field: 'Sessions (Count)' } },
+    'device-count': { kind: 'value', says: '5', spec: { rows: [{ field: 'Device', agg: 'countd' }] }, measure: { field: 'Device', agg: 'countd' } },
+    'top-device': {
+      kind: 'top',
+      says: 'TV',
+      spec: { columns: [{ field: 'Device' }], rows: [{ field: 'Minutes Watched' }] },
+      dimension: { field: 'Device' },
+      measure: { field: 'Minutes Watched' },
+    },
+  },
+}
+
+## Big idea
+
+Every field in Tableau has a **role**: it is either a **dimension** or a **measure**. The role decides what happens when you drag the field into a view.
+
+- A **dimension** answers *"by what?"*: by device, by genre, by country, by month. Dimensions slice the data into groups.
+- A **measure** answers *"how much?"*: how many minutes, how many sessions, how much revenue. Measures are numbers, and Tableau **aggregates** them, adding them up by default.
+
+If you know SQL, you already know the idea. In
+
+```sql
+SELECT device, SUM(minutes_watched) FROM sessions GROUP BY device
+```
+
+`device` plays the dimension (it goes in `GROUP BY`) and `minutes_watched` plays the measure (it goes inside `SUM`). In pandas it is `sessions.groupby("Device")["Minutes Watched"].sum()`. Tableau writes that query for you every time you drop a field on a shelf.
+
+## How it works
+
+### What dimensions contain
+
+Tableau's help says dimensions "typically contain qualitative values (such as names, dates, or geographical data)". At Driftlight that means fields such as Genre, Device, Plan, Country, City and the session's Start date.
+
+You use dimensions to **categorize, segment and reveal detail**. When you drag a discrete dimension to Rows or Columns, Tableau creates **headers**, one for each member (each distinct value). Tableau never aggregates a dimension on its own: Device stays a list of devices.
+
+Dates are dimensions too, even though they look like numbers on a calendar. For relational data, Tableau treats every date and date-time field as a dimension.
+
+### What measures contain
+
+Measures "typically contain numeric, quantitative values that you can measure": things you can add, average or compare. At Driftlight these are Minutes Watched, Runtime, Monthly Price and Screens.
+
+When you drag a measure into the view, Tableau **aggregates** it. Minutes Watched becomes `SUM(Minutes Watched)`, and the pill shows the aggregation in its name. Driftlight's sessions add up to <Fact id="total-minutes" /> minutes watched:
+
+<LessonViz id="one-measure" />
+
+Every data source also gets a count measure, named after the table, which counts its rows. In the app's sandbox the sessions source has `Sessions (Count)`, and it counts <Fact id="session-count" /> sessions. Since Tableau 2020.2 every table in a data source has such a field, named after the table followed by (Count), as in `Orders (Count)`. It is generated automatically and can only be used aggregated. Older workbooks may show its predecessor, `Number of Records`.
+
+### The difference between them
+
+When you **connect** to data, Tableau assigns each field a role from its values. A field of numbers is added as a measure. A field that contains anything other than numbers, such as text, dates or true/false values, is added as a dimension. In the Data pane, dimensions appear above a gray line and measures below it, for each table. You can change a field's role by dragging it across that line, for example dragging a measure up to where the other dimensions are.
+
+Put them together and the dimension decides **how many marks** there are, while the measure decides **how big** each mark is. Add Device to the view above and the single total splits into one bar per device. There are <Fact id="device-count" /> devices, so you get that many headers and bars, plus a **Null** header for the few sessions where no device was recorded. Together they still add up to the same total:
+
+<LessonViz id="by-device" />
+
+The rule of thumb:
+
+| | Dimension | Measure |
+|---|---|---|
+| Typical values | Qualitative: names, categories, dates, places | Quantitative: numbers you can add up |
+| In the view | Slices the view into headers or marks (the level of detail) | Aggregated per slice: `SUM`, `AVG`, `COUNT`… |
+| SQL analogy | A `GROUP BY` column | The column inside `SUM()` |
+| Driftlight examples | Genre, Device, Country, Start | Minutes Watched, Runtime, Monthly Price |
+
+**Numbers that are really labels.** Some fields are made of digits but you would never add them up: customer IDs, order numbers, ZIP codes. Tableau's help gives postal codes as the example: "they're actually string values that shouldn't be added or averaged". If such a field arrives as a measure, make it a dimension. In Driftlight's data, Subscriber ID and Postal Code are already dimensions.
+
+**Dimensions can be counted.** You can aggregate a dimension with Count, Count (Distinct), Minimum, Maximum or Attribute, for example `COUNTD(Subscriber ID)` for "how many different subscribers?". Tableau's help says this "creates a new temporary measure column": the field in the Data pane stays a dimension.
+
+<LessonViz id="id-as-measure" />
+
+## At Driftlight
+
+Driftlight's analysts sort every new question into dimensions and measures before they touch Tableau:
+
+- *"Which device do people watch on most?"* "Which device" is the dimension, Device. "Watch most" is the measure, `SUM(Minutes Watched)`. The answer is <Fact id="top-device" />.
+- *"How many subscribers does each plan have?"* Plan is the dimension. There's no subscriber-number field to add up, so the measure is a count: `COUNTD(Subscriber ID)` on sessions, or `Subscribers (Count)` on the subscribers table.
+- *"Average runtime of our films by genre?"* Genre is the dimension; Runtime is the measure with its aggregation changed from `SUM` to `AVG`. (Task 4.3 covers aggregations in detail.)
+
+## Exam traps
+
+<Callout title="Dimension is not the same as discrete">
+  <p>Role (dimension or measure) and continuity (discrete or continuous, blue or green) are two separate properties. Most dimensions are discrete and most measures are continuous, but a date dimension can be continuous and a measure can be made discrete. Task 4.2 covers the colours.</p>
+</Callout>
+
+<Callout title="Digits don't make a measure">
+  <p>IDs, ZIP or postal codes and phone numbers are labels. If a question asks why the "sum of customer IDs" looks absurd, the fix is to convert the field to a dimension, not to change its aggregation.</p>
+</Callout>
+
+<Callout title="Dates are dimensions">
+  <p>A date field such as Order Date or Start is a dimension, even though dates can be drawn on a continuous axis. Don't pick "measure" for a date because it sounds like time is being measured.</p>
+</Callout>
+
+<Callout title="Superstore note">
+  <p>Exam items often assume Tableau's Sample-Superstore data. There, Sales, Profit, Quantity and Discount are measures; Category, Sub-Category, Region, Segment, Customer Name and Order Date are dimensions. Driftlight's equivalents are Minutes Watched (measure) and Genre, Plan, Region and Start (dimensions).</p>
+</Callout>
+
+## Build
+
+<BuildLinks />

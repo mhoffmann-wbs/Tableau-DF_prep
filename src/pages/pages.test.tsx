@@ -35,6 +35,19 @@ describe('pages', () => {
     expect(screen.getByRole('button', { name: 'Start the mock exam' })).toBeDisabled()
   })
 
+  it('lists lessons in learning order and marks a lesson as read', async () => {
+    await renderAt('/learn', 'Learn')
+    const items = screen.getAllByRole('listitem').filter((li) => /^\d+/.test(li.textContent ?? ''))
+    expect(items[0]).toHaveTextContent('4.1 Understand dimensions and measures')
+    expect(items[3]).toHaveTextContent('1.1 Create live connections and extracts')
+    cleanup()
+    await renderAt('/learn/4.1', '4.1 Understand dimensions and measures')
+    expect(screen.getByRole('heading', { level: 2, name: 'Exam traps' })).toBeInTheDocument()
+    expect(screen.getAllByRole('link', { name: 'Open in sandbox' })[0]).toHaveAttribute('href', expect.stringMatching(/^\/build\/sandbox#spec=/))
+    screen.getByRole('button', { name: 'Mark as read' }).click()
+    expect(await screen.findByRole('button', { name: '✓ Marked as read' })).toBeInTheDocument()
+  })
+
   it('shows the non-affiliation footer and a not-found page', async () => {
     await renderAt('/nope', 'Page not found')
     expect(screen.getByText(/Not affiliated with or endorsed by Salesforce/)).toBeInTheDocument()

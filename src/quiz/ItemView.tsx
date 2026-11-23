@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { OBJECTIVE_BY_ID, TASK_BY_ID } from '../content/blueprint'
 import { type Item, selectCount } from '../content/schema'
 import { Inline } from '../components/Inline'
@@ -59,6 +60,11 @@ export function ItemView({ item, response, onChange, revealed = false, keyboard 
               ))}
             </p>
           )}
+          <p className="text-sm">
+            <Link to={`/learn/${item.taskId}`} className="text-brand-dark underline">
+              Lesson {item.taskId}: {TASK_BY_ID.get(item.taskId)?.title}
+            </Link>
+          </p>
           <ul className="text-xs text-slate-500">
             {item.objectives.map((id) => (
               <li key={id}>

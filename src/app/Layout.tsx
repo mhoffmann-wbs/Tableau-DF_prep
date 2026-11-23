@@ -4,6 +4,7 @@ import { Link, NavLink, Outlet } from 'react-router'
 // Links are added as their pages are built (PLAN.md §9).
 const NAV: { to: string; label: string }[] = [
   { to: '/', label: 'Exam outline' },
+  { to: '/learn', label: 'Learn' },
   { to: '/practice', label: 'Practice' },
   { to: '/questions', label: 'Questions' },
   { to: '/mock', label: 'Mock exam' },

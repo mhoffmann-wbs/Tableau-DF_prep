@@ -5,7 +5,7 @@ import { z } from 'zod'
 // migration in `load()` and keep ProgressSchema in step whenever the shape
 // changes; never read localStorage elsewhere.
 const STORAGE_KEY = 'tableau-df:progress'
-const VERSION = 2
+const VERSION = 3
 
 export interface ItemStat {
   attempts: number
@@ -38,17 +38,21 @@ export interface Progress {
   mockResults: MockResult[]
   /** Sandbox "make this chart" challenges: id → when first completed. They don't count towards readiness. */
   sandbox: Record<string, number>
+  /** Task ids of the lessons marked as read. */
+  lessonsRead: string[]
 }
 
 function empty(): Progress {
-  return { version: VERSION, items: {}, mockResults: [], sandbox: {} }
+  return { version: VERSION, items: {}, mockResults: [], sandbox: {}, lessonsRead: [] }
 }
 
 /** Brings stored or imported progress from an older version up to VERSION; other versions are returned unchanged. */
 function migrate(raw: { version?: unknown }): { version?: unknown } {
-  let doc: { version?: unknown; sandbox?: unknown } = raw
+  let doc: Record<string, unknown> & { version?: unknown } = raw
   // v1 → v2: sandbox challenge completions.
   if (doc.version === 1) doc = { ...doc, version: 2, sandbox: {} }
+  // v2 → v3: lessons marked as read.
+  if (doc.version === 2) doc = { ...doc, version: 3, lessonsRead: [] }
   return doc
 }
 
@@ -116,6 +120,11 @@ export function recordSandboxChallenge(challengeId: string, at: number = Date.no
   commit({ ...state, sandbox: { ...state.sandbox, [challengeId]: at } })
 }
 
+export function setLessonRead(taskId: string, read: boolean) {
+  const rest = state.lessonsRead.filter((id) => id !== taskId)
+  commit({ ...state, lessonsRead: read ? [...rest, taskId] : rest })
+}
+
 // Imports come from files people pick, so they are validated in full before replacing anything.
 const count = z.number().int().nonnegative()
 const row = z.object({ id: z.string(), correct: count, total: count })
@@ -126,6 +135,7 @@ const ProgressSchema = z.object({
     z.object({ at: z.number(), correct: count, total: count, percent: z.number(), passed: z.boolean(), domains: z.array(row), tasks: z.array(row) }),
   ),
   sandbox: z.record(z.string(), z.number()),
+  lessonsRead: z.array(z.string()),
 })
 
 const EXPORT_APP = 'tableau-df-prep'

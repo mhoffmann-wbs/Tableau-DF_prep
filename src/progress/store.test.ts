@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest'
-import { exportProgress, getProgress, importProgress, recordAnswer, recordMockResult, recordSandboxChallenge, reloadProgress, resetProgress } from './store'
+import { exportProgress, getProgress, importProgress, recordAnswer, recordMockResult, recordSandboxChallenge, reloadProgress, resetProgress, setLessonRead } from './store'
 
 beforeEach(() => {
   localStorage.clear()
@@ -42,7 +42,7 @@ describe('progress store', () => {
     expect(() => importProgress('nope')).toThrow("isn't valid JSON")
     expect(() => importProgress('{"app":"other"}')).toThrow("isn't a Tableau-DF prep progress export")
     expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 1, items: { x: { attempts: -1 } } } }))).toThrow('damaged')
-    expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 3 } }))).toThrow('newer version')
+    expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 4 } }))).toThrow('newer version')
     expect(getProgress().items['4.1-002']?.attempts).toBe(1)
   })
 
@@ -52,14 +52,23 @@ describe('progress store', () => {
     expect(getProgress().sandbox).toEqual({ 'bar-genre-minutes': 5 })
   })
 
+  it('marks lessons as read and unread', () => {
+    setLessonRead('4.1', true)
+    setLessonRead('1.1', true)
+    setLessonRead('4.1', true)
+    expect(getProgress().lessonsRead).toEqual(['1.1', '4.1'])
+    setLessonRead('1.1', false)
+    expect(getProgress().lessonsRead).toEqual(['4.1'])
+  })
+
   it('migrates version 1 progress, stored or imported', () => {
     const v1 = { version: 1, items: { '2.1-001': { attempts: 1, correct: 1, lastCorrect: true, lastAt: 1, streak: 1 } }, mockResults: [] }
     localStorage.setItem('tableau-df:progress', JSON.stringify(v1))
     reloadProgress()
-    expect(getProgress()).toMatchObject({ version: 2, sandbox: {} })
+    expect(getProgress()).toMatchObject({ version: 3, sandbox: {}, lessonsRead: [] })
     expect(getProgress().items['2.1-001']?.attempts).toBe(1)
     resetProgress()
     importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: v1 }))
-    expect(getProgress()).toMatchObject({ version: 2, sandbox: {}, items: v1.items })
+    expect(getProgress()).toMatchObject({ version: 3, sandbox: {}, lessonsRead: [], items: v1.items })
   })
 })

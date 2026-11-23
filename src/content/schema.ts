@@ -3,7 +3,7 @@
 // against the blueprint live in the content tests, so this file stays
 // independent of blueprint data.
 import { z } from 'zod'
-import { vizSpecSchema } from '../engine/spec.ts'
+import { pillSchema, vizSpecSchema } from '../engine/spec.ts'
 
 const nonEmpty = z.string().trim().min(1)
 
@@ -82,3 +82,68 @@ export const itemFileSchema = z.array(itemSchema)
 
 /** How many options the learner must pick. */
 export const selectCount = (item: Item) => (item.kind === 'single' ? 1 : item.select)
+
+// ---- lessons (PLAN.md §5) ----
+
+/** Lessons cite Tableau's own help, release notes and Tableau Public pages. */
+const LESSON_LINK = /^https:\/\/(help\.tableau\.com|www\.tableau\.com|public\.tableau\.com)\//
+
+/**
+ * A number or member a lesson states about the Driftlight data, declared as a
+ * query so a test can recompute it. `value` reads the `measure` column of the
+ * one row whose discrete members match `where`; `top` reads the `dimension`
+ * member of the row with the largest (or smallest) `measure`. `says` is the text
+ * the lesson shows, and must equal the computed result.
+ */
+export const factSchema = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('value'),
+    says: nonEmpty,
+    spec: vizSpecSchema,
+    measure: pillSchema,
+    /** Field name → display member, picking one row. Omit when the view has a single mark. */
+    where: z.record(z.string(), z.string()).optional(),
+    /** Decimal places; `percent` multiplies by 100 and appends %. */
+    digits: z.number().int().min(0).max(3).default(0),
+    percent: z.boolean().default(false),
+  }),
+  z.object({
+    kind: z.literal('top'),
+    says: nonEmpty,
+    spec: vizSpecSchema,
+    dimension: pillSchema,
+    measure: pillSchema,
+    order: z.enum(['desc', 'asc']).default('desc'),
+  }),
+])
+
+export type Fact = z.infer<typeof factSchema>
+
+const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
+
+export const lessonMetaSchema = z.object({
+  taskId: z.string().regex(/^\d\.\d$/),
+  /** Date the lesson's Tableau facts were last checked against the help. */
+  updated: z.iso.date(),
+  /** One or two sentences: what the learner must take away. */
+  tldr: nonEmpty,
+  /** Objective ids the lesson teaches; a content test requires all of the task's. */
+  objectivesCovered: z.array(z.string().regex(/^\d\.\d\.\d$/)).min(1),
+  /** Sources for the lesson's Tableau facts. */
+  links: z.array(z.object({ title: nonEmpty, url: z.url().regex(LESSON_LINK) })).min(1),
+  /** Charts the lesson embeds with <LessonViz id="…" />, each with an "Open in sandbox" link. */
+  vizzes: z
+    .record(
+      slug,
+      z.object({
+        spec: vizSpecSchema,
+        show: z.enum(['chart', 'shelves', 'both']).default('both'),
+        caption: nonEmpty,
+      }),
+    )
+    .default({}),
+  /** Data facts the lesson shows with <Fact id="…" />. */
+  facts: z.record(slug, factSchema).default({}),
+})
+
+export type LessonMeta = z.infer<typeof lessonMetaSchema>
