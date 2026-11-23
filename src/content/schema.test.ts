@@ -21,6 +21,13 @@ describe('item schema', () => {
     })
   })
 
+  it('accepts data checks on viz items only', () => {
+    const check = { kind: 'top', says: 'TV', spec: { columns: [{ field: 'Device' }], rows: [{ field: 'Minutes Watched' }] }, dimension: { field: 'Device' }, measure: { field: 'Minutes Watched' } }
+    expect(problems({ ...VIZ, checks: [check] })).toEqual([])
+    expect(problems({ ...VIZ, checks: [{ ...check, kind: 'median' }] }).length).toBeGreaterThan(0)
+    expect(itemSchema.parse({ ...SINGLE, checks: [check] })).not.toHaveProperty('checks')
+  })
+
   it('checks ids and objectives against the task', () => {
     expect(problems({ ...SINGLE, id: '4.2-001' })).toContain('id must start with taskId')
     expect(problems({ ...SINGLE, objectives: ['4.2.1'] })).toContain('objective 4.2.1 is not under task 4.1')

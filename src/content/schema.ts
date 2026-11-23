@@ -14,6 +14,37 @@ const option = z.object({
   rationale: nonEmpty,
 })
 
+/**
+ * A number or member a lesson or `viz` item states about the Driftlight data, declared as a
+ * query so a test can recompute it. `value` reads the `measure` column of the
+ * one row whose discrete members match `where`; `top` reads the `dimension`
+ * member of the row with the largest (or smallest) `measure`. `says` is the text
+ * the lesson shows, and must equal the computed result.
+ */
+export const factSchema = z.discriminatedUnion('kind', [
+  z.object({
+    kind: z.literal('value'),
+    says: nonEmpty,
+    spec: vizSpecSchema,
+    measure: pillSchema,
+    /** Field name → display member, picking one row. Omit when the view has a single mark. */
+    where: z.record(z.string(), z.string()).optional(),
+    /** Decimal places; `percent` multiplies by 100 and appends %. */
+    digits: z.number().int().min(0).max(3).default(0),
+    percent: z.boolean().default(false),
+  }),
+  z.object({
+    kind: z.literal('top'),
+    says: nonEmpty,
+    spec: vizSpecSchema,
+    dimension: pillSchema,
+    measure: pillSchema,
+    order: z.enum(['desc', 'asc']).default('desc'),
+  }),
+])
+
+export type Fact = z.infer<typeof factSchema>
+
 const base = {
   /** `${taskId}-NNN`, e.g. "2.3-014". */
   id: z.string().regex(/^\d\.\d-\d{3}$/),
@@ -53,6 +84,8 @@ const viz = z.object({
     /** Draw the chart, the shelves as pills, or both. */
     show: z.enum(['chart', 'shelves', 'both']).default('chart'),
   }),
+  /** Driftlight numbers or members the item states; each `says` must appear in the stem or an option. */
+  checks: z.array(factSchema).optional(),
 })
 
 export const itemSchema = z.discriminatedUnion('kind', [single, multi, viz]).superRefine((item, ctx) => {
@@ -88,36 +121,6 @@ export const selectCount = (item: Item) => (item.kind === 'single' ? 1 : item.se
 /** Lessons cite Tableau's own help, release notes and Tableau Public pages. */
 const LESSON_LINK = /^https:\/\/(help\.tableau\.com|www\.tableau\.com|public\.tableau\.com)\//
 
-/**
- * A number or member a lesson states about the Driftlight data, declared as a
- * query so a test can recompute it. `value` reads the `measure` column of the
- * one row whose discrete members match `where`; `top` reads the `dimension`
- * member of the row with the largest (or smallest) `measure`. `says` is the text
- * the lesson shows, and must equal the computed result.
- */
-export const factSchema = z.discriminatedUnion('kind', [
-  z.object({
-    kind: z.literal('value'),
-    says: nonEmpty,
-    spec: vizSpecSchema,
-    measure: pillSchema,
-    /** Field name → display member, picking one row. Omit when the view has a single mark. */
-    where: z.record(z.string(), z.string()).optional(),
-    /** Decimal places; `percent` multiplies by 100 and appends %. */
-    digits: z.number().int().min(0).max(3).default(0),
-    percent: z.boolean().default(false),
-  }),
-  z.object({
-    kind: z.literal('top'),
-    says: nonEmpty,
-    spec: vizSpecSchema,
-    dimension: pillSchema,
-    measure: pillSchema,
-    order: z.enum(['desc', 'asc']).default('desc'),
-  }),
-])
-
-export type Fact = z.infer<typeof factSchema>
 
 const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/)
 
