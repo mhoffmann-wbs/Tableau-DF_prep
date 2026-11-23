@@ -1,0 +1,122 @@
+export const meta = {
+  taskId: '3.2',
+  updated: '2026-11-23',
+  tldr: 'A dashboard combines sheets: click New Dashboard and drag sheets from the Sheets list. Make it interactive with filter cards, Use as Filter, highlighters and tooltips, and wire sheets together under Dashboard > Actions (Filter, Highlight, Go to URL, Go to Sheet, Change Parameter, Change Set Values). Layout uses tiled or floating objects in containers, a size (Fixed by default, Range or Automatic) and device layouts. A story is a sequence of story points, each showing a sheet or dashboard with a caption.',
+  objectivesCovered: ['3.2.1', '3.2.2', '3.2.3', '3.2.4', '3.2.5'],
+  links: [
+    { title: 'Create a dashboard', url: 'https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm' },
+    { title: 'Size and lay out your dashboard', url: 'https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm' },
+    { title: 'Create dashboard layouts for different device types', url: 'https://help.tableau.com/current/pro/desktop/en-us/dashboards_dsd_create.htm' },
+    { title: 'Actions', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions.htm' },
+    { title: 'Filter actions', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm' },
+    { title: 'Highlight actions and highlighters', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions_highlight.htm' },
+    { title: 'URL actions', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions_url.htm' },
+    { title: 'Parameter actions', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions_parameters.htm' },
+    { title: 'Apply filters to multiple sheets', url: 'https://help.tableau.com/current/pro/desktop/en-us/filtering_global.htm' },
+    { title: 'Viz in Tooltip', url: 'https://help.tableau.com/current/pro/desktop/en-us/viz_in_tooltip.htm' },
+    { title: 'Create a story', url: 'https://help.tableau.com/current/pro/desktop/en-us/story_create.htm' },
+  ],
+}
+
+## Big idea
+
+A workbook has three kinds of sheets:
+- a **worksheet** holds one view
+- a **dashboard** arranges several worksheets (plus text, images and controls) on one screen, so viewers can compare them and interact with them
+- a **story** is a sequence of worksheets or dashboards, one per **story point**, that walks a reader through an argument, like a slide deck.
+
+If you know Jupyter dashboards or a BI tool's report pages, a Tableau dashboard is the same idea, with the extra trick that the sheets talk to each other: clicking a bar in one chart can filter or highlight the others.
+
+## How it works
+
+### Add worksheets to a dashboard
+
+1. "At the bottom of the workbook, click the **New Dashboard** icon."
+2. "From the **Sheets** list at left, drag views to your dashboard at right."
+3. Add **objects** from the Objects section the same way: **Horizontal** and **Vertical** layout containers, **Text**, **Image**, **Web Page**, **Blank** (spacing) and **Navigation**. "Navigation objects let your audience navigate from one dashboard to another, or to other sheets or stories."
+
+### Add interactive elements for consumers
+
+- **Filters.** Show a filter card for viewers (**Show Filter**, task 2.2). To make one card filter every sheet on the dashboard, open the card's menu and choose **Apply to Worksheets > Selected worksheets**, then "click **All on dashboard**". The other Apply to Worksheets options are All Using Related Data Sources, All Using This Data Source and Only This Worksheet.
+- **Use as Filter.** "In the upper corner of sheet, enable the **Use as Filter** option to use selected marks in the sheet as filters for other sheets in the dashboard." This is a one-click filter action.
+- **Highlighter.** A data highlighter lets viewers "search for data points in a view using keywords or select from a drop-down list"; matching marks stand out and the rest fade. "Highlighters added to worksheets also appear on dashboards and stories."
+- **Tooltips.** "On the Marks card select **Tooltip**" to edit what appears on hover. "Use the Insert menu at the top of the dialog box to add dynamic text such as field values." **Include command buttons** shows filtering and View Data options in the tooltip; **Allow selection by category** selects all marks with the same value. A **Viz in Tooltip** puts a whole sheet inside the tooltip: in the Tooltip Editor, choose **Insert > Sheets** and pick the sheet.
+- **Show/Hide buttons.** "From the pop-up menu in the upper corner of the object, select **Add Show/Hide Button**", for example to fold away a panel of filters.
+
+### Add dashboard actions
+
+"On a dashboard, select **Dashboard > Actions**", then **Add Action** and choose a type:
+
+| Action | When the viewer acts on a mark… |
+|---|---|
+| **Filter** | other sheets are filtered to the selected members |
+| **Highlight** | matching marks on other sheets are highlighted |
+| **Go to URL** | a web page opens, with field values in the URL |
+| **Go to Sheet** | another sheet, dashboard or story opens |
+| **Change Parameter** | a parameter (task 2.3) takes the mark's value |
+| **Change Set Values** | the members of a set change |
+
+Each action has:
+- **Source** and **target** sheets
+- **Run action on**: **Hover**, **Select** (optionally single-select only) or **Menu** (a link in the tooltip)
+- for filter actions, what happens when the selection is cleared: **Leave the filter**, **Show all values** or **Exclude all values**. (Parameter actions instead offer **Keep current value** or **Set value to**.)
+
+**URL actions** insert field values in angle brackets, as in `https://example.com/title?id=<Title ID>`. The fields "must be used in the view" (on Detail is enough). The target can be a new browser tab or a **Web Page** object on the same dashboard.
+
+### Configure a dashboard layout and create device-specific dashboards
+
+**Tiled vs. floating.** "Tiled items don't overlap; they become part of a single-layer grid." "Floating items can be layered over other objects." Hold **Shift** while dragging to float an item. Use floating sparingly, for legends or a logo.
+
+**Layout containers.** "A horizontal layout container resizes the width of the views and objects it contains; a vertical layout container adjusts height." Containers keep groups of sheets aligned when the dashboard resizes.
+
+**Size.** The dashboard's size is **Fixed size (default)**, which "can pick from a preset size" such as Desktop Browser; **Range**, between a minimum and maximum; or **Automatic**, which fills the window. A fixed size looks the same everywhere; automatic adapts but can squeeze views.
+
+The **Layout** pane sets an item's exact position ("x and y position in pixels") and size, and whether its title shows.
+
+**Device layouts.** One dashboard can carry layouts for desktop, tablet and phone. "On the Dashboard tab on the left, click **Device Preview**", pick a device type, then "click the **Add Layout** button" (for example **Add Tablet Layout**). "Device layouts appear on the Dashboard tab, under **Default**." A phone layout can be generated automatically (**Auto-Generate Layout**), and its size options include **Fit width**, "recommended for phones". When publishing, the help says to "make sure the **Show sheets as tabs** check box is cleared" so the device layouts are used.
+
+### Create a story and a story point
+
+1. "Click the **New Story** tab."
+2. Drag a sheet or dashboard from the left into the story, then "click **Add a caption** to summarize the story point".
+3. Add the next point: **Blank** for a fresh point, or **Duplicate** to copy the current one and change it (filter, highlight).
+4. When you change a point's sheet (say, apply a filter), "save your changes by clicking **Update** on the story toolbar above the navigator box", or **Save as New** to keep both versions.
+5. In the Story pane, "choose a navigator style that best suits your story, and show or hide the next and previous arrows".
+
+A story point remembers the state of its sheet, such as filters and selections, so the same dashboard can appear in several points, each telling a different part of the story.
+
+## At Driftlight
+
+The "Viewing at a glance" dashboard for Driftlight's executives:
+
+- **Sheets:** a map of subscribers by country, a line of minutes per month and a bar chart of genres, in a vertical container with a text box title.
+- **Interactivity:** a **filter action** from the map (Select): clicking a country filters the line and the bars, and clearing the selection **shows all values** again. A **highlight action** on hover links the genre bars to the line. A Plan filter card applies to **all sheets on the dashboard**. Tooltips on the bars contain a **Viz in Tooltip** with the genre's top titles.
+- **URL action:** from the title list, **Go to URL** opens the title's page in the catalogue tool using `<Title ID>`.
+- **Layout:** fixed size (Desktop Browser), tiled, with the legend floating in a corner. A **phone layout** stacks the three sheets at **Fit width**.
+- **Story:** for the quarterly review, a four-point story: growth overall, then growth by region, then the genre driving it, then the plan mix, each point with a one-line caption.
+
+## Exam traps
+
+<Callout title="Use as Filter is a filter action">
+  <p>The Use as Filter button on a dashboard sheet creates a filter action from that sheet to the others. Custom behaviour (hover, menu, which targets, what happens on clear) is set under Dashboard &gt; Actions.</p>
+</Callout>
+
+<Callout title="Filter vs. highlight action">
+  <p>A filter action removes marks from the target sheets; a highlight action keeps all marks and dims the others. If the question says the other values must stay visible, it's a highlight action (or a highlighter).</p>
+</Callout>
+
+<Callout title="URL actions need the field in the view">
+  <p>A URL action can only insert fields used in the source view (Detail is enough), written in angle brackets: &lt;Title ID&gt;.</p>
+</Callout>
+
+<Callout title="Tiled vs. floating, fixed vs. automatic">
+  <p>Tiled objects sit in a non-overlapping grid; floating objects can overlap (Shift-drag). Fixed size is the default dashboard size and looks identical everywhere; Automatic resizes to the window.</p>
+</Callout>
+
+<Callout title="Story point vs. dashboard">
+  <p>A dashboard shows several sheets at once; a story shows one sheet or dashboard per story point, in sequence, with captions. To keep a changed filter in a story point, click Update (or Save as New).</p>
+</Callout>
+
+## Build
+
+<BuildLinks />
