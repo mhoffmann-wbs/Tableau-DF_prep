@@ -101,6 +101,34 @@ describe('sandbox', () => {
     expect(parseSpecHash(router.state.location.hash)).toMatchObject({ totals: { column: true } })
   })
 
+  it('adds, edits and removes reference lines from the Analytics pane', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    await addField('Genre', 'Add to Rows')
+    await addField('Minutes Watched', 'Add to Columns')
+    await user.click(screen.getByRole('tab', { name: 'Analytics' }))
+    const pane = screen.getByRole('complementary', { name: 'Analytics pane' })
+    await user.click(within(pane).getByRole('button', { name: 'Average Line' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Pane' }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ refs: [{ kind: 'line', scope: 'pane', value: { kind: 'computed', agg: 'avg' } }] })
+
+    // A constant line asks for its value.
+    await user.click(within(pane).getByRole('button', { name: 'Constant Line' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Table' }))
+    const dialog = screen.getByRole('region', { name: 'Edit Reference Line' })
+    await user.clear(within(dialog).getByRole('textbox', { name: 'Value constant' }))
+    await user.type(within(dialog).getByRole('textbox', { name: 'Value constant' }), '400000')
+    await user.click(within(dialog).getByRole('button', { name: 'OK' }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ refs: [{}, { scope: 'table', value: { kind: 'constant', value: 400000 } }] })
+
+    await user.click(screen.getByRole('button', { name: /^Average line/ }))
+    await user.click(screen.getByRole('menuitem', { name: 'Remove' }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ refs: [{ value: { kind: 'constant' } }] })
+
+    await user.click(within(pane).getByRole('button', { name: 'Totals' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Column Grand Totals' }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ totals: { column: true } })
+  })
+
   it('switches a date between parts and values', async () => {
     await renderAt('/build/sandbox', 'Viz builder sandbox')
     await addField('Start', 'Add to Columns')

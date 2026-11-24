@@ -8,7 +8,8 @@ import { type CalcFields, evaluateGroup, rowValue } from './calc/index.ts'
 import { calcsOf, type Dataset, type Row, type SourceRef, type Value } from './model.ts'
 import { MONTHS, WEEKDAYS, aggregate, compareKeys, datePart, dateTrunc, display } from './values.ts'
 import { EngineError, type ResolvedPill, TABLE_CALC_NAME, resolvePill } from './pills.ts'
-import { type DateLevel, type Filter, MEASURE_NAMES, type Pill, type VizSpec, pillsOf } from './spec.ts'
+import { type DateLevel, type Filter, MEASURE_NAMES, type Pill, type Ref, type VizSpec, pillsOf } from './spec.ts'
+import { type RefValues, refValues } from './refs.ts'
 import { PERCENT_CALCS, PERCENT_FORMAT, addressing, defaultCompute, tableCalcValues } from './tablecalc.ts'
 
 export interface Column extends ResolvedPill {
@@ -19,8 +20,19 @@ export interface Column extends ResolvedPill {
   raw?: string[]
 }
 
+/** A reference item's values in each of its scopes; `members` are the scope's dimension members by column id. */
+export interface RefResult {
+  index: number
+  /** The measure's column. */
+  column: string
+  scope: Ref['scope']
+  scopes: ({ members: Row } & RefValues)[]
+}
+
 export interface QueryResult {
   columns: Column[]
+  /** Reference items whose measure is in the view, computed over the view's marks (not totals). */
+  refs?: RefResult[]
   /** One row per mark, keyed by column id. Discrete values are display strings, dates on continuous columns epoch ms. */
   rows: Row[]
 }
@@ -291,14 +303,16 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     // Axis and tooltip titles name the calculation; the pill itself keeps its label and a delta.
     m.label = `${TABLE_CALC_NAME[m.tableCalc.type]} of ${m.label}`
   }
+  const refs = refsOf(spec, { calcs, get, columns, dims, measures, marks: out })
   out.push(...totalsOf(spec, { calcs, get, dims, measures, measureCards, across, down, marks: out }))
 
   const alias = (row: Row) => {
-    for (const d of aliased) row[d.id] = d.field.aliases![row[d.id] as string] ?? row[d.id]!
+    for (const d of aliased) if (d.id in row) row[d.id] = d.field.aliases![row[d.id] as string] ?? row[d.id]!
     return row
   }
+  if (aliased.length) for (const r of refs) for (const sc of r.scopes) alias(sc.members)
   const rowsOut = out.map((o) => (aliased.length ? alias(o.row) : o.row))
-  if (measureCards.length === 0) return { columns, rows: rowsOut }
+  if (measureCards.length === 0) return { columns, rows: rowsOut, ...(refs.length && { refs }) }
   // Measure Names and Measure Values: one row per mark and measure.
   const names = columns.find((c) => c.field.special === 'names')
   const values = columns.find((c) => c.field.special === 'values')
@@ -306,7 +320,54 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
   const unpivoted = rowsOut.flatMap((row, i) =>
     measureCards.map((m, j) => ({ ...row, ...(names && { [names.id]: m.label }), ...(values && { [values.id]: out[i]!.cards[j]! }) })),
   )
-  return { columns, rows: unpivoted }
+  return { columns, rows: unpivoted, ...(refs.length && { refs }) }
+}
+
+/**
+ * A shelf's dimensions that split the view into panes, and those that also
+ * split each pane into cells (its band of headers), the way `render.ts` lays
+ * the shelf out.
+ */
+function scopeDims(spec: VizSpec, pills: Pill[], columns: Column[], dims: Column[]): { pane: Column[]; cell: Column[] } {
+  const cols = pills.map((p) => columns.find((c) => c.key === resolvePill(spec, p).key)!)
+  const first = cols.findIndex((c) => c.continuous)
+  const outer = first < 0 ? cols.slice(0, -1) : cols.slice(0, first)
+  const inner = first < 0 ? cols.slice(-1) : []
+  const isDim = (c: Column) => dims.includes(c)
+  return { pane: outer.filter(isDim), cell: [...outer, ...inner].filter(isDim) }
+}
+
+/** Each reference item's values per scope, over the view's marks; items whose measure isn't in the view are skipped. */
+function refsOf(spec: VizSpec, ctx: { calcs: CalcFields; get: Getter; columns: Column[]; dims: Column[]; measures: Column[]; marks: Mark[] }): RefResult[] {
+  const { calcs, get, columns, dims, marks } = ctx
+  if (spec.refs.length === 0) return []
+  const x = scopeDims(spec, spec.columns, columns, dims)
+  const y = scopeDims(spec, spec.rows, columns, dims)
+  const out: RefResult[] = []
+  spec.refs.forEach((ref, index) => {
+    let key: string
+    try {
+      key = resolvePill(spec, ref.measure).key
+    } catch {
+      return
+    }
+    const m = ctx.measures.find((c) => c.key === key && c.continuous)
+    if (!m) return
+    const by = ref.scope === 'table' ? [] : ref.scope === 'pane' ? [...x.pane, ...y.pane] : [...x.cell, ...y.cell]
+    const groups = new Map<string, Mark[]>()
+    for (const o of marks) {
+      const k = JSON.stringify(by.map((d) => o.members[dims.indexOf(d)]!.value))
+      groups.set(k, [...(groups.get(k) ?? []), o])
+    }
+    const scopes = [...groups.values()].map((group) => {
+      const members: Row = {}
+      for (const d of by) members[d.id] = group[0]!.members[dims.indexOf(d)]!.value
+      const total = () => (m.tableCalc ? null : measureValue(calcs, get, group.flatMap((o) => o.rows), m.field.name, m.agg))
+      return { members, ...refValues(ref, group.map((o) => o.row[m.id]!), total, { label: m.label, format: m.field.format }) }
+    })
+    out.push({ index, column: m.id, scope: ref.scope, scopes })
+  })
+  return out
 }
 
 /** One mark: its dimension members, its rows, its output row, and its Measure Values card values. */

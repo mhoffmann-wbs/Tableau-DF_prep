@@ -103,7 +103,7 @@ One engine (model, query, calc, Vega-Lite renderer) shared by the sandbox, `viz`
 ## 7. Build: the hands-on replacement
 
 ### 7a. Viz builder sandbox (`/build/sandbox`)
-A schematic Tableau-style workspace (not a visual copy): Data pane, Filters/Columns/Rows shelves, Marks card, blue/green pills with menus, the spec in `#spec=`. "Make this chart" challenges check the learner's spec with `engine/match.ts`; they don't count towards readiness. Remaining features: phase 8.5–8.6 and 8.10.
+A schematic Tableau-style workspace (not a visual copy): Data pane, Filters/Columns/Rows shelves, Marks card, blue/green pills with menus, the spec in `#spec=`. "Make this chart" challenges check the learner's spec with `engine/match.ts`; they don't count towards readiness. Remaining features: phase 8.6 and 8.10.
 
 ### 7b. Calc playground (`/build/calc`)
 A documented subset of Tableau's calculation language: operators, `IF/IIF/CASE`, string, date (`TODAY` pinned), number, null, type-conversion and aggregate functions, with Tableau's "Cannot mix aggregate and non-aggregate arguments" error. Exercises compare outputs with a reference calc; saved calcs become sandbox fields. LOD expressions and table-calc functions are out of scope (the outline asks only for quick table calcs, 2.3.3, and simple calculated fields, 2.3.5).
@@ -141,7 +141,7 @@ Versioned progress store with export/import; readiness per task (coverage × acc
    2. **Groups, sets, hierarchies and bins** (done 2026-11-24): from the Data pane and from selected marks; hierarchy drill.
    3. **Axes** (done 2026-11-24): Automatic mark per the help; measure panes, combined axis (Measure Names/Values), dual and synchronized axes, mark type per measure.
    4. **Quick table calcs and totals** (done 2026-11-24): 7 quick table calcs with Compute Using (pill menu); row and column grand totals, subtotals, Total All Using (Totals menu).
-   5. **Reference lines** from an Analytics pane (line, band, distribution scopes by table, pane and cell).
+   5. **Reference lines** (done 2026-11-24): Analytics pane (Constant/Average Line, Median with Quartiles, Totals, custom line, band, distribution) with Table/Pane/Cell targets; the reference dialog.
    6. **Simple dashboard**: two sheets with a filter action.
    7. **Content on the new features**: `viz` items for 2.1.5–2.1.6 and 2.3.2–2.3.7, new sandbox challenges, lesson charts that replace the text-only parts, and the Group/set/hierarchy simulator building in the sandbox. First make `match.ts` compare `mark`, `axes` and the Measure Values card.
    8. **Tableau Public challenges** (§7d). Needs the three `unverified` `PUBLIC_LIMITS` checked in Tableau Public first.
@@ -164,6 +164,7 @@ Facts to verify in Tableau (not settled by the help) and known limits, from fini
 - What a manual data type change does to values (sandbox offers no Boolean/number → date, and text → date only in ISO form); whether a "None" geographic role exists.
 - Quick table calcs: the default Compute Using (we go Table (across), else Table (down)); Running total's aggregation (Sum); Rank type (Competition); the Percent Difference formula (÷ |previous|); Percentile's ties and a lone value; Moving Average's window (2 previous + current, as the help's example) and its start; whether Pane (across) exists (the help doesn't list it); what YTD total, Compound growth rate, Year over year growth and YTD growth compute (left out of the sandbox).
 - Totals: the "Grand Total"/"Total" header labels; the Analysis > Totals item names (only "Show column grand totals" is in the help); the help's bar chart where "only column totals are calculated because the table contains only column headers" (the sandbox totals across Columns headers as Row Grand Totals); what a total of a table calculation shows.
+- Reference lines: whether Average, Median, Sum, Minimum and Maximum use the marks (we do) or the rows (only Total is documented as the rows); the default label (we use Computation) and its text; the dialog's starting values (Percentages 60, 80 of Average is only documented for Show Me's bullet graph; Quantiles 4; Standard deviation 1, sample); whether lines extend the axis.
 - Display-unit names "Thousands (K)" / "Millions (M)".
 - Default names of groups, sets and hierarchies, and a group's name from its members.
 - How Measure Names members are named; Automatic mark for a continuous dimension against a measure (sandbox draws Circle).
@@ -172,4 +173,5 @@ Facts to verify in Tableau (not settled by the help) and known limits, from fini
 - Engine: filled maps for countries only; density marks approximated with translucent circles.
 - Sandbox: headers can't be selected (groups from headers go through the Data pane); selected marks aren't highlighted; groups, sets and bins can't be used in or built on calcs; no Combined Sets; dynamic sets ignore context filters (none yet); axis drops are menu items, not drag targets; only one shelf holds several measures and a dual axis takes exactly two; the per-measure Marks card sets only the mark type.
 - Totals: no per-field Total using, no Row Totals to Left / Column Totals to Top, no Remove All Subtotals separate from the toggle; totals of table calculations are null; `match.ts` ignores totals and only compares table calcs through pill keys.
+- Reference lines: no Box Plot, Average/Median with 95% CI, Trend Line or Forecast; no Parameter values (no parameters yet), confidence intervals, tooltips, line formatting or fill above/below; no reference items on Measure Values or a map; none on totals marks; dropping an item asks for its target instead of showing drop areas over the view; lines can't be dragged off the view.
 - Simulators leave out Go to Sheet, Change Set Values, Viz in Tooltip, Show/Hide buttons, relative-date filters and extract row-limit options.

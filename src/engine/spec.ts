@@ -166,6 +166,49 @@ export const hierarchySchema = z.object({ name: fieldName, fields: z.array(field
 
 export type Hierarchy = z.infer<typeof hierarchySchema>
 
+/** A reference line's computation: Constant, or one over the marks in its scope (Total over their underlying rows). */
+export const REF_AGGS = ['total', 'sum', 'min', 'max', 'avg', 'median'] as const
+export type RefAgg = (typeof REF_AGGS)[number]
+
+const refValueSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('constant'), value: z.number() }),
+  z.object({ kind: z.literal('computed'), agg: z.enum(REF_AGGS) }),
+])
+
+export type RefValue = z.infer<typeof refValueSchema>
+
+const refBase = z.object({
+  /** The measure whose axis it is on: a continuous measure on Columns or Rows. */
+  measure: pillSchema,
+  /** "The terms Table, Pane, and Cell define the scope." */
+  scope: z.enum(['table', 'pane', 'cell']),
+  label: z.enum(['none', 'value', 'computation', 'custom']).default('computation'),
+  /** Custom label text; `<Value>` stands for the line's value. */
+  custom: z.string().optional(),
+})
+
+/**
+ * A reference line, band or distribution from the Analytics pane. A
+ * distribution shades between its outermost values and draws a line at each:
+ * percentages of a computation, percentiles of the marks, quantiles (3 to 10
+ * tiles) or standard deviations around the mean.
+ */
+export const refSchema = z.discriminatedUnion('kind', [
+  refBase.extend({ kind: z.literal('line'), value: refValueSchema }),
+  refBase.extend({ kind: z.literal('band'), from: refValueSchema, to: refValueSchema }),
+  refBase.extend({
+    kind: z.literal('distribution'),
+    dist: z.discriminatedUnion('kind', [
+      z.object({ kind: z.literal('percentages'), values: z.array(z.number()).min(1), agg: z.enum(REF_AGGS) }),
+      z.object({ kind: z.literal('percentiles'), values: z.array(z.number().min(0).max(100)).min(1) }),
+      z.object({ kind: z.literal('quantiles'), n: z.number().int().min(3).max(10) }),
+      z.object({ kind: z.literal('stddev'), factor: z.number().positive(), sample: z.boolean() }),
+    ]),
+  }),
+])
+
+export type Ref = z.infer<typeof refSchema>
+
 export const vizSpecSchema = z.object({
   source: z.enum(SOURCES).default('sessions'),
   /** Checked against the data model by the engine, like field names. */
@@ -208,6 +251,8 @@ export const vizSpecSchema = z.object({
     })
     .prefault({}),
   filters: z.array(filterSchema).default([]),
+  /** Reference lines, bands and distributions. */
+  refs: z.array(refSchema).default([]),
 })
 
 export type VizSpec = z.infer<typeof vizSpecSchema>

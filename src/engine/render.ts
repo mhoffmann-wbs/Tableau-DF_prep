@@ -7,7 +7,7 @@ import type { TopLevelSpec } from 'vega-lite'
 import { COUNTRIES } from '../data/geography.ts'
 import type { Row } from './model.ts'
 import { EngineError, resolvePill } from './pills.ts'
-import type { Column, QueryResult } from './query.ts'
+import type { Column, QueryResult, RefResult } from './query.ts'
 import type { MarkType, Pill, VizSpec } from './spec.ts'
 import { formatExpr, formatNumber } from './values.ts'
 
@@ -129,6 +129,15 @@ export function needsWorld(spec: VizSpec): boolean {
 
 const ISO_BY_COUNTRY = new Map(COUNTRIES.map((c) => [c.country, c.iso]))
 
+/** The reference items whose measure is an axis in the view (the innermost continuous pill, or one of several measures). */
+function refsOnAxes(result: QueryResult, X: ShelfLayout, Y: ShelfLayout): { ref: RefResult; measure: Column }[] {
+  const axes = [X.inner, Y.inner, ...X.measures, ...Y.measures].filter((c): c is Column => c?.continuous === true && c.kind === 'measure')
+  return (result.refs ?? []).flatMap((ref) => {
+    const measure = axes.find((c) => c.id === ref.column)
+    return measure ? [{ ref, measure }] : []
+  })
+}
+
 export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?: Theme; world?: Topology } = {}): TopLevelSpec {
   const theme = options.theme ?? LIGHT_THEME
   const col = (p: Pill | undefined) => (p ? result.columns.find((c) => c.key === resolvePill(spec, p).key) : undefined)
@@ -185,6 +194,26 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
 
   const isGeo = x?.field.geo === 'longitude' && y?.field.geo === 'latitude'
   if (isGeo && multi) throw new EngineError('Maps can’t have several measures on a shelf here.')
+
+  // Reference items join the data as rows marked `__ref`, so facets put them in their panes.
+  const refs = isGeo ? [] : refsOnAxes(result, X, Y)
+  if (refs.length) {
+    const paneIds = [...xOuter, ...yOuter].map((c) => c.id)
+    const combos = new Map<string, Row>()
+    for (const r of rows) combos.set(JSON.stringify(paneIds.map((id) => r[id])), Object.fromEntries(paneIds.map((id) => [id, r[id]!])))
+    const extra: Row[] = []
+    for (const { ref, measure } of refs) {
+      for (const sc of ref.scopes) {
+        const panes = [...combos.values()].filter((p) => Object.entries(sc.members).every(([k, v]) => !(k in p) || p[k] === v) && (!folded || p['__m'] === measure.label))
+        for (const pane of panes) {
+          const at = { ...pane, ...sc.members, __ref: ref.index }
+          for (const l of sc.lines) extra.push({ ...at, __rv: l.value, __rl: l.label ?? null, __rs: l.stroke ? 1 : null })
+          if (sc.band) extra.push({ ...at, __rb: sc.band[0], __rb2: sc.band[1] })
+        }
+      }
+    }
+    rows = [...rows, ...extra]
+  }
   const mark = markOf(x, y)
   if (mark === 'map' && !isGeo) throw new EngineError('A map needs Longitude on Columns and Latitude on Rows.')
 
@@ -249,7 +278,8 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
         break
     }
     if (opts.fixedColor && !color) markDef.color = opts.fixedColor
-    const transform = opts.filter ? { transform: [{ filter: opts.filter }] } : {}
+    const filters = [...(refs.length ? ['!isValid(datum.__ref)'] : []), ...(opts.filter ? [opts.filter] : [])]
+    const transform = filters.length ? { transform: [{ filter: filters.join(' && ') }] } : {}
     const out: Obj[] = []
     if (mk !== 'map') out.push({ ...transform, mark: markDef, encoding: enc })
     if (labelEnc && mk !== 'text' && mk !== 'map') {
@@ -272,19 +302,56 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
     return out
   }
 
+  /** A measure's reference items on its axis: shaded bands (`back`, "behind the marks"), lines (ticks within a cell) and labels. */
+  const refLayersFor = (m: Column, lx: Column | undefined, ly: Column | undefined): { back: Obj[]; front: Obj[] } => {
+    const mine = refs.filter((r) => r.measure.id === m.id)
+    const back: Obj[] = []
+    const front: Obj[] = []
+    const ch = multi ? channel : x?.id === m.id ? 'x' : 'y'
+    const other = ch === 'x' ? ly : lx
+    const otherCh = ch === 'x' ? 'y' : 'x'
+    // The measure's own title, so the shared axis keeps it.
+    const value = (field: string): Obj => ({ field, type: 'quantitative', title: folded ? null : m.label })
+    for (const { ref } of mine) {
+      // Per cell, a line spans only its cell's band.
+      const band = ref.scope === 'cell' && other && !other.continuous ? { [otherCh]: encodingOf(other) } : {}
+      const only = (test: string) => ({ transform: [{ filter: `datum.__ref == ${ref.index} && ${test}` }] })
+      back.push({ ...only('isValid(datum.__rb)'), mark: { type: 'rect', color: theme.muted, opacity: 0.15 }, encoding: { ...band, [ch]: value('__rb'), [`${ch}2`]: { field: '__rb2' } } })
+      front.push({
+        ...only('isValid(datum.__rs)'),
+        mark: band[otherCh] ? { type: 'tick', color: theme.text, thickness: 1.5 } : { type: 'rule', color: theme.text, strokeDash: [4, 3] },
+        encoding: { ...band, [ch]: value('__rv') },
+      })
+      const end = ch === 'y' ? { x: band.x ?? { value: 'width' } } : { y: band.y ?? { value: 0 } }
+      front.push({
+        ...only('isValid(datum.__rl)'),
+        mark: { type: 'text', color: theme.muted, fontSize: 10, ...(ch === 'y' ? { align: 'right', baseline: 'bottom', dy: -2 } : { align: 'left', baseline: 'bottom', dx: 3, dy: -2 }) },
+        encoding: { ...end, [ch]: value('__rv'), text: { field: '__rl' } },
+      })
+    }
+    return { back, front }
+  }
+
   let layers: Obj[]
   let resolve: Obj | undefined
   if (dual) {
     const sync = spec.axes[multi!]?.sync === true
     layers = measures.flatMap((m, i) => {
       const [lx, ly] = multi === 'columns' ? [m, y] : [x, m]
-      return layersFor(lx, ly, markOf(lx, ly, m), { fixedColor: DUAL_COLORS[i] })
+      const own = layersFor(lx, ly, markOf(lx, ly, m), { fixedColor: DUAL_COLORS[i] })
+      const { back, front } = refLayersFor(m, lx, ly)
+      // A measure's reference items share its axis, so they nest with its marks.
+      return back.length + front.length ? [{ layer: [...back, ...own, ...front] }] : own
     })
     // Two axes; Synchronize Axis gives them one scale.
     resolve = { scale: { [channel]: sync ? 'shared' : 'independent' }, axis: { [channel]: 'independent' } }
   } else if (folded && folded.byMark.size > 1) {
     layers = [...folded.byMark].flatMap(([mk, labels]) => layersFor(x, y, mk as Exclude<MarkType, 'automatic'>, { filter: `indexof(${JSON.stringify(labels)}, datum.__m) >= 0` }))
   } else layers = layersFor(x, y, folded ? ([...folded.byMark.keys()][0] as Exclude<MarkType, 'automatic'>) : mark)
+  if (!dual) {
+    const items = (folded ? measures : [x, y].filter((c): c is Column => c !== undefined)).map((m) => refLayersFor(m, x, y))
+    layers = [...items.flatMap((i) => i.back), ...layers, ...items.flatMap((i) => i.front)]
+  }
 
   const config: Obj = {
     background: null,

@@ -17,6 +17,7 @@ import {
   MEASURE_VALUES,
   type MarkType,
   type Pill,
+  type Ref,
   type SetDef,
   type SourceId,
   type TableCalcType,
@@ -337,6 +338,32 @@ export function setTotals(spec: VizSpec, patch: Partial<VizSpec['totals']>): Viz
   return { ...spec, totals }
 }
 
+// ---- reference lines ----
+
+/** The measures with an axis a reference item can go on: continuous measures on Columns or Rows (not Measure Values). */
+export function axisMeasures(spec: VizSpec): Pill[] {
+  return [...spec.columns, ...spec.rows].filter((p) => {
+    try {
+      const rp = resolvePill(spec, p)
+      return rp.kind === 'measure' && rp.continuous && !rp.field.special && !rp.field.generated
+    } catch {
+      return false
+    }
+  })
+}
+
+/** Adds (`index` undefined) or replaces a reference item. */
+export function setRef(spec: VizSpec, index: number | undefined, ref: Ref): VizSpec {
+  const refs = [...spec.refs]
+  if (index === undefined || index >= refs.length) refs.push(ref)
+  else refs[index] = ref
+  return { ...spec, refs }
+}
+
+export function removeRef(spec: VizSpec, index: number): VizSpec {
+  return { ...spec, refs: spec.refs.filter((_, i) => i !== index) }
+}
+
 /** A measure's own mark type (its Marks card), when its shelf holds several measures. */
 export function setPillMark(spec: VizSpec, at: PillAt, mark: MarkType): VizSpec {
   const { mark: _m, ...pill } = pillAt(spec, at)!
@@ -506,6 +533,7 @@ export function compactSpec(spec: VizSpec): Record<string, unknown> {
   }
   if (Object.keys(marks).length) out.marks = marks
   if (spec.filters.length) out.filters = spec.filters
+  if (spec.refs.length) out.refs = spec.refs
   return out
 }
 

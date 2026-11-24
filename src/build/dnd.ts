@@ -2,10 +2,11 @@
 // Every drag has a keyboard and touch alternative in the field and pill menus.
 import { type DragEvent, useState } from 'react'
 import type { PillAt } from '../engine/edit'
+import type { AnalyticsItem } from './AnalyticsPane'
 
 const MIME = 'application/x-tableau-df-sandbox'
 
-export type Dragged = { kind: 'field'; field: string } | { kind: 'pill'; at: PillAt }
+export type Dragged = { kind: 'field'; field: string } | { kind: 'pill'; at: PillAt } | { kind: 'analytics'; item: AnalyticsItem }
 
 export function startDrag(e: DragEvent, dragged: Dragged) {
   e.dataTransfer.setData(MIME, JSON.stringify(dragged))

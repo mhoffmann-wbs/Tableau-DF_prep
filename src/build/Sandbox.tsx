@@ -20,17 +20,21 @@ import {
   setDerived,
   setFilter,
   setMarkType,
+  removeRef,
   setPillMark,
+  setRef,
   setTotals,
 } from '../engine/edit'
 import { type Field, fieldOf, fieldsOf, isEditable, SOURCE_INFO } from '../engine/model'
 import type { MarkMembers } from '../engine/runtime'
 import { AGG_LABEL, EngineError, type ResolvedPill, resolvePill } from '../engine/pills'
 import { automaticMark } from '../engine/render'
-import { type Bin, type Calc, type FieldEdit, type Group, MARK_TYPES, type TotalAgg, MEASURE_NAMES, MEASURE_VALUES, type Filter, type MarkType, type SetDef, type VizSpec, pillsOf } from '../engine/spec'
+import { type Bin, type Calc, type FieldEdit, type Group, MARK_TYPES, type TotalAgg, MEASURE_NAMES, MEASURE_VALUES, type Filter, type MarkType, type Ref, type SetDef, type VizSpec, pillsOf } from '../engine/spec'
 import { Viz } from '../engine/Viz'
 import { type Dragged, useDropTarget } from './dnd'
 import { MenuButton, MenuHeading, MenuItem } from './Menu'
+import { type AnalyticsItem, AnalyticsPane, DropTargets, type TargetAction, refName } from './AnalyticsPane'
+import { RefEditor } from './RefEditor'
 import { FilterEditor } from './FilterEditor'
 import { saveCalc } from '../progress/store'
 import { CalcEditor, calcStatus } from './CalcEditor'
@@ -41,7 +45,13 @@ import { ShelfPill } from './ShelfPill'
 import { SortEditor } from './SortEditor'
 
 /** The open dialog; `error` is why its last change was refused (a taken name). */
-type Editor = ({ kind: 'filter'; index: number; filter: Filter } | { kind: 'sort'; at: PillAt } | PaneDialog) & { error?: string }
+type Editor = (
+  | { kind: 'filter'; index: number; filter: Filter }
+  | { kind: 'sort'; at: PillAt }
+  | { kind: 'drop'; item: AnalyticsItem }
+  | { kind: 'ref'; index?: number; ref: Ref }
+  | PaneDialog
+) & { error?: string }
 
 const MARK_NAME: Record<MarkType, string> = {
   automatic: 'Automatic',
@@ -81,8 +91,14 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
   /** Drops a field or a pill on a shelf, at `index` on list shelves. */
   const dropOn = (shelf: ShelfId, index?: number) => (d: Dragged) => {
     if (d.kind === 'pill') edit(movePill(spec, d.at, shelf, index))
-    else edit(placePill(spec, pillFor(d.field), shelf, index))
+    else if (d.kind === 'field') edit(placePill(spec, pillFor(d.field), shelf, index))
+    // An Analytics pane item goes on the view, not a shelf.
+    else setEditor({ kind: 'drop', item: d.item })
   }
+  /** An Analytics pane target: a change, or the reference dialog on a new item. */
+  const analytics = (a: TargetAction) => ('spec' in a ? edit(a.spec) : setEditor({ kind: 'ref', ref: a.open }))
+  const [paneTab, setPaneTab] = useState<'data' | 'analytics'>('data')
+  const viewDrop = useDropTarget((d) => d.kind === 'analytics' && setEditor({ kind: 'drop', item: d.item }), (k) => k === 'analytics')
   const addFilter = (field: string) => {
     const filter = defaultFilter(spec, field)
     if (filter) setEditor({ kind: 'filter', index: spec.filters.length, filter })
@@ -112,7 +128,29 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[14rem_minmax(0,1fr)]">
-      <DataPane spec={spec} onChange={edit} lockSource={lockSource} onAddFilter={addFilter} onOpen={setEditor} onFieldChange={changeField} />
+      <div className="min-w-0 space-y-2 self-start">
+        <div role="tablist" aria-label="Side pane" className="flex gap-1">
+          {(['data', 'analytics'] as const).map((t) => (
+            <button
+              key={t}
+              type="button"
+              role="tab"
+              aria-selected={paneTab === t}
+              onClick={() => setPaneTab(t)}
+              className={`rounded-t px-3 py-1 text-sm ${paneTab === t ? 'bg-white font-semibold text-slate-800 ring-1 ring-slate-200' : 'text-slate-500 hover:text-slate-800'}`}
+            >
+              {t === 'data' ? 'Data' : 'Analytics'}
+            </button>
+          ))}
+        </div>
+        {paneTab === 'data' ? (
+          <DataPane spec={spec} onChange={edit} lockSource={lockSource} onAddFilter={addFilter} onOpen={setEditor} onFieldChange={changeField} />
+        ) : (
+          <aside aria-label="Analytics pane" className={`${card} p-2`}>
+            <AnalyticsPane spec={spec} onAction={analytics} />
+          </aside>
+        )}
+      </div>
       <div className="min-w-0 space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
           <FiltersCard spec={spec} onDropField={addFilter} onEdit={(index) => setEditor({ kind: 'filter', index, filter: spec.filters[index]! })} />
@@ -122,6 +160,23 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
           <div className="flex items-center gap-2 border-b border-slate-200 py-1.5">
             <span className="w-20 shrink-0 text-xs font-semibold tracking-wide text-slate-500 uppercase">Analysis</span>
             <TotalsMenu spec={spec} onChange={edit} />
+            {spec.refs.map((r, i) => (
+              <MenuButton key={i} menuLabel={refName(spec, r)} label={refName(spec, r)} className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-700 hover:bg-slate-200">
+                {(close) => (
+                  <>
+                    <MenuItem
+                      onSelect={() => {
+                        close()
+                        setEditor({ kind: 'ref', index: i, ref: r })
+                      }}
+                    >
+                      Edit…
+                    </MenuItem>
+                    <MenuItem onSelect={() => edit(removeRef(spec, i))}>Remove</MenuItem>
+                  </>
+                )}
+              </MenuButton>
+            ))}
           </div>
           {(['columns', 'rows'] as const).map((shelf) => (
             <ListShelfRow key={shelf} shelf={shelf} spec={spec} dropOn={dropOn} pillProps={pillProps} />
@@ -171,6 +226,17 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
         {editor?.kind === 'derived' && (
           <DerivedDialog key={`${editor.type}|${editor.field}|${editor.index ?? 'new'}`} spec={spec} editor={editor} onApply={tryEdit} onCancel={() => setEditor(undefined)} />
         )}
+        {editor?.kind === 'drop' && <DropTargets spec={spec} item={editor.item} onAction={analytics} onCancel={() => setEditor(undefined)} />}
+        {editor?.kind === 'ref' && (
+          <RefEditor
+            key={`${editor.index ?? 'new'}|${JSON.stringify(editor.ref)}`}
+            spec={spec}
+            initial={editor.ref}
+            onApply={(ref) => edit(setRef(spec, editor.index, ref))}
+            onCancel={() => setEditor(undefined)}
+            onRemove={editor.index !== undefined ? () => edit(removeRef(spec, editor.index!)) : undefined}
+          />
+        )}
         {editor?.kind === 'hierarchy' && (
           <HierarchyEditor
             key={editor.fields.join('|')}
@@ -184,7 +250,9 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
           <p className={`${card} p-6 text-center text-slate-500`}>Drag fields from the Data pane to Columns and Rows, or open a field’s menu to add it.</p>
         ) : (
           <>
-            <Viz spec={spec} title="Your view" onMark={selectMark} />
+            <div {...viewDrop.props} className={viewDrop.over ? 'rounded-lg ring-2 ring-accent' : undefined}>
+              <Viz spec={spec} title="Your view" onMark={selectMark} />
+            </div>
             {selected.length > 0 && <SelectionBar spec={spec} marks={selected} onClear={() => setSelection(undefined)} onOpen={setEditor} />}
           </>
         )}

@@ -50,6 +50,7 @@ export const VIZ: Item = {
       rows: [{ field: 'Minutes Watched', agg: 'sum' }],
       marks: { type: 'line', detail: [], tooltip: [] },
       filters: [],
+      refs: [],
     },
   },
 }
