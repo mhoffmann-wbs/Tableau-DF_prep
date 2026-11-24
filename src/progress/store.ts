@@ -1,11 +1,12 @@
 import { useSyncExternalStore } from 'react'
 import { z } from 'zod'
+import { SOURCES, type SourceId } from '../engine/spec'
 
 // All persisted learner state lives behind this module. Bump VERSION, add a
 // migration in `load()` and keep ProgressSchema in step whenever the shape
 // changes; never read localStorage elsewhere.
 const STORAGE_KEY = 'tableau-df:progress'
-const VERSION = 3
+const VERSION = 4
 
 export interface ItemStat {
   attempts: number
@@ -32,6 +33,14 @@ export interface MockResult {
   tasks: ScoreRowRecord[]
 }
 
+/** A calculated field saved in the calc playground or the sandbox, reusable in any sheet on its data source. */
+export interface SavedCalc {
+  source: SourceId
+  name: string
+  formula: string
+  savedAt: number
+}
+
 export interface Progress {
   version: typeof VERSION
   items: Record<string, ItemStat>
@@ -40,10 +49,13 @@ export interface Progress {
   sandbox: Record<string, number>
   /** Task ids of the lessons marked as read. */
   lessonsRead: string[]
+  /** Calc playground exercises: id → when first solved. Like sandbox challenges, they don't count towards readiness. */
+  calcExercises: Record<string, number>
+  calcs: SavedCalc[]
 }
 
 function empty(): Progress {
-  return { version: VERSION, items: {}, mockResults: [], sandbox: {}, lessonsRead: [] }
+  return { version: VERSION, items: {}, mockResults: [], sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [] }
 }
 
 /** Brings stored or imported progress from an older version up to VERSION; other versions are returned unchanged. */
@@ -53,6 +65,8 @@ function migrate(raw: { version?: unknown }): { version?: unknown } {
   if (doc.version === 1) doc = { ...doc, version: 2, sandbox: {} }
   // v2 → v3: lessons marked as read.
   if (doc.version === 2) doc = { ...doc, version: 3, lessonsRead: [] }
+  // v3 → v4: calc exercises and saved calcs.
+  if (doc.version === 3) doc = { ...doc, version: 4, calcExercises: {}, calcs: [] }
   return doc
 }
 
@@ -125,6 +139,21 @@ export function setLessonRead(taskId: string, read: boolean) {
   commit({ ...state, lessonsRead: read ? [...rest, taskId] : rest })
 }
 
+export function recordCalcExercise(exerciseId: string, at: number = Date.now()) {
+  if (state.calcExercises[exerciseId] !== undefined) return
+  commit({ ...state, calcExercises: { ...state.calcExercises, [exerciseId]: at } })
+}
+
+/** Saves a calc, replacing one with the same name on the same source. */
+export function saveCalc(calc: Omit<SavedCalc, 'savedAt'>, at: number = Date.now()) {
+  const rest = state.calcs.filter((c) => !(c.source === calc.source && c.name === calc.name))
+  commit({ ...state, calcs: [...rest, { ...calc, savedAt: at }] })
+}
+
+export function deleteCalc(source: SourceId, name: string) {
+  commit({ ...state, calcs: state.calcs.filter((c) => !(c.source === source && c.name === name)) })
+}
+
 // Imports come from files people pick, so they are validated in full before replacing anything.
 const count = z.number().int().nonnegative()
 const row = z.object({ id: z.string(), correct: count, total: count })
@@ -136,6 +165,8 @@ const ProgressSchema = z.object({
   ),
   sandbox: z.record(z.string(), z.number()),
   lessonsRead: z.array(z.string()),
+  calcExercises: z.record(z.string(), z.number()),
+  calcs: z.array(z.object({ source: z.enum(SOURCES), name: z.string().min(1), formula: z.string(), savedAt: z.number() })),
 })
 
 const EXPORT_APP = 'tableau-df-prep'

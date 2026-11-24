@@ -41,7 +41,7 @@ function compareSlot(name: string, mine: ResolvedPill | undefined, target: Resol
 function sortKey(spec: VizSpec, p: Pill): string {
   const s = p.sort
   if (!s) return 'none'
-  const agg = s.field ? (s.agg ?? resolvePill(spec.source, { field: s.field }).agg) : undefined
+  const agg = s.field ? (s.agg ?? resolvePill(spec, { field: s.field }).agg) : undefined
   return JSON.stringify([s.order, s.field ?? null, agg ?? null, s.manual ?? null])
 }
 
@@ -91,7 +91,7 @@ export function differences(mine: VizSpec, target: VizSpec): string[] {
 }
 
 function resolveAll(spec: VizSpec) {
-  const r = (p: Pill) => resolvePill(spec.source, p)
+  const r = (p: Pill) => resolvePill(spec, p)
   const opt = (p: Pill | undefined) => (p ? r(p) : undefined)
   return {
     columns: spec.columns.map(r),

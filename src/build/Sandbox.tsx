@@ -13,23 +13,28 @@ import {
   pillFor,
   placePill,
   removeFilter,
+  removeCalc,
   removePill,
   replacePill,
+  setCalc,
   setFilter,
   setMarkType,
+  usesField,
 } from '../engine/edit'
-import { type Field, SOURCE_INFO } from '../engine/model'
+import { type Field, fieldsOf, SOURCE_INFO } from '../engine/model'
 import { AGG_LABEL, resolvePill } from '../engine/pills'
 import { automaticMark } from '../engine/render'
-import { MARK_TYPES, type Filter, type MarkType, SOURCES, type SourceId, type VizSpec, pillsOf } from '../engine/spec'
+import { type Calc, MARK_TYPES, type Filter, type MarkType, SOURCES, type SourceId, type VizSpec, pillsOf } from '../engine/spec'
 import { Viz } from '../engine/Viz'
 import { type Dragged, startDrag, useDropTarget } from './dnd'
 import { FilterEditor } from './FilterEditor'
-import { MenuButton, MenuItem } from './Menu'
+import { MenuButton, MenuHeading, MenuItem } from './Menu'
+import { saveCalc, useProgress } from '../progress/store'
+import { CalcEditor, calcStatus } from './CalcEditor'
 import { ShelfPill } from './ShelfPill'
 import { SortEditor } from './SortEditor'
 
-type Editor = { kind: 'filter'; index: number; filter: Filter } | { kind: 'sort'; at: PillAt }
+type Editor = { kind: 'filter'; index: number; filter: Filter } | { kind: 'sort'; at: PillAt } | { kind: 'calc'; index?: number }
 
 const MARK_NAME: Record<MarkType, string> = {
   automatic: 'Automatic',
@@ -63,14 +68,14 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
     else edit(placePill(spec, pillFor(d.field), shelf, index))
   }
   const addFilter = (field: string) => {
-    const filter = defaultFilter(spec.source, field)
+    const filter = defaultFilter(spec, field)
     if (filter) setEditor({ kind: 'filter', index: spec.filters.length, filter })
   }
   const pillProps = { spec, onChange: edit, onEditSort: (at: PillAt) => setEditor({ kind: 'sort', at }) }
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[14rem_minmax(0,1fr)]">
-      <DataPane spec={spec} onChange={edit} lockSource={lockSource} onAddFilter={addFilter} />
+      <DataPane spec={spec} onChange={edit} lockSource={lockSource} onAddFilter={addFilter} onEditCalc={(index) => setEditor({ kind: 'calc', index })} />
       <div className="min-w-0 space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
           <FiltersCard spec={spec} onDropField={addFilter} onEdit={(index) => setEditor({ kind: 'filter', index, filter: spec.filters[index]! })} />
@@ -84,16 +89,28 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
         {editor?.kind === 'filter' && (
           <FilterEditor
             key={`${editor.index}|${editor.filter.field}`}
-            source={spec.source}
+            source={spec}
             initial={editor.filter}
             onApply={(f) => edit(setFilter(spec, editor.index, f))}
             onCancel={() => setEditor(undefined)}
             onRemove={editor.index < spec.filters.length ? () => edit(removeFilter(spec, editor.index)) : undefined}
           />
         )}
+        {editor?.kind === 'calc' && (
+          <CalcDialog
+            key={editor.index ?? 'new'}
+            spec={spec}
+            index={editor.index}
+            onApply={(calc) => {
+              saveCalc({ source: spec.source, ...calc })
+              edit(setCalc(spec, editor.index, calc))
+            }}
+            onCancel={() => setEditor(undefined)}
+          />
+        )}
         {editor?.kind === 'sort' && pillAt(spec, editor.at) && (
           <SortEditor
-            source={spec.source}
+            source={spec}
             pill={pillAt(spec, editor.at)!}
             onApply={(p) => edit(replacePill(spec, editor.at, p))}
             onCancel={() => setEditor(undefined)}
@@ -111,10 +128,24 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
 
 const TYPE_ICON: Record<Field['type'], string> = { string: 'Abc', number: '#', date: 'Date', datetime: 'Date', boolean: 'T|F' }
 
-function DataPane({ spec, onChange, lockSource, onAddFilter }: { spec: VizSpec; onChange: (s: VizSpec) => void; lockSource: boolean; onAddFilter: (field: string) => void }) {
+function DataPane({
+  spec,
+  onChange,
+  lockSource,
+  onAddFilter,
+  onEditCalc,
+}: {
+  spec: VizSpec
+  onChange: (s: VizSpec) => void
+  lockSource: boolean
+  onAddFilter: (field: string) => void
+  /** Opens the calculation editor: a calc's index, or undefined for a new one. */
+  onEditCalc: (index?: number) => void
+}) {
+  const saved = useProgress().calcs.filter((c) => c.source === spec.source && !spec.calcs.some((x) => x.name === c.name))
   // Dropping a pill back on the Data pane removes it, as in Tableau.
   const drop = useDropTarget((d) => d.kind === 'pill' && onChange(removePill(spec, d.at)), (k) => k === 'pill')
-  const fields = SOURCE_INFO[spec.source].fields
+  const fields = fieldsOf(spec)
   const group = (role: Field['role'], title: string) => (
     <div>
       <h3 className="px-1 text-xs font-semibold tracking-wide text-slate-500 uppercase">{title}</h3>
@@ -123,7 +154,7 @@ function DataPane({ spec, onChange, lockSource, onAddFilter }: { spec: VizSpec; 
           .filter((f) => f.role === role)
           .map((f) => (
             <li key={f.name}>
-              <FieldButton field={f} spec={spec} onChange={onChange} onAddFilter={onAddFilter} />
+              <FieldButton field={f} spec={spec} onChange={onChange} onAddFilter={onAddFilter} onEditCalc={onEditCalc} />
             </li>
           ))}
       </ul>
@@ -148,24 +179,66 @@ function DataPane({ spec, onChange, lockSource, onAddFilter }: { spec: VizSpec; 
       </label>
       {group('dimension', 'Dimensions')}
       {group('measure', 'Measures')}
+      <MenuButton menuLabel="Calculated fields" label="Calculated field…" className="w-full rounded border border-dashed border-slate-300 px-2 py-1 text-left text-sm text-slate-600 hover:bg-slate-100">
+        {(close) => (
+          <>
+            <MenuItem
+              onSelect={() => {
+                close()
+                onEditCalc()
+              }}
+            >
+              Create calculated field…
+            </MenuItem>
+            {saved.length > 0 && <MenuHeading>Saved calculations</MenuHeading>}
+            {saved.map((c) => (
+              <MenuItem
+                key={c.name}
+                onSelect={() => {
+                  onChange(setCalc(spec, undefined, { name: c.name, formula: c.formula }))
+                  close()
+                }}
+              >
+                Add {c.name}
+              </MenuItem>
+            ))}
+          </>
+        )}
+      </MenuButton>
     </aside>
   )
 }
 
-function FieldButton({ field, spec, onChange, onAddFilter }: { field: Field; spec: VizSpec; onChange: (s: VizSpec) => void; onAddFilter: (field: string) => void }) {
+function FieldButton({
+  field,
+  spec,
+  onChange,
+  onAddFilter,
+  onEditCalc,
+}: {
+  field: Field
+  spec: VizSpec
+  onChange: (s: VizSpec) => void
+  onAddFilter: (field: string) => void
+  onEditCalc: (index?: number) => void
+}) {
+  const calcIndex = spec.calcs.findIndex((c) => c.name === field.name)
+  const broken = field.calc?.error
   const targets: ShelfId[] = ['columns', 'rows', ...CHANNELS, 'detail', 'tooltip']
   return (
     <MenuButton
       menuLabel={`Add ${field.name}`}
       draggable
       onDragStart={(e) => startDrag(e, { kind: 'field', field: field.name })}
+      title={broken ? broken.message : field.calc?.formula}
       className={`flex w-full cursor-grab items-center gap-2 rounded px-1 py-0.5 text-left text-sm hover:bg-slate-100 ${field.role === 'dimension' ? 'text-discrete' : 'text-continuous'}`}
       label={
         <>
           <span aria-hidden className="w-8 shrink-0 font-mono text-[10px] text-slate-500">
-            {field.geo ? '⊕' : TYPE_ICON[field.type]}
+            {field.calc ? `=${TYPE_ICON[field.type]}` : field.geo ? '⊕' : TYPE_ICON[field.type]}
           </span>
-          <span className="text-slate-800">{field.name}</span>
+          <span className={broken ? 'text-red-700 line-through' : 'text-slate-800'}>{field.name}</span>
+          {field.calc && <span className="sr-only">{broken ? ' (calculation with an error)' : ' (calculated field)'}</span>}
         </>
       }
     >
@@ -182,7 +255,7 @@ function FieldButton({ field, spec, onChange, onAddFilter }: { field: Field; spe
               Add to {SHELF_LABEL[shelf]}
             </MenuItem>
           ))}
-          {!field.generated && (
+          {!field.generated && !broken && (
             <MenuItem
               onSelect={() => {
                 close()
@@ -191,6 +264,27 @@ function FieldButton({ field, spec, onChange, onAddFilter }: { field: Field; spe
             >
               Add to Filters…
             </MenuItem>
+          )}
+          {calcIndex >= 0 && (
+            <>
+              <MenuHeading>Calculation</MenuHeading>
+              <MenuItem
+                onSelect={() => {
+                  close()
+                  onEditCalc(calcIndex)
+                }}
+              >
+                Edit calculation…
+              </MenuItem>
+              <MenuItem
+                onSelect={() => {
+                  onChange(removeCalc(spec, field.name))
+                  close()
+                }}
+              >
+                {usesField(spec, field.name) ? 'Remove from sheet, with its pills' : 'Remove from sheet'}
+              </MenuItem>
+            </>
           )}
         </>
       )}
@@ -241,7 +335,7 @@ function MarksCard({
   try {
     const inner = (shelf: 'columns' | 'rows') => {
       const p = spec[shelf].at(-1)
-      return p ? resolvePill(spec.source, p) : undefined
+      return p ? resolvePill(spec, p) : undefined
     }
     auto = MARK_NAME[automaticMark(inner('columns'), inner('rows'))]
   } catch {
@@ -322,4 +416,34 @@ function ListShelfRow({
       ))}
     </div>
   )
+}
+
+/** Analysis > Create Calculated Field, inside the sandbox: the playground's editor on this sheet's fields. */
+function CalcDialog({ spec, index, onApply, onCancel }: { spec: VizSpec; index?: number; onApply: (calc: Calc) => void; onCancel: () => void }) {
+  const existing = index === undefined ? undefined : spec.calcs[index]
+  const [name, setName] = useState(existing?.name ?? nextCalcName(spec))
+  const [formula, setFormula] = useState(existing?.formula ?? '')
+  // Earlier calcs can be used; the one being edited and later ones can't.
+  const sheet = { source: spec.source, calcs: spec.calcs.slice(0, index ?? spec.calcs.length) }
+  const valid = name.trim() !== '' && formula.trim() !== '' && 'field' in calcStatus(sheet, name, formula)
+  return (
+    <section aria-label={existing ? `Edit ${existing.name}` : 'Create calculated field'} className="space-y-3 rounded-lg border border-brand/40 bg-white p-3 text-sm">
+      <h3 className="font-semibold">{existing ? `Edit [${existing.name}]` : 'Create calculated field'}</h3>
+      <CalcEditor sheet={sheet} name={name} onName={setName} formula={formula} onFormula={setFormula} />
+      <p className="text-xs text-slate-500">The calculation is also saved for your other {SOURCE_INFO[spec.source].label} sheets and the calc playground.</p>
+      <div className="flex flex-wrap gap-2">
+        <button type="button" disabled={!valid} onClick={() => onApply({ name: name.trim(), formula })} className="rounded bg-brand px-3 py-1 text-chalk disabled:opacity-40">
+          {existing ? 'Apply' : 'Add to Data pane'}
+        </button>
+        <button type="button" onClick={onCancel} className="rounded border border-slate-300 px-3 py-1">
+          Cancel
+        </button>
+      </div>
+    </section>
+  )
+}
+
+/** The first free default name: Calculation1, Calculation2… */
+function nextCalcName(spec: VizSpec): string {
+  for (let i = 1; ; i++) if (!spec.calcs.some((c) => c.name === `Calculation${i}`)) return `Calculation${i}`
 }

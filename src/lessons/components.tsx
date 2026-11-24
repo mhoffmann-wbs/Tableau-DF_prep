@@ -2,6 +2,7 @@ import type { MDXComponents } from 'mdx/types'
 import { type ComponentProps, type ReactNode, createContext, use } from 'react'
 import { Link } from 'react-router'
 import type { LessonMeta } from '../content/schema'
+import { CALC_EXERCISES } from '../content/calc'
 import { SANDBOX_CHALLENGES } from '../content/sandbox'
 import { specHash } from '../engine/edit'
 import { Shelves } from '../engine/Shelves'
@@ -62,6 +63,7 @@ export function BuildLinks() {
   const meta = useMeta()
   const challenges = SANDBOX_CHALLENGES.filter((c) => c.objectives.some((o) => o.startsWith(`${meta.taskId}.`)))
   const presets = Object.values(meta.vizzes)
+  const exercises = CALC_EXERCISES.filter((e) => e.objectives.some((o) => o.startsWith(`${meta.taskId}.`)))
   return (
     <ul>
       {challenges.map((c) => (
@@ -69,12 +71,17 @@ export function BuildLinks() {
           Challenge: <Link to={`/build/sandbox/${c.id}`}>{c.title}</Link>
         </li>
       ))}
+      {exercises.map((e) => (
+        <li key={e.id}>
+          Calc exercise: <Link to={`/build/calc/${e.id}`}>{e.title}</Link>
+        </li>
+      ))}
       {presets.map((v) => (
         <li key={v.caption}>
           Sandbox preset: <Link to={`/build/sandbox${specHash(v.spec)}`}>{v.caption}</Link>
         </li>
       ))}
-      {challenges.length + presets.length === 0 && <li>Hands-on practice for this task arrives with the simulators and the Tableau Public challenges.</li>}
+      {challenges.length + exercises.length + presets.length === 0 && <li>Hands-on practice for this task arrives with the simulators and the Tableau Public challenges.</li>}
     </ul>
   )
 }

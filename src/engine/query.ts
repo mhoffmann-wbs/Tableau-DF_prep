@@ -4,9 +4,11 @@
 // Output columns are keyed c0, c1… because Vega-Lite treats dots and brackets
 // in field names specially.
 import { COUNTRIES } from '../data/geography.ts'
-import type { Dataset, Row, Value } from './model.ts'
+import { type CalcFields, evaluateGroup, rowValue } from './calc/index.ts'
+import { calcsOf, type Dataset, type Row, type SourceRef, type Value } from './model.ts'
+import { MONTHS, WEEKDAYS, aggregate, compareKeys, datePart, dateTrunc, display } from './values.ts'
 import { EngineError, type ResolvedPill, resolvePill } from './pills.ts'
-import { type Aggregation, type DateLevel, type Filter, type Pill, type VizSpec, pillsOf } from './spec.ts'
+import { type DateLevel, type Filter, type Pill, type VizSpec, pillsOf } from './spec.ts'
 
 export interface Column extends ResolvedPill {
   id: string
@@ -20,51 +22,9 @@ export interface QueryResult {
   rows: Row[]
 }
 
-// ---- dates (UTC) ----
+// ---- dates and members ----
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-const WEEKDAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-const DAY_MS = 86_400_000
-
-/** Canonical date part: YEAR 2025, QUARTER 1–4, MONTH 1–12, WEEK 1–53 (Sunday start), DAY 1–31, WEEKDAY 1–7 (Sunday = 1). */
-export function datePart(ms: number, level: DateLevel): number {
-  const d = new Date(ms)
-  switch (level) {
-    case 'year':
-      return d.getUTCFullYear()
-    case 'quarter':
-      return Math.floor(d.getUTCMonth() / 3) + 1
-    case 'month':
-      return d.getUTCMonth() + 1
-    case 'week': {
-      const jan1 = Date.UTC(d.getUTCFullYear(), 0, 1)
-      const dayOfYear = Math.floor((ms - jan1) / DAY_MS)
-      return Math.floor((dayOfYear + new Date(jan1).getUTCDay()) / 7) + 1
-    }
-    case 'day':
-      return d.getUTCDate()
-    case 'weekday':
-      return d.getUTCDay() + 1
-  }
-}
-
-/** Start of the date's year, quarter, month, week (Sunday) or day. */
-export function dateTrunc(ms: number, level: Exclude<DateLevel, 'weekday'>): number {
-  const d = new Date(ms)
-  const y = d.getUTCFullYear()
-  switch (level) {
-    case 'year':
-      return Date.UTC(y, 0, 1)
-    case 'quarter':
-      return Date.UTC(y, Math.floor(d.getUTCMonth() / 3) * 3, 1)
-    case 'month':
-      return Date.UTC(y, d.getUTCMonth(), 1)
-    case 'week':
-      return Date.UTC(y, d.getUTCMonth(), d.getUTCDate() - d.getUTCDay())
-    case 'day':
-      return Date.UTC(y, d.getUTCMonth(), d.getUTCDate())
-  }
-}
+export { aggregate, datePart, dateTrunc, display } from './values.ts'
 
 function partLabel(n: number, level: DateLevel): string {
   if (level === 'quarter') return `Q${n}`
@@ -90,19 +50,13 @@ function valueLabel(ms: number, level: DateLevel): string {
   return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${y}`
 }
 
-// ---- dimension members ----
-
-/** Display form of a raw value, as Tableau shows members (and as `values` filters name them). */
-export function display(v: Value): string {
-  if (v === null) return 'Null'
-  if (typeof v === 'boolean') return v ? 'True' : 'False'
-  return String(v)
-}
-
 type Member = { value: Value; sortKey: number | string }
 
-function member(row: Row, rp: ResolvedPill): Member {
-  const raw = row[rp.field.name] ?? null
+/** Reads a field from a row, computing row-level calcs. */
+type Getter = (row: Row, field: string) => Value
+
+function member(row: Row, rp: ResolvedPill, get: Getter): Member {
+  const raw = get(row, rp.field.name)
   if (rp.date) {
     if (raw === null) return { value: rp.continuous ? null : 'Null', sortKey: Infinity }
     const { level, mode } = rp.date
@@ -114,36 +68,6 @@ function member(row: Row, rp: ResolvedPill): Member {
   if (raw === null) return { value: 'Null', sortKey: '￿' }
   if (typeof raw === 'number') return { value: String(raw), sortKey: raw }
   return { value: display(raw), sortKey: display(raw).toLowerCase() }
-}
-
-const compareKeys = (a: number | string, b: number | string) =>
-  typeof a === 'number' && typeof b === 'number' ? a - b : String(a).localeCompare(String(b), 'en')
-
-// ---- aggregation ----
-
-export function aggregate(values: Value[], agg: Aggregation): Value {
-  const present = values.filter((v) => v !== null)
-  if (agg === 'count') return present.length
-  if (agg === 'countd') return new Set(present).size
-  if (present.length === 0) return null
-  switch (agg) {
-    case 'sum':
-      return (present as number[]).reduce((a, b) => a + b, 0)
-    case 'avg':
-      return (present as number[]).reduce((a, b) => a + b, 0) / present.length
-    case 'median': {
-      const s = [...(present as number[])].sort((a, b) => a - b)
-      const mid = Math.floor(s.length / 2)
-      return s.length % 2 ? s[mid]! : (s[mid - 1]! + s[mid]!) / 2
-    }
-    case 'min':
-    case 'max': {
-      const sorted = [...present].sort((a, b) => compareKeys(a as number | string, b as number | string))
-      return agg === 'min' ? sorted[0]! : sorted[sorted.length - 1]!
-    }
-    case 'attr':
-      return present.every((v) => v === present[0]) ? present[0]! : '*'
-  }
 }
 
 // ---- generated latitude/longitude ----
@@ -176,19 +100,20 @@ function geoCoords(geo: (typeof GEO_PRECEDENCE)[number], name: string): [number,
 
 // ---- filters ----
 
-function rowFilter(f: Filter, source: VizSpec['source']): ((r: Row) => boolean) | undefined {
-  const field = resolvePill(source, { field: f.field }).field
+function rowFilter(f: Filter, spec: VizSpec, get: Getter): ((r: Row) => boolean) | undefined {
+  const { field, agg } = resolvePill(spec, { field: f.field })
   const isDate = field.type === 'date' || field.type === 'datetime'
   switch (f.kind) {
     case 'values': {
       if (isDate) throw new EngineError(`Filter ${field.name} by a date range or a date part, not by values.`)
+      if (agg === 'agg') throw new EngineError(`${field.name} is an aggregate calculation: filter it by a range of values.`)
       const set = new Set(f.values)
-      return (r) => set.has(display(r[field.name] ?? null)) !== (f.exclude ?? false)
+      return (r) => set.has(display(get(r, field.name))) !== (f.exclude ?? false)
     }
     case 'range':
-      if (f.agg) return undefined // a measure filter: applied after aggregation
+      if (isMeasureFilter(f, spec)) return undefined // applied after aggregation
       return (r) => {
-        const v = r[field.name]
+        const v = get(r, field.name)
         return typeof v === 'number' && (f.min === undefined || v >= f.min) && (f.max === undefined || v <= f.max)
       }
     case 'dateRange': {
@@ -196,7 +121,7 @@ function rowFilter(f: Filter, source: VizSpec['source']): ((r: Row) => boolean) 
       const from = f.from ? Date.parse(`${f.from}T00:00:00Z`) : -Infinity
       const to = f.to ? Date.parse(`${f.to}T00:00:00Z`) : Infinity
       return (r) => {
-        const v = r[field.name]
+        const v = get(r, field.name)
         return typeof v === 'number' && dateTrunc(v, 'day') >= from && dateTrunc(v, 'day') <= to
       }
     }
@@ -204,32 +129,48 @@ function rowFilter(f: Filter, source: VizSpec['source']): ((r: Row) => boolean) 
       if (!isDate) throw new EngineError(`${field.name} is not a date.`)
       const set = new Set(f.values.map(Number))
       return (r) => {
-        const v = r[field.name]
+        const v = get(r, field.name)
         return typeof v === 'number' && set.has(datePart(v, f.level))
       }
     }
   }
 }
 
+/** A range filter on an aggregated measure or an aggregate calc runs after aggregation. */
+function isMeasureFilter(f: Filter, spec: VizSpec): boolean {
+  return f.kind === 'range' && (f.agg !== undefined || resolvePill(spec, { field: f.field }).agg === 'agg')
+}
+
+/** A measure's value over a group of rows. */
+function measureValue(calcs: CalcFields, get: Getter, rows: Row[], field: string, agg: ResolvedPill['agg']): Value {
+  if (agg === 'agg') return evaluateGroup(calcs, calcs.calc(field)!, rows)
+  return aggregate(
+    rows.map((r) => get(r, field)),
+    agg!,
+  )
+}
+
 // ---- the query ----
 
 export function query(spec: VizSpec, data: Dataset): QueryResult {
   const source = spec.source
+  const calcs = calcsOf(spec)
+  const get: Getter = (r, name) => rowValue(calcs, r, name)
   const columns: Column[] = []
   for (const pill of pillsOf(spec)) {
-    const rp = resolvePill(source, pill)
+    const rp = resolvePill(spec, pill)
     if (!columns.some((c) => c.key === rp.key)) columns.push({ ...rp, id: `c${columns.length}` })
   }
   const dims = columns.filter((c) => c.kind === 'dimension')
   const measures = columns.filter((c) => c.kind === 'measure')
 
-  const filters = spec.filters.map((f) => rowFilter(f, source)).filter((f) => f !== undefined)
+  const filters = spec.filters.map((f) => rowFilter(f, spec, get)).filter((f) => f !== undefined)
   const rows = data[source].filter((r) => filters.every((f) => f(r)))
 
   // One group per combination of dimension members: the view's level of detail.
   const groups = new Map<string, { members: Member[]; rows: Row[] }>()
   for (const r of rows) {
-    const members = dims.map((d) => member(r, d))
+    const members = dims.map((d) => member(r, d, get))
     const key = JSON.stringify(members.map((m) => m.value))
     const g = groups.get(key)
     if (g) g.rows.push(r)
@@ -238,14 +179,14 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
   // A view without dimensions still has one mark, even when every row is filtered out.
   if (dims.length === 0 && groups.size === 0) groups.set('[]', { members: [], rows: [] })
 
-  const measureFilters = spec.filters.filter((f): f is Extract<Filter, { kind: 'range' }> => f.kind === 'range' && f.agg !== undefined)
+  const measureFilters = spec.filters.filter((f): f is Extract<Filter, { kind: 'range' }> => isMeasureFilter(f, spec))
   const finestGeo = GEO_PRECEDENCE.map((g) => dims.find((d) => d.field.geo === g)).find((d) => d !== undefined)
 
   let out: { members: Member[]; row: Row }[] = []
   for (const g of groups.values()) {
     if (
       !measureFilters.every((f) => {
-        const v = aggregate(g.rows.map((r) => r[f.field] ?? null), f.agg!)
+        const v = measureValue(calcs, get, g.rows, f.field, f.agg ?? 'agg')
         return typeof v === 'number' && (f.min === undefined || v >= f.min) && (f.max === undefined || v <= f.max)
       })
     )
@@ -258,7 +199,7 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
         const name = g.members[dims.indexOf(finestGeo)]!.value
         const coords = typeof name === 'string' ? geoCoords(finestGeo.field.geo as (typeof GEO_PRECEDENCE)[number], name) : undefined
         row[m.id] = coords ? coords[m.field.geo === 'latitude' ? 0 : 1] : null
-      } else row[m.id] = aggregate(g.rows.map((r) => r[m.field.name] ?? null), m.agg!)
+      } else row[m.id] = measureValue(calcs, get, g.rows, m.field.name, m.agg)
     }
     out.push({ members: g.members, row })
   }
@@ -272,14 +213,17 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     let order = [...seen.keys()].sort((a, b) => compareKeys(seen.get(a)!, seen.get(b)!))
     const sort = d.pill.sort
     if (sort?.field) {
-      const by = resolvePill(source, { field: sort.field, agg: sort.agg } as Pill)
+      const fieldAgg = resolvePill(spec, { field: sort.field })
+      const by = resolvePill(spec, { field: sort.field, ...(fieldAgg.agg !== 'agg' && { agg: sort.agg }) } as Pill)
       if (by.kind !== 'measure') throw new EngineError(`Sort by a measure: ${by.label} is a dimension.`)
-      const totals = new Map<Value, Value[]>()
+      const byMember = new Map<Value, Row[]>()
       for (const r of rows) {
-        const m = member(r, d).value
-        totals.set(m, [...(totals.get(m) ?? []), r[by.field.name] ?? null])
+        const m = member(r, d, get).value
+        const list = byMember.get(m)
+        if (list) list.push(r)
+        else byMember.set(m, [r])
       }
-      const value = (m: Value) => (aggregate(totals.get(m) ?? [], by.agg!) as number | null) ?? -Infinity
+      const value = (m: Value) => (measureValue(calcs, get, byMember.get(m) ?? [], by.field.name, by.agg) as number | null) ?? -Infinity
       order = [...order].sort((a, b) => value(a) - value(b))
     }
     if (sort?.order === 'desc') order.reverse()
@@ -299,8 +243,8 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
 }
 
 /** The column a pill produced, for reading values in tests and checkpoints. */
-export function columnOf(result: QueryResult, source: VizSpec['source'], pill: Pill): Column {
-  const key = resolvePill(source, pill).key
+export function columnOf(result: QueryResult, ref: SourceRef, pill: Pill): Column {
+  const key = resolvePill(ref, pill).key
   const column = result.columns.find((c) => c.key === key)
   if (!column) throw new EngineError(`${pill.field} is not in the view.`)
   return column

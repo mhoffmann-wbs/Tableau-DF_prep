@@ -27,7 +27,7 @@ const user = userEvent.setup()
 const shelf = (name: string) => screen.getByRole('group', { name: `${name} shelf` })
 
 /** Opens a field in the Data pane and picks a menu item. */
-async function addField(field: string, item: string) {
+async function addField(field: string | RegExp, item: string) {
   await user.click(within(screen.getByRole('complementary', { name: 'Data pane' })).getByRole('button', { name: field }))
   await user.click(screen.getByRole('menuitem', { name: item }))
 }
@@ -142,3 +142,38 @@ describe('make this chart', () => {
     expect(screen.getByRole('link', { name: 'All challenges' })).toHaveAttribute('href', '/build')
   })
 })
+
+describe('calculated fields in the sandbox', () => {
+  it('creates a calc from the Data pane, uses it on a shelf and saves it', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    const pane = () => within(screen.getByRole('complementary', { name: 'Data pane' }))
+    await user.click(pane().getByRole('button', { name: 'Calculated field…' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Create calculated field…' }))
+    const dialog = within(screen.getByRole('region', { name: 'Create calculated field' }))
+    await user.clear(dialog.getByRole('textbox', { name: 'Name' }))
+    await user.type(dialog.getByRole('textbox', { name: 'Name' }), 'Hours')
+
+    await user.click(dialog.getByRole('textbox', { name: 'Formula' }))
+    await user.paste('[Minutes Watched] / COUNT([Session ID])')
+    expect(dialog.getByText('Cannot mix aggregate and non-aggregate arguments with this function.')).toBeInTheDocument()
+    expect(dialog.getByRole('button', { name: 'Add to Data pane' })).toBeDisabled()
+
+    await user.clear(dialog.getByRole('textbox', { name: 'Formula' }))
+    await user.paste('[Minutes Watched] / 60')
+    expect(dialog.getByText(/It becomes a measure, aggregated as SUM/)).toBeInTheDocument()
+    await user.click(dialog.getByRole('button', { name: 'Add to Data pane' }))
+
+    await addField(/^Hours.*calculated field/, 'Add to Columns')
+    expect(shelf('Columns')).toHaveTextContent('SUM(Hours)')
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ calcs: [{ name: 'Hours', formula: '[Minutes Watched] / 60' }], columns: [{ field: 'Hours' }] })
+    expect(getProgress().calcs).toMatchObject([{ source: 'sessions', name: 'Hours', formula: '[Minutes Watched] / 60' }])
+
+    await addField(/^Hours.*calculated field/, 'Remove from sheet, with its pills')
+    expect(shelf('Columns')).not.toHaveTextContent('Hours')
+    // A saved calc can come back into the sheet.
+    await user.click(pane().getByRole('button', { name: 'Calculated field…' }))
+    await user.click(screen.getByRole('menuitem', { name: 'Add Hours' }))
+    expect(pane().getByRole('button', { name: /^Hours.*calculated field/ })).toBeInTheDocument()
+  })
+})
+

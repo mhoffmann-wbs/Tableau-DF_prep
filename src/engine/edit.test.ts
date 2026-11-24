@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defaultFilter, emptySpec, isCompleteFilter, movePill, parseSpecHash, pillFor, placePill, removePill, specHash } from './edit'
+import { defaultFilter, emptySpec, isCompleteFilter, movePill, parseSpecHash, pillFor, placePill, removeCalc, removePill, setCalc, specHash, usesField } from './edit'
 import { vizSpecSchema } from './spec'
 
 const genre = pillFor('Genre')
@@ -52,5 +52,40 @@ describe('#spec= links', () => {
     expect(parseSpecHash('')).toBeUndefined()
     expect(parseSpecHash('#spec=%7Bnope')).toBeInstanceOf(Error)
     expect(parseSpecHash(`#spec=${encodeURIComponent('{"source":"nope"}')}`)).toBeInstanceOf(Error)
+  })
+})
+
+describe('calculated fields', () => {
+  const hours = { name: 'Hours', formula: '[Minutes Watched] / 60' }
+  const sheet = () =>
+    vizSpecSchema.parse({
+      calcs: [hours, { name: 'Double', formula: '[Hours] * 2' }],
+      rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Hours', agg: 'sum' } }],
+      columns: [{ field: 'Hours' }],
+      filters: [{ kind: 'range', field: 'Hours', min: 1 }],
+    })
+
+  it('renames a calc everywhere it is used', () => {
+    const s = setCalc(sheet(), 0, { name: 'Hours Watched', formula: hours.formula })
+    expect(s.calcs.map((c) => c.formula)).toEqual([hours.formula, '[Hours Watched] * 2'])
+    expect(s.columns[0]!.field).toBe('Hours Watched')
+    expect(s.rows[0]!.sort!.field).toBe('Hours Watched')
+    expect(s.filters[0]!.field).toBe('Hours Watched')
+  })
+
+  it('removes a calc with its pills, filters and sorts', () => {
+    expect(usesField(sheet(), 'Hours')).toBe(true)
+    const s = removeCalc(sheet(), 'Hours')
+    expect(s.calcs.map((c) => c.name)).toEqual(['Double'])
+    expect(s.columns).toEqual([])
+    expect(s.rows).toEqual([{ field: 'Genre' }])
+    expect(s.filters).toEqual([])
+    expect(usesField(s, 'Hours')).toBe(false)
+  })
+
+  it('keeps calcs in the #spec= hash', () => {
+    const s = setCalc(emptySpec(), undefined, hours)
+    expect(parseSpecHash(specHash(s))).toEqual(s)
+    expect(specHash(emptySpec())).not.toContain('calcs')
   })
 })

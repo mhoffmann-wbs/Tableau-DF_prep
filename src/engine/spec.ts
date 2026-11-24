@@ -56,8 +56,14 @@ export type Filter = z.infer<typeof filterSchema>
 export const SOURCES = ['sessions', 'subscribers', 'titles'] as const
 export type SourceId = (typeof SOURCES)[number]
 
+/** A calculated field: Analysis > Create Calculated Field, kept with the sheet so links stay self-contained. */
+export const calcSchema = z.object({ name: fieldName, formula: z.string().trim().min(1) })
+export type Calc = z.infer<typeof calcSchema>
+
 export const vizSpecSchema = z.object({
   source: z.enum(SOURCES).default('sessions'),
+  /** Checked against the data model by the engine, like field names. */
+  calcs: z.array(calcSchema).default([]),
   columns: z.array(pillSchema).default([]),
   rows: z.array(pillSchema).default([]),
   marks: z

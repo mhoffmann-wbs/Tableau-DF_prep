@@ -1,8 +1,8 @@
 // Resolves a pill against the data model: which field it is, whether it is a
 // dimension or an (aggregated) measure, blue or green, and its Tableau label.
 // No data here, so the shelves view can use it without loading the dataset.
-import { type Field, fieldOf, SOURCE_INFO } from './model.ts'
-import type { Aggregation, DateLevel, Pill, SourceId } from './spec.ts'
+import { type Field, fieldOf, SOURCE_INFO, type SourceRef } from './model.ts'
+import type { Aggregation, DateLevel, Pill } from './spec.ts'
 
 /** A problem with a spec, phrased for the learner. */
 export class EngineError extends Error {}
@@ -21,8 +21,8 @@ export const AGG_LABEL: Record<Aggregation, string> = {
 export interface ResolvedPill {
   pill: Pill
   field: Field
-  /** Set when the pill is aggregated: a measure, or a dimension under COUNTD etc. */
-  agg?: Aggregation
+  /** Set when the pill is aggregated: a measure, or a dimension under COUNTD etc. `agg` is an aggregate calculation, labelled AGG(…). */
+  agg?: Aggregation | 'agg'
   /** Date fields used as dimensions. */
   date?: { level: DateLevel; mode: 'part' | 'value' }
   kind: 'dimension' | 'measure'
@@ -34,12 +34,16 @@ export interface ResolvedPill {
 
 const NUMERIC_ONLY: Aggregation[] = ['sum', 'avg', 'median']
 
-export function resolvePill(source: SourceId, pill: Pill): ResolvedPill {
-  const field = fieldOf(source, pill.field)
+export function resolvePill(ref: SourceRef, pill: Pill): ResolvedPill {
+  const field = fieldOf(ref, pill.field)
+  const source = typeof ref === 'string' ? ref : ref.source
   if (!field) throw new EngineError(`There is no field "${pill.field}" in the ${SOURCE_INFO[source].label} data source.`)
+  if (field.calc?.error) throw new EngineError(`The calculation ${field.name} has an error: ${field.calc.error.message}`)
   const isDate = field.type === 'date' || field.type === 'datetime'
-  const agg = field.role === 'measure' ? (pill.agg ?? field.agg) : pill.agg
-  if (agg && NUMERIC_ONLY.includes(agg) && field.type !== 'number')
+  const aggCalc = field.calc?.compiled?.aggregate === true
+  if (aggCalc && pill.agg) throw new EngineError(`${field.name} is an aggregate calculation, so it can’t be aggregated again.`)
+  const agg = aggCalc ? 'agg' : field.role === 'measure' ? (pill.agg ?? field.agg) : pill.agg
+  if (agg && agg !== 'agg' && NUMERIC_ONLY.includes(agg) && field.type !== 'number')
     throw new EngineError(`${AGG_LABEL[agg]} needs a number, but ${field.name} is a ${field.type} field.`)
   if (pill.date && !isDate) throw new EngineError(`${field.name} is not a date, so it has no date parts or date values.`)
   // A date dimension without a level starts as YEAR, the way Tableau drops one on a shelf.
@@ -51,7 +55,8 @@ export function resolvePill(source: SourceId, pill: Pill): ResolvedPill {
   else if (agg) continuous = field.type === 'number' || agg === 'count' || agg === 'countd'
   else continuous = false
 
-  const label = agg ? `${AGG_LABEL[agg]}(${field.name})` : date ? `${date.level.toUpperCase()}(${field.name})` : field.name
+  const aggLabel = agg === 'agg' ? 'AGG' : agg ? AGG_LABEL[agg] : undefined
+  const label = aggLabel ? `${aggLabel}(${field.name})` : date ? `${date.level.toUpperCase()}(${field.name})` : field.name
   const key = [agg ?? '', date ? `${date.mode}:${date.level}` : '', field.name, continuous ? 'c' : 'd'].join('|')
   return { pill, field, agg, date, kind: agg ? 'measure' : 'dimension', continuous, label, key }
 }

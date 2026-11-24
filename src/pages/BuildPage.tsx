@@ -1,9 +1,11 @@
 import { Link } from 'react-router'
+import { CALC_EXERCISES } from '../content/calc'
 import { SANDBOX_CHALLENGES } from '../content/sandbox'
 import { useProgress } from '../progress/store'
 
 export default function BuildPage() {
-  const solved = useProgress().sandbox
+  const { sandbox: solved, calcExercises } = useProgress()
+  const calcsDone = CALC_EXERCISES.filter((e) => calcExercises[e.id] !== undefined).length
   const done = SANDBOX_CHALLENGES.filter((c) => solved[c.id] !== undefined).length
   return (
     <div className="space-y-6">
@@ -21,6 +23,18 @@ export default function BuildPage() {
         <p className="mt-1 text-sm text-slate-600">
           A schematic Tableau-style worksheet: a Data pane, the Filters shelf, the Marks card, Columns and Rows, and pills that turn blue or
           green. Build anything you like.
+        </p>
+      </section>
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <h2 className="text-lg font-semibold">
+          <Link to="/build/calc" className="text-brand-dark underline">
+            Calc playground
+          </Link>
+        </h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Write calculated fields (string, date, arithmetic, logic and aggregate formulas), see their values on the Driftlight data and learn
+          Tableau’s errors, such as mixing aggregate and row-level values. {CALC_EXERCISES.length} exercises, {calcsDone} solved. Saved
+          calculations show up in the sandbox’s Data pane.
         </p>
       </section>
       <section className="space-y-3">

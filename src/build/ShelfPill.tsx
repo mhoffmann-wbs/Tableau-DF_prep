@@ -59,7 +59,7 @@ export function ShelfPill({
   let rp: ResolvedPill | undefined
   let problem: string | undefined
   try {
-    rp = resolvePill(spec.source, pill)
+    rp = resolvePill(spec, pill)
   } catch (e) {
     problem = e instanceof EngineError ? e.message : String(e)
   }
@@ -88,7 +88,7 @@ export function ShelfPill({
             fn()
             close()
           }
-          const aggs = aggregationChoices(spec.source, pill)
+          const aggs = aggregationChoices(spec, pill)
           return (
             <>
               {problem && <p className="px-3 py-1 text-xs text-red-700">{problem}</p>}
@@ -114,13 +114,13 @@ export function ShelfPill({
                   ))}
                 </>
               )}
-              {rp && canToggleContinuity(spec.source, pill) && (
+              {rp && canToggleContinuity(spec, pill) && (
                 <>
                   <MenuHeading>Display</MenuHeading>
-                  <MenuItem checked={!rp.continuous} onSelect={act(() => set(withContinuity(spec.source, pill, false)))}>
+                  <MenuItem checked={!rp.continuous} onSelect={act(() => set(withContinuity(spec, pill, false)))}>
                     Discrete
                   </MenuItem>
-                  <MenuItem checked={rp.continuous} onSelect={act(() => set(withContinuity(spec.source, pill, true)))}>
+                  <MenuItem checked={rp.continuous} onSelect={act(() => set(withContinuity(spec, pill, true)))}>
                     Continuous
                   </MenuItem>
                 </>

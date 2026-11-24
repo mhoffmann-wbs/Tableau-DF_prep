@@ -1,10 +1,10 @@
 // The heavy half of <Viz>: dataset, query, Vega-Lite and the world map. Loaded
 // with a dynamic import, so pages without charts never download it.
 import embed from 'vega-embed'
-import { loadDataset } from './model'
+import { loadDataset, type SourceRef } from './model'
 import { partFromLabel, query } from './query'
 import { type Theme, type Topology, needsWorld, toVegaLite } from './render'
-import { type Pill, type SourceId, type VizSpec, vizSpecSchema } from './spec'
+import { type Pill, type VizSpec, vizSpecSchema } from './spec'
 
 let world: Promise<Topology> | undefined
 
@@ -25,8 +25,9 @@ export interface Member {
 }
 
 /** The members a discrete pill shows, in display order. */
-export async function membersOf(source: SourceId, pill: Pill): Promise<Member[]> {
-  const result = query(vizSpecSchema.parse({ source, rows: [pill] }), await loadDataset())
+export async function membersOf(ref: SourceRef, pill: Pill): Promise<Member[]> {
+  const sheet = typeof ref === 'string' ? { source: ref } : ref
+  const result = query(vizSpecSchema.parse({ ...sheet, rows: [pill] }), await loadDataset())
   const level = pill.date?.mode === 'part' ? pill.date.level : undefined
   return (result.columns[0]?.order ?? [])
     .filter((m) => !(level && m === 'Null'))

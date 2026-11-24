@@ -85,7 +85,7 @@ function combine(rows: Row[], cols: Column[], id: string): { field: Obj | undefi
 
 function shelf(spec: VizSpec, result: QueryResult, pills: Pill[], name: string): { inner?: Column; outer: Column[] } {
   const cols = pills.map((p) => {
-    const key = resolvePill(spec.source, p).key
+    const key = resolvePill(spec, p).key
     return result.columns.find((c) => c.key === key)!
   })
   const outer = cols.slice(0, -1)
@@ -96,7 +96,7 @@ function shelf(spec: VizSpec, result: QueryResult, pills: Pill[], name: string):
 
 /** Whether the spec draws a map, so the world shapes must be loaded first. */
 export function needsWorld(spec: VizSpec): boolean {
-  const geo = (p: Pill | undefined) => (p ? resolvePill(spec.source, p).field.geo : undefined)
+  const geo = (p: Pill | undefined) => (p ? resolvePill(spec, p).field.geo : undefined)
   return geo(spec.columns.at(-1)) === 'longitude' && geo(spec.rows.at(-1)) === 'latitude'
 }
 
@@ -104,7 +104,7 @@ const ISO_BY_COUNTRY = new Map(COUNTRIES.map((c) => [c.country, c.iso]))
 
 export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?: Theme; world?: Topology } = {}): TopLevelSpec {
   const theme = options.theme ?? LIGHT_THEME
-  const col = (p: Pill | undefined) => (p ? result.columns.find((c) => c.key === resolvePill(spec.source, p).key) : undefined)
+  const col = (p: Pill | undefined) => (p ? result.columns.find((c) => c.key === resolvePill(spec, p).key) : undefined)
   const { inner: x, outer: xOuter } = shelf(spec, result, spec.columns, 'Columns')
   const { inner: y, outer: yOuter } = shelf(spec, result, spec.rows, 'Rows')
   const isGeo = x?.field.geo === 'longitude' && y?.field.geo === 'latitude'

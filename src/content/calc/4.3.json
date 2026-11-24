@@ -1,0 +1,64 @@
+[
+  {
+    "id": "minutes-per-session",
+    "title": "Aggregate: minutes per session",
+    "objectives": ["4.3.2", "2.3.5"],
+    "source": "sessions",
+    "name": "Minutes per Session",
+    "prompt": "Create Minutes per Session: total minutes watched divided by the number of sessions, so it stays right at any level of detail. It's checked per Device.",
+    "fields": ["Minutes Watched", "Session ID"],
+    "expected": "SUM([Minutes Watched]) / COUNT([Session ID])",
+    "by": ["Device"],
+    "accepted": ["SUM([Minutes Watched]) / COUNTD([Session ID])", "SUM(ZN([Minutes Watched])) / COUNT([Session ID])"],
+    "wrong": ["[Minutes Watched] / COUNT([Session ID])", "AVG([Minutes Watched])"],
+    "hints": [
+      "Aggregate each part first: SUM of the minutes, COUNT of the session IDs.",
+      "Mixing a row-level field with an aggregate in one formula is an error, so wrap the minutes in SUM."
+    ],
+    "debrief": "An aggregate calculation aggregates first, then divides, so the ratio is computed again for every mark at whatever level of detail the view has. AVG([Minutes Watched]) is close but not the same: AVG ignores the sessions with null minutes, while COUNT([Session ID]) counts every session. The (Count) field can't go into a calculation, so you count an ID."
+  },
+  {
+    "id": "minutes-per-subscriber",
+    "title": "Aggregate: minutes per subscriber",
+    "objectives": ["4.3.2", "2.3.5"],
+    "source": "sessions",
+    "name": "Minutes per Subscriber",
+    "prompt": "Create Minutes per Subscriber: total minutes watched divided by the number of different subscribers who watched. It's checked per Region.",
+    "fields": ["Minutes Watched", "Subscriber ID"],
+    "expected": "SUM([Minutes Watched]) / COUNTD([Subscriber ID])",
+    "by": ["Region"],
+    "wrong": ["SUM([Minutes Watched]) / COUNT([Subscriber ID])", "AVG([Minutes Watched])"],
+    "hints": ["Each session row repeats its subscriber, so COUNT counts sessions, not people.", "COUNTD counts distinct values."],
+    "debrief": "COUNT counts rows that have a value; COUNTD counts distinct values. On the sessions table a subscriber appears once per session, so only COUNTD counts people."
+  },
+  {
+    "id": "completion-rate",
+    "title": "Aggregate: completion rate",
+    "objectives": ["4.3.2", "2.3.5"],
+    "source": "sessions",
+    "name": "Completion Rate",
+    "prompt": "Create Completion Rate: the share of sessions in which the title was watched to the end (Completed is TRUE), as a number from 0 to 1. It's checked per Genre.",
+    "fields": ["Completed", "Session ID"],
+    "expected": "SUM(IIF([Completed], 1, 0)) / COUNT([Session ID])",
+    "by": ["Genre"],
+    "accepted": ["SUM(INT([Completed])) / COUNT([Session ID])", "AVG(IIF([Completed], 1, 0))"],
+    "wrong": ["SUM(IIF([Completed], 1, 0))", "IIF([Completed], 1, 0) / COUNT([Session ID])"],
+    "hints": ["Turn TRUE into 1 and FALSE into 0 for each row, then add them up.", "Divide that SUM by the number of sessions."],
+    "debrief": "The row-level part (1 or 0 per session) sits inside SUM, so the whole formula is aggregate. The rate per genre isn't the average of rates per title: an aggregate calculation recomputes the ratio from the totals for each mark."
+  },
+  {
+    "id": "big-genre-flag",
+    "title": "Aggregate: a test on a total",
+    "objectives": ["4.3.2", "2.3.5"],
+    "source": "sessions",
+    "name": "Big Genre",
+    "prompt": "Label each genre \"Big\" when its sessions add up to more than 500,000 minutes watched, and \"Small\" otherwise. It's checked per Genre.",
+    "fields": ["Minutes Watched"],
+    "expected": "IF SUM([Minutes Watched]) > 500000 THEN \"Big\" ELSE \"Small\" END",
+    "by": ["Genre"],
+    "accepted": ["IIF(SUM([Minutes Watched]) > 500000, 'Big', 'Small')"],
+    "wrong": ["IF [Minutes Watched] > 500000 THEN 'Big' ELSE 'Small' END", "IF SUM([Minutes Watched]) < 500000 THEN 'Big' ELSE 'Small' END"],
+    "hints": ["The test is about the total, not one session: aggregate inside the IF.", "IF SUM([Minutes Watched]) > 500000 THEN … ELSE … END"],
+    "debrief": "An IF can test an aggregate, as long as every part of it is aggregate or constant. The label depends on the level of detail: per genre it splits Big from Small, but put Device in the view as well and each mark is tested on its own, smaller total."
+  }
+]

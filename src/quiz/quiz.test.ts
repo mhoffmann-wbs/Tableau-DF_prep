@@ -120,7 +120,7 @@ describe('practice sets', () => {
 describe('readiness', () => {
   const bank = ['1.1', '2.1'].flatMap((t) => [1, 2].map((n) => fakeItem(t, n)))
   const stat = (lastCorrect: boolean) => ({ attempts: 1, correct: lastCorrect ? 1 : 0, lastCorrect, lastAt: 0, streak: lastCorrect ? 1 : 0 })
-  const progress: Progress = { version: 3, items: { '1.1-001': stat(true), '1.1-002': stat(false), '2.1-001': stat(true) }, mockResults: [], sandbox: {}, lessonsRead: [] }
+  const progress: Progress = { version: 4, items: { '1.1-001': stat(true), '1.1-002': stat(false), '2.1-001': stat(true) }, mockResults: [], sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [] }
 
   it('is coverage × accuracy per task, weighted by the guide', () => {
     const rows = taskReadiness(TASKS, bank, progress)

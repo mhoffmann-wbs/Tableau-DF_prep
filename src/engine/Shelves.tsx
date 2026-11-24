@@ -1,9 +1,10 @@
 import { type ReactNode } from 'react'
 import { AGG_LABEL, type ResolvedPill, resolvePill } from './pills'
-import type { Filter, Pill, SourceId, VizSpec } from './spec'
+import type { SourceRef } from './model'
+import type { Filter, Pill, VizSpec } from './spec'
 
 /** A pill: blue when discrete, green when continuous, as in Tableau. */
-export function PillChip({ source, pill }: { source: SourceId; pill: Pill }) {
+export function PillChip({ source, pill }: { source: SourceRef; pill: Pill }) {
   let rp: ResolvedPill
   try {
     rp = resolvePill(source, pill)
@@ -35,7 +36,8 @@ function Shelf({ name, children }: { name: string; children: ReactNode }) {
 
 /** The shelves and Marks card of a spec, read-only. */
 export function Shelves({ spec }: { spec: VizSpec }) {
-  const { source, marks } = spec
+  const { marks } = spec
+  const source = spec
   const channels: [string, Pill | undefined][] = [
     ['Color', marks.color],
     ['Size', marks.size],

@@ -1,9 +1,9 @@
 // Spec edits the sandbox makes (PLAN.md §7a): dropping fields on shelves,
 // moving and changing pills, filters and the mark type. Pure functions over a
 // VizSpec, no data, so they are tested without the dataset or a browser.
-import { fieldOf } from './model.ts'
+import { fieldOf, type SourceRef } from './model.ts'
 import { resolvePill } from './pills.ts'
-import { type Aggregation, type DateLevel, type Filter, type MarkType, type Pill, type SourceId, type VizSpec, vizSpecSchema } from './spec.ts'
+import { type Aggregation, type Calc, type DateLevel, type Filter, type MarkType, type Pill, type SourceId, type VizSpec, pillsOf, vizSpecSchema } from './spec.ts'
 
 /** Shelves that hold a list of pills. */
 export const LIST_SHELVES = ['columns', 'rows', 'detail', 'tooltip'] as const
@@ -102,9 +102,9 @@ const OTHER_AGGS: Aggregation[] = ['count', 'countd', 'min', 'max', 'attr']
  * (not aggregated), offered for dimension fields only: the engine keeps
  * measure fields aggregated. Generated coordinates offer none.
  */
-export function aggregationChoices(source: SourceId, pill: Pill): (Aggregation | undefined)[] {
+export function aggregationChoices(source: SourceRef, pill: Pill): (Aggregation | undefined)[] {
   const field = fieldOf(source, pill.field)
-  if (!field || field.generated) return []
+  if (!field || field.generated || field.calc?.error || field.calc?.compiled?.aggregate) return []
   if (field.role === 'measure') return NUMBER_AGGS
   return [undefined, ...(field.type === 'number' ? NUMBER_AGGS : OTHER_AGGS)]
 }
@@ -121,7 +121,7 @@ export function withDateLevel(pill: Pill, level: DateLevel, mode: 'part' | 'valu
 }
 
 /** Whether a pill can switch between discrete and continuous: dates and numbers can, text can't. */
-export function canToggleContinuity(source: SourceId, pill: Pill): boolean {
+export function canToggleContinuity(source: SourceRef, pill: Pill): boolean {
   const rp = resolvePill(source, pill)
   if (rp.field.generated) return false
   if (rp.date) return true
@@ -129,16 +129,16 @@ export function canToggleContinuity(source: SourceId, pill: Pill): boolean {
   return rp.field.type === 'number'
 }
 
-export function withContinuity(source: SourceId, pill: Pill, continuous: boolean): Pill {
+export function withContinuity(source: SourceRef, pill: Pill, continuous: boolean): Pill {
   const { as: _as, sort, ...rest } = pill
   const byDefault = resolvePill(source, rest).continuous
   return { ...rest, ...(byDefault !== continuous && { as: continuous ? 'continuous' : 'discrete' }), ...(!continuous && sort && { sort }) }
 }
 
 /** The filter Tableau would start from when a field is dropped on Filters, before the learner picks members or a range. */
-export function defaultFilter(source: SourceId, name: string): Filter | undefined {
+export function defaultFilter(source: SourceRef, name: string): Filter | undefined {
   const field = fieldOf(source, name)
-  if (!field || field.generated) return undefined
+  if (!field || field.generated || field.calc?.error) return undefined
   if (field.type === 'date' || field.type === 'datetime') return { kind: 'datePart', field: name, level: 'year', values: [] }
   if (field.role === 'measure') return { kind: 'range', field: name, agg: field.agg }
   return { kind: 'values', field: name, values: [] }
@@ -165,12 +165,60 @@ export function setMarkType(spec: VizSpec, type: MarkType): VizSpec {
   return { ...spec, marks: { ...spec.marks, type } }
 }
 
+// ---- calculated fields ----
+
+/** Applies `fn` to every pill, wherever it sits; `undefined` removes the pill. */
+function mapPills(spec: VizSpec, fn: (p: Pill) => Pill | undefined): VizSpec {
+  const list = (ps: Pill[]) => ps.map(fn).filter((p): p is Pill => p !== undefined)
+  const one = (p: Pill | undefined) => (p ? fn(p) : undefined)
+  const { marks } = spec
+  return {
+    ...spec,
+    columns: list(spec.columns),
+    rows: list(spec.rows),
+    marks: { ...marks, color: one(marks.color), size: one(marks.size), label: one(marks.label), shape: one(marks.shape), detail: list(marks.detail), tooltip: list(marks.tooltip) },
+  }
+}
+
+const fieldRef = (name: string) => `[${name.replace(/]/g, ']]')}]`
+
+/**
+ * Adds a calc (at `index` undefined) or replaces one. Renaming a calc renames
+ * the pills, filters, sorts and formulas that use it, as Tableau does.
+ */
+export function setCalc(spec: VizSpec, index: number | undefined, calc: Calc): VizSpec {
+  if (index === undefined) return { ...spec, calcs: [...spec.calcs, calc] }
+  const old = spec.calcs[index]!.name
+  const calcs = spec.calcs.map((c, i) => (i === index ? calc : { ...c, formula: old === calc.name ? c.formula : c.formula.split(fieldRef(old)).join(fieldRef(calc.name)) }))
+  if (old === calc.name) return { ...spec, calcs }
+  const rename = (name: string) => (name === old ? calc.name : name)
+  const renamed = mapPills(spec, (p) => ({ ...p, field: rename(p.field), ...(p.sort && { sort: { ...p.sort, ...(p.sort.field && { field: rename(p.sort.field) }) } }) }))
+  return { ...renamed, calcs, filters: spec.filters.map((f) => ({ ...f, field: rename(f.field) })) }
+}
+
+/** Removes a calc with the pills and filters on it; sorts by it go back to the default. */
+export function removeCalc(spec: VizSpec, name: string): VizSpec {
+  const cleared = mapPills(spec, (p) => {
+    if (p.field === name) return undefined
+    if (p.sort?.field !== name) return p
+    const { sort: _sort, ...rest } = p
+    return rest
+  })
+  return { ...cleared, calcs: spec.calcs.filter((c) => c.name !== name), filters: spec.filters.filter((f) => f.field !== name) }
+}
+
+/** Whether the view uses a field: on a shelf, in a filter or in a sort. */
+export function usesField(spec: VizSpec, name: string): boolean {
+  return pillsOf(spec).some((p) => p.field === name || p.sort?.field === name) || spec.filters.some((f) => f.field === name)
+}
+
 // ---- the spec in the URL (#spec=…) ----
 
 /** The spec without defaults, so links stay short. */
 export function compactSpec(spec: VizSpec): Record<string, unknown> {
   const out: Record<string, unknown> = {}
   if (spec.source !== 'sessions') out.source = spec.source
+  if (spec.calcs.length) out.calcs = spec.calcs
   if (spec.columns.length) out.columns = spec.columns
   if (spec.rows.length) out.rows = spec.rows
   const marks: Record<string, unknown> = {}

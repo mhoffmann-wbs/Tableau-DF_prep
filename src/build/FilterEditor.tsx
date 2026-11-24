@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { isCompleteFilter } from '../engine/edit'
-import { fieldOf } from '../engine/model'
+import { fieldOf, type SourceRef } from '../engine/model'
 import { AGG_LABEL } from '../engine/pills'
 import type { Member } from '../engine/runtime'
-import { AGGREGATIONS, type Aggregation, type DateLevel, type Filter, type SourceId } from '../engine/spec'
+import { AGGREGATIONS, type Aggregation, type DateLevel, type Filter } from '../engine/spec'
 
 /** Long member lists (Title, Subscriber ID) show this many until the search narrows them. */
 const SHOWN = 200
@@ -27,7 +27,7 @@ export function FilterEditor({
   onCancel,
   onRemove,
 }: {
-  source: SourceId
+  source: SourceRef
   initial: Filter
   onApply: (f: Filter) => void
   onCancel: () => void
@@ -83,6 +83,9 @@ export function FilterEditor({
       )}
       {draft.kind === 'range' && (
         <div className="flex flex-wrap items-end gap-3">
+          {field?.calc?.compiled?.aggregate ? (
+            <p className="self-center text-slate-600">AGG({draft.field}): an aggregate calculation, filtered after aggregation.</p>
+          ) : (
           <label className="flex flex-col gap-1">
             Aggregation
             <select
@@ -98,6 +101,7 @@ export function FilterEditor({
               ))}
             </select>
           </label>
+          )}
           <NumberInput label="At least" value={draft.min} onChange={(min) => setDraft({ ...draft, min })} />
           <NumberInput label="At most" value={draft.max} onChange={(max) => setDraft({ ...draft, max })} />
         </div>
@@ -151,9 +155,9 @@ function NumberInput({ label, value, onChange }: { label: string; value: number 
 type MemberFilter = Extract<Filter, { kind: 'values' | 'datePart' }>
 
 /** Checkboxes for the members of a field or date part, loaded from the data. */
-function MemberPicker({ source, draft, onChange }: { source: SourceId; draft: MemberFilter; onChange: (f: MemberFilter) => void }) {
+function MemberPicker({ source, draft, onChange }: { source: SourceRef; draft: MemberFilter; onChange: (f: MemberFilter) => void }) {
   const level = draft.kind === 'datePart' ? draft.level : undefined
-  const loadKey = `${source}|${draft.field}|${level ?? ''}`
+  const loadKey = JSON.stringify([source, draft.field, level ?? ''])
   const [loaded, setLoaded] = useState<{ key: string; members: Member[] }>()
   const [search, setSearch] = useState('')
   const members = loaded?.key === loadKey ? loaded.members : undefined

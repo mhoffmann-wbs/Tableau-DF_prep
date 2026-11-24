@@ -1,13 +1,13 @@
 import { useState } from 'react'
-import { SOURCE_INFO } from '../engine/model'
+import { fieldsOf, type SourceRef } from '../engine/model'
 import { AGG_LABEL } from '../engine/pills'
-import { AGGREGATIONS, type Aggregation, type Pill, type SourceId } from '../engine/spec'
+import { AGGREGATIONS, type Aggregation, type Pill } from '../engine/spec'
 
 const inputClass = 'rounded border border-slate-300 bg-white px-2 py-1 text-sm'
 
 /** The sort dialog of a discrete pill: by its own members, or computed from a measure. */
-export function SortEditor({ source, pill, onApply, onCancel }: { source: SourceId; pill: Pill; onApply: (p: Pill) => void; onCancel: () => void }) {
-  const measures = SOURCE_INFO[source].fields.filter((f) => f.role === 'measure' && !f.generated)
+export function SortEditor({ source, pill, onApply, onCancel }: { source: SourceRef; pill: Pill; onApply: (p: Pill) => void; onCancel: () => void }) {
+  const measures = fieldsOf(source).filter((f) => f.role === 'measure' && !f.generated && !f.calc?.error)
   const [by, setBy] = useState<'members' | 'field'>(pill.sort?.field ? 'field' : 'members')
   const [order, setOrder] = useState<'asc' | 'desc'>(pill.sort?.order ?? 'asc')
   const [field, setField] = useState(pill.sort?.field ?? measures[0]!.name)
