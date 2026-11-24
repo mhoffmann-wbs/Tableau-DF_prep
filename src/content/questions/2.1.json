@@ -2995,5 +2995,917 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_symbol.htm"
     ]
+  },
+  {
+    "id": "2.1-070",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "The chart shows total minutes per plan, with each bar split into coloured parts. Starting from a plain bar of `SUM(Minutes Watched)` by `Plan`, which change produced it?",
+    "options": [
+      {
+        "text": "Drag `Device` to Size on the Marks card.",
+        "correct": false,
+        "rationale": "Size would make the bars or marks thicker or thinner by device; it does not split a bar into coloured parts."
+      },
+      {
+        "text": "Drag `Device` to Color on the Marks card.",
+        "correct": true,
+        "rationale": "A dimension on Color splits each bar into one coloured segment per member, and the marks stack automatically."
+      },
+      {
+        "text": "Drag `Device` to Filters and keep all members.",
+        "correct": false,
+        "rationale": "A filter only chooses which members stay in the view; it adds no coloured segments."
+      },
+      {
+        "text": "Change the mark type from Bar to Line.",
+        "correct": false,
+        "rationale": "A line mark draws no stacked segments; the bars would disappear."
+      }
+    ],
+    "explanation": "A stacked bar is a bar chart with a second dimension on Color. Each bar then splits into one segment per member of that dimension, and the segments add up to the bar's total.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-071",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "In this stacked bar, what does one coloured segment of a bar represent?",
+    "options": [
+      {
+        "text": "The total minutes of all plans, shown once for every device.",
+        "correct": false,
+        "rationale": "The total across plans appears nowhere as a segment; every bar covers a single plan."
+      },
+      {
+        "text": "The number of devices that Driftlight supports for that plan.",
+        "correct": false,
+        "rationale": "Segments are sized by `SUM(Minutes Watched)`, not by a count of devices."
+      },
+      {
+        "text": "The average minutes per session for that plan.",
+        "correct": false,
+        "rationale": "The measure is summed, so a segment does not show an average."
+      },
+      {
+        "text": "The minutes watched for one plan on one device.",
+        "correct": true,
+        "rationale": "The bar gives the plan, the colour gives the device, and the segment's length is the summed measure for that combination."
+      }
+    ],
+    "explanation": "Each segment is one combination of the bar's dimension member and the Color member. Stacked in order, the segments add up to the bar's total.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-072",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "Look at the stacked bar. Which two statements about this view are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The height of a whole bar equals the sum of its segments.",
+        "correct": true,
+        "rationale": "Stacked segments are summed, so the whole bar shows the plan's total minutes."
+      },
+      {
+        "text": "`Plan` on Columns decides how many segments each bar has.",
+        "correct": false,
+        "rationale": "The number of segments comes from the members on Color, not from the field on Columns."
+      },
+      {
+        "text": "`Device` on Color creates one segment for each device member in a bar.",
+        "correct": true,
+        "rationale": "Each member of the Color dimension gets its own colour and segment."
+      },
+      {
+        "text": "The segments appear because the mark type is set to Square.",
+        "correct": false,
+        "rationale": "The mark type is Bar. Square belongs to highlight tables."
+      },
+      {
+        "text": "Each plan needs its own measure pill on Rows to stack segments.",
+        "correct": false,
+        "rationale": "One measure on Rows is enough; the dimension on Color splits it."
+      }
+    ],
+    "explanation": "Adding a dimension to Color splits each bar. The segments belong to Color members, and their lengths sum to the bar's overall value.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-073",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "The chart shows one bar per device placed next to each other inside every plan, with no stacking. Which setup produces it?",
+    "options": [
+      {
+        "text": "`Plan` on Columns, `Device` on Color and Stack Marks set to Off.",
+        "correct": false,
+        "rationale": "This is a legitimate way to avoid stacking, but it overlaps the bars on one baseline instead of placing them side by side."
+      },
+      {
+        "text": "`Plan` and `Device` on Rows with `SUM(Minutes Watched)` on Columns.",
+        "correct": false,
+        "rationale": "That draws horizontal bars, and these bars are vertical."
+      },
+      {
+        "text": "`Plan` on Columns with `Device` on Color, left on Automatic.",
+        "correct": false,
+        "rationale": "Device on Color stacks the bars into one tall bar per plan."
+      },
+      {
+        "text": "`Plan` and then `Device` on Columns with `SUM(Minutes Watched)` on Rows.",
+        "correct": true,
+        "rationale": "A second dimension on Columns adds an inner header, so each plan gets a separate bar per device side by side."
+      }
+    ],
+    "explanation": "Stacked and side-by-side bars answer different questions. Stacking comes from a dimension on Color, while a second dimension on the shelf creates separate bars next to each other that share one scale.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          },
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-074",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.7"
+    ],
+    "stem": "In a stacked bar of `SUM(Minutes Watched)` by `Plan` coloured by `Device`, the legend lists a member called `Null`. What does its segment represent?",
+    "options": [
+      {
+        "text": "Sessions whose `Device` value is blank.",
+        "correct": true,
+        "rationale": "Blank values of the Color dimension are grouped into a `Null` member, which gets its own segment."
+      },
+      {
+        "text": "Sessions with zero minutes watched.",
+        "correct": false,
+        "rationale": "Zero minutes would still belong to a named device; `Null` describes the dimension, not the measure."
+      },
+      {
+        "text": "Plans that no subscriber has chosen.",
+        "correct": false,
+        "rationale": "Plans sit on Columns and the legend shows devices, so the segment is not about plans."
+      },
+      {
+        "text": "Rows that Tableau removed because they were duplicates.",
+        "correct": false,
+        "rationale": "Tableau does not drop duplicates automatically; blank members show as `Null`."
+      }
+    ],
+    "explanation": "A dimension with blank cells produces a `Null` member. On Color, that member becomes its own segment, so blank values stay visible in the stack.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm"
+    ]
+  },
+  {
+    "id": "2.1-075",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "Look at the shelves of this density map. What does each underlying point stand for?",
+    "options": [
+      {
+        "text": "One country.",
+        "correct": false,
+        "rationale": "`Country` is not in the view; the field on Detail is `Subscriber ID`."
+      },
+      {
+        "text": "One subscriber, placed at that subscriber's latitude and longitude.",
+        "correct": true,
+        "rationale": "`Subscriber ID` on Detail gives every subscriber its own point, and the Density mark blends the points."
+      },
+      {
+        "text": "One plan.",
+        "correct": false,
+        "rationale": "`Plan` is not used in this view."
+      },
+      {
+        "text": "One session.",
+        "correct": false,
+        "rationale": "Sessions are a different source; this view uses the subscribers table."
+      }
+    ],
+    "explanation": "The Density mark needs many underlying points. Putting an ID on Detail creates one point per record, here one per subscriber, and the mark shows where those points cluster.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude"
+          }
+        ],
+        "marks": {
+          "type": "density",
+          "detail": [
+            {
+              "field": "Subscriber ID"
+            }
+          ]
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-076",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "On this density map, what does a heavily shaded area mean?",
+    "options": [
+      {
+        "text": "The country there has the most plans.",
+        "correct": false,
+        "rationale": "The view has no `Plan` or `Country` field; it works on individual points."
+      },
+      {
+        "text": "The area has a higher average value of a measure.",
+        "correct": false,
+        "rationale": "No measure is in the view; intensity comes from how many points overlap."
+      },
+      {
+        "text": "Many subscriber points lie close together there.",
+        "correct": true,
+        "rationale": "A density map reveals clusters: more overlapping points in an area make it more intense."
+      },
+      {
+        "text": "Subscribers there watch longer sessions.",
+        "correct": false,
+        "rationale": "Viewing time is not part of this view, so it cannot explain the shading."
+      }
+    ],
+    "explanation": "A density map reads like a heat map of point locations. Intense areas hold more overlapping points, so it answers where the points cluster, not how large a measure is.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude"
+          }
+        ],
+        "marks": {
+          "type": "density",
+          "detail": [
+            {
+              "field": "Subscriber ID"
+            }
+          ]
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-077",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "Look at the shelves of this density map. Compared with a symbol map of `City`, which two statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The mark type is set to Density instead of Circle.",
+        "correct": true,
+        "rationale": "Density is chosen from the mark type drop-down on the Marks card."
+      },
+      {
+        "text": "`Subscriber ID` on Detail supplies many underlying points.",
+        "correct": true,
+        "rationale": "The recipe puts a field with many data points on Detail; an ID gives one point per record."
+      },
+      {
+        "text": "A measure on Size is required for the map to draw.",
+        "correct": false,
+        "rationale": "Size only changes mark size; the density map needs no measure."
+      },
+      {
+        "text": "`Latitude (generated)` is required because the map uses a geographic role.",
+        "correct": false,
+        "rationale": "This view uses the `Latitude` and `Longitude` fields from the data, not generated ones."
+      },
+      {
+        "text": "The Map mark type fills each subscriber's area.",
+        "correct": false,
+        "rationale": "The mark type is Density. The Map mark type fills polygons such as countries."
+      }
+    ],
+    "explanation": "A density map uses the Density mark type, latitude and longitude on the shelves and a field with many underlying points on Detail. It shows clusters instead of one symbol per place.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude"
+          }
+        ],
+        "marks": {
+          "type": "density",
+          "detail": [
+            {
+              "field": "Subscriber ID"
+            }
+          ]
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-078",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "This density map uses the generated coordinates with `Country` on Detail. Why does it show few clusters, if any?",
+    "options": [
+      {
+        "text": "The Density mark cannot use generated coordinates.",
+        "correct": false,
+        "rationale": "Generated coordinates are valid; the problem is how many points there are."
+      },
+      {
+        "text": "Subscriber data must be on the sessions source for density maps.",
+        "correct": false,
+        "rationale": "The source does not decide this; the number of points on Detail does."
+      },
+      {
+        "text": "Latitude and longitude should both be on Columns for density.",
+        "correct": false,
+        "rationale": "Each coordinate belongs on its own shelf; moving them would not add points."
+      },
+      {
+        "text": "`Country` gives only one underlying point per country, which is too few for density.",
+        "correct": true,
+        "rationale": "A density map needs a field with many underlying data points, such as an ID."
+      }
+    ],
+    "explanation": "The Density mark shows where many points overlap. A geographic field such as `Country` produces one location per member, so there are few points. Putting an ID on Detail creates a point for each record.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "density",
+          "detail": [
+            {
+              "field": "Country"
+            }
+          ]
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-079",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.8"
+    ],
+    "stem": "A colleague looks at this density map and says it shows the number of subscribers in each country. What is wrong with that reading?",
+    "options": [
+      {
+        "text": "Density maps can only display the countries that have an ID.",
+        "correct": false,
+        "rationale": "Countries are not the unit here; the points are individual subscribers."
+      },
+      {
+        "text": "The density map blends individual points and shows concentrations, not totals per country.",
+        "correct": true,
+        "rationale": "Intense areas mean many points are close together, so country borders and totals do not appear."
+      },
+      {
+        "text": "The map needs a measure on Color to show any numbers.",
+        "correct": false,
+        "rationale": "Density does not use Color for a measure; it colours by point concentration."
+      },
+      {
+        "text": "Density maps are always drawn for one region only.",
+        "correct": false,
+        "rationale": "Nothing restricts a density map to one region."
+      }
+    ],
+    "explanation": "A density map answers where points cluster. For a number per country, use a filled map with a measure on Color or a table.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude"
+          }
+        ],
+        "marks": {
+          "type": "density",
+          "detail": [
+            {
+              "field": "Subscriber ID"
+            }
+          ]
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_heatmap.htm"
+    ]
+  },
+  {
+    "id": "2.1-080",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "Look at the shelves. What will this view show?",
+    "options": [
+      {
+        "text": "A table with one number for each region and year.",
+        "correct": true,
+        "rationale": "Dimensions on Rows and Columns with the measure on Label produce a crosstab of exact values."
+      },
+      {
+        "text": "One line per region over the years.",
+        "correct": false,
+        "rationale": "No continuous date is on a shelf, so no line is drawn."
+      },
+      {
+        "text": "A bar for each region, stacked by year.",
+        "correct": false,
+        "rationale": "The measure is on Label, not on a shelf, so no bars are drawn."
+      },
+      {
+        "text": "Coloured squares without any numbers.",
+        "correct": false,
+        "rationale": "The measure is on Label and not Color, and the mark is not Square."
+      }
+    ],
+    "explanation": "A crosstab places one dimension on Rows, another on Columns and a measure on Text (Label). Each cell then holds one number.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Region"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Minutes Watched"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
+  },
+  {
+    "id": "2.1-081",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "Look at this crosstab. Which two statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Each cell holds the summed minutes for one region and one year.",
+        "correct": true,
+        "rationale": "The Rows and Columns members intersect, and the Label shows the aggregated measure there."
+      },
+      {
+        "text": "Colour intensity in each cell shows how large the value is.",
+        "correct": false,
+        "rationale": "This view has no measure on Color, so the cells are not shaded."
+      },
+      {
+        "text": "`Minutes Watched` on Label puts the numbers in the cells.",
+        "correct": true,
+        "rationale": "The measure on Text or Label is what writes the values into the table."
+      },
+      {
+        "text": "`Region` and `YEAR(Start)` are measures here.",
+        "correct": false,
+        "rationale": "Both are dimensions, which define the headers."
+      },
+      {
+        "text": "The view needs a Square mark type to show numbers.",
+        "correct": false,
+        "rationale": "Square is for highlight tables; text marks show numbers."
+      }
+    ],
+    "explanation": "In a crosstab, the dimensions give the row and column headers, and the measure on Label fills each intersection with an aggregated number.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Region"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Minutes Watched"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
+  },
+  {
+    "id": "2.1-082",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "In the cell for Europe and 2025 this crosstab reads 472,579. What does that number represent?",
+    "options": [
+      {
+        "text": "The average minutes per subscriber in Europe.",
+        "correct": false,
+        "rationale": "The pill is summed, and no averaging by subscriber is applied."
+      },
+      {
+        "text": "The number of sessions in Europe during 2025.",
+        "correct": false,
+        "rationale": "The Label holds `SUM(Minutes Watched)`, not a count of sessions."
+      },
+      {
+        "text": "The total minutes watched in Europe during 2025.",
+        "correct": true,
+        "rationale": "The cell sums `Minutes Watched` for the sessions that fall under both headers."
+      },
+      {
+        "text": "The share of all minutes that Europe contributed.",
+        "correct": false,
+        "rationale": "No percentage calculation is in the view; the value is a plain sum."
+      }
+    ],
+    "explanation": "Each cell is the aggregate of the measure for the intersection of its row and column members. With SUM, it is the total for that region and year.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Region"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Minutes Watched"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ],
+    "checks": [
+      {
+        "kind": "value",
+        "says": "472,579",
+        "spec": {
+          "rows": [
+            {
+              "field": "Region"
+            }
+          ],
+          "columns": [
+            {
+              "field": "Start"
+            }
+          ],
+          "marks": {
+            "label": {
+              "field": "Minutes Watched"
+            }
+          }
+        },
+        "measure": {
+          "field": "Minutes Watched"
+        },
+        "where": {
+          "Region": "Europe",
+          "Start": "2025"
+        }
+      }
+    ]
+  },
+  {
+    "id": "2.1-083",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "Look at this highlight table. Which two statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Minutes Watched` on Label prints the exact value in each square.",
+        "correct": true,
+        "rationale": "The Label supplies the numbers, so readers still see exact values."
+      },
+      {
+        "text": "The mark type is Bar, which is why the cells are rectangles.",
+        "correct": false,
+        "rationale": "The mark type is Square; Bar would draw bars."
+      },
+      {
+        "text": "The same measure on Color shades each square by its value.",
+        "correct": true,
+        "rationale": "A measure on Color gives the colour cue that sets a highlight table apart."
+      },
+      {
+        "text": "The colours show how many regions each year has.",
+        "correct": false,
+        "rationale": "Colour is driven by the measure, not by a count of regions."
+      },
+      {
+        "text": "Region and year headers must both be on Columns.",
+        "correct": false,
+        "rationale": "The dimensions sit on Rows and Columns, one on each shelf."
+      }
+    ],
+    "explanation": "A highlight table is a crosstab with Square marks and a measure on Color. Keeping the measure on Label too gives both exact numbers and a colour cue.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Region"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "marks": {
+          "type": "square",
+          "color": {
+            "field": "Minutes Watched"
+          },
+          "label": {
+            "field": "Minutes Watched"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
+  },
+  {
+    "id": "2.1-084",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.9"
+    ],
+    "stem": "The head of finance has this crosstab and wants to spot the largest region-and-year cells at a glance while still reading exact values. Which change fits best?",
+    "options": [
+      {
+        "text": "Drag `Minutes Watched` to Color and leave the mark type as Text.",
+        "correct": false,
+        "rationale": "This only colours the numbers; there is no filled cell, so it is hard to scan."
+      },
+      {
+        "text": "Remove `Minutes Watched` from Label and drag it to Size.",
+        "correct": false,
+        "rationale": "Dropping the label removes the exact values the head of finance wants to read."
+      },
+      {
+        "text": "Change the mark type to Square, drag `Minutes Watched` to Color and keep it on Label.",
+        "correct": true,
+        "rationale": "Square marks coloured by the measure turn the crosstab into a highlight table, and Label keeps the numbers."
+      },
+      {
+        "text": "Replace `Region` on Rows with `Genre`.",
+        "correct": false,
+        "rationale": "Changing the dimension changes the question and adds no visual cue."
+      }
+    ],
+    "explanation": "A highlight table adds a visual cue to a crosstab. Use a crosstab for exact numbers alone, and upgrade it to a highlight table when readers also need to see where values are large or small.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Region"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Minutes Watched"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
+    ]
   }
 ]
