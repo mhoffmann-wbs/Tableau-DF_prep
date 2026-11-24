@@ -18,15 +18,28 @@ function readTheme(): Theme {
 
 type DrawState = { key: string } & ({ status: 'ready' } | { status: 'error'; message: string })
 
-/** Draws a viz spec over the Driftlight data. The engine loads on first use. With `onMark`, clicks on marks are reported. */
-export function Viz({ spec, title, onMark }: { spec: VizSpec; title?: string; onMark?: (members: MarkMembers, additive: boolean) => void }) {
+/** Draws a viz spec over the Driftlight data. The engine loads on first use. With `onMark`, clicks on marks are reported; with `onHover`, moving over them. */
+export function Viz({
+  spec,
+  title,
+  onMark,
+  onHover,
+}: {
+  spec: VizSpec
+  title?: string
+  onMark?: (members: MarkMembers, additive: boolean) => void
+  onHover?: (members: MarkMembers) => void
+}) {
   const ref = useRef<HTMLDivElement>(null)
   // The latest callback, so a new one doesn't redraw the chart.
   const markRef = useRef(onMark)
+  const hoverRef = useRef(onHover)
   useEffect(() => {
     markRef.current = onMark
+    hoverRef.current = onHover
   })
   const selectable = onMark !== undefined
+  const hoverable = onHover !== undefined
   // The spec's JSON identifies the drawing: a structurally equal spec doesn't redraw.
   const key = JSON.stringify(spec)
   const [drawn, setDrawn] = useState<DrawState | undefined>()
@@ -36,7 +49,15 @@ export function Viz({ spec, title, onMark }: { spec: VizSpec; title?: string; on
     let cancelled = false
     let cleanup: (() => void) | undefined
     import('./runtime')
-      .then((m) => m.renderViz(ref.current!, JSON.parse(key) as VizSpec, readTheme(), selectable ? (members, additive) => markRef.current?.(members, additive) : undefined))
+      .then((m) =>
+        m.renderViz(
+          ref.current!,
+          JSON.parse(key) as VizSpec,
+          readTheme(),
+          selectable ? (members, additive) => markRef.current?.(members, additive) : undefined,
+          hoverable ? (members) => hoverRef.current?.(members) : undefined,
+        ),
+      )
       .then((finalize) => {
         if (cancelled) return finalize()
         cleanup = finalize
@@ -51,7 +72,7 @@ export function Viz({ spec, title, onMark }: { spec: VizSpec; title?: string; on
       cancelled = true
       cleanup?.()
     }
-  }, [key, selectable])
+  }, [key, selectable, hoverable])
 
   return (
     <figure className="max-w-full overflow-x-auto rounded-lg border border-slate-200 bg-white p-3" aria-label={title ?? 'Chart'} aria-busy={state.status === 'loading'}>

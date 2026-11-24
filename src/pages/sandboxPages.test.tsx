@@ -8,15 +8,22 @@ import { RouterProvider, createMemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { routes } from '../app/routes'
 import { parseSpecHash } from '../engine/edit'
+import { parseWorkbookHash } from '../engine/dashboard'
 import type { MarkMembers } from '../engine/runtime'
+import type { VizSpec } from '../engine/spec'
 import { getProgress, resetProgress } from '../progress/store'
 
 /** The last chart's click handler: clicking a mark in jsdom means calling it. */
-const view = vi.hoisted(() => ({ onMark: undefined as ((m: MarkMembers, additive: boolean) => void) | undefined }))
+const view = vi.hoisted(() => ({
+  onMark: undefined as ((m: MarkMembers, additive: boolean) => void) | undefined,
+  /** Each drawn chart's spec and handlers, by its element (the dashboard draws two). */
+  charts: new Map<unknown, { spec: VizSpec; onMark?: (m: MarkMembers, additive: boolean) => void; onHover?: (m: MarkMembers) => void }>(),
+}))
 
 vi.mock('../engine/runtime', () => ({
-  renderViz: async (_el: unknown, _spec: unknown, _theme: unknown, onMark?: (m: MarkMembers, additive: boolean) => void) => {
+  renderViz: async (el: unknown, spec: VizSpec, _theme: unknown, onMark?: (m: MarkMembers, additive: boolean) => void, onHover?: (m: MarkMembers) => void) => {
     view.onMark = onMark
+    view.charts.set(el, { spec, onMark, onHover })
     return () => {}
   },
   membersOf: async () => ['Console', 'Mobile', 'TV', 'Null'].map((m) => ({ label: m, value: m })),
@@ -324,6 +331,69 @@ describe('sandbox', () => {
   it('reports a damaged preset', async () => {
     await renderAt('/build/sandbox#spec=%7Bnope', 'Viz builder sandbox')
     expect(screen.getByRole('alert')).toHaveTextContent('damaged')
+  })
+})
+
+describe('dashboard', () => {
+  /** The handlers of the chart drawn in a dashboard zone. */
+  const chartIn = async (sheet: string) => {
+    const figure = await within(screen.getByRole('region', { name: sheet })).findByRole('figure', { name: sheet })
+    await waitFor(() => expect(view.charts.has(figure.lastElementChild)).toBe(true))
+    return () => view.charts.get(figure.lastElementChild)!
+  }
+
+  it('builds two sheets, filters one from the other and keeps the workbook in the URL', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    await addField('Genre', 'Add to Rows')
+    await addField('Minutes Watched', 'Add to Columns')
+    expect(router.state.location.hash).toMatch(/^#spec=/)
+    await user.click(screen.getByRole('tab', { name: 'Sheet 2' }))
+    expect(shelf('Rows')).not.toHaveTextContent('Genre')
+    await addField('Device', 'Add to Rows')
+    await addField('Sessions (Count)', 'Add to Columns')
+    expect(router.state.location.hash).toMatch(/^#wb=/)
+
+    await user.click(screen.getByRole('tab', { name: /Dashboard 1/ }))
+    const sheet2 = await chartIn('Sheet 2')
+    await user.click(within(screen.getByRole('region', { name: 'Sheet 1' })).getByRole('button', { name: /Use as Filter/ }))
+    expect(parseWorkbookHash(router.state.location.hash)).toMatchObject({ dashboard: { actions: [{ source: 0, target: 1, run: 'select', clearing: 'all' }] } })
+
+    const sheet1 = await chartIn('Sheet 1')
+    act(() => sheet1().onMark!([{ field: 'Genre', member: 'Comedy' }], false))
+    expect(await within(screen.getByRole('region', { name: 'Sheet 2' })).findByText('filtered by an action')).toBeInTheDocument()
+    await waitFor(() => expect(sheet2().spec.filters).toEqual([{ kind: 'values', field: 'Genre', values: ['Comedy'] }]))
+    expect(screen.getByText('Selected: Genre: Comedy')).toBeInTheDocument()
+    // Show all values: clearing the selection removes the filter.
+    act(() => sheet1().onMark!([], false))
+    await waitFor(() => expect(sheet2().spec.filters).toEqual([]))
+  })
+
+  it('edits a filter action in Dashboard > Actions: Menu, Exclude all values, Selected fields', async () => {
+    const workbook = {
+      sheets: [{ rows: [{ field: 'Genre' }, { field: 'Type' }], columns: [{ field: 'Minutes Watched' }] }, { rows: [{ field: 'Device' }], columns: [{ field: 'Sessions (Count)' }] }],
+    }
+    const router = await renderAt(`/build/sandbox#wb=${encodeURIComponent(JSON.stringify(workbook))}`, 'Viz builder sandbox')
+    await user.click(screen.getByRole('tab', { name: /Dashboard 1/ }))
+    await user.click(screen.getByRole('button', { name: 'Dashboard ▸ Actions…' }))
+    await user.click(screen.getByRole('button', { name: 'Add Action ▸ Filter…' }))
+    await user.click(within(screen.getByRole('radiogroup', { name: 'Run action on' })).getByRole('radio', { name: 'Menu' }))
+    await user.click(within(screen.getByRole('radiogroup', { name: 'Clearing the selection will' })).getByRole('radio', { name: 'Exclude all values' }))
+    await user.click(within(screen.getByRole('radiogroup', { name: 'Target filters' })).getByRole('radio', { name: 'Selected fields' }))
+    await user.click(within(screen.getByRole('group', { name: 'Selected fields' })).getByRole('checkbox', { name: 'Type' }))
+    await user.click(screen.getByRole('button', { name: 'OK' }))
+    expect(parseWorkbookHash(router.state.location.hash)).toMatchObject({
+      dashboard: { actions: [{ name: 'Filter 1', source: 0, target: 1, run: 'menu', clearing: 'exclude', fields: ['Genre'] }] },
+    })
+    expect(screen.getByRole('row', { name: /Filter 1/ })).toHaveTextContent('MenuSheet 1Sheet 2Exclude all values')
+
+    const sheet1 = await chartIn('Sheet 1')
+    const sheet2 = await chartIn('Sheet 2')
+    act(() => sheet1().onMark!([{ field: 'Genre', member: 'Drama' }, { field: 'Type', member: 'Movie' }], false))
+    expect(sheet2().spec.filters).toEqual([])
+    await user.click(screen.getByRole('button', { name: '▸ Filter 1' }))
+    await waitFor(() => expect(sheet2().spec.filters).toEqual([{ kind: 'values', field: 'Genre', values: ['Drama'] }]))
+    act(() => sheet1().onMark!([], false))
+    expect(await screen.findByText(/excludes all values here/)).toBeInTheDocument()
   })
 })
 

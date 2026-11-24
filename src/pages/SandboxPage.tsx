@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate, useParams } from 'react-router'
+import { Dashboard } from '../build/Dashboard'
 import { Sandbox } from '../build/Sandbox'
 import { OBJECTIVE_BY_ID } from '../content/blueprint'
 import { SANDBOX_CHALLENGES, SANDBOX_CHALLENGE_BY_ID, type SandboxChallenge } from '../content/sandbox'
+import { emptyWorkbook, parseWorkbookHash, sheetName, type Workbook, workbookHash } from '../engine/dashboard'
 import { emptySpec, parseSpecHash, specHash } from '../engine/edit'
 import { type MatchResult, matchSpec } from '../engine/match'
 import type { VizSpec } from '../engine/spec'
@@ -27,6 +29,35 @@ function useHashSpec(fallback: VizSpec) {
     set: (next: VizSpec) => {
       setUndo((u) => [...u, specHash(spec)])
       go(specHash(next))
+    },
+    canUndo: undo.length > 0,
+    undo: () => {
+      go(undo.at(-1)!)
+      setUndo((u) => u.slice(0, -1))
+    },
+  }
+}
+
+function readWorkbookHash(hash: string): Workbook | Error | undefined {
+  const spec = parseSpecHash(hash)
+  if (spec !== undefined) return spec instanceof Error ? spec : emptyWorkbook(spec)
+  return parseWorkbookHash(hash)
+}
+
+/** Like useHashSpec for the free sandbox's workbook: `#wb=`, or a `#spec=` link opened as Sheet 1. */
+function useHashWorkbook() {
+  const { hash } = useLocation()
+  const navigate = useNavigate()
+  const [undo, setUndo] = useState<string[]>([])
+  const parsed = useMemo(() => readWorkbookHash(hash), [hash])
+  const workbook = parsed instanceof Error || parsed === undefined ? emptyWorkbook() : parsed
+  const go = (next: string) => navigate({ hash: next }, { replace: true, preventScrollReset: true })
+  return {
+    workbook,
+    error: parsed instanceof Error ? parsed.message : undefined,
+    set: (next: Workbook) => {
+      setUndo((u) => [...u, workbookHash(workbook)])
+      go(workbookHash(next))
     },
     canUndo: undo.length > 0,
     undo: () => {
@@ -66,23 +97,51 @@ function Toolbar({ canUndo, onUndo, onReset, resetLabel }: { canUndo: boolean; o
   )
 }
 
+const DASHBOARD = 'dashboard'
+type Tab = number | typeof DASHBOARD
+
 function FreeSandbox() {
-  const state = useHashSpec(emptySpec())
+  const state = useHashWorkbook()
+  const { workbook } = state
+  const [tab, setTab] = useState<Tab>(0)
+  const setSheet = (i: number, spec: VizSpec) => state.set({ ...workbook, sheets: workbook.sheets.map((s, j) => (j === i ? spec : s)) })
+  const tabs: { id: Tab; label: string }[] = [...workbook.sheets.map((_, i) => ({ id: i, label: sheetName(i) })), { id: DASHBOARD, label: 'Dashboard 1' }]
   return (
     <div className="space-y-4">
       <h1 className="text-3xl font-bold">Viz builder sandbox</h1>
       <p className="text-slate-600">
         Build views from the Driftlight data the way you would in Tableau: drag fields from the Data pane to the shelves, or open a field to
-        add it. Open a pill to change its aggregation, date level, discrete or continuous setting, or sort. The address bar always holds your
-        chart, so you can bookmark it or send it to someone.
+        add it. Open a pill to change its aggregation, date level, discrete or continuous setting, or sort. Build two sheets and put them on
+        the dashboard to try filter actions. The address bar always holds your work, so you can bookmark it or send it to someone.
       </p>
       {state.error && (
         <p role="alert" className="rounded border border-amber-300 bg-amber-50 p-2 text-sm">
           {state.error}
         </p>
       )}
-      <Toolbar canUndo={state.canUndo} onUndo={state.undo} onReset={() => state.set(emptySpec(state.spec.source))} resetLabel="Clear sheet" />
-      <Sandbox spec={state.spec} onChange={state.set} />
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div role="tablist" aria-label="Sheets and dashboard" className="flex flex-wrap gap-1">
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={tab === t.id}
+              onClick={() => setTab(t.id)}
+              className={`rounded-t border border-b-0 px-3 py-1 text-sm ${tab === t.id ? 'border-brand bg-white font-semibold' : 'border-slate-300 bg-slate-100'}`}
+            >
+              {t.id === DASHBOARD ? '▦ ' : ''}
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {tab === DASHBOARD ? (
+          <Toolbar canUndo={state.canUndo} onUndo={state.undo} onReset={() => state.set({ ...workbook, dashboard: { layout: 'horizontal', actions: [] } })} resetLabel="Clear dashboard" />
+        ) : (
+          <Toolbar canUndo={state.canUndo} onUndo={state.undo} onReset={() => setSheet(tab, emptySpec(workbook.sheets[tab]!.source))} resetLabel="Clear sheet" />
+        )}
+      </div>
+      {tab === DASHBOARD ? <Dashboard workbook={workbook} onChange={state.set} /> : <Sandbox key={tab} spec={workbook.sheets[tab]!} onChange={(spec) => setSheet(tab, spec)} />}
     </div>
   )
 }

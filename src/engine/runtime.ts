@@ -14,29 +14,42 @@ export type MarkMembers = { field: string; member: string }[]
 /**
  * Draws the spec into `el`; resolves to a cleanup function. With `onMark`,
  * a click on a mark reports its members (an empty list for the background),
- * and whether Shift, Ctrl or ⌘ was held to add to the selection.
+ * and whether Shift, Ctrl or ⌘ was held to add to the selection. With
+ * `onHover`, moving onto a mark reports its members and moving off one an
+ * empty list.
  */
-export async function renderViz(el: HTMLElement, spec: VizSpec, theme: Theme, onMark?: (members: MarkMembers, additive: boolean) => void): Promise<() => void> {
+export async function renderViz(
+  el: HTMLElement,
+  spec: VizSpec,
+  theme: Theme,
+  onMark?: (members: MarkMembers, additive: boolean) => void,
+  onHover?: (members: MarkMembers) => void,
+): Promise<() => void> {
   const map = needsWorld(spec)
   if (map) world ??= import('world-atlas/countries-110m.json').then((m) => m.default as unknown as Topology)
   const [data, topology] = await Promise.all([loadDataset(), map ? world : undefined])
   const res = query(spec, data!)
   const vl = toVegaLite(spec, res, { theme, world: topology })
   const result = await embed(el, vl, { actions: false, renderer: 'svg' })
-  if (onMark) {
-    const dims = res.columns.filter((c) => c.kind === 'dimension' && !c.continuous && !c.date)
+  const dims = res.columns.filter((c) => c.kind === 'dimension' && !c.continuous && !c.date)
+  const marksOf = (item: unknown): MarkMembers => {
+    const datum = ((item as { datum?: unknown } | null)?.datum ?? {}) as Record<string, unknown>
+    return dims
+      .filter((c) => c.id in datum)
+      .map((c) => {
+        const label = String(datum[c.id])
+        const i = c.order?.indexOf(label) ?? -1
+        return { field: c.field.name, member: c.raw && i >= 0 ? c.raw[i]! : label }
+      })
+  }
+  if (onMark)
     result.view.addEventListener('click', (event, item) => {
-      const datum = (item?.datum ?? {}) as Record<string, unknown>
-      const members = dims
-        .filter((c) => c.id in datum)
-        .map((c) => {
-          const label = String(datum[c.id])
-          const i = c.order?.indexOf(label) ?? -1
-          return { field: c.field.name, member: c.raw && i >= 0 ? c.raw[i]! : label }
-        })
       const e = event as MouseEvent
-      onMark(members, e.shiftKey || e.ctrlKey || e.metaKey)
+      onMark(marksOf(item), e.shiftKey || e.ctrlKey || e.metaKey)
     })
+  if (onHover) {
+    result.view.addEventListener('mouseover', (_, item) => onHover(marksOf(item)))
+    result.view.addEventListener('mouseout', () => onHover([]))
   }
   return () => result.finalize()
 }
