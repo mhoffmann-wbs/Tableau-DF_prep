@@ -2371,5 +2371,629 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
     ]
+  },
+  {
+    "id": "2.1-060",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "In this scatterplot, what does each circle represent?",
+    "options": [
+      {
+        "text": "One session, placed by how many minutes it lasted.",
+        "correct": false,
+        "rationale": "Rows are not drawn per session. The measures are aggregated for each member of the Detail field."
+      },
+      {
+        "text": "One genre, because genres group the titles.",
+        "correct": false,
+        "rationale": "`Genre` is not in the view. Only `Title` is on Detail, so the level of detail is the title."
+      },
+      {
+        "text": "One title, with its session count and its total minutes watched.",
+        "correct": true,
+        "rationale": "`Title` is on Detail, so Tableau creates one mark per title. Its position comes from the two measures for that title."
+      },
+      {
+        "text": "The whole dataset, summarised in a single point.",
+        "correct": false,
+        "rationale": "That is what you get with no dimension in the view. Here `Title` on Detail splits it into many marks."
+      }
+    ],
+    "explanation": "The marks in a scatterplot are made by the dimensions in the view that are not on Rows or Columns. A dimension on Detail sets the level of detail, so each of its members becomes one circle positioned by the two aggregated measures.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "Title"
+            }
+          ]
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-061",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "Look at the shelves. How many circles will this scatterplot draw?",
+    "options": [
+      {
+        "text": "One circle per `Genre`, each coloured by its genre.",
+        "correct": true,
+        "rationale": "A dimension on Color also sets the level of detail, so each of its members gets its own mark."
+      },
+      {
+        "text": "A single circle, because Color only changes the hue of a mark.",
+        "correct": false,
+        "rationale": "Color is a dimension here. A discrete field on Color splits the data into one mark per member."
+      },
+      {
+        "text": "One circle per session, because no aggregation is shown on the shelves.",
+        "correct": false,
+        "rationale": "Both measures are aggregated by default, so the view groups rows by the dimensions it contains."
+      },
+      {
+        "text": "One circle per `Genre` and device, because both are in the view.",
+        "correct": false,
+        "rationale": "`Device` is not in the view. Only `Genre` is on Color."
+      }
+    ],
+    "explanation": "Detail and Color both split the data into the members of their fields. With `Genre` on Color and nothing else, each genre becomes one circle, and the colour tells them apart.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "color": {
+            "field": "Genre"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-062",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "Look at the view: titles plotted by sessions and minutes, coloured by genre. Which two statements are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Title` on Detail gives one circle per title.",
+        "correct": true,
+        "rationale": "The Detail field sets the level of detail, so each title becomes a mark."
+      },
+      {
+        "text": "Both axes are continuous because the fields on Rows and Columns are measures.",
+        "correct": true,
+        "rationale": "Measures give continuous axes, so the chart has two numeric axes and no headers."
+      },
+      {
+        "text": "`Genre` on Color turns the chart into a bar chart with coloured segments.",
+        "correct": false,
+        "rationale": "Color only paints the marks. The mark type is `Circle` and stays so."
+      },
+      {
+        "text": "Each genre gets its own pane because `Genre` is a dimension.",
+        "correct": false,
+        "rationale": "Panes come from dimensions on Rows or Columns. A dimension on Color only changes the colour."
+      },
+      {
+        "text": "Removing `Title` from Detail leaves a single circle, because Color adds no marks.",
+        "correct": false,
+        "rationale": "`Genre` is a dimension on Color, so it still splits the data. The result would be one circle per genre."
+      }
+    ],
+    "explanation": "A scatterplot has a measure on each axis, and the dimensions on Detail and Color decide how many marks there are. Here `Title` makes one circle per title and the axes are two continuous scales.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "Title"
+            }
+          ],
+          "color": {
+            "field": "Genre"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-063",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "Suppose one title's circle in this scatterplot sits far away from the cloud formed by the other titles. What does that position tell the analyst?",
+    "options": [
+      {
+        "text": "That title is wrongly joined to another table, so its row is duplicated.",
+        "correct": false,
+        "rationale": "Position comes from the aggregated measures. It does not signal a data error by itself."
+      },
+      {
+        "text": "That title belongs to a different genre than the rest.",
+        "correct": false,
+        "rationale": "Genre is not in the view, so it does not affect where a circle sits."
+      },
+      {
+        "text": "That title is a discrete member, which Tableau draws separately from continuous ones.",
+        "correct": false,
+        "rationale": "Every title is a member of the same dimension. The distance comes from the measure values."
+      },
+      {
+        "text": "That title has an unusual combination of sessions and minutes, so it deserves a closer look.",
+        "correct": true,
+        "rationale": "Outliers are the points that sit apart from the rest. The position shows how the two measures differ for that title."
+      }
+    ],
+    "explanation": "A scatterplot helps spot outliers and relationships between two measures. A mark far from the others has a different mix of the two values, which is a reason to investigate rather than proof of an error.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "Title"
+            }
+          ]
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-064",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.3"
+    ],
+    "stem": "A scatterplot has `Genre` on Rows ahead of the two measures. Why does each pane show a single circle?",
+    "options": [
+      {
+        "text": "`Genre` has to be moved to Detail first, otherwise Tableau cannot draw a circle inside each pane.",
+        "correct": false,
+        "rationale": "Tableau draws a circle per pane without it. Detail would only add marks inside a pane, which is a different design."
+      },
+      {
+        "text": "`Genre` on Rows makes one pane per genre, and nothing in a pane splits the data further.",
+        "correct": true,
+        "rationale": "A dimension on a shelf makes panes, and within each pane the measures aggregate to one point."
+      },
+      {
+        "text": "The measures are discrete, so Tableau keeps only the first value of each.",
+        "correct": false,
+        "rationale": "Both measures are continuous and aggregated, not reduced to their first value."
+      },
+      {
+        "text": "A scatterplot allows only one dimension, so Tableau drops the others.",
+        "correct": false,
+        "rationale": "Tableau does not drop dimensions. It uses them to build panes."
+      }
+    ],
+    "explanation": "A dimension on Rows or Columns creates panes, not extra marks inside one chart. To get one mark per member in a single plot, put the dimension on Detail or Color.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Genre"
+          },
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "type": "circle"
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm"
+    ]
+  },
+  {
+    "id": "2.1-065",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "In this filled map, what decides how dark each country is shaded?",
+    "options": [
+      {
+        "text": "The mark size, because bigger areas hold more subscribers.",
+        "correct": false,
+        "rationale": "Size is not used here. Shading comes from the field on Color."
+      },
+      {
+        "text": "The `Country` pill on Detail, which assigns a darker colour to later countries.",
+        "correct": false,
+        "rationale": "`Country` on Detail only says which areas to fill. It does not rank them."
+      },
+      {
+        "text": "The measure on Color, `SUM(Subscribers (Count))`, for that country.",
+        "correct": true,
+        "rationale": "On a filled map a measure on Color sets the shade of each area."
+      },
+      {
+        "text": "The Latitude and Longitude values, because darker shades are further from the equator.",
+        "correct": false,
+        "rationale": "The generated coordinates place the map. They do not drive the colour."
+      }
+    ],
+    "explanation": "A filled map needs the Map mark type, a geographic dimension on Detail and a measure on Color. Detail picks the areas and Color turns the measure into a shade.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "map",
+          "detail": [
+            {
+              "field": "Country"
+            }
+          ],
+          "color": {
+            "field": "Subscribers (Count)"
+          }
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm"
+    ]
+  },
+  {
+    "id": "2.1-066",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "Look at the shelves. Which two statements about this view are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`City` on Detail places one circle at each city.",
+        "correct": true,
+        "rationale": "Detail sets the level of detail, so every city becomes a mark at its location."
+      },
+      {
+        "text": "The measure on Size makes it a proportional symbol map.",
+        "correct": true,
+        "rationale": "Circles are scaled by the measure, so larger circles stand for larger values."
+      },
+      {
+        "text": "The Map mark type is used, so the cities are filled as areas.",
+        "correct": false,
+        "rationale": "The mark type is `Circle`. Cities are points and not areas to fill."
+      },
+      {
+        "text": "`Latitude (generated)` and `Longitude (generated)` are columns that the CSV file must contain.",
+        "correct": false,
+        "rationale": "Tableau generates them for fields with a geographic role. They do not exist in the file."
+      },
+      {
+        "text": "The measure on Size decides where each circle is placed.",
+        "correct": false,
+        "rationale": "Size only scales a circle. Placement comes from the generated coordinates and the field on Detail."
+      }
+    ],
+    "explanation": "A symbol map puts Longitude on Columns, Latitude on Rows and a geographic field on Detail. Adding a measure to Size scales each circle, which makes it a proportional symbol map.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "City"
+            }
+          ],
+          "size": {
+            "field": "Subscribers (Count)"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_symbol.htm"
+    ]
+  },
+  {
+    "id": "2.1-067",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "The head of marketing sees this symbol map of cities, but the board wants subscribers shaded per country. Which changes build that view?",
+    "options": [
+      {
+        "text": "Set the mark type to Map, put `Country` on Detail and move the measure from Size to Color.",
+        "correct": true,
+        "rationale": "A filled map uses the Map mark, an area field on Detail and a measure on Color."
+      },
+      {
+        "text": "Keep the Circle mark, add `Country` to Detail and add a second measure to Size.",
+        "correct": false,
+        "rationale": "Circles stay points. Without the Map mark type, no area is filled."
+      },
+      {
+        "text": "Set the mark type to Density, keep `City` on Detail and move the measure to Color.",
+        "correct": false,
+        "rationale": "Density shows where many points cluster. It does not shade countries."
+      },
+      {
+        "text": "Put `Country` on Rows and the measure on Columns, then pick the Map mark type.",
+        "correct": false,
+        "rationale": "Country on Rows makes headers and a bar chart. A map needs the generated coordinates and Detail."
+      }
+    ],
+    "explanation": "Moving from a symbol map to a filled map changes the mark type and the roles of the fields. The area goes on Detail and the measure moves from Size to Color.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "City"
+            }
+          ],
+          "size": {
+            "field": "Subscribers (Count)"
+          }
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm"
+    ]
+  },
+  {
+    "id": "2.1-068",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "Look at the shelves. Which two statements describe this view? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The Map mark type fills each country as an area.",
+        "correct": true,
+        "rationale": "The `Map` mark type draws areas for the geographic field on Detail."
+      },
+      {
+        "text": "`Country` on Detail sets which areas get a mark.",
+        "correct": true,
+        "rationale": "Detail holds the geographic field that gives one area per country."
+      },
+      {
+        "text": "The measure on Color places a circle at each country.",
+        "correct": false,
+        "rationale": "Color shades a mark. It does not place circles, and this view draws areas."
+      },
+      {
+        "text": "The view needs `Region` on Rows so that countries appear.",
+        "correct": false,
+        "rationale": "Countries appear because of the field on Detail. No field on Rows is needed."
+      },
+      {
+        "text": "Each subscriber is drawn as its own filled area.",
+        "correct": false,
+        "rationale": "The level of detail is the country, so there is one area per country."
+      }
+    ],
+    "explanation": "A filled map combines the Map mark type, a geographic dimension on Detail and a measure on Color. Detail selects which areas are filled, and the mark type draws them as areas.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "map",
+          "detail": [
+            {
+              "field": "Country"
+            }
+          ],
+          "color": {
+            "field": "Subscribers (Count)"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm"
+    ]
+  },
+  {
+    "id": "2.1-069",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.4"
+    ],
+    "stem": "A symbol map has `City` on Detail and `SUM(Subscribers (Count))` on Size. What happens if the analyst removes the measure from Size?",
+    "options": [
+      {
+        "text": "The map turns into a filled map of the cities.",
+        "correct": false,
+        "rationale": "A filled map needs the Map mark type. Removing Size does not change the mark type."
+      },
+      {
+        "text": "The circles disappear, because Detail needs a measure to draw marks.",
+        "correct": false,
+        "rationale": "Marks come from the level of detail. Detail does not need a measure."
+      },
+      {
+        "text": "Tableau merges the circles into one mark per country.",
+        "correct": false,
+        "rationale": "The level of detail is the city. No country field is added."
+      },
+      {
+        "text": "Tableau keeps one circle per city, all the same size.",
+        "correct": true,
+        "rationale": "`City` on Detail still sets one mark per city. Without Size, the circles share one default size."
+      }
+    ],
+    "explanation": "Detail decides how many marks there are and where they sit. Size only varies a mark's size, so removing it leaves the same circles at equal size and the map is no longer proportional.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "City"
+            }
+          ],
+          "size": {
+            "field": "Subscribers (Count)"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_howto_symbol.htm"
+    ]
   }
 ]
