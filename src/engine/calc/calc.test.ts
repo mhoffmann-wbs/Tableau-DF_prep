@@ -227,7 +227,7 @@ describe('calculated fields in the data model', () => {
       { name: 'Early', formula: '[Late]' },
       { name: 'Late', formula: '1' },
     ])
-    const [bad, counted, dup, early] = calcFields('sessions', s.calcs)
+    const [bad, counted, dup, early] = calcFields({ source: 'sessions' }, s.calcs)
     expect(bad!.calc!.error!.message).toBe(MIX_MESSAGE)
     expect(counted!.calc!.error!.message).toContain('COUNTD([Session ID])')
     expect(dup!.calc!.error!.message).toContain('already a field')

@@ -58,7 +58,7 @@ type Member = { value: Value; sortKey: number | string }
 type Getter = (row: Row, field: string) => Value
 
 function member(row: Row, rp: ResolvedPill, get: Getter): Member {
-  const raw = get(row, rp.field.name)
+  const raw = get(row, rp.members ?? rp.field.name)
   if (rp.date) {
     if (raw === null) return { value: rp.continuous ? null : 'Null', sortKey: Infinity }
     const { level, mode } = rp.date
@@ -156,7 +156,7 @@ function measureValue(calcs: CalcFields, get: Getter, rows: Row[], field: string
 
 export function query(spec: VizSpec, data: Dataset): QueryResult {
   const source = spec.source
-  const calcs = calcsOf(spec)
+  const calcs = calcsOf(spec, data[source])
   const get: Getter = (r, name) => rowValue(calcs, r, name)
   const columns: Column[] = []
   for (const pill of pillsOf(spec)) {
@@ -167,6 +167,8 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
   const measures = columns.filter((c) => c.kind === 'measure')
 
   const filters = spec.filters.map((f) => rowFilter(f, spec, get)).filter((f) => f !== undefined)
+  // Show Members in Set keeps the members In the set.
+  for (const c of columns) if (c.members) filters.push((r) => get(r, c.field.name) === 'In')
   const rows = data[source].filter((r) => filters.every((f) => f(r)))
 
   // One group per combination of dimension members: the view's level of detail.

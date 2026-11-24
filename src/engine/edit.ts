@@ -5,12 +5,15 @@ import { fieldOf, fieldsOf, type SourceRef } from './model.ts'
 import { EngineError, resolvePill } from './pills.ts'
 import {
   type Aggregation,
+  type Bin,
   type Calc,
   type DateLevel,
   type FieldEdit,
   type Filter,
+  type Group,
   type MarkType,
   type Pill,
+  type SetDef,
   type SourceId,
   type VizSpec,
   pillsOf,
@@ -203,7 +206,26 @@ function renameRefs(spec: VizSpec, old: string, name: string): VizSpec {
     ...renamed,
     calcs: spec.calcs.map((c) => ({ ...c, formula: c.formula.split(fieldRef(old)).join(fieldRef(name)) })),
     fields: spec.fields.map((e) => (e.sort?.field === old ? { ...e, sort: { ...e.sort, field: name } } : e)),
+    groups: spec.groups.map((g) => ({ ...g, name: rename(g.name), field: rename(g.field) })),
+    sets: spec.sets.map((x) => ({ ...x, name: rename(x.name), field: rename(x.field), rule: x.rule.kind === 'members' ? x.rule : { ...x.rule, field: rename(x.rule.field) } })),
+    bins: spec.bins.map((b) => ({ ...b, name: rename(b.name), field: rename(b.field) })),
+    hierarchies: spec.hierarchies.map((h) => ({ ...h, fields: h.fields.map(rename) })),
     filters: spec.filters.map((f) => ({ ...f, field: rename(f.field) })),
+  }
+}
+
+/** Takes a field off the sheet: its pills, filters and hierarchy place go; sorts by it go back to the default. */
+function dropRefs(spec: VizSpec, name: string): VizSpec {
+  const cleared = mapPills(spec, (p) => {
+    if (p.field === name) return undefined
+    if (p.sort?.field !== name) return p
+    const { sort: _sort, ...rest } = p
+    return rest
+  })
+  return {
+    ...cleared,
+    filters: spec.filters.filter((f) => f.field !== name),
+    hierarchies: spec.hierarchies.map((h) => ({ ...h, fields: h.fields.filter((f) => f !== name) })).filter((h) => h.fields.length > 0),
   }
 }
 
@@ -220,13 +242,99 @@ export function setCalc(spec: VizSpec, index: number | undefined, calc: Calc): V
 
 /** Removes a calc with the pills and filters on it; sorts by it go back to the default. */
 export function removeCalc(spec: VizSpec, name: string): VizSpec {
-  const cleared = mapPills(spec, (p) => {
-    if (p.field === name) return undefined
-    if (p.sort?.field !== name) return p
-    const { sort: _sort, ...rest } = p
-    return rest
-  })
-  return { ...cleared, calcs: spec.calcs.filter((c) => c.name !== name), filters: spec.filters.filter((f) => f.field !== name) }
+  return { ...dropRefs(spec, name), calcs: spec.calcs.filter((c) => c.name !== name) }
+}
+
+// ---- groups, sets, bins and hierarchies ----
+
+export type DerivedKind = 'groups' | 'sets' | 'bins'
+type DerivedDef = { groups: Group; sets: SetDef; bins: Bin }
+
+/**
+ * Adds a group, set or bin (at `index` undefined) or replaces one; a new name
+ * follows through the sheet. Throws an EngineError when the name is taken.
+ */
+export function setDerived<K extends DerivedKind>(spec: VizSpec, kind: K, index: number | undefined, def: DerivedDef[K]): VizSpec {
+  const list = spec[kind] as DerivedDef[K][]
+  const old = index === undefined ? undefined : list[index]!.name
+  if (def.name !== old && fieldsOf(spec).some((f) => f.name === def.name)) throw new EngineError(`There is already a field called ${def.name}. Choose another name.`)
+  const renamed = old === undefined ? spec : renameRefs(spec, old, def.name)
+  const next = index === undefined ? [...list, def] : (renamed[kind] as DerivedDef[K][]).map((d, i) => (i === index ? def : d))
+  return { ...renamed, [kind]: next }
+}
+
+/** Removes a group, set or bin with its pills, filters and hierarchy place. */
+export function removeDerived(spec: VizSpec, name: string): VizSpec {
+  const cleared = dropRefs(spec, name)
+  return { ...cleared, groups: spec.groups.filter((g) => g.name !== name), sets: spec.sets.filter((x) => x.name !== name), bins: spec.bins.filter((b) => b.name !== name) }
+}
+
+/** The hierarchy a field is in, if any. */
+export const hierarchyOf = (spec: VizSpec, field: string) => spec.hierarchies.find((h) => h.fields.includes(field))
+
+/** A new hierarchy of `fields` (general to detailed); each leaves any hierarchy it was in. Throws when the name is taken. */
+export function createHierarchy(spec: VizSpec, name: string, fields: string[]): VizSpec {
+  if (spec.hierarchies.some((h) => h.name === name) || fieldsOf(spec).some((f) => f.name === name)) throw new EngineError(`There is already a field or hierarchy called ${name}. Choose another name.`)
+  const rest = spec.hierarchies.map((h) => ({ ...h, fields: h.fields.filter((f) => !fields.includes(f)) })).filter((h) => h.fields.length > 0)
+  return { ...spec, hierarchies: [...rest, { name, fields }] }
+}
+
+/** Adds a field to the end of a hierarchy (or, with `before`, ahead of that field), taking it out of any other. */
+export function addToHierarchy(spec: VizSpec, hierarchy: string, field: string, before?: string): VizSpec {
+  const hierarchies = spec.hierarchies
+    .map((h) => {
+      const fields = h.fields.filter((f) => f !== field)
+      if (h.name !== hierarchy) return { ...h, fields }
+      const at = before ? fields.indexOf(before) : -1
+      return { ...h, fields: at < 0 ? [...fields, field] : [...fields.slice(0, at), field, ...fields.slice(at)] }
+    })
+    .filter((h) => h.fields.length > 0)
+  return { ...spec, hierarchies }
+}
+
+/** Takes a field out of its hierarchy; a hierarchy left empty goes. */
+export function removeFromHierarchy(spec: VizSpec, field: string): VizSpec {
+  return { ...spec, hierarchies: spec.hierarchies.map((h) => ({ ...h, fields: h.fields.filter((f) => f !== field) })).filter((h) => h.fields.length > 0) }
+}
+
+/** Removes a hierarchy; its fields stay in the Data pane. */
+export function removeHierarchy(spec: VizSpec, name: string): VizSpec {
+  return { ...spec, hierarchies: spec.hierarchies.filter((h) => h.name !== name) }
+}
+
+/**
+ * Drilling on a list-shelf pill of a hierarchy field: `down` is the next level
+ * (when it isn't on the shelf yet), `up` says whether lower levels follow it.
+ */
+export function drillState(spec: VizSpec, at: PillAt): { down?: string; up: boolean } {
+  if (isChannel(at.shelf)) return { up: false }
+  const pill = listOf(spec, at.shelf)[at.index]
+  const h = pill && !pill.agg ? hierarchyOf(spec, pill.field) : undefined
+  if (!h) return { up: false }
+  const level = h.fields.indexOf(pill!.field)
+  const onShelf = listOf(spec, at.shelf).map((p) => p.field)
+  const next = h.fields[level + 1]
+  return { down: next && !onShelf.includes(next) ? next : undefined, up: h.fields.slice(level + 1).some((f) => onShelf.includes(f)) }
+}
+
+/** The + on a hierarchy pill: the next level goes on the same shelf, right after it. */
+export function drillDown(spec: VizSpec, at: PillAt): VizSpec {
+  const next = drillState(spec, at).down
+  return next ? placePill(spec, { field: next }, at.shelf, at.index + 1) : spec
+}
+
+/** The − on a hierarchy pill: the levels below it leave the shelf. */
+export function drillUp(spec: VizSpec, at: PillAt): VizSpec {
+  if (isChannel(at.shelf)) return spec
+  const list = listOf(spec, at.shelf)
+  const h = hierarchyOf(spec, list[at.index]!.field)
+  if (!h) return spec
+  const below = h.fields.slice(h.fields.indexOf(list[at.index]!.field) + 1)
+  return withList(
+    spec,
+    at.shelf,
+    list.filter((p) => !below.includes(p.field)),
+  )
 }
 
 // ---- field edits (Data pane) ----
@@ -288,6 +396,7 @@ export function compactSpec(spec: VizSpec): Record<string, unknown> {
   if (spec.source !== 'sessions') out.source = spec.source
   if (spec.calcs.length) out.calcs = spec.calcs
   if (spec.fields.length) out.fields = spec.fields
+  for (const k of ['groups', 'sets', 'bins', 'hierarchies'] as const) if (spec[k].length) out[k] = spec[k]
   if (spec.columns.length) out.columns = spec.columns
   if (spec.rows.length) out.rows = spec.rows
   const marks: Record<string, unknown> = {}

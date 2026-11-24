@@ -5,46 +5,39 @@ import {
   type PillAt,
   SHELF_LABEL,
   type ShelfId,
+  createHierarchy,
   defaultFilter,
   editField,
-  emptySpec,
-  fieldEdit,
   isChannel,
   movePill,
   pillAt,
   pillFor,
   placePill,
   removeFilter,
-  removeCalc,
-  removePill,
   replacePill,
   setCalc,
+  setDerived,
   setFilter,
   setMarkType,
-  usesField,
 } from '../engine/edit'
-import { type Field, fieldsOf, isEditable, SOURCE_INFO, TYPE_CHANGES } from '../engine/model'
+import { type Field, fieldOf, fieldsOf, isEditable, SOURCE_INFO } from '../engine/model'
+import type { MarkMembers } from '../engine/runtime'
 import { AGG_LABEL, EngineError, resolvePill } from '../engine/pills'
 import { automaticMark } from '../engine/render'
-import { type Aggregation, type Calc, type FieldEdit, MARK_TYPES, type Filter, type GeoRole, type MarkType, SOURCES, type SourceId, type VizSpec, pillsOf } from '../engine/spec'
+import { type Bin, type Calc, type FieldEdit, type Group, MARK_TYPES, type Filter, type MarkType, type SetDef, type VizSpec, pillsOf } from '../engine/spec'
 import { Viz } from '../engine/Viz'
-import { type Dragged, startDrag, useDropTarget } from './dnd'
+import { type Dragged, useDropTarget } from './dnd'
 import { FilterEditor } from './FilterEditor'
-import { MenuButton, MenuHeading, MenuItem } from './Menu'
-import { saveCalc, useProgress } from '../progress/store'
+import { saveCalc } from '../progress/store'
 import { CalcEditor, calcStatus } from './CalcEditor'
+import { DataPane, type PaneDialog } from './DataPane'
+import { BinEditor, GroupEditor, HierarchyEditor, SetEditor } from './DerivedEditors'
 import { AliasEditor, CommentEditor, NumberFormatEditor, RenameEditor } from './FieldEditors'
-import { AGG_NAME, ShelfPill } from './ShelfPill'
+import { ShelfPill } from './ShelfPill'
 import { SortEditor } from './SortEditor'
 
-/** Data pane field dialogs, for a field named by its data source name. */
-type FieldDialog = 'rename' | 'aliases' | 'comment' | 'format' | 'sort'
-
-type Editor =
-  | { kind: 'filter'; index: number; filter: Filter }
-  | { kind: 'sort'; at: PillAt }
-  | { kind: 'calc'; index?: number }
-  | { kind: 'field'; dialog: FieldDialog; original: string; error?: string }
+/** The open dialog; `error` is why its last change was refused (a taken name). */
+type Editor = ({ kind: 'filter'; index: number; filter: Filter } | { kind: 'sort'; at: PillAt } | PaneDialog) & { error?: string }
 
 const MARK_NAME: Record<MarkType, string> = {
   automatic: 'Automatic',
@@ -82,28 +75,31 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
     if (filter) setEditor({ kind: 'filter', index: spec.filters.length, filter })
   }
   const pillProps = { spec, onChange: edit, onEditSort: (at: PillAt) => setEditor({ kind: 'sort', at }) }
-  /** Applies a Data pane change; a refused one (a taken name) keeps its dialog open with the reason. */
-  const changeField = (original: string, patch: Partial<Omit<FieldEdit, 'field'>>) => {
+  /** Applies a change that may be refused (a taken name): then its dialog stays open with the reason. */
+  const tryEdit = (change: () => VizSpec) => {
     try {
-      edit(editField(spec, original, patch))
+      edit(change())
     } catch (e) {
       if (!(e instanceof EngineError)) throw e
-      setEditor((cur) => (cur?.kind === 'field' ? { ...cur, error: e.message } : cur))
+      setEditor((cur) => cur && { ...cur, error: e.message })
     }
+  }
+  const changeField = (original: string, patch: Partial<Omit<FieldEdit, 'field'>>) => tryEdit(() => editField(spec, original, patch))
+  // Marks selected in the view, for a group or set made from marks; a new chart starts a new selection.
+  const viewKey = JSON.stringify(spec)
+  const [selection, setSelection] = useState<{ key: string; marks: MarkMembers[] }>()
+  const selected = selection?.key === viewKey ? selection.marks : []
+  const selectMark = (members: MarkMembers, additive: boolean) => {
+    if (members.length === 0) return setSelection(undefined)
+    const same = (m: MarkMembers) => JSON.stringify(m) === JSON.stringify(members)
+    const marks = additive ? (selected.some(same) ? selected.filter((m) => !same(m)) : [...selected, members]) : [members]
+    setSelection({ key: viewKey, marks })
   }
   const fieldEditor = editor?.kind === 'field' ? fieldsOf(spec).find((f) => (f.original?.name ?? f.name) === editor.original) : undefined
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[14rem_minmax(0,1fr)]">
-      <DataPane
-        spec={spec}
-        onChange={edit}
-        lockSource={lockSource}
-        onAddFilter={addFilter}
-        onEditCalc={(index) => setEditor({ kind: 'calc', index })}
-        onFieldChange={changeField}
-        onFieldDialog={(original, dialog) => setEditor({ kind: 'field', original, dialog })}
-      />
+      <DataPane spec={spec} onChange={edit} lockSource={lockSource} onAddFilter={addFilter} onOpen={setEditor} onFieldChange={changeField} />
       <div className="min-w-0 space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
           <FiltersCard spec={spec} onDropField={addFilter} onEdit={(index) => setEditor({ kind: 'filter', index, filter: spec.filters[index]! })} />
@@ -151,268 +147,84 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
         {editor?.kind === 'field' && fieldEditor && (
           <FieldDialogView key={`${editor.original}|${editor.dialog}`} spec={spec} field={fieldEditor} editor={editor} onApply={(patch) => changeField(editor.original, patch)} onCancel={() => setEditor(undefined)} />
         )}
+        {editor?.kind === 'derived' && (
+          <DerivedDialog key={`${editor.type}|${editor.field}|${editor.index ?? 'new'}`} spec={spec} editor={editor} onApply={tryEdit} onCancel={() => setEditor(undefined)} />
+        )}
+        {editor?.kind === 'hierarchy' && (
+          <HierarchyEditor
+            key={editor.fields.join('|')}
+            fields={editor.fields}
+            error={editor.error}
+            onApply={(name) => tryEdit(() => createHierarchy(spec, name, editor.fields))}
+            onCancel={() => setEditor(undefined)}
+          />
+        )}
         {pillsOf(spec).length === 0 ? (
           <p className={`${card} p-6 text-center text-slate-500`}>Drag fields from the Data pane to Columns and Rows, or open a field’s menu to add it.</p>
         ) : (
-          <Viz spec={spec} title="Your view" />
+          <>
+            <Viz spec={spec} title="Your view" onMark={selectMark} />
+            {selected.length > 0 && <SelectionBar spec={spec} marks={selected} onClear={() => setSelection(undefined)} onOpen={setEditor} />}
+          </>
         )}
       </div>
     </div>
   )
 }
 
-const TYPE_ICON: Record<Field['type'], string> = { string: 'Abc', number: '#', date: 'Date', datetime: 'Date', boolean: 'T|F' }
-
-function DataPane({
-  spec,
-  onChange,
-  lockSource,
-  onAddFilter,
-  onEditCalc,
-  onFieldChange,
-  onFieldDialog,
-}: {
-  spec: VizSpec
-  onChange: (s: VizSpec) => void
-  lockSource: boolean
-  onAddFilter: (field: string) => void
-  /** Opens the calculation editor: a calc's index, or undefined for a new one. */
-  onEditCalc: (index?: number) => void
-} & FieldActions) {
-  const saved = useProgress().calcs.filter((c) => c.source === spec.source && !spec.calcs.some((x) => x.name === c.name))
-  // Dropping a pill back on the Data pane removes it, as in Tableau.
-  const drop = useDropTarget((d) => d.kind === 'pill' && onChange(removePill(spec, d.at)), (k) => k === 'pill')
-  const fields = fieldsOf(spec)
-  const group = (role: Field['role'], title: string) => (
-    <div>
-      <h3 className="px-1 text-xs font-semibold tracking-wide text-slate-500 uppercase">{title}</h3>
-      <ul className="mt-1 sm:grid sm:grid-cols-2 lg:block">
-        {fields
-          .filter((f) => f.role === role)
-          .map((f) => (
-            <li key={f.name}>
-              <FieldButton field={f} spec={spec} onChange={onChange} onAddFilter={onAddFilter} onEditCalc={onEditCalc} onFieldChange={onFieldChange} onFieldDialog={onFieldDialog} />
-            </li>
-          ))}
-      </ul>
-    </div>
-  )
+/**
+ * The marks selected in the view, with the two commands Tableau offers on
+ * them here: Group (the paperclip) and Create Set, on one of their dimensions.
+ */
+function SelectionBar({ spec, marks, onClear, onOpen }: { spec: VizSpec; marks: MarkMembers[]; onClear: () => void; onOpen: (d: PaneDialog) => void }) {
+  // Groups and sets are made from data source dimensions that aren't dates.
+  const usable = [...new Set(marks.flatMap((m) => m.map((x) => x.field)))].filter((name) => {
+    const f = fieldOf(spec, name)
+    return f && isEditable(f, spec.source) && f.role === 'dimension' && f.type !== 'date' && f.type !== 'datetime'
+  })
+  const [chosen, setChosen] = useState<string>()
+  const field = chosen && usable.includes(chosen) ? chosen : usable[0]
+  const members = field ? [...new Set(marks.flatMap((m) => m.filter((x) => x.field === field).map((x) => x.member)))] : []
   return (
-    <aside aria-label="Data pane" {...drop.props} className={`${card} space-y-3 self-start p-2 ${drop.over ? 'ring-2 ring-accent' : ''}`}>
-      <label className="flex flex-col gap-1 px-1 text-xs font-semibold tracking-wide text-slate-500 uppercase">
-        Data source
-        <select
-          value={spec.source}
-          disabled={lockSource}
-          onChange={(e) => onChange(emptySpec(e.target.value as SourceId))}
-          className="rounded border border-slate-300 bg-white px-2 py-1 text-sm font-normal tracking-normal text-slate-800 normal-case"
-        >
-          {SOURCES.map((s) => (
-            <option key={s} value={s}>
-              {SOURCE_INFO[s].label}
-            </option>
-          ))}
-        </select>
-      </label>
-      {group('dimension', 'Dimensions')}
-      {group('measure', 'Measures')}
-      <MenuButton menuLabel="Calculated fields" label="Calculated field…" className="w-full rounded border border-dashed border-slate-300 px-2 py-1 text-left text-sm text-slate-600 hover:bg-slate-100">
-        {(close) => (
-          <>
-            <MenuItem
-              onSelect={() => {
-                close()
-                onEditCalc()
-              }}
-            >
-              Create calculated field…
-            </MenuItem>
-            {saved.length > 0 && <MenuHeading>Saved calculations</MenuHeading>}
-            {saved.map((c) => (
-              <MenuItem
-                key={c.name}
-                onSelect={() => {
-                  onChange(setCalc(spec, undefined, { name: c.name, formula: c.formula }))
-                  close()
-                }}
-              >
-                Add {c.name}
-              </MenuItem>
+    <div role="region" aria-label="Selected marks" className={`${card} flex flex-wrap items-center gap-2 p-2 text-sm`}>
+      <span>
+        {marks.length} {marks.length === 1 ? 'mark' : 'marks'} selected{field && `: ${members.join(', ')}`}
+      </span>
+      {usable.length > 1 && (
+        <label className="flex items-center gap-1">
+          by
+          <select className="rounded border border-slate-300 bg-white px-1 py-0.5" value={field} onChange={(e) => setChosen(e.target.value)}>
+            {usable.map((f) => (
+              <option key={f}>{f}</option>
             ))}
-          </>
-        )}
-      </MenuButton>
-    </aside>
-  )
-}
-
-/** Data pane changes to a data source field, by its data source name. */
-interface FieldActions {
-  onFieldChange: (original: string, patch: Partial<Omit<FieldEdit, 'field'>>) => void
-  onFieldDialog: (original: string, dialog: FieldDialog) => void
-}
-
-const TYPE_NAME: Record<Field['type'], string> = { string: 'String', number: 'Number', date: 'Date', datetime: 'Date & Time', boolean: 'Boolean' }
-const GEO_NAME: Record<GeoRole, string> = {
-  country: 'Country/Region',
-  state: 'State/Province',
-  city: 'City',
-  postal: 'ZIP Code/Postcode',
-  latitude: 'Latitude',
-  longitude: 'Longitude',
-}
-const DEFAULT_AGGS: Aggregation[] = ['sum', 'avg', 'median', 'count', 'countd', 'min', 'max']
-
-function FieldButton({
-  field,
-  spec,
-  onChange,
-  onAddFilter,
-  onEditCalc,
-  onFieldChange,
-  onFieldDialog,
-}: {
-  field: Field
-  spec: VizSpec
-  onChange: (s: VizSpec) => void
-  onAddFilter: (field: string) => void
-  onEditCalc: (index?: number) => void
-} & FieldActions) {
-  const calcIndex = spec.calcs.findIndex((c) => c.name === field.name)
-  const broken = field.calc?.error
-  const targets: ShelfId[] = ['columns', 'rows', ...CHANNELS, 'detail', 'tooltip']
-  return (
-    <MenuButton
-      menuLabel={`Add ${field.name}`}
-      draggable
-      onDragStart={(e) => startDrag(e, { kind: 'field', field: field.name })}
-      title={broken ? broken.message : (field.calc?.formula ?? field.comment)}
-      className={`flex w-full cursor-grab items-center gap-2 rounded px-1 py-0.5 text-left text-sm hover:bg-slate-100 ${field.role === 'dimension' ? 'text-discrete' : 'text-continuous'}`}
-      label={
-        <>
-          <span aria-hidden className="w-8 shrink-0 font-mono text-[10px] text-slate-500">
-            {field.calc ? `=${TYPE_ICON[field.type]}` : field.geo ? '⊕' : TYPE_ICON[field.type]}
-          </span>
-          <span className={broken ? 'text-red-700 line-through' : 'text-slate-800'}>{field.name}</span>
-          {field.calc && <span className="sr-only">{broken ? ' (calculation with an error)' : ' (calculated field)'}</span>}
-        </>
-      }
-    >
-      {(close) => (
-        <>
-          {targets.map((shelf) => (
-            <MenuItem
-              key={shelf}
-              onSelect={() => {
-                onChange(placePill(spec, pillFor(field.name), shelf))
-                close()
-              }}
-            >
-              Add to {SHELF_LABEL[shelf]}
-            </MenuItem>
-          ))}
-          {!field.generated && !broken && (
-            <MenuItem
-              onSelect={() => {
-                close()
-                onAddFilter(field.name)
-              }}
-            >
-              Add to Filters…
-            </MenuItem>
-          )}
-          {isEditable(field, spec.source) && <FieldMenu field={field} spec={spec} close={close} onFieldChange={onFieldChange} onFieldDialog={onFieldDialog} />}
-          {calcIndex >= 0 && (
-            <>
-              <MenuHeading>Calculation</MenuHeading>
-              <MenuItem
-                onSelect={() => {
-                  close()
-                  onEditCalc(calcIndex)
-                }}
-              >
-                Edit calculation…
-              </MenuItem>
-              <MenuItem
-                onSelect={() => {
-                  onChange(removeCalc(spec, field.name))
-                  close()
-                }}
-              >
-                {usesField(spec, field.name) ? 'Remove from sheet, with its pills' : 'Remove from sheet'}
-              </MenuItem>
-            </>
-          )}
-        </>
+          </select>
+        </label>
       )}
-    </MenuButton>
-  )
-}
-
-/** The field actions of lesson 1.3 and 4.2: rename, aliases, data type, geographic role, conversions and Default Properties. */
-function FieldMenu({ field, spec, close, onFieldChange, onFieldDialog }: { field: Field; spec: VizSpec; close: () => void } & FieldActions) {
-  const original = field.original?.name ?? field.name
-  const edit = fieldEdit(spec, original)
-  const act = (fn: () => void) => () => {
-    close()
-    fn()
-  }
-  const change = (patch: Partial<Omit<FieldEdit, 'field'>>) => act(() => onFieldChange(original, patch))
-  const dialog = (d: FieldDialog) => act(() => onFieldDialog(original, d))
-  const isDate = field.type === 'date' || field.type === 'datetime'
-  const types = [field.original?.type ?? field.type, ...TYPE_CHANGES[field.original?.type ?? field.type]]
-  const roles: GeoRole[] = field.type === 'string' && field.role === 'dimension' ? ['country', 'state', 'city', 'postal'] : field.type === 'number' ? ['latitude', 'longitude'] : []
-  // Convert to Discrete/Continuous: numbers and dates only; the default is continuous for measures.
-  const natural = field.role === 'measure' ? 'continuous' : 'discrete'
-  const current = field.as ?? natural
-  const toggle = current === 'discrete' ? 'continuous' : 'discrete'
-  return (
-    <>
-      <MenuHeading>Field</MenuHeading>
-      <MenuItem onSelect={dialog('rename')}>Rename…</MenuItem>
-      {field.role === 'dimension' && !isDate && field.as !== 'continuous' && <MenuItem onSelect={dialog('aliases')}>Aliases…</MenuItem>}
-      {field.role === 'measure' && <MenuItem onSelect={change({ role: 'dimension', as: undefined })}>Convert to Dimension</MenuItem>}
-      {edit?.role === 'dimension' && <MenuItem onSelect={change({ role: undefined, as: undefined, aliases: undefined, sort: undefined })}>Convert to Measure</MenuItem>}
-      {(field.type === 'number' || isDate) && <MenuItem onSelect={change({ as: toggle === natural ? undefined : toggle, aliases: undefined })}>Convert to {toggle === 'continuous' ? 'Continuous' : 'Discrete'}</MenuItem>}
-      {field.role === 'dimension' && types.length > 1 && (
+      {field ? (
         <>
-          <MenuHeading>Change Data Type</MenuHeading>
-          {types.map((t) => (
-            <MenuItem key={t} checked={field.type === t} onSelect={change({ type: t === (field.original?.type ?? field.type) ? undefined : t })}>
-              {TYPE_NAME[t]}
-            </MenuItem>
-          ))}
+          <button
+            type="button"
+            onClick={() => onOpen({ kind: 'derived', type: 'groups', field, preset: { name: `${field} (group)`, field, groups: [{ name: members.join(', '), members }] } })}
+            className="rounded border border-slate-300 px-2 py-0.5 hover:bg-slate-100"
+          >
+            📎 Group
+          </button>
+          <button
+            type="button"
+            onClick={() => onOpen({ kind: 'derived', type: 'sets', field, preset: { name: `${field} Set`, field, fixed: true, rule: { kind: 'members', members } } })}
+            className="rounded border border-slate-300 px-2 py-0.5 hover:bg-slate-100"
+          >
+            Create Set…
+          </button>
         </>
+      ) : (
+        <span className="text-slate-500">These marks have no dimension to group (dates and calculated fields can’t be grouped here).</span>
       )}
-      {roles.length > 0 && (
-        <>
-          <MenuHeading>Geographic Role</MenuHeading>
-          {roles.map((g) => (
-            <MenuItem key={g} checked={field.geo === g} onSelect={change({ geo: g })}>
-              {GEO_NAME[g]}
-            </MenuItem>
-          ))}
-        </>
-      )}
-      <MenuHeading>Default Properties</MenuHeading>
-      <MenuItem onSelect={dialog('comment')}>Comment…</MenuItem>
-      {field.type === 'number' && <MenuItem onSelect={dialog('format')}>Number Format…</MenuItem>}
-      {field.role === 'dimension' && !isDate && <MenuItem onSelect={dialog('sort')}>Sort…</MenuItem>}
-      {field.role === 'measure' &&
-        DEFAULT_AGGS.map((a) => (
-          <MenuItem key={a} checked={field.agg === a} onSelect={change({ agg: a })}>
-            Aggregation: {AGG_NAME[a]}
-          </MenuItem>
-        ))}
-      {edit && (
-        <>
-          <MenuHeading>Sandbox</MenuHeading>
-          <MenuItem onSelect={act(() => onFieldChange(original, Object.fromEntries(Object.keys(edit).filter((k) => k !== 'field').map((k) => [k, undefined]))))}>
-            Undo all changes to this field
-          </MenuItem>
-        </>
-      )}
-    </>
+      <button type="button" onClick={onClear} className="ml-auto text-xs text-brand-dark underline">
+        Clear selection
+      </button>
+      <p className="w-full text-xs text-slate-500">Shift-, Ctrl- or ⌘-click marks to add them; click the background to clear.</p>
+    </div>
   )
 }
 
@@ -443,6 +255,17 @@ function FieldDialogView({
     case 'sort':
       return <SortEditor source={spec} pill={{ field: field.name }} scope="default" initial={field.sort} onApply={(sort) => onApply({ sort })} onCancel={onCancel} />
   }
+}
+
+/** Create or edit a group, set or bins. */
+function DerivedDialog({ spec, editor, onApply, onCancel }: { spec: VizSpec; editor: Extract<Editor, { kind: 'derived' }>; onApply: (change: () => VizSpec) => void; onCancel: () => void }) {
+  const { type, field, index, error } = editor
+  const common = { source: spec, field, error, onCancel, editing: index !== undefined }
+  const apply = <T extends Group | SetDef | Bin>(def: T) => onApply(() => setDerived(spec, type, index, def as never))
+  const initial = index === undefined ? editor.preset : spec[type][index]
+  if (type === 'groups') return <GroupEditor {...common} initial={initial as Group | undefined} onApply={apply} />
+  if (type === 'sets') return <SetEditor {...common} initial={initial as SetDef | undefined} onApply={apply} />
+  return <BinEditor {...common} initial={initial as Bin | undefined} onApply={apply} />
 }
 
 function filterLabel(f: Filter): string {

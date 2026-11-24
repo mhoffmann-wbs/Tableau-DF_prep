@@ -5,6 +5,9 @@ import {
   SHELF_LABEL,
   aggregationChoices,
   canToggleContinuity,
+  drillDown,
+  drillState,
+  drillUp,
   movePill,
   pillAt,
   removePill,
@@ -39,6 +42,12 @@ const PART_LEVELS: [DateLevel, string][] = [
 ]
 const VALUE_LEVELS = PART_LEVELS.filter(([l]) => l !== 'weekday').map(([l, name]): [DateLevel, string] => [l, l === 'week' ? 'Week' : name])
 
+/** Members and In/Out sort differently, so a sort starts over. */
+function withoutSetView(pill: Pill): Pill {
+  const { setView: _v, sort: _s, ...rest } = pill
+  return rest
+}
+
 /** A pill on a shelf: drag it to move it, or open its menu to change, move or remove it. */
 export function ShelfPill({
   spec,
@@ -66,9 +75,20 @@ export function ShelfPill({
   const set = (next: Pill) => onChange(replacePill(spec, at, next))
   const where = SHELF_LABEL[at.shelf]
   const color = !rp ? 'bg-red-600' : rp.continuous ? 'bg-continuous' : 'bg-discrete'
+  const drill = rp ? drillState(spec, at) : { up: false }
 
   return (
-    <span {...(onDropBefore && drop.props)} className={`inline-flex ${drop.over ? 'border-l-4 border-accent pl-1' : ''}`}>
+    <span {...(onDropBefore && drop.props)} className={`inline-flex items-center ${drop.over ? 'border-l-4 border-accent pl-1' : ''}`}>
+      {(drill.up || drill.down) && (
+        <button
+          type="button"
+          aria-label={drill.up ? `Drill up: collapse ${pill.field}` : `Drill down from ${pill.field} to ${drill.down}`}
+          onClick={() => onChange(drill.up ? drillUp(spec, at) : drillDown(spec, at))}
+          className={`-mr-1 h-5 w-5 rounded-full text-xs leading-none font-bold text-white ring-2 ring-white ${color}`}
+        >
+          {drill.up ? '−' : '+'}
+        </button>
+      )}
       <MenuButton
         menuLabel={`${rp?.label ?? pill.field} on ${where}`}
         draggable
@@ -122,6 +142,17 @@ export function ShelfPill({
                   </MenuItem>
                   <MenuItem checked={rp.continuous} onSelect={act(() => set(withContinuity(spec, pill, true)))}>
                     Continuous
+                  </MenuItem>
+                </>
+              )}
+              {rp?.field.derived?.kind === 'set' && (
+                <>
+                  <MenuHeading>Set</MenuHeading>
+                  <MenuItem checked={!pill.setView} onSelect={act(() => set(withoutSetView(pill)))}>
+                    Show In/Out of Set
+                  </MenuItem>
+                  <MenuItem checked={pill.setView === 'members'} onSelect={act(() => set({ ...withoutSetView(pill), setView: 'members' }))}>
+                    Show Members in Set
                   </MenuItem>
                 </>
               )}

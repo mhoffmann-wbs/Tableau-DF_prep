@@ -2,16 +2,23 @@
 // The sandbox and its challenges, driven through the field and pill menus (the
 // keyboard and touch path; drag and drop uses the same spec edits). The lazy
 // runtime is mocked: jsdom can't fetch the dataset or draw with Vega.
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterProvider, createMemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { routes } from '../app/routes'
 import { parseSpecHash } from '../engine/edit'
+import type { MarkMembers } from '../engine/runtime'
 import { getProgress, resetProgress } from '../progress/store'
 
+/** The last chart's click handler: clicking a mark in jsdom means calling it. */
+const view = vi.hoisted(() => ({ onMark: undefined as ((m: MarkMembers, additive: boolean) => void) | undefined }))
+
 vi.mock('../engine/runtime', () => ({
-  renderViz: async () => () => {},
+  renderViz: async (_el: unknown, _spec: unknown, _theme: unknown, onMark?: (m: MarkMembers, additive: boolean) => void) => {
+    view.onMark = onMark
+    return () => {}
+  },
   membersOf: async () => ['Console', 'Mobile', 'TV', 'Null'].map((m) => ({ label: m, value: m })),
 }))
 
@@ -146,6 +153,89 @@ describe('sandbox', () => {
     await addField('Release Year', 'Undo all changes to this field')
     expect(hash()).toMatchObject({ fields: [{ field: 'Device' }, { field: 'Minutes Watched' }] })
     expect(router.state.location.hash).not.toContain('Release')
+  })
+
+  it('creates groups, sets, bins and hierarchies, and drills down', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    const hash = () => parseSpecHash(router.state.location.hash)
+
+    await addField('Device', 'Group…')
+    const group = screen.getByRole('region', { name: 'Create Group [Device]' })
+    await user.click(await within(group).findByRole('checkbox', { name: 'Console' }))
+    await user.click(within(group).getByRole('checkbox', { name: 'TV' }))
+    await user.click(within(group).getByRole('button', { name: 'Group' }))
+    expect(within(group).queryByRole('checkbox', { name: 'TV' })).not.toBeInTheDocument()
+    await user.clear(within(group).getByRole('textbox', { name: 'Group name 1' }))
+    await user.type(within(group).getByRole('textbox', { name: 'Group name 1' }), 'Big screen')
+    await user.click(within(group).getByRole('checkbox', { name: 'Include ‘Other’' }))
+    await user.click(within(group).getByRole('button', { name: 'OK' }))
+    expect(hash()).toMatchObject({ groups: [{ name: 'Device (group)', field: 'Device', groups: [{ name: 'Big screen', members: ['Console', 'TV'] }], other: true }] })
+    await addField(/Device \(group\)/, 'Add to Rows')
+    expect(shelf('Rows')).toHaveTextContent('Device (group)')
+
+    await addField(/^Device$/, 'Set…')
+    const set = screen.getByRole('region', { name: 'Create Set [Device]' })
+    await user.click(within(set).getByRole('tab', { name: 'Top' }))
+    await user.clear(within(set).getByRole('spinbutton', { name: 'How many' }))
+    await user.type(within(set).getByRole('spinbutton', { name: 'How many' }), '2')
+    await user.click(within(set).getByRole('button', { name: 'OK' }))
+    expect(hash()).toMatchObject({ sets: [{ name: 'Device Set', rule: { kind: 'top', from: 'top', n: 2, field: 'Minutes Watched', agg: 'sum' } }] })
+    await addField(/Device Set/, 'Add to Columns')
+    await user.click(within(shelf('Columns')).getByRole('button', { name: /Device Set/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Show Members in Set' }))
+    expect(hash()).toMatchObject({ columns: [{ field: 'Device Set', setView: 'members' }] })
+
+    await addField('Minutes Watched', 'Bins…')
+    const bins = screen.getByRole('region', { name: 'Create Bins [Minutes Watched]' })
+    await user.clear(within(bins).getByRole('spinbutton', { name: 'Size of bins' }))
+    await user.type(within(bins).getByRole('spinbutton', { name: 'Size of bins' }), '15')
+    await user.click(within(bins).getByRole('button', { name: 'OK' }))
+    expect(hash()).toMatchObject({ bins: [{ name: 'Minutes Watched (bin)', field: 'Minutes Watched', size: 15 }] })
+    expect(within(screen.getByRole('complementary', { name: 'Data pane' })).getByRole('button', { name: /Minutes Watched \(bin\)\s*\(bin\)/ })).toBeInTheDocument()
+
+    await addField(/^Type$/, 'Create Hierarchy…')
+    await user.click(within(screen.getByRole('region', { name: 'Create Hierarchy' })).getByRole('button', { name: 'OK' }))
+    await addField(/^Genre$/, 'Add to Hierarchy Type Hierarchy')
+    expect(hash()).toMatchObject({ hierarchies: [{ name: 'Type Hierarchy', fields: ['Type', 'Genre'] }] })
+    expect(screen.getByRole('list', { name: 'Type Hierarchy levels' })).toHaveTextContent(/Type.*Genre/)
+
+    await addField(/^Type$/, 'Add to Detail')
+    await user.click(screen.getByRole('button', { name: 'Drill down from Type to Genre' }))
+    expect(hash()).toMatchObject({ marks: { detail: [{ field: 'Type' }, { field: 'Genre' }] } })
+    await user.click(screen.getByRole('button', { name: 'Drill up: collapse Type' }))
+    expect(hash()).toMatchObject({ marks: { detail: [{ field: 'Type' }] } })
+  })
+
+  it('groups marks and makes a fixed set from them', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    await addField('Device', 'Add to Rows')
+    await addField('Genre', 'Add to Columns')
+    await waitFor(() => expect(view.onMark).toBeDefined())
+    const click = (device: string, genre: string, additive = false) => act(() => view.onMark!([{ field: 'Device', member: device }, { field: 'Genre', member: genre }], additive))
+
+    click('TV', 'Drama')
+    click('Console', 'Comedy', true)
+    const bar = screen.getByRole('region', { name: 'Selected marks' })
+    expect(bar).toHaveTextContent('2 marks selected: TV, Console')
+    await user.selectOptions(within(bar).getByRole('combobox'), 'Genre')
+    expect(bar).toHaveTextContent('Drama, Comedy')
+    await user.selectOptions(within(bar).getByRole('combobox'), 'Device')
+
+    await user.click(within(bar).getByRole('button', { name: /Group/ }))
+    const group = screen.getByRole('region', { name: 'Create Group [Device]' })
+    expect(within(group).getByRole('textbox', { name: 'Group name 1' })).toHaveValue('TV, Console')
+    await user.click(within(group).getByRole('button', { name: 'OK' }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ groups: [{ name: 'Device (group)', field: 'Device', groups: [{ name: 'TV, Console', members: ['TV', 'Console'] }] }] })
+    // The chart changed (a new field in the Data pane), so the selection starts over.
+    expect(screen.queryByRole('region', { name: 'Selected marks' })).not.toBeInTheDocument()
+
+    click('Mobile', 'Drama')
+    await user.click(within(screen.getByRole('region', { name: 'Selected marks' })).getByRole('button', { name: 'Create Set…' }))
+    await user.click(within(screen.getByRole('region', { name: 'Create Set [Device]' })).getByRole('button', { name: 'OK' }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ sets: [{ name: 'Device Set', field: 'Device', fixed: true, rule: { kind: 'members', members: ['Mobile'] } }] })
+    click('Mobile', 'Drama')
+    act(() => view.onMark!([], false))
+    expect(screen.queryByRole('region', { name: 'Selected marks' })).not.toBeInTheDocument()
   })
 
   it('opens a preset from the URL', async () => {

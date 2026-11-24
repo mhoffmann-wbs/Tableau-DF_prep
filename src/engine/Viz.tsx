@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { EngineError } from './pills'
 import { LIGHT_THEME, type Theme } from './render'
+import type { MarkMembers } from './runtime'
 import type { VizSpec } from './spec'
 
 /** Chart colours from the theme tokens, so charts follow dark mode. */
@@ -17,9 +18,15 @@ function readTheme(): Theme {
 
 type DrawState = { key: string } & ({ status: 'ready' } | { status: 'error'; message: string })
 
-/** Draws a viz spec over the Driftlight data. The engine loads on first use. */
-export function Viz({ spec, title }: { spec: VizSpec; title?: string }) {
+/** Draws a viz spec over the Driftlight data. The engine loads on first use. With `onMark`, clicks on marks are reported. */
+export function Viz({ spec, title, onMark }: { spec: VizSpec; title?: string; onMark?: (members: MarkMembers, additive: boolean) => void }) {
   const ref = useRef<HTMLDivElement>(null)
+  // The latest callback, so a new one doesn't redraw the chart.
+  const markRef = useRef(onMark)
+  useEffect(() => {
+    markRef.current = onMark
+  })
+  const selectable = onMark !== undefined
   // The spec's JSON identifies the drawing: a structurally equal spec doesn't redraw.
   const key = JSON.stringify(spec)
   const [drawn, setDrawn] = useState<DrawState | undefined>()
@@ -29,7 +36,7 @@ export function Viz({ spec, title }: { spec: VizSpec; title?: string }) {
     let cancelled = false
     let cleanup: (() => void) | undefined
     import('./runtime')
-      .then((m) => m.renderViz(ref.current!, JSON.parse(key) as VizSpec, readTheme()))
+      .then((m) => m.renderViz(ref.current!, JSON.parse(key) as VizSpec, readTheme(), selectable ? (members, additive) => markRef.current?.(members, additive) : undefined))
       .then((finalize) => {
         if (cancelled) return finalize()
         cleanup = finalize
@@ -44,7 +51,7 @@ export function Viz({ spec, title }: { spec: VizSpec; title?: string }) {
       cancelled = true
       cleanup?.()
     }
-  }, [key])
+  }, [key, selectable])
 
   return (
     <figure className="max-w-full overflow-x-auto rounded-lg border border-slate-200 bg-white p-3" aria-label={title ?? 'Chart'} aria-busy={state.status === 'loading'}>

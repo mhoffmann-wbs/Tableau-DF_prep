@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { fieldsOf, type SourceRef } from '../engine/model'
+import { fieldsOf, sheetOf, type SourceRef } from '../engine/model'
 import { AGG_LABEL } from '../engine/pills'
 import { AGGREGATIONS, type Aggregation, type Pill, type Sort } from '../engine/spec'
-import { manualKey, sheetOf, useMembers } from './members'
+import { manualKey, useMembers } from './members'
 
 const inputClass = 'rounded border border-slate-300 bg-white px-2 py-1 text-sm'
 

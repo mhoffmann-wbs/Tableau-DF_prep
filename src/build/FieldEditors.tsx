@@ -2,10 +2,10 @@
 // Properties that need more than a menu item (Comment, Number Format). Each
 // returns the patch for `editField`; the Sandbox applies it.
 import { type ReactNode, useState } from 'react'
-import type { Field, SourceRef } from '../engine/model'
+import { type Field, sheetOf, type SourceRef } from '../engine/model'
 import { type FieldEdit, type NumberFormat, numberFormatSchema } from '../engine/spec'
 import { formatNumber } from '../engine/values'
-import { sheetOf, useMembers } from './members'
+import { useMembers } from './members'
 
 type Patch = Partial<Omit<FieldEdit, 'field'>>
 

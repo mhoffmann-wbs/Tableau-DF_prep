@@ -30,6 +30,8 @@ export interface ResolvedPill {
   label: string
   /** Identifies the pill's output column: same field, aggregation, date level and continuity → same column. */
   key: string
+  /** Show Members in Set: the column shows this field's members (the set's dimension), only those In the set. */
+  members?: string
 }
 
 const NUMERIC_ONLY: Aggregation[] = ['sum', 'avg', 'median']
@@ -39,6 +41,9 @@ export function resolvePill(ref: SourceRef, pill: Pill): ResolvedPill {
   const source = typeof ref === 'string' ? ref : ref.source
   if (!field) throw new EngineError(`There is no field "${pill.field}" in the ${SOURCE_INFO[source].label} data source.`)
   if (field.calc?.error) throw new EngineError(`The calculation ${field.name} has an error: ${field.calc.error.message}`)
+  if (field.broken) throw new EngineError(field.broken)
+  if (pill.setView && field.derived?.kind !== 'set') throw new EngineError(`${field.name} is not a set, so it has no members to show.`)
+  if (pill.setView && pill.agg) throw new EngineError(`Show Members in Set works on the set as a dimension, not aggregated.`)
   const isDate = field.type === 'date' || field.type === 'datetime'
   const aggCalc = field.calc?.compiled?.aggregate === true
   if (aggCalc && pill.agg) throw new EngineError(`${field.name} is an aggregate calculation, so it can’t be aggregated again.`)
@@ -59,6 +64,7 @@ export function resolvePill(ref: SourceRef, pill: Pill): ResolvedPill {
 
   const aggLabel = agg === 'agg' ? 'AGG' : agg ? AGG_LABEL[agg] : undefined
   const label = aggLabel ? `${aggLabel}(${field.name})` : date ? `${date.level.toUpperCase()}(${field.name})` : field.name
-  const key = [agg ?? '', date ? `${date.mode}:${date.level}` : '', field.name, continuous ? 'c' : 'd'].join('|')
-  return { pill, field, agg, date, kind: agg ? 'measure' : 'dimension', continuous, label, key }
+  const key = [agg ?? '', date ? `${date.mode}:${date.level}` : '', field.name, continuous ? 'c' : 'd', pill.setView ?? ''].join('|')
+  const members = pill.setView && field.derived?.kind === 'set' ? field.derived.def.field : undefined
+  return { pill, field, agg, date, kind: agg ? 'measure' : 'dimension', continuous, label, key, ...(members && { members }) }
 }

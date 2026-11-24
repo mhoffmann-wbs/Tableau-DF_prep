@@ -14,7 +14,7 @@ export interface CalcSheet {
 /** What a formula compiles to on a sheet: the field it becomes, or the error that stops it. */
 export function calcStatus(sheet: CalcSheet, name: string, formula: string): { field: Field } | { error: CalcError } {
   const others = sheet.calcs.filter((c) => c.name !== name)
-  const field = calcFields(sheet.source, [...others, { name: name.trim() || 'Calculation', formula }], sheet.fields).at(-1)!
+  const field = calcFields(sheet, [...others, { name: name.trim() || 'Calculation', formula }]).at(-1)!
   return field.calc?.error ? { error: field.calc.error } : { field }
 }
 

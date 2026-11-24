@@ -39,6 +39,8 @@ export const pillSchema = z
     date: z.object({ level: z.enum(DATE_LEVELS), mode: z.enum(['part', 'value']) }).optional(),
     /** Overrides the default: date parts and dimensions are discrete, date values and measures continuous. */
     as: z.enum(['discrete', 'continuous']).optional(),
+    /** A set pill shows In/Out by default; `members` shows the members in the set instead (Show Members in Set). */
+    setView: z.literal('members').optional(),
     /** Discrete pills only; overrides the field's default sort. */
     sort: sortSchema.optional(),
   })
@@ -104,12 +106,57 @@ export const fieldEditSchema = z.object({
 
 export type FieldEdit = z.infer<typeof fieldEditSchema>
 
+/** Create > Group: members of a dimension combined under new names; the rest keep theirs, or go to Other. */
+export const groupSchema = z.object({
+  name: fieldName,
+  field: fieldName,
+  groups: z.array(z.object({ name: fieldName, members: z.array(z.string()).min(1) })),
+  /** Include 'Other': every member not in a group. */
+  other: z.boolean().optional(),
+})
+
+export type Group = z.infer<typeof groupSchema>
+
+export const SET_OPS = ['>', '>=', '<', '<=', '=', '<>'] as const
+
+/**
+ * Create > Set on one dimension. `members`: the General tab, or a fixed set
+ * made from marks (`fixed`); `condition` and `top` are dynamic and are
+ * computed over the whole data source.
+ */
+export const setSchema = z.object({
+  name: fieldName,
+  field: fieldName,
+  fixed: z.boolean().optional(),
+  rule: z.discriminatedUnion('kind', [
+    z.object({ kind: z.literal('members'), members: z.array(z.string()), exclude: z.boolean().optional() }),
+    z.object({ kind: z.literal('condition'), field: fieldName, agg: z.enum(AGGREGATIONS), op: z.enum(SET_OPS), value: z.number() }),
+    z.object({ kind: z.literal('top'), from: z.enum(['top', 'bottom']), n: z.number().int().min(1), field: fieldName, agg: z.enum(AGGREGATIONS) }),
+  ]),
+})
+
+export type SetDef = z.infer<typeof setSchema>
+
+/** Create > Bins on a measure: a dimension of equal ranges, lower limit inclusive. */
+export const binSchema = z.object({ name: fieldName, field: fieldName, size: z.number().positive() })
+
+export type Bin = z.infer<typeof binSchema>
+
+/** A hierarchy of dimensions, from general to detailed, for drilling down and up. */
+export const hierarchySchema = z.object({ name: fieldName, fields: z.array(fieldName).min(1) })
+
+export type Hierarchy = z.infer<typeof hierarchySchema>
+
 export const vizSpecSchema = z.object({
   source: z.enum(SOURCES).default('sessions'),
   /** Checked against the data model by the engine, like field names. */
   calcs: z.array(calcSchema).default([]),
   /** Renames, aliases, types and default properties of the source's fields. */
   fields: z.array(fieldEditSchema).default([]),
+  groups: z.array(groupSchema).default([]),
+  sets: z.array(setSchema).default([]),
+  bins: z.array(binSchema).default([]),
+  hierarchies: z.array(hierarchySchema).default([]),
   columns: z.array(pillSchema).default([]),
   rows: z.array(pillSchema).default([]),
   marks: z

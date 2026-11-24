@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { isCompleteFilter } from '../engine/edit'
-import { fieldOf, type SourceRef } from '../engine/model'
+import { fieldOf, sheetOf, type SourceRef } from '../engine/model'
 import { AGG_LABEL } from '../engine/pills'
 import { AGGREGATIONS, type Aggregation, type DateLevel, type Filter } from '../engine/spec'
-import { sheetOf, useMembers } from './members'
+import { useMembers } from './members'
 
 /** Long member lists (Title, Subscriber ID) show this many until the search narrows them. */
 const SHOWN = 200
