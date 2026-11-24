@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Tableau-DF_prep** is a static self-study web app for the **Salesforce Certified Tableau Desktop Foundations** exam (Analytics-101), in English, for data bootcamp learners new to Tableau. Pillars: **Learn** (one lesson per task, 12), **Check** (practice, the question bank, a 40-item/70-minute mock passing at 48%) and **Build** (a viz builder sandbox, a calc playground, concept simulators, Tableau Public challenges and flashcards, in place of a coding lab). Every scenario uses one invented streaming service, **Driftlight**, and its generated dataset.
 
-**`PLAN.md` is the build plan and sets the order of work** (decisions, blueprint → content map, item kinds, dataset, Build pillar, phases). §9 records what is done; mark a phase or substep done there with the date, and update the docs below so they describe what exists.
+**`PLAN.md` is the build plan and sets the order of work** (decisions, blueprint → content map, item kinds, dataset, Build pillar, phases). §9 records what is done (one line per finished step) and §10 lists the open checks; mark a phase or substep done in §9 with the date, put its unresolved facts and limits in §10, and update the docs below so they describe what exists.
 
 ## Authoritative sources
 
