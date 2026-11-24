@@ -1802,5 +1802,574 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
     ]
+  },
+  {
+    "id": "2.1-050",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "The chart ranks genres by total minutes, longest bar at the top. Which setup produces it?",
+    "options": [
+      {
+        "text": "`Genre` on Columns and `SUM(Minutes Watched)` on Rows, with `Genre` sorted descending by `SUM(Minutes Watched)`.",
+        "correct": false,
+        "rationale": "A dimension on Columns with the measure on Rows draws vertical bars, but these bars run horizontally."
+      },
+      {
+        "text": "`Genre` on Rows and `SUM(Minutes Watched)` on Columns, with `Genre` sorted descending by `SUM(Minutes Watched)`.",
+        "correct": true,
+        "rationale": "The dimension on Rows with the measure on Columns gives horizontal bars, and the computed sort ranks them by length."
+      },
+      {
+        "text": "`Genre` on Rows and `SUM(Minutes Watched)` on Columns, with `Genre` left on its default alphabetical order.",
+        "correct": false,
+        "rationale": "The orientation is right, but the default order would list genres alphabetically, not by bar length."
+      },
+      {
+        "text": "`Genre` on Rows and `SUM(Minutes Watched)` on Columns, with `Genre` also dragged to Color.",
+        "correct": false,
+        "rationale": "Color would paint each bar a different hue; it does not rank bars, and this chart is one colour."
+      }
+    ],
+    "explanation": "A bar chart needs a dimension and a measure. Which shelf holds the dimension sets the direction: dimension on Rows gives horizontal bars. The order of the bars comes from the dimension's sort, which can be computed from the measure.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre",
+            "sort": {
+              "order": "desc",
+              "field": "Minutes Watched",
+              "agg": "sum"
+            }
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-051",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "Look at the shelves. Which view will Tableau draw with the mark type left on Automatic?",
+    "options": [
+      {
+        "text": "A single bar, because `Subscribers (Count)` is aggregated over all plans.",
+        "correct": false,
+        "rationale": "`Plan` is a dimension in the view, so the measure is split per plan, not totalled into one mark."
+      },
+      {
+        "text": "A line across the plans, because the measure is continuous.",
+        "correct": false,
+        "rationale": "Automatic draws a line only when a date is an inner field; `Plan` is not a date."
+      },
+      {
+        "text": "Horizontal bars, one per `Plan`.",
+        "correct": true,
+        "rationale": "A dimension on Rows with a measure on Columns gives Automatic a Bar mark, with the bars running left to right."
+      },
+      {
+        "text": "Vertical bars, one per `Plan`.",
+        "correct": false,
+        "rationale": "Vertical bars need the dimension on Columns and the measure on Rows. Here the shelves are the other way round."
+      }
+    ],
+    "explanation": "With a dimension and a measure as the inner fields, Automatic chooses Bar. The measure's shelf sets the bar length direction: a measure on Columns means horizontal bars.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-052",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "Which two questions can this chart answer? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Which genre has the most total minutes watched?",
+        "correct": true,
+        "rationale": "The longest bar is the genre with the largest `SUM(Minutes Watched)`."
+      },
+      {
+        "text": "How does `Minutes Watched` in `Drama` compare with `Minutes Watched` in `Comedy`?",
+        "correct": true,
+        "rationale": "Bars share one axis, so comparing two genres means comparing two bar lengths."
+      },
+      {
+        "text": "Did total minutes watched rise or fall from month to month?",
+        "correct": false,
+        "rationale": "There is no date on the view, so it carries no information about change over time."
+      },
+      {
+        "text": "Which device was used most in each genre?",
+        "correct": false,
+        "rationale": "`Device` is not on the view, so the bars cannot show a device split."
+      },
+      {
+        "text": "How are `Minutes Watched` and `Sessions (Count)` related across titles?",
+        "correct": false,
+        "rationale": "That is a measure against a measure, which takes a scatterplot with one mark per title."
+      }
+    ],
+    "explanation": "A bar chart of one measure by one dimension compares categories. It shows the ranking and the size of the gaps, but only for the fields on the view; time or another split would need another field.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre",
+            "sort": {
+              "order": "desc",
+              "field": "Minutes Watched",
+              "agg": "sum"
+            }
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-053",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "In this bar chart, the device names are listed down the left as headers while the bottom shows a numeric scale. Why?",
+    "options": [
+      {
+        "text": "`Device` is a measure, so it draws headers, and `AVG(Minutes Watched)` is a dimension, so it draws an axis.",
+        "correct": false,
+        "rationale": "The roles are reversed: `Device` is the dimension and the average is the measure."
+      },
+      {
+        "text": "Every bar chart shows headers on Rows and an axis on Columns, whichever fields are used.",
+        "correct": false,
+        "rationale": "Headers or axes depend on whether a pill is discrete or continuous, not on its shelf."
+      },
+      {
+        "text": "The `AVG` aggregation turns the measure into a header that Tableau labels with a scale.",
+        "correct": false,
+        "rationale": "Aggregation does not create headers. It only fixes how rows combine, and the pill stays continuous."
+      },
+      {
+        "text": "`Device` is discrete, so it draws headers, and `AVG(Minutes Watched)` is continuous, so it draws an axis.",
+        "correct": true,
+        "rationale": "Blue discrete pills create headers; green continuous pills create axes."
+      }
+    ],
+    "explanation": "Discrete (blue) pills slice the view and add headers. Continuous (green) pills add an axis. In a bar chart the dimension supplies the headers and the measure supplies the axis.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Device"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched",
+            "agg": "avg"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-054",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.1"
+    ],
+    "stem": "With `Genre` and `Device` on Columns and `SUM(Minutes Watched)` on Rows, what does Automatic draw?",
+    "options": [
+      {
+        "text": "One bar per `Genre`, with the devices stacked inside each bar.",
+        "correct": false,
+        "rationale": "Stacking needs a dimension on Color. Dimensions on Columns add headers instead."
+      },
+      {
+        "text": "A bar for every `Genre` and `Device` combination, grouped under the genre headers.",
+        "correct": true,
+        "rationale": "With a dimension and a measure as inner fields, Automatic draws bars, and the extra dimension adds one bar per member within each header."
+      },
+      {
+        "text": "One line per `Device`, running across the genres.",
+        "correct": false,
+        "rationale": "Automatic draws a line only for a date field, and `Genre` is not one."
+      },
+      {
+        "text": "A single bar showing the total minutes of all sessions.",
+        "correct": false,
+        "rationale": "Both dimensions are in the view, so the measure is split by them and not totalled."
+      }
+    ],
+    "explanation": "Each dimension on a shelf slices the data further. The view has one mark per combination of its dimension members, and with a dimension and a measure as inner fields, Automatic draws them as bars.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Genre"
+          },
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm"
+    ]
+  },
+  {
+    "id": "2.1-055",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "The chart is one line along a time axis, with a mark for every month of 2024 and 2025. Which setup produces it?",
+    "options": [
+      {
+        "text": "Discrete `MONTH(Start)` on Columns and `SUM(Minutes Watched)` on Rows.",
+        "correct": false,
+        "rationale": "A discrete month part would draw 12 headers, January to December, with both years merged."
+      },
+      {
+        "text": "Discrete `YEAR(Start)` on Columns and `SUM(Minutes Watched)` on Rows.",
+        "correct": false,
+        "rationale": "A discrete year gives only two headers, so there would be two marks, not 24."
+      },
+      {
+        "text": "`SUM(Minutes Watched)` on Columns and continuous `MONTH(Start)` on Rows.",
+        "correct": false,
+        "rationale": "That puts time on the vertical axis, so the line would run from top to bottom."
+      },
+      {
+        "text": "Continuous `MONTH(Start)` on Columns and `SUM(Minutes Watched)` on Rows.",
+        "correct": true,
+        "rationale": "A continuous month value draws a time axis, and a mark for each month in the range makes one long line."
+      }
+    ],
+    "explanation": "A line chart needs a date and a measure. A continuous date value gives a linear time axis, so every month in the range becomes a point. A discrete date part gives headers and groups months across years.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-056",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "Look at the shelves. What does one mark in this view stand for?",
+    "options": [
+      {
+        "text": "The total minutes in one month of one specific year, so the view has 24 marks.",
+        "correct": false,
+        "rationale": "That is what a continuous month value gives. A month part carries no year."
+      },
+      {
+        "text": "The minutes of a single session that started in that month.",
+        "correct": false,
+        "rationale": "The measure is aggregated, so each mark combines many sessions."
+      },
+      {
+        "text": "The total minutes in one calendar month, with 2024 and 2025 added together.",
+        "correct": true,
+        "rationale": "A discrete month part groups by month name only, so the same month of both years falls into one mark."
+      },
+      {
+        "text": "The average minutes per session across all months.",
+        "correct": false,
+        "rationale": "The aggregation is `SUM`, and the marks are split by month, not totalled into one."
+      }
+    ],
+    "explanation": "A date part such as `MONTH(Start)` keeps only the month, so months of different years merge. A date value keeps the full date, one point per month in the range. This choice decides what each mark means.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "part"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "type": "line"
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-057",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "The line chart has one line per device. Which two statements explain the view? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Device` on Color splits the line into one line per device member.",
+        "correct": true,
+        "rationale": "A dimension on Color breaks the marks into a separate line for each member."
+      },
+      {
+        "text": "The `Start` pill is a continuous date value, so Tableau draws a time axis.",
+        "correct": true,
+        "rationale": "A green date pill draws an axis, and a mark per month makes the line."
+      },
+      {
+        "text": "`Device` is a measure, which is why it is drawn as several lines.",
+        "correct": false,
+        "rationale": "`Device` is a dimension. Measures add values, not groups."
+      },
+      {
+        "text": "The lines would merge into one if `Device` were removed from Color and the pill moved to the Filters shelf.",
+        "correct": false,
+        "rationale": "A filter only limits which devices appear; it does not draw them as separate lines."
+      },
+      {
+        "text": "The `Start` pill is discrete, so every month appears as its own header.",
+        "correct": false,
+        "rationale": "The pill is green. A discrete part would show headers, not a continuous axis."
+      }
+    ],
+    "explanation": "The date on Columns decides the axis and the line, and the dimension on Color decides how many lines are drawn. Together they answer how a measure changes over time for each member.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-058",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "The chart plots `SUM(Sessions (Count))` against a continuous quarter. Which question does it answer?",
+    "options": [
+      {
+        "text": "Which device had the most sessions in each quarter?",
+        "correct": false,
+        "rationale": "`Device` is not on the view, so no split by device appears."
+      },
+      {
+        "text": "Is the number of sessions growing from one quarter to the next?",
+        "correct": true,
+        "rationale": "A line across quarters shows how the session count changes over time."
+      },
+      {
+        "text": "What share of all sessions does each genre account for?",
+        "correct": false,
+        "rationale": "A share by genre needs a genre on the view, and a line over time is not a part-to-whole view."
+      },
+      {
+        "text": "Which single session ran the longest?",
+        "correct": false,
+        "rationale": "The measure counts sessions. It says nothing about the length of one session."
+      }
+    ],
+    "explanation": "A line chart answers questions about change over time. Here the measure is a count of sessions and the date is continuous quarters, so the trend of volume is the story.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "quarter",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
+  },
+  {
+    "id": "2.1-059",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.2"
+    ],
+    "stem": "Look at the shelves. Which two statements about this view are correct? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Each mark is the average `Minutes Watched` of the sessions that started in one month.",
+        "correct": true,
+        "rationale": "The `AVG` pill averages the rows within each month on the axis."
+      },
+      {
+        "text": "The marks are joined in date order because the month pill is continuous.",
+        "correct": true,
+        "rationale": "With a continuous date and a measure, Automatic draws a line that connects the points along the time axis."
+      },
+      {
+        "text": "Each mark is the total minutes of the month, because measures are always summed.",
+        "correct": false,
+        "rationale": "The aggregation is on the pill. This one is `AVG`, not `SUM`."
+      },
+      {
+        "text": "Tableau draws one mark per session, so the line has thousands of points.",
+        "correct": false,
+        "rationale": "The measure is aggregated per month, which gives one mark per month."
+      },
+      {
+        "text": "The month pill is discrete, so Tableau draws headers and no line.",
+        "correct": false,
+        "rationale": "The pill is green and continuous, which gives an axis and a line."
+      }
+    ],
+    "explanation": "The date pill decides the shape and the aggregation decides what each point means. A continuous date with an aggregated measure gives one point per month, joined into a line.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "agg": "avg"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm"
+    ]
   }
 ]
