@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project status
 
-Phases 0–4 are done: the scaffold, the blueprint, the item schema, the content tests and scripts, the Driftlight dataset, the chart engine, the quiz engine, sandbox v1 and the 12 lessons. The app has a home page showing the exam format, the lessons in learning order and the outline, Learn (12 lessons), Practice, the question bank, the mock exam and Progress (all waiting for the bank, which is still empty), Build (the viz builder sandbox and 15 "make this chart" challenges), plus an unlisted `/dev/charts` gallery. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
+Phases 0–5 are done: the scaffold, the blueprint, the item schema, the content tests and scripts, the Driftlight dataset, the chart engine, the quiz engine, sandbox v1, the 12 lessons and the 600-item question bank. The app has a home page showing the exam format, the lessons in learning order and the outline, Learn (12 lessons), Practice, the question bank, the mock exam and Progress, Build (the viz builder sandbox and 15 "make this chart" challenges), plus an unlisted `/dev/charts` gallery. **`PLAN.md` is the build plan and sets the order of work.** It records the decisions made, the blueprint → content map, the item kinds, the dataset, the Build pillar and the phases. As parts get built, update this file so it describes what exists, and mark phases done in `PLAN.md` §9 with the date.
 
 ## Purpose
 
@@ -62,10 +62,10 @@ GitHub Pages serves the app under `/Tableau-DF_prep/`. `.github/workflows/deploy
 - `src/content/schema.ts`: the Zod item union. All kinds share `id` (`<taskId>-NNN`), `taskId`, `objectives[]` (all under `taskId`), `stem`, `options` (`text`, `correct`, `rationale`), `explanation` and optional `sourceLinks`:
   - `single`: exactly 4 options.
   - `multi`: `select` 2–3, 5–6 options.
-  - `viz`: `select` 1–3, 4–6 options, plus `viz: {spec, show: chart|shelves|both}`.
+  - `viz`: `select` 1–3, 4–6 options, plus `viz: {spec, show: chart|shelves|both}` and optional `checks[]`: every Driftlight number or member the item states, as a lesson-style fact (`factSchema`, shared with lesson `meta.facts`).
 
-  Multi-select stems must contain exactly `(Choose N answers.)`, and single-answer stems must not. `selectCount()` gives N.
-- `src/content/questions/<taskId>.json`: one JSON array per task (empty so far), loaded by `bank.ts` (`ITEMS`, `QUESTION_FILES`). `bank.test.ts` checks file/task match, objectives, unique ids and the `quality.ts` checks. The checks cover single-answer items (`single`, and `viz` with `select` 1):
+  Multi-select stems must contain `(Choose N answers.)` exactly once, and single-answer stems must not. `selectCount()` gives N.
+- `src/content/questions/<taskId>.json`: one JSON array per task, 600 items in all (346 `single`, 153 `multi`, 101 `viz`; every objective has at least 9), loaded by `bank.ts` (`ITEMS`, `QUESTION_FILES`). Tableau facts come from the task's lesson, which was checked against the help. `bank.test.ts` checks file/task match, objectives, unique ids, the `quality.ts` checks, and that every `viz` item draws over the data and states each `checks` value exactly as `evaluateFact` computes it. The checks cover single-answer items (`single`, and `viz` with `select` 1):
   - no key letter in more than 40% of items
   - the key is the strictly longest option in at most 40%
   - no duplicate stems (stem + viz spec)
@@ -131,5 +131,5 @@ GitHub Pages serves the app under `/Tableau-DF_prep/`. `.github/workflows/deploy
   - `MockExamPage` (countdown, flags, review screen, results by domain and task).
   - `ProgressPage` (readiness by domain, weakest tasks, export and import).
   - `BuildPage` (`/build`: sandbox link, challenge list with solved marks) and `SandboxPage` (`/build/sandbox` free, with the spec in `#spec=` and Undo; `/build/sandbox/:challengeId` with target, Check, hints, debrief, next link). `sandboxPages.test.tsx` mocks `engine/runtime`.
-  - `pages.test.tsx` renders real routes with `createMemoryRouter` and an async `renderAt()`. `quizPages.test.tsx` runs the quiz pages over a `vi.mock`ed bank built from `fakeBank()`/`fakeItem()` in `src/test/fixtures.ts`. Lesson links from items come with phase 4.
+  - `pages.test.tsx` renders real routes with `createMemoryRouter` and an async `renderAt()`. `quizPages.test.tsx` runs the quiz pages over a `vi.mock`ed bank built from `fakeBank()`/`fakeItem()` in `src/test/fixtures.ts`.
 - Theme tokens (`src/index.css`, `@theme`): `brand`, `brand-dark`, `accent`, `chalk`, `page`, `header`, and the pill colours `discrete` (blue) and `continuous` (green). Dark mode follows the OS by remapping the tokens and the slate scale once, so components don't use `dark:` variants.

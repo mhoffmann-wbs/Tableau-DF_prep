@@ -28,12 +28,12 @@ describe('pages', () => {
     expect(screen.getAllByText('Drawing the chart…').length).toBeGreaterThan(0)
   })
 
-  it('says the quiz pages have no questions while the bank is empty', async () => {
+  it('offers practice on every task and domain and a mock exam from the real bank', async () => {
     await renderAt('/practice', 'Practice')
-    expect(screen.getAllByText('(no questions yet)')).toHaveLength(16)
+    expect(screen.queryByText('(no questions yet)')).toBeNull()
     cleanup()
     await renderAt('/mock', 'Mock exam')
-    expect(screen.getByRole('button', { name: 'Start the mock exam' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Start the mock exam' })).toBeEnabled()
   })
 
   it('lists lessons in learning order and marks a lesson as read', async () => {

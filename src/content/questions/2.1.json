@@ -3907,5 +3907,408 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm"
     ]
+  },
+  {
+    "id": "2.1-085",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "A chart has one axis on the left, a colour legend that lists `Measure Names`, and both measures drawn with the same kind of mark. Which chart is it?",
+    "options": [
+      {
+        "text": "A dual axis chart",
+        "correct": false,
+        "rationale": "A dual axis chart has two axes, one on each side, and a Marks card per measure."
+      },
+      {
+        "text": "A combined axis chart",
+        "correct": true,
+        "rationale": "One shared axis with Measure Names on Color is the signature of a blended axis."
+      },
+      {
+        "text": "A scatterplot",
+        "correct": false,
+        "rationale": "A scatterplot puts one measure on each axis, so it has two axes."
+      },
+      {
+        "text": "A crosstab",
+        "correct": false,
+        "rationale": "A crosstab shows numbers as text in a table and has no axis."
+      }
+    ],
+    "explanation": "A combined (blended) axis chart has one shared axis, Measure Values on the shelf and Measure Names on Color. A dual axis chart would show a second axis on the opposite side.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-086",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "The analyst blended `Minutes Watched` and `Sessions (Count)` on one axis, but the sessions are hard to read. They now want minutes as bars and sessions as a line. What should they do?",
+    "options": [
+      {
+        "text": "Keep the combined axis and pick a different mark type for each measure on the Marks card",
+        "correct": false,
+        "rationale": "A combined axis has one set of marks for both measures, so this cannot be done there."
+      },
+      {
+        "text": "Add `Measure Names` to Detail so each measure gets its own mark type",
+        "correct": false,
+        "rationale": "Detail splits the marks into more points; it does not assign mark types to measures."
+      },
+      {
+        "text": "Apply Synchronize Axis so that the two measures use the same range",
+        "correct": false,
+        "rationale": "Synchronize Axis works on a dual axis, and it would not give the measures different mark types."
+      },
+      {
+        "text": "Rebuild it as a dual axis chart and set each measure's mark type on its own Marks card",
+        "correct": true,
+        "rationale": "A dual axis gives each measure its own axis and Marks card, which suits different scales."
+      }
+    ],
+    "explanation": "Different scales call for a dual axis, and a dual axis also allows a mark type per measure. A combined axis has only one mark type for both measures.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-087",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "The analyst changes the mark type on a combined axis chart to Line. What happens?",
+    "options": [
+      {
+        "text": "Both measures are drawn as lines",
+        "correct": true,
+        "rationale": "Blended measures share one set of marks, so the mark type applies to both."
+      },
+      {
+        "text": "Only the first measure becomes a line and the second stays a bar",
+        "correct": false,
+        "rationale": "Separate mark types per measure need a dual axis, which has a Marks card for each."
+      },
+      {
+        "text": "Tableau turns the chart into a dual axis chart automatically",
+        "correct": false,
+        "rationale": "Changing the mark type never changes how many axes the view has."
+      },
+      {
+        "text": "`Measure Names` is removed from Color",
+        "correct": false,
+        "rationale": "The colours still tell the measures apart; only the mark shape changes."
+      }
+    ],
+    "explanation": "In a combined axis chart the measures are merged into Measure Values and drawn with one mark type. Only a dual axis chart lets each measure have its own mark type.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-088",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "The analyst drops the `Actual Hours` pill onto the axis of `Target Hours`. What does Tableau put on the Rows shelf in place of the two measures?",
+    "options": [
+      {
+        "text": "`Measure Names`, which holds the two measures as members",
+        "correct": false,
+        "rationale": "`Measure Names` is added to Color; the shelf holds `Measure Values`."
+      },
+      {
+        "text": "Two pills, each with a Dual Axis check mark",
+        "correct": false,
+        "rationale": "That would be a dual axis, which is made differently."
+      },
+      {
+        "text": "`Measure Values`",
+        "correct": true,
+        "rationale": "Blending swaps the individual measures for Measure Values on the shelf."
+      },
+      {
+        "text": "A single `Sessions (Count)` pill",
+        "correct": false,
+        "rationale": "Tableau does not substitute another measure; it uses `Measure Values`."
+      }
+    ],
+    "explanation": "When a measure is dropped on an existing axis, Tableau replaces the measures with Measure Values on the shelf and adds Measure Names to Color. Both measures then share the axis.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-089",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "Which two pairs of measures suit a combined axis? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Minutes Watched` in millions and `Sessions (Count)` in thousands",
+        "correct": false,
+        "rationale": "The scales differ a lot, so a dual axis suits them better."
+      },
+      {
+        "text": "Planned Spend and Actual Spend, both in euros",
+        "correct": true,
+        "rationale": "The same units can share one axis for a direct comparison."
+      },
+      {
+        "text": "`Monthly Price` in currency and `Runtime` in minutes",
+        "correct": false,
+        "rationale": "Different units need separate axes."
+      },
+      {
+        "text": "Target Hours and Actual Hours, both in hours",
+        "correct": true,
+        "rationale": "The same units make a shared axis easy to read."
+      },
+      {
+        "text": "Sales in dollars and a count of orders in hundreds",
+        "correct": false,
+        "rationale": "Dollars and counts have different units and scales."
+      }
+    ],
+    "explanation": "A combined axis suits measures in the same units, because one shared axis allows a direct comparison. Measures with different units or scales belong on a dual axis.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-090",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "Target Hours and Actual Hours are both measured in hours. Why is a combined axis a better fit than an unsynchronized dual axis?",
+    "options": [
+      {
+        "text": "Both measures are read against one scale, so bar lengths can be compared directly",
+        "correct": true,
+        "rationale": "One shared axis removes any risk of two different ranges."
+      },
+      {
+        "text": "A combined axis lets the two measures use different mark types",
+        "correct": false,
+        "rationale": "Different mark types belong to a dual axis, which has a Marks card per measure."
+      },
+      {
+        "text": "A combined axis avoids needing `Measure Values` and `Measure Names`",
+        "correct": false,
+        "rationale": "Blending relies on exactly those two fields."
+      },
+      {
+        "text": "A dual axis cannot show two measures measured in the same units",
+        "correct": false,
+        "rationale": "A dual axis can show them, but the two axes might have different ranges."
+      }
+    ],
+    "explanation": "With a dual axis each measure has its own axis, and the ranges can differ unless the axes are synchronized. A combined axis puts both measures on one scale, which suits measures in the same units.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-091",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "The analyst wants a dual axis, not a combined axis, for `Sessions (Count)` next to a measure already in the view. Where should they drop the `Sessions (Count)` pill?",
+    "options": [
+      {
+        "text": "On the existing axis",
+        "correct": false,
+        "rationale": "Dropping onto an existing axis blends the measures into one shared axis."
+      },
+      {
+        "text": "On Color on the Marks card",
+        "correct": false,
+        "rationale": "A measure on Color shades the marks; it adds no axis."
+      },
+      {
+        "text": "On the right side of the view, when a black dashed line appears",
+        "correct": true,
+        "rationale": "This creates a second axis on the opposite side."
+      },
+      {
+        "text": "On `Measure Names` in the Data pane",
+        "correct": false,
+        "rationale": "Dropping a measure there does not create an axis."
+      }
+    ],
+    "explanation": "A second measure dropped on the right side of the view, at the black dashed line, becomes a second axis. Dropped on the existing axis, it would be blended instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-092",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "In a dual axis chart, minutes are drawn as bars. The analyst wants `Sessions (Count)` as a line and leaves minutes unchanged. Where do they change the mark type?",
+    "options": [
+      {
+        "text": "On the Marks card of `Sessions (Count)`",
+        "correct": true,
+        "rationale": "Each measure of a dual axis chart has its own Marks card and mark type."
+      },
+      {
+        "text": "On the All Marks card, which sets one type for every measure",
+        "correct": false,
+        "rationale": "That would change both measures to the same type, minutes included."
+      },
+      {
+        "text": "In the Synchronize Axis dialog",
+        "correct": false,
+        "rationale": "Synchronizing only aligns the ranges of the two axes."
+      },
+      {
+        "text": "On the `Measure Names` pill on Color",
+        "correct": false,
+        "rationale": "Color distinguishes marks and does not assign mark types."
+      }
+    ],
+    "explanation": "A dual axis chart has a Marks card for each measure, so each can have its own mark type. Bars for one measure and a line for the other is the classic combo chart.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-093",
+    "taskId": "2.1",
+    "kind": "single",
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "What is the largest number of layered axes that a dual axis chart can have in Tableau?",
+    "options": [
+      {
+        "text": "Two, one on the left and one on the right",
+        "correct": false,
+        "rationale": "Two is the usual dual axis, but Tableau allows more."
+      },
+      {
+        "text": "Four, two on Columns and two on Rows",
+        "correct": true,
+        "rationale": "Tableau help states this limit."
+      },
+      {
+        "text": "Three, one for each of Rows, Columns and Color",
+        "correct": false,
+        "rationale": "Color is not an axis and has no layered axis."
+      },
+      {
+        "text": "Six, one for each of the measures in the Data pane",
+        "correct": false,
+        "rationale": "The number of layered axes is not tied to the measures available."
+      }
+    ],
+    "explanation": "Tableau allows up to four layered axes: two on the Columns shelf and two on the Rows shelf. The common dual axis uses only two of them.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-094",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "The two axes of a dual axis chart show different ranges. Which two statements about Synchronize Axis are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It is chosen by right-clicking the secondary axis",
+        "correct": true,
+        "rationale": "That is the documented way to start it."
+      },
+      {
+        "text": "It replaces the two measures with `Measure Values`",
+        "correct": false,
+        "rationale": "`Measure Values` appears when axes are blended, not when they are synchronized."
+      },
+      {
+        "text": "It gives both axes the same scale",
+        "correct": true,
+        "rationale": "The two axes then use the same range."
+      },
+      {
+        "text": "It is applied by dragging one measure onto the other axis",
+        "correct": false,
+        "rationale": "That gesture blends the measures into one axis."
+      },
+      {
+        "text": "It changes the second measure into a line",
+        "correct": false,
+        "rationale": "Mark types are set on the Marks cards, not by synchronizing."
+      }
+    ],
+    "explanation": "The two axes of a dual axis chart are independent. Right-clicking the secondary axis and selecting Synchronize Axis puts both on the same scale.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-095",
+    "taskId": "2.1",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "Which two statements describe a dual axis chart rather than a combined axis chart? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The shelf keeps the two measures themselves",
+        "correct": true,
+        "rationale": "Measure Values is used only when axes are blended."
+      },
+      {
+        "text": "`Measure Names` on Color distinguishes the measures",
+        "correct": false,
+        "rationale": "That belongs to a combined axis chart."
+      },
+      {
+        "text": "Each measure has its own mark type",
+        "correct": true,
+        "rationale": "A Marks card exists for each measure."
+      },
+      {
+        "text": "A single axis is shared by both measures",
+        "correct": false,
+        "rationale": "A shared axis is what makes a combined axis."
+      },
+      {
+        "text": "It is created by dropping a measure onto an existing axis",
+        "correct": false,
+        "rationale": "That gesture blends the axes; a dual axis needs the right edge or the Dual Axis command."
+      }
+    ],
+    "explanation": "A dual axis chart layers two measures, each with its own axis and Marks card, and it keeps the measures themselves on the shelf. A combined axis uses Measure Values and Measure Names instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
   }
 ]
