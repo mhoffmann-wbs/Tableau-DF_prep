@@ -1546,5 +1546,682 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
     ]
+  },
+  {
+    "id": "2.2-043",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "The chart shows `Subscribers (Count)` for each `City`, filtered to one country. Two bars are the same city under different spellings. What should the analyst do so the city appears as one bar?",
+    "options": [
+      {
+        "text": "Drag `City` to Filters and use Keep Only on the spelling that has more subscribers.",
+        "correct": false,
+        "rationale": "This hides the other spelling's subscribers, so the count for the city is too low instead of combined."
+      },
+      {
+        "text": "Select both bars, right-click and choose Create Set, then put the set on Rows.",
+        "correct": false,
+        "rationale": "A set only splits members into In and Out. The two spellings would still be separate members."
+      },
+      {
+        "text": "Select both bars or headers and click the group icon, then rename the group.",
+        "correct": true,
+        "rationale": "A group combines the selected members into one, so their subscribers are counted in a single bar."
+      },
+      {
+        "text": "Drag `City` onto another field in the Data pane to build a hierarchy from the two spellings.",
+        "correct": false,
+        "rationale": "A hierarchy stacks different fields for drilling. It doesn't merge members of one field."
+      }
+    ],
+    "explanation": "Merging members of one field into a bigger category is the job of a group. Select the members in the view and use the group icon (paperclip), or use Create > Group in the Data pane, then rename it.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "City"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ],
+        "filters": [
+          {
+            "kind": "values",
+            "field": "Country",
+            "values": [
+              "Germany"
+            ]
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-044",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.2.1"
+    ],
+    "stem": "The analyst selects the Mobile and Tablet headers in this chart and clicks the group icon. Which two statements are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The two members become one mark, and the group's default name is built from the combined member names.",
+        "correct": true,
+        "rationale": "A group combines the selected members into a single group and names it from the member names until it is renamed."
+      },
+      {
+        "text": "Selecting Include 'Other' in the Edit Group dialog would gather the remaining members into one more group.",
+        "correct": true,
+        "rationale": "Include 'Other' puts all members that aren't in a named group into one Other group."
+      },
+      {
+        "text": "The sessions for Mobile and Tablet are deleted from the data source.",
+        "correct": false,
+        "rationale": "Grouping changes how members are combined in the view. It never removes rows from the data."
+      },
+      {
+        "text": "Each session is now marked In or Out of a subset, shown in two colors.",
+        "correct": false,
+        "rationale": "That describes a set. A group makes bigger categories, not an In/Out split."
+      },
+      {
+        "text": "The group adds + and - icons so the analyst can drill from the group down to the devices.",
+        "correct": false,
+        "rationale": "Drilling icons belong to hierarchies. A group has no drill path."
+      }
+    ],
+    "explanation": "A group merges members into a bigger category and gives it a name. Include 'Other' extends it by lumping every ungrouped member together. The underlying data stays unchanged.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Device"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm"
+    ]
+  },
+  {
+    "id": "2.2-045",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.2"
+    ],
+    "stem": "This chart shows `Subscribers (Count)` per `Country`. The head of marketing picks a handful of launch markets by hand. They want those bars colored differently from the rest, and the list must stay the same when new data arrives. What fits?",
+    "options": [
+      {
+        "text": "Select the launch-market marks, choose Create Set, and put the set on Color as In/Out.",
+        "correct": true,
+        "rationale": "Selecting marks makes a fixed set, and Color shows its In and Out members as two colors."
+      },
+      {
+        "text": "Create a dynamic set on the Top tab and put it on Color.",
+        "correct": false,
+        "rationale": "A Top set follows the data and can change members when the numbers change, so the list wouldn't stay fixed."
+      },
+      {
+        "text": "Select the launch-market marks and create a group, then put the group on Color.",
+        "correct": false,
+        "rationale": "A group merges the selected countries into one bar. It doesn't keep the other bars separate and compared against them."
+      },
+      {
+        "text": "Select the launch-market marks and choose Keep Only, then add the `Country` field to Color.",
+        "correct": false,
+        "rationale": "Keep Only is a filter. It removes the other countries, so there is nothing left to compare against."
+      }
+    ],
+    "explanation": "A set marks a subset as In or Out. Made from selected marks it is fixed, so its members don't change when the data does, and its In/Out view on Color compares the subset with the rest.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Country"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm"
+    ]
+  },
+  {
+    "id": "2.2-046",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "The `Type`, `Genre` and `Sub-Genre` pills are on Rows, and the chart shows nested headers. What do the nested headers mean?",
+    "options": [
+      {
+        "text": "Each level is a filter, and only members that pass all three filters are drawn.",
+        "correct": false,
+        "rationale": "The pills are on Rows, not on the Filters shelf. Nested headers split the view; they don't remove marks."
+      },
+      {
+        "text": "Each header is a group that was created by combining the members below it.",
+        "correct": false,
+        "rationale": "Groups are created with the group icon or Create > Group. Headers only show the levels placed on a shelf."
+      },
+      {
+        "text": "The headers sort the bars, so `Type` is the primary sort and `Sub-Genre` the last.",
+        "correct": false,
+        "rationale": "Sorting is a separate setting. Headers show the structure of the view, not a sort order."
+      },
+      {
+        "text": "Each `Sub-Genre` header sits inside a `Genre` header, which sits inside a `Type` header.",
+        "correct": true,
+        "rationale": "Fields placed in order on a shelf nest from general to detailed. This is the drilled-down state of a hierarchy."
+      }
+    ],
+    "explanation": "A hierarchy stacks related dimensions from general to detailed. Drilling down adds the next level as nested headers inside the one above, and drilling up removes it again.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "rows": [
+          {
+            "field": "Type"
+          },
+          {
+            "field": "Genre"
+          },
+          {
+            "field": "Sub-Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Titles (Count)"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-047",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.3"
+    ],
+    "stem": "The chart shows titles per `Type`. The catalogue team wants to click a + icon on the pill to see the `Genre` break down under each `Type`, without rebuilding the view. What should be set up in the Data pane?",
+    "options": [
+      {
+        "text": "A group that combines `Type` and `Genre` into one field, placed on Rows.",
+        "correct": false,
+        "rationale": "A group merges members of one field. It doesn't give a field a drill path."
+      },
+      {
+        "text": "A hierarchy with `Type` first and `Genre` below it, placed on Rows.",
+        "correct": true,
+        "rationale": "The hierarchy field shows a + icon. Clicking it drills down and adds `Genre` as the next nested header."
+      },
+      {
+        "text": "A fixed set that holds every `Genre`, placed on Rows.",
+        "correct": false,
+        "rationale": "A set divides members into In and Out. It doesn't add a drill level."
+      },
+      {
+        "text": "A `Genre` filter shown as a filter card on the sheet.",
+        "correct": false,
+        "rationale": "A filter card limits which members are shown. It doesn't add a level of detail."
+      }
+    ],
+    "explanation": "Drilling needs a hierarchy. Drop one field on top of another in the Data pane, name the hierarchy, and then use the + and - icons on its pill in the view.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "rows": [
+          {
+            "field": "Type"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Titles (Count)"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm"
+    ]
+  },
+  {
+    "id": "2.2-048",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "The `Device` pill on Filters excludes Web. `Device` is on no other shelf. What does each bar in the chart show?",
+    "options": [
+      {
+        "text": "The minutes from Web sessions only, because the excluded member is the one that is drawn.",
+        "correct": false,
+        "rationale": "Exclude removes the ticked members. It doesn't keep them."
+      },
+      {
+        "text": "The minutes from all sessions, because a filter on a field that isn't in the view has no effect.",
+        "correct": false,
+        "rationale": "A field doesn't have to be in the view to filter it, so the filter still applies."
+      },
+      {
+        "text": "The minutes from sessions on every device except Web, split by `Genre`.",
+        "correct": true,
+        "rationale": "The dimension filter removes the Web sessions before the minutes are summed per genre."
+      },
+      {
+        "text": "The minutes for every genre, but genres that have any Web session are removed from the chart.",
+        "correct": false,
+        "rationale": "Filtering removes rows before aggregation. A genre isn't dropped, only its Web sessions are."
+      }
+    ],
+    "explanation": "A dimension filter works on rows before they are aggregated. With Exclude selected, the ticked members are removed and everything else stays, even when the filtered field is not in the view.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "filters": [
+          {
+            "kind": "values",
+            "field": "Device",
+            "values": [
+              "Web"
+            ],
+            "exclude": true
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-049",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "The shelves show one title per row and a `SUM(Minutes Watched)` filter set to at least 30,000. What does the filter keep?",
+    "options": [
+      {
+        "text": "Titles whose total minutes across all their sessions reach 30,000.",
+        "correct": true,
+        "rationale": "A measure filter is applied to each mark's aggregated value, after the sessions are summed per title."
+      },
+      {
+        "text": "Sessions in which at least 30,000 minutes were watched.",
+        "correct": false,
+        "rationale": "The pill is an aggregate. A filter on single rows would use the unaggregated field."
+      },
+      {
+        "text": "The 30,000 titles with the most minutes watched.",
+        "correct": false,
+        "rationale": "That is a Top filter, which counts members. This one compares a value against a threshold."
+      },
+      {
+        "text": "Every title, with the bars for smaller titles drawn in gray.",
+        "correct": false,
+        "rationale": "Filters remove marks. They never recolor them."
+      }
+    ],
+    "explanation": "A measure filter works on aggregates, like `HAVING` in SQL. Tableau sums the measure for each mark and keeps the marks that pass, so the rule applies to totals and not to single sessions.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Title"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "filters": [
+          {
+            "kind": "range",
+            "field": "Minutes Watched",
+            "agg": "sum",
+            "min": 30000
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-050",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.2.4"
+    ],
+    "stem": "The view has a `Device` filter set to TV and a `SUM(Minutes Watched)` filter, with one title per row. Which two statements describe how Tableau applies them? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The `Device` filter removes the non-TV sessions first, so each title's total counts TV minutes only.",
+        "correct": true,
+        "rationale": "Filters on dimensions run before filters on measures, so the totals are built from TV sessions."
+      },
+      {
+        "text": "The `SUM(Minutes Watched)` filter is judged on each title's aggregated value.",
+        "correct": true,
+        "rationale": "A measure filter compares the aggregate of each mark with its rule, after the dimension filter."
+      },
+      {
+        "text": "The measure filter runs before the `Device` filter, because measures are calculated first.",
+        "correct": false,
+        "rationale": "The order is fixed: dimension filters, then measure filters."
+      },
+      {
+        "text": "The `Device` filter only works if `Device` is also on Rows or Columns.",
+        "correct": false,
+        "rationale": "A filtered field doesn't have to be in the view."
+      },
+      {
+        "text": "Both filters are context filters, because they share the Filters shelf.",
+        "correct": false,
+        "rationale": "A filter is only a context filter after Add to Context, and then its pill turns gray."
+      }
+    ],
+    "explanation": "Tableau applies filters in a fixed order: extract, data source, context, dimension, then measure filters. So the dimension filter shapes the rows and the measure filter then judges the totals.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Title"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "filters": [
+          {
+            "kind": "values",
+            "field": "Device",
+            "values": [
+              "TV"
+            ]
+          },
+          {
+            "kind": "range",
+            "field": "Minutes Watched",
+            "agg": "sum",
+            "min": 5000
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering_context.htm"
+    ]
+  },
+  {
+    "id": "2.2-051",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "The chart shows `SUM(Minutes Watched)` by month, colored by year, and only November and December appear in both years. Which filter on `Start` produced it?",
+    "options": [
+      {
+        "text": "A range of dates from 1 November 2024 to 31 December 2025.",
+        "correct": false,
+        "rationale": "That range would also keep every month between the two, such as March 2025."
+      },
+      {
+        "text": "A relative date filter for the last 2 months.",
+        "correct": false,
+        "rationale": "A relative filter keeps one moving window, so two separate years wouldn't both show."
+      },
+      {
+        "text": "A starting date of 1 November 2024, with no end date.",
+        "correct": false,
+        "rationale": "Starting dates keep everything after the date, so the months between would show too."
+      },
+      {
+        "text": "A date-part filter on Months with November and December ticked.",
+        "correct": true,
+        "rationale": "A date-part filter keeps the same parts of every year, here both November and December."
+      }
+    ],
+    "explanation": "A date-part filter keeps specific parts, such as months or quarters, across all years. Ranges and relative filters keep one continuous stretch of the timeline.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "part"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Start",
+            "date": {
+              "level": "year",
+              "mode": "part"
+            }
+          }
+        },
+        "filters": [
+          {
+            "kind": "datePart",
+            "field": "Start",
+            "level": "month",
+            "values": [
+              11,
+              12
+            ]
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-052",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "The `Start` pill is continuous (green) on Columns. A second `Start` pill on Filters holds a range of dates from 1 January 2025 to 30 June 2025. Which two statements are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The range keeps one fixed stretch of the timeline, and it doesn't move when the view is opened later.",
+        "correct": true,
+        "rationale": "A range of dates has fixed ends. A relative date filter is the one that moves with the date."
+      },
+      {
+        "text": "The pill on Columns draws the timeline, and the pill on Filters decides which dates are kept.",
+        "correct": true,
+        "rationale": "These are two separate pills with different jobs. The one on Columns doesn't filter."
+      },
+      {
+        "text": "The filter keeps January to June of every year in the data.",
+        "correct": false,
+        "rationale": "That is a date-part filter on Months. A range keeps only the dates between its two ends."
+      },
+      {
+        "text": "The filter updates to the last six months each time the view is opened.",
+        "correct": false,
+        "rationale": "That would be a relative date filter, which counts back from the date the view is opened."
+      },
+      {
+        "text": "Placing a continuous date on Columns already limits the view to the dates in the filter.",
+        "correct": false,
+        "rationale": "A pill on a shelf shows what exists in the data. Only the Filters shelf removes dates."
+      }
+    ],
+    "explanation": "A range of dates is fixed, a relative date filter moves with the calendar, and a date part repeats across years. A date can be on a shelf and on Filters at once, with separate jobs.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "day",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "filters": [
+          {
+            "kind": "dateRange",
+            "field": "Start",
+            "from": "2025-01-01",
+            "to": "2025-06-30"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
+  },
+  {
+    "id": "2.2-053",
+    "taskId": "2.2",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.2.5"
+    ],
+    "stem": "A `Start` filter on this view is a range of dates, 1 July 2024 to 31 December 2024. Next year new sessions are loaded and the analyst opens the view. What does the filter show?",
+    "options": [
+      {
+        "text": "The latest six months in the data, because Tableau moves date filters forward on its own.",
+        "correct": false,
+        "rationale": "Only a relative date filter moves with the calendar."
+      },
+      {
+        "text": "Still 1 July 2024 to 31 December 2024, because the ends of a range are fixed.",
+        "correct": true,
+        "rationale": "A range of dates keeps exactly the stretch it was set to, however much new data arrives."
+      },
+      {
+        "text": "Every date from 1 July 2024 to the newest date, because the end follows the data.",
+        "correct": false,
+        "rationale": "That would need a starting date with no end date. This filter has an end date."
+      },
+      {
+        "text": "The third and fourth quarters of every year, including the new one.",
+        "correct": false,
+        "rationale": "That describes a date-part filter on Quarters. This one is a single range."
+      }
+    ],
+    "explanation": "The ends of a range of dates are fixed. To keep a window that follows the calendar, use a relative date filter; to repeat the same months or quarters each year, use a date-part filter.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "day",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "filters": [
+          {
+            "kind": "dateRange",
+            "field": "Start",
+            "from": "2024-07-01",
+            "to": "2024-12-31"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/filtering.htm"
+    ]
   }
 ]
