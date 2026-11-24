@@ -78,7 +78,7 @@ It also holds `EXAM_FORMAT` (§2), `questionTarget()` and `allocateMock()` (larg
 
 ## 5. Learn: lessons
 
-12 MDX lessons (`lessons/<taskId>.mdx`): `## Big idea`, `## How it works` (one sub-heading per objective), `## At Driftlight`, `## Exam traps`, `## Build`. Learning order **4 → 1 → 2 → 3**; the blueprint view keeps guide order. UI is drawn as our own schematics, never screenshots.
+12 MDX lessons (`lessons/<taskId>.mdx`): `## Big idea`, `## How it works` (one sub-heading per objective), `## At Driftlight`, `## Exam traps`, `## Build`. Lessons follow the exam guide's order (domains 1 → 4). UI is drawn as our own schematics, never screenshots.
 
 ## 6. Data
 

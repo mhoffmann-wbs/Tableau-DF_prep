@@ -48,8 +48,8 @@ export default function HomePage() {
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Lessons in learning order</h2>
-        <p className="max-w-3xl text-slate-600">The concepts of domain 4 come first, because every other task builds on them.</p>
+        <h2 className="text-2xl font-semibold">Lessons</h2>
+        <p className="max-w-3xl text-slate-600">One lesson per exam task, in the order of the exam guide.</p>
         <ol className="grid gap-x-6 gap-y-1 rounded-lg border border-slate-200 bg-white p-4 text-sm sm:grid-cols-2">
           {LESSON_ORDER.map((id, i) => (
             <li key={id} className="flex gap-2">

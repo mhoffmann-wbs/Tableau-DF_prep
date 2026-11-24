@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen } from '@testing-library/react'
+import { cleanup, render, screen, within } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { routes } from '../app/routes'
@@ -36,11 +36,13 @@ describe('pages', () => {
     expect(screen.getByRole('button', { name: 'Start the mock exam' })).toBeEnabled()
   })
 
-  it('lists lessons in learning order and marks a lesson as read', async () => {
+  it('lists lessons by domain in guide order and marks a lesson as read', async () => {
     await renderAt('/learn', 'Learn')
-    const items = screen.getAllByRole('listitem').filter((li) => /^\d+/.test(li.textContent ?? ''))
-    expect(items[0]).toHaveTextContent('4.1 Understand dimensions and measures')
-    expect(items[3]).toHaveTextContent('1.1 Create live connections and extracts')
+    const domains = screen.getAllByRole('heading', { level: 2 })
+    expect(domains[0]).toHaveTextContent('1. Connecting to and Preparing Data')
+    expect(domains[3]).toHaveTextContent('4. Understanding Tableau Concepts')
+    const items = within(domains[0]!.closest('section')!).getAllByRole('listitem')
+    expect(items[0]).toHaveTextContent('1.1 Create live connections and extracts')
     cleanup()
     await renderAt('/learn/4.1', '4.1 Understand dimensions and measures')
     expect(screen.getByRole('heading', { level: 2, name: 'Exam traps' })).toBeInTheDocument()
@@ -51,7 +53,7 @@ describe('pages', () => {
 
   it('lists the guides and shows each with numbers from the exam guide', async () => {
     await renderAt('/guides', 'Guides')
-    expect(screen.getByRole('link', { name: 'Cheat sheet' })).toHaveAttribute('href', '/guides/cheat-sheet')
+    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Cheat sheet' })).toHaveAttribute('href', '/guides/cheat-sheet')
     cleanup()
     await renderAt('/guides/exam-day', /Exam-day guide/)
     expect(screen.getByRole('button', { name: 'Print' })).toBeInTheDocument()

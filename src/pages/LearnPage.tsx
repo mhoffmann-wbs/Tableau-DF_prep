@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { Link, useParams } from 'react-router'
 import { Inline } from '../components/Inline'
 import { ITEMS } from '../content/bank'
-import { DOMAIN_BY_ID, LESSON_ORDER, TASK_BY_ID } from '../content/blueprint'
+import { DOMAIN_BY_ID, DOMAINS, LESSON_ORDER, TASK_BY_ID, tasksOf } from '../content/blueprint'
 import { LESSONS } from '../content/lessons'
 import { LessonContext, lessonComponents } from '../lessons/components'
 import { setLessonRead, useProgress } from '../progress/store'
@@ -17,39 +17,38 @@ function LessonIndex() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Learn</h1>
-      <p className="max-w-3xl text-slate-600">
+      <p className="text-slate-600">
         One lesson per exam task: the big idea, how it works in Tableau, how Driftlight uses it, the traps the exam likes to set, and
-        where to practise it. The lessons start with the concepts (domain 4) because everything else builds on them.{' '}
-        {lessonsRead.length} of {LESSONS.size} marked as read.
+        where to practise it. {lessonsRead.length} of {LESSONS.size} marked as read.
       </p>
-      <ol className="space-y-2">
-        {LESSON_ORDER.map((id, i) => {
-          const task = TASK_BY_ID.get(id)!
-          const domain = DOMAIN_BY_ID.get(task.domainId)!
-          return (
-            <li key={id} className="flex items-baseline gap-3 rounded-lg border border-slate-200 bg-white p-3">
-              <span className="w-6 shrink-0 text-right font-mono text-sm text-slate-400">{i + 1}</span>
-              <span className="flex-1">
-                {LESSONS.has(id) ? (
-                  <Link to={`/learn/${id}`} className="font-medium text-brand-dark hover:underline">
-                    {id} {task.title}
+      {DOMAINS.map((d) => (
+        <section key={d.id} className="rounded-lg border border-slate-200 bg-white p-4">
+          <h2 className="flex flex-wrap items-baseline justify-between gap-2 font-semibold">
+            <span>
+              {d.id}. {d.title}
+            </span>
+            <span className="text-sm font-normal text-slate-500">{d.weight}% of the exam</span>
+          </h2>
+          <ul className="mt-2 space-y-1">
+            {tasksOf(d.id).map((t) => (
+              <li key={t.id} className="flex items-baseline gap-2 text-sm">
+                <span className="w-4 shrink-0" aria-label={lessonsRead.includes(t.id) ? 'read' : undefined}>
+                  {lessonsRead.includes(t.id) ? '✓' : ''}
+                </span>
+                {LESSONS.has(t.id) ? (
+                  <Link to={`/learn/${t.id}`} className="text-brand-dark hover:underline">
+                    {t.id} {t.title}
                   </Link>
                 ) : (
                   <span className="text-slate-400">
-                    {id} {task.title} (coming soon)
+                    {t.id} {t.title} (coming soon)
                   </span>
                 )}
-                <span className="block text-xs text-slate-500">
-                  Domain {domain.id}: {domain.title}
-                </span>
-              </span>
-              <span className="w-4 shrink-0" aria-label={lessonsRead.includes(id) ? 'read' : undefined}>
-                {lessonsRead.includes(id) ? '✓' : ''}
-              </span>
-            </li>
-          )
-        })}
-      </ol>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
     </div>
   )
 }
@@ -161,7 +160,7 @@ function LessonView({ taskId }: { taskId: string }) {
   )
 }
 
-/** Previous and next lesson in learning order, skipping tasks without a lesson yet. */
+/** Previous and next lesson in guide order, skipping tasks without a lesson yet. */
 function LessonNav({ taskId }: { taskId: string }) {
   const order = LESSON_ORDER.filter((id) => LESSONS.has(id) || id === taskId)
   const index = order.indexOf(taskId)

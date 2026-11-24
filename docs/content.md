@@ -2,7 +2,7 @@
 
 The exam blueprint, the item schema and question bank, lessons, guides, calc exercises, flashcards and sandbox challenges (`src/content/`). Moved from CLAUDE.md; keep it describing what exists.
 
-- `src/content/blueprint.ts`: `EXAM_FORMAT` (format facts from the guide), `DOMAINS`, `TASKS` with their objectives **verbatim** (ids `"2.3"` and `"2.3.5"`, as the guide numbers them), `LESSON_ORDER` (concepts first: 4, 1, 2, 3), `largestRemainder`, `allocateMock()` (9 · 15 · 10 · 6), `TARGETS`/`questionTarget()` (600 items split by domain weight, then by objective count; at least `MIN_PER_OBJECTIVE` = 8), and `PUBLIC_LIMITS`.
+- `src/content/blueprint.ts`: `EXAM_FORMAT` (format facts from the guide), `DOMAINS`, `TASKS` with their objectives **verbatim** (ids `"2.3"` and `"2.3.5"`, as the guide numbers them), `LESSON_ORDER` (guide order), `largestRemainder`, `allocateMock()` (9 · 15 · 10 · 6), `TARGETS`/`questionTarget()` (600 items split by domain weight, then by objective count; at least `MIN_PER_OBJECTIVE` = 8), and `PUBLIC_LIMITS`.
 - `src/content/schema.ts`: the Zod item union. All kinds share `id` (`<taskId>-NNN`), `taskId`, `objectives[]` (all under `taskId`), `stem`, `options` (`text`, `correct`, `rationale`), `explanation` and optional `sourceLinks`:
   - `single`: exactly 4 options.
   - `multi`: `select` 2–3, 5–6 options.

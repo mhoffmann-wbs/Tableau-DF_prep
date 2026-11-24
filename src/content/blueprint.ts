@@ -150,8 +150,8 @@ export const OBJECTIVE_BY_ID = new Map(OBJECTIVES.map((o) => [o.id, o]))
 export const tasksOf = (domainId: DomainId) => TASKS.filter((t) => t.domainId === domainId)
 export const taskOfObjective = (objectiveId: string) => TASK_BY_ID.get(objectiveId.split('.').slice(0, 2).join('.'))
 
-/** Lessons run concepts first (PLAN.md §5); the blueprint view keeps guide order. */
-export const LESSON_ORDER: string[] = ['4.1', '4.2', '4.3', '1.1', '1.2', '1.3', '2.1', '2.2', '2.3', '3.1', '3.2', '3.3']
+/** Lessons follow the exam guide's order, domain by domain (PLAN.md §5). */
+export const LESSON_ORDER: string[] = TASKS.map((t) => t.id)
 
 /**
  * Splits `total` in proportion to `weights` by largest remainder; ties go to

@@ -104,11 +104,11 @@ describe('calc exercises', () => {
 
   it('is linked from the Build page', async () => {
     await renderAt('/build', 'Build')
-    expect(screen.getByRole('link', { name: 'Calc playground' })).toBeInTheDocument()
+    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Calc playground' })).toBeInTheDocument()
   })
 
   it('says when an exercise is missing', async () => {
     await renderAt('/build/calc/no-such-exercise', 'Exercise not found')
-    expect(screen.getByRole('link', { name: 'Calc playground' })).toBeInTheDocument()
+    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Calc playground' })).toBeInTheDocument()
   })
 })
