@@ -1,0 +1,119 @@
+export const meta = {
+  id: 'clean-up-subscribers',
+  taskId: '1.3',
+  title: 'Clean up the subscribers data',
+  summary: 'Rename a field, alias the plan codes, fix the postal code’s data type, map the countries and set default properties on the raw subscribers file.',
+  updated: '2026-11-24',
+  objectives: ['1.3.1', '1.3.2', '1.3.3', '1.3.4', '1.3.5'],
+  files: ['subscribers.csv'],
+  links: [
+    { title: 'Organize and customize fields in the Data pane (rename)', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_dwfeatures.htm' },
+    { title: 'Create aliases to rename members in the view', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm' },
+    { title: 'Assign geographic roles', url: 'https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm' },
+    { title: 'Data types', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm' },
+    { title: 'Edit default settings for fields', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm' },
+  ],
+  steps: [
+    { id: 'connect-subscribers', label: 'Connect to the subscribers file' },
+    { id: 'postal-code-string', label: 'Make Postal Code a string' },
+    { id: 'rename-signup', label: 'Rename a field' },
+    { id: 'alias-plans', label: 'Alias the plan codes' },
+    { id: 'country-map', label: 'Map the countries' },
+    { id: 'default-properties', label: 'Set default properties' },
+  ],
+  checkpoints: [
+    {
+      id: 'premium-subscribers',
+      question: 'How many subscribers are on the plan you aliased as Premium (code PRM)?',
+      answer: {
+        kind: 'value',
+        says: '606',
+        spec: { source: 'subscribers', rows: [{ field: 'Plan Code' }], columns: [{ field: 'Subscribers (Count)' }] },
+        measure: { field: 'Subscribers (Count)' },
+        where: { 'Plan Code': 'PRM' },
+      },
+    },
+    {
+      id: 'top-country',
+      question: 'On your map, which country has the most subscribers?',
+      answer: {
+        kind: 'top',
+        says: 'United States',
+        spec: { source: 'subscribers', rows: [{ field: 'Country' }], columns: [{ field: 'Subscribers (Count)' }] },
+        dimension: { field: 'Country' },
+        measure: { field: 'Subscribers (Count)' },
+      },
+    },
+    {
+      id: 'germany-subscribers',
+      question: 'How many subscribers does Germany have?',
+      answer: {
+        kind: 'value',
+        says: '207',
+        spec: { source: 'subscribers', rows: [{ field: 'Country' }], columns: [{ field: 'Subscribers (Count)' }] },
+        measure: { field: 'Subscribers (Count)' },
+        where: { Country: 'Germany' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Raw data arrives with codes and types chosen by the system that produced it. In this challenge you fix Driftlight's subscribers file **inside Tableau**, as metadata: rename a field, alias codes, correct a data type, give a field a geographic role and set default properties. None of it changes the CSV.
+
+## Get the data
+
+Download the subscribers file:
+
+<DataFiles />
+
+It has one row per subscriber, with a plan code (`BAS`, `STD`, `PRM`, `ADS`), location fields and a postal code for US subscribers. Some postal codes start with a zero, such as `07109`.
+
+## Steps
+
+<Step id="connect-subscribers">
+  In Tableau Public, connect to `subscribers.csv` (**Text file**). On the Data Source page, look at the data type icon above each column of the grid. Note which type Tableau guessed for **Postal Code** and **Signup Date**.
+</Step>
+
+<Step id="postal-code-string">
+  If Tableau read **Postal Code** as a number, it would lose the leading zero (`07109` becomes `7109`) and offer to add the codes up. On the Data Source page, "click the data type icon for the field" in the grid and choose the string (text) type. Then, on a sheet, click the field's icon in the Data pane and pick **Geographic Role > ZIP Code/Postcode**. Change data types before you build anything else: "Be sure to change data types before you create an extract."
+</Step>
+
+<Step id="rename-signup">
+  Open a sheet. In the Data pane, select **Signup Date** and press **F2** (or right-click and choose **Rename**). Call it **Joined On**. "Renaming a field doesn't change the name of the field in the underlying data source, only what appears in Tableau." To undo it, the circular arrow in the edit box restores the original name.
+</Step>
+
+<Step id="alias-plans">
+  Drag **Plan Code** to Rows and the count measure, named after the table and followed by **(Count)**, to Columns. Now right-click **Plan Code** in the Data pane and select **Aliases**. Type the plan names next to the codes: BAS → Basic, STD → Standard, PRM → Premium, ADS → Basic with Ads. The bars keep their counts; only the labels change. Aliases work only on members of discrete dimensions: "They can't be created for continuous dimensions, dates, or measures."
+</Step>
+
+<Step id="country-map">
+  Click the data type icon of **Country** in the Data pane and check that it has the **Country/Region** geographic role (assign it under **Geographic Role** if not). Tableau adds **Latitude (generated)** and **Longitude (generated)** to the measures. On a new sheet, drag **Country** to **Detail** on the Marks card: Tableau creates a map. Choose **Map** in the Marks card's mark type drop-down and drag the count measure to **Color** for a filled map. Hover over the countries to read their counts.
+</Step>
+
+<Step id="default-properties">
+  Right-click **Plan Code** in the Data pane and open **Default Properties > Color**. Give each plan a colour, then drag Plan Code to Color on any sheet: the same colours appear everywhere this data source is used. Then right-click **Channel** and add a **Default Properties > Comment** describing the field; it shows in the field's tooltip in the Data pane.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>Field properties work the same in Tableau Public and the paid Desktop. In the paid Desktop you would save this clean-up as a `.tds` (see [Connect, extract and save a data source](/build/challenges/connect-and-extract)) so colleagues get the same names and aliases.</p>
+</Callout>
+
+## Checkpoints
+
+Type what your own views show.
+
+<Checkpoint id="premium-subscribers" />
+
+<Checkpoint id="top-country" />
+
+<Checkpoint id="germany-subscribers" />
+
+## Exam angle
+
+- **Rename** changes a field's name; an **alias** changes how one member is shown. Neither changes the underlying data.
+- Aliases exist only for members of discrete dimensions, never for measures, dates or continuous fields. To merge two members (two spellings of a city) you need a group (task 2.2), not an alias.
+- The geographic role sits in the data type icon's menu. It generates Latitude (generated) and Longitude (generated); unmatched values show as "unknown" and are fixed with **Edit Locations**.
+- A **Default Property** (number format, aggregation, color, sort, comment) applies to every new view; formatting one pill changes only that view.
+- Codes such as postal codes belong in strings, not numbers.

@@ -7,7 +7,7 @@ import { type CardState, type Rating, rate, TOP_BOX } from '../flashcards/leitne
 // migration in `load()` and keep ProgressSchema in step whenever the shape
 // changes; never read localStorage elsewhere.
 const STORAGE_KEY = 'tableau-df:progress'
-const VERSION = 5
+const VERSION = 6
 
 export interface ItemStat {
   attempts: number
@@ -71,10 +71,17 @@ export interface Progress {
   /** Flashcard review state by card id, built-in and own cards alike. */
   flashcards: Record<string, CardState>
   decks: Deck[]
+  /** Tableau Public challenges: ticked steps and correctly answered checkpoints, by challenge id. */
+  challenges: Record<string, ChallengeRecord>
+}
+
+export interface ChallengeRecord {
+  steps: string[]
+  checkpoints: string[]
 }
 
 function empty(): Progress {
-  return { version: VERSION, items: {}, mockResults: [], sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [] }
+  return { version: VERSION, items: {}, mockResults: [], sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [], challenges: {} }
 }
 
 /** Brings stored or imported progress from an older version up to VERSION; other versions are returned unchanged. */
@@ -88,6 +95,8 @@ function migrate(raw: { version?: unknown }): { version?: unknown } {
   if (doc.version === 3) doc = { ...doc, version: 4, calcExercises: {}, calcs: [] }
   // v4 → v5: flashcard review state and own decks.
   if (doc.version === 4) doc = { ...doc, version: 5, flashcards: {}, decks: [] }
+  // v5 → v6: Tableau Public challenge steps and checkpoints.
+  if (doc.version === 5) doc = { ...doc, version: 6, challenges: {} }
   return doc
 }
 
@@ -179,6 +188,20 @@ export function rateCard(cardId: string, rating: Rating, at: number = Date.now()
   commit({ ...state, flashcards: { ...state.flashcards, [cardId]: rate(state.flashcards[cardId], rating, at) } })
 }
 
+const challengeRecord = (challengeId: string): ChallengeRecord => state.challenges[challengeId] ?? { steps: [], checkpoints: [] }
+
+export function setChallengeStep(challengeId: string, stepId: string, done: boolean) {
+  const prev = challengeRecord(challengeId)
+  const rest = prev.steps.filter((id) => id !== stepId)
+  commit({ ...state, challenges: { ...state.challenges, [challengeId]: { ...prev, steps: done ? [...rest, stepId] : rest } } })
+}
+
+export function recordCheckpoint(challengeId: string, checkpointId: string) {
+  const prev = challengeRecord(challengeId)
+  if (prev.checkpoints.includes(checkpointId)) return
+  commit({ ...state, challenges: { ...state.challenges, [challengeId]: { ...prev, checkpoints: [...prev.checkpoints, checkpointId] } } })
+}
+
 const newId = () => `my-${crypto.randomUUID()}`
 
 /** Creates a deck or replaces one's name and cards; cards without an id get one. Returns the deck id. */
@@ -231,6 +254,7 @@ const ProgressSchema = z.object({
       createdAt: z.number(),
     }),
   ),
+  challenges: z.record(z.string(), z.object({ steps: z.array(z.string()), checkpoints: z.array(z.string()) })),
 })
 
 const EXPORT_APP = 'tableau-df-prep'

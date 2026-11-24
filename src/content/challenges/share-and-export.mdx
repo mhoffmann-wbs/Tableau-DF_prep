@@ -1,0 +1,115 @@
+export const meta = {
+  id: 'share-and-export',
+  taskId: '3.3',
+  title: 'Share a view and look at its data',
+  summary: 'Build a bar chart of 2025 minutes by device, look at the rows behind a bar, export the view as a picture, and save the workbook locally and to your Tableau Public profile.',
+  updated: '2026-11-24',
+  objectives: ['3.3.1', '3.3.2', '3.3.3'],
+  files: ['sessions_2025.csv'],
+  links: [
+    { title: 'View underlying data', url: 'https://help.tableau.com/current/pro/desktop/en-us/inspectdata_viewdata.htm' },
+    { title: 'Export data', url: 'https://help.tableau.com/current/pro/desktop/en-us/save_export_data.htm' },
+    { title: 'Export views to another application (image, PowerPoint)', url: 'https://help.tableau.com/current/pro/desktop/en-us/save_export_image.htm' },
+    { title: 'Print views (Print to PDF)', url: 'https://help.tableau.com/current/pro/desktop/en-us/printing.htm' },
+    { title: 'Tableau Public FAQ', url: 'https://help.tableau.com/current/pro/desktop/en-gb/public_faq.htm' },
+    { title: 'Compare Tableau Desktop editions', url: 'https://help.tableau.com/current/pro/desktop/en-us/desktop_comparison.htm' },
+  ],
+  steps: [
+    { id: 'build-bars', label: 'Build minutes by device' },
+    { id: 'view-data', label: 'Look at the data behind the Mobile bar' },
+    { id: 'export-picture', label: 'Export the view as an image or a PDF' },
+    { id: 'save-locally', label: 'Save the workbook on your computer' },
+    { id: 'save-to-public', label: 'Save the workbook to Tableau Public' },
+    { id: 'export-powerpoint', label: 'Export to PowerPoint', objective: '3.3.3', optional: 'unverified' },
+  ],
+  checkpoints: [
+    {
+      id: 'mobile-minutes-2025',
+      question: 'How many minutes were watched on Mobile in 2025 (the Summary value of the Mobile bar)?',
+      answer: {
+        kind: 'value',
+        says: '391,473',
+        spec: {
+          rows: [{ field: 'Device' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { Device: 'Mobile' },
+      },
+    },
+    {
+      id: 'mobile-sessions-2025',
+      question: 'How many session rows are behind the Mobile bar (the rows in the full data)?',
+      answer: {
+        kind: 'value',
+        says: '4,372',
+        spec: {
+          rows: [{ field: 'Device' }],
+          columns: [{ field: 'Sessions (Count)' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Sessions (Count)' },
+        where: { Device: 'Mobile' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Task 3.3 is about getting a finished view to other people and getting the numbers out of it. In this challenge you build one bar chart in Tableau Desktop Public Edition (Tableau Public for short), look at the rows behind one bar, export a picture and save the workbook twice: on your computer and on your Tableau Public profile.
+
+## Get the data
+
+Download this file:
+
+<DataFiles />
+
+`sessions_2025.csv` has one row per viewing session in 2025. You also need **Tableau Desktop Public Edition**, free from Tableau Public's website.
+
+## Steps
+
+<Step id="build-bars">
+  Connect to `sessions_2025.csv` (**Text file** in the Connect pane) and open **Sheet 1**. Drag **Device** to Rows and **Minutes Watched** to Columns: one bar per device, each showing `SUM(Minutes Watched)`. Hover over the Mobile bar to read its value.
+</Step>
+
+<Step id="view-data">
+  Right-click the Mobile bar and select **View Data**. The **Summary** tab "displays the dimensions that define the view and the aggregated measure or measures that make up the mark": one row, Mobile and its sum. The full data tab lists the session rows themselves; its row count is the number of sessions behind the bar. Tableau's help documents View Data for Desktop and doesn't mention Tableau Public. If your edition has no View Data, get the same two numbers another way: the tooltip gives the sum, and the table's **(Count)** measure on Columns gives the number of rows. Then read lesson 3.3 on the Summary and full data tabs and the **Download** button.
+</Step>
+
+<Step id="export-picture">
+  Export the view as a picture. In Desktop, the lesson's paths are **Worksheet > Export > Image** (BMP, JPEG, PNG or SVG) and **File > Print to PDF** (Entire Workbook, Active Sheet or Selected Sheets). The help doesn't say which of these Tableau Public offers, so try them in your menus. If neither is there, take note of the paths: the exam asks for them, not for Tableau Public's menus.
+</Step>
+
+<Step id="save-locally">
+  Save the workbook on your computer. Tableau Public lets you "either share workbooks publicly to your Tableau Public profile or save workbooks locally". Look at the file extension of the saved file. In the paid Desktop, **File > Save As** with **Tableau Packaged Workbooks** gives a `.twbx`, which "saves the workbook along with all referenced local file data sources and images into a single file".
+</Step>
+
+<Step id="save-to-public">
+  Save the workbook to your Tableau Public profile (you need a free Tableau Public account). Open it in the browser. Anyone can see it there, so Tableau Public is only for data you may share publicly. By default, viewers can download the viz and its underlying data, which you can turn off in the viz settings.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>Tableau Public saves to your Tableau Public profile or to your computer, but it can't publish to Tableau Server or Tableau Cloud. The exam's **Server > Publish Workbook** questions assume the paid Desktop. Desktop Free Edition can't publish either, and can't save to Tableau Public. Lesson [3.3](/learn/3.3) walks through the Publish Workbook dialog, and the [Live vs. extract simulator](/build/sim/live-extract) shows what happens to a published data source.</p>
+</Callout>
+
+<Step id="export-powerpoint">
+  Select **File > Export as PowerPoint** and choose the sheet. "Selected sheets become static PNG images on separate slides", with the filters in effect applied. The help documents this for Desktop and doesn't mention Tableau Public. If your edition lacks the command, skip the step and remember that the slides are pictures: not interactive, and not updated with the data.
+</Step>
+
+## Checkpoints
+
+Type what your own view shows. A number may be typed as Tableau formats it (`391,473` or `391.5K`).
+
+<Checkpoint id="mobile-minutes-2025" />
+
+<Checkpoint id="mobile-sessions-2025" />
+
+## Exam angle
+
+- Match the format to the recipient: `.twbx` for someone with Tableau, a published workbook for browser viewers, an image or PDF for a report, PowerPoint for slides, View Data or an export for the numbers.
+- View Data's **Summary** is one row per mark (aggregated). The **full data** is the underlying rows: "the individual records behind a bar".
+- **Worksheet > Export > Data** exports the data behind the view. **Worksheet > Export > Crosstab to Excel** exports the table as laid out.
+- **File > Export as PowerPoint** makes static images, one slide per sheet, with the current filters applied.
+- Publishing goes through **Server > Publish Workbook**. Hiding sheets before publishing doesn't secure them: use permissions.

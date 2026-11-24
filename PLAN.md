@@ -115,7 +115,7 @@ Components with their copy as data, each ending with 2–3 bank items: Data mode
 About 12 MDX challenges, roughly one per task, in Tableau Public with the downloaded Driftlight files. A few optional steps use Desktop Free Edition (§1). Each has:
 - `meta.steps`, a checklist stored in progress (don't rename step ids), and `meta.checkpoints`, numeric or text answers the learner reads from their own viz ("Total minutes watched on Mobile in Q3 2025?"). The `check` query in the engine computes each answer, and a test verifies them.
 - sections `## Goal`, `## Get the data`, `## Steps`, `## Checkpoints` and `## Exam angle`, plus a `> Public vs. Desktop` callout wherever the steps differ from Desktop or from 2022.3.
-- a mark on any step Public can't do. Such a step is either an optional **Desktop Free Edition** step (with a `meta.steps` flag `edition: "free"`, so it never blocks completion), or, if only the paid Desktop can do it, a pointer to the simulator that covers it. Check what Free Edition supports in Tableau's help before relying on it.
+- a mark on any step Public can't do (`PUBLIC_LIMITS`). Such a step is optional and never blocks completion: `optional: "free"` when the help documents that Public can't and Free Edition can (a **Desktop Free Edition** step), `optional: "unverified"` while the help doesn't settle it for Public. If only the paid Desktop can do it, there is no step, only a pointer to the simulator that covers it. Check what Free Edition supports in Tableau's help before relying on it.
 
 Challenges never count towards readiness.
 
@@ -144,7 +144,7 @@ Versioned progress store with export/import; readiness per task (coverage × acc
    5. **Reference lines** (done 2026-11-24): Analytics pane (Constant/Average Line, Median with Quartiles, Totals, custom line, band, distribution) with Table/Pane/Cell targets; the reference dialog.
    6. **Simple dashboard**: two sheets with a filter action.
    7. **Content on the new features**: `viz` items for 2.1.5–2.1.6 and 2.3.2–2.3.7, new sandbox challenges, lesson charts that replace the text-only parts, and the Group/set/hierarchy simulator building in the sandbox. First make `match.ts` compare `mark`, `axes` and the Measure Values card.
-   8. **Tableau Public challenges** (§7d). Needs the three `unverified` `PUBLIC_LIMITS` checked in Tableau Public first.
+   8. **Tableau Public challenges** (done 2026-11-24): 12 challenges, one per task, at `/build/challenges/:id`, with checklists and checkpoints in progress (v6); the steps for the three `unverified` limits are optional until checked.
    9. **Cheat sheet and exam-day guide** (done 2026-11-24): `/guides`, facts restated from the lessons and `EXAM_FORMAT`. Recheck the cheat sheet whenever a lesson is corrected.
    10. **Mobile pass and sandbox accessibility** (keyboard alternatives to dragging pills).
 
@@ -153,7 +153,9 @@ Versioned progress store with export/import; readiness per task (coverage × acc
 Facts to verify in Tableau (not settled by the help) and known limits, from finished phases. Remove an entry when it's resolved.
 
 **Check in Tableau Public / Desktop**
-- `PUBLIC_LIMITS` `unverified`: 1.1.4 `.tds`, 1.1.5 CSV + Excel connections, 3.3.3 PowerPoint (before 8.8).
+- `PUBLIC_LIMITS` `unverified` (the help doesn't say; 2026-11-24): 1.1.4 `.tds`, 1.1.5 CSV + Excel connections, 3.3.3 PowerPoint. Check in Tableau Public; when one works, make it `documented` or drop it, and turn its challenge step into a required one (the test follows `PUBLIC_LIMITS`). Free Edition's support for `.tds` and PowerPoint isn't documented either.
+- Challenge steps written from the paid Desktop's help, unconfirmed in Tableau Public: the data types Public infers for the raw CSVs (Postal Code, Country's geographic role); the union's second file showing in the left pane; removing a table from the logical canvas; the name of a unioned table's (Count) field; View Data, Export > Image and Print to PDF (`share-and-export`, hedged with a fallback); Public's local save format; Device Preview and phone layouts (`build-a-dashboard`); whether a filter card shown on a sheet appears on its dashboard; whether a Top N set ignores the view's filters as the engine does (`organize-and-filter`).
+- Challenge wording not in the help: "Add Phone Layout", "Years" in the date filter dialog, the data type menu's string label.
 - Menu path for hiding and showing a legend (3.1.6); lesson 3.1 states none.
 - Default Color (palette) for measures: lesson 1.3 says Color is for dimensions only; fix it if Tableau offers it, and add default Color/Shape to the sandbox.
 - Recheck lesson menu labels against 2022.3 when an install is available (the help is the current version).

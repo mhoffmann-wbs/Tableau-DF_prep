@@ -1,0 +1,107 @@
+export const meta = {
+  id: 'union-relate-join',
+  taskId: '1.2',
+  title: 'Union, relate and join Driftlight’s tables',
+  summary: 'Stack the two sessions files with a union, relate the titles table, then join the same table and watch a sum balloon.',
+  updated: '2026-11-24',
+  objectives: ['1.2.1', '1.2.2', '1.2.3'],
+  files: ['sessions_2024.csv', 'sessions_2025.csv', 'titles.csv'],
+  links: [
+    { title: 'The Tableau Data Model', url: 'https://help.tableau.com/current/pro/desktop/en-us/datasource_datamodel.htm' },
+    { title: 'Relate your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/relate_tables.htm' },
+    { title: 'How relationships differ from joins', url: 'https://help.tableau.com/current/pro/desktop/en-us/datasource_relationships_learnmorepage.htm' },
+    { title: 'Join your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm' },
+    { title: 'Union your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/union.htm' },
+  ],
+  steps: [
+    { id: 'union-sessions', label: 'Union the two sessions files' },
+    { id: 'sessions-by-year', label: 'Count sessions per year' },
+    { id: 'relate-titles', label: 'Relate the titles table' },
+    { id: 'runtime-related', label: 'Sum Runtime over the relationship' },
+    { id: 'join-titles', label: 'Join the titles table instead' },
+    { id: 'runtime-joined', label: 'Sum Runtime over the join' },
+  ],
+  checkpoints: [
+    {
+      id: 'sessions-2024',
+      question: 'After the union, how many sessions are there in 2024?',
+      answer: {
+        kind: 'value',
+        says: '15,000',
+        spec: { columns: [{ field: 'Start' }], rows: [{ field: 'Sessions (Count)' }] },
+        measure: { field: 'Sessions (Count)' },
+        where: { Start: '2024' },
+      },
+    },
+    {
+      id: 'runtime-related',
+      question: 'With titles related to the sessions, what is SUM(Runtime) with nothing else in the view?',
+      answer: { kind: 'value', says: '33,609', spec: { source: 'titles', rows: [{ field: 'Runtime' }] }, measure: { field: 'Runtime' } },
+    },
+    {
+      id: 'runtime-joined',
+      question: 'With titles joined to the sessions instead, what is SUM(Runtime) now?',
+      answer: { kind: 'value', says: '2,692,290', spec: { rows: [{ field: 'Runtime' }] }, measure: { field: 'Runtime' } },
+    },
+  ],
+}
+
+## Goal
+
+Driftlight's viewing data arrives as two yearly files plus a titles lookup. You combine them the three ways task 1.2 asks about: a **union** for the two years, a **relationship** to the titles, and then a **join** to the same titles, so you see for yourself why a join between tables at different levels of detail can duplicate a measure.
+
+## Get the data
+
+Download the three files into one folder:
+
+<DataFiles />
+
+`sessions_2024.csv` and `sessions_2025.csv` have the same columns, one row per viewing session. `titles.csv` has one row per title, with its `Runtime` in minutes. Read [lesson 1.2](/learn/1.2) first if relationships, joins and unions are new to you.
+
+## Steps
+
+<Step id="union-sessions">
+  In Tableau Public, connect to `sessions_2024.csv` (**Text file**). On the Data Source page, double-click the table on the canvas to open its physical layer: "logical tables are like containers for physical tables". Then drag `sessions_2025.csv` from the left pane **directly below** the first table, or double-click **New Union** and drag both files into the **Union** dialog. Tableau adds fields that record where each row came from, such as **Table Name**. Close the physical layer to get back to the logical layer.
+</Step>
+
+<Step id="sessions-by-year">
+  On a sheet, drag **Start** to Columns (Tableau shows `YEAR(Start)`) and the count measure, named after the table and followed by **(Count)**, to Rows. You should see one bar per year: the union stacked the rows of both files.
+</Step>
+
+<Step id="relate-titles">
+  Back on the Data Source page (logical layer), drag `titles.csv` onto the canvas. When the "noodle" appears between the two tables, drop it. Tableau tries to match fields itself; in the settings below the canvas, check that the relationship uses **Title ID** on both sides (the fields "must have the same data type").
+</Step>
+
+<Step id="runtime-related">
+  On a new sheet, drag **Runtime** to Rows and nothing else. Read `SUM(Runtime)` from the tooltip or put Runtime on Label too. Relationships "maintain each table's level of detail", so Tableau adds up the runtimes of the titles table itself, once per title.
+</Step>
+
+<Step id="join-titles">
+  Now do it the old way. On the Data Source page, take `titles.csv` off the logical canvas. Double-click the sessions table to open the physical layer again, then double-click or drag `titles.csv` onto the join canvas next to the union. Click the join icon (the Venn diagram) and choose **Inner**, with the clause `Title ID = Title ID`.
+</Step>
+
+<Step id="runtime-joined">
+  Go back to the Runtime sheet. The joined tables are "merged into a single logical table with a fixed combination of data": every session row now carries its title's Runtime, so `SUM(Runtime)` adds each runtime once per session. Compare it with your first number.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>The steps here are the paid Desktop's, from the lesson. Tableau Public is a newer version than the 2022.3 the exam tests, and newer versions add options the exam doesn't ask about, such as multi-fact relationships (2024.2).</p>
+</Callout>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`33,609` or `33.6K`).
+
+<Checkpoint id="sessions-2024" />
+
+<Checkpoint id="runtime-related" />
+
+<Checkpoint id="runtime-joined" />
+
+## Exam angle
+
+- **Union** adds rows (same columns, such as monthly or yearly files), a **join** adds columns across the same row structure, and a **relationship** combines tables at different levels of detail. Relationships are Tableau's default and recommended method.
+- A noodle between logical tables is a relationship; a Venn diagram between physical tables, inside a logical table, is a join.
+- "My SUM is suddenly far too big after adding a table" points to a join between tables at different levels of detail. The usual fix is a relationship, not a different aggregation.
+- The four join types are inner, left, right and full outer. A left join keeps every row of the left table and shows nulls where the right table has no match.
+- Try the same ideas without Tableau in the [Data model lab](/build/sim/data-model).

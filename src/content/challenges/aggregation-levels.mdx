@@ -1,0 +1,124 @@
+export const meta = {
+  id: 'aggregation-levels',
+  taskId: '4.3',
+  title: 'One measure, many levels of detail',
+  summary: 'Watch SUM(Minutes Watched) go from one mark to one per device, see which aggregations add back up, change the default aggregation and turn aggregation off.',
+  updated: '2026-11-24',
+  objectives: ['4.3.1', '4.3.2'],
+  files: ['sessions_2025.csv'],
+  links: [
+    { title: 'Data Aggregation in Tableau', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm' },
+    { title: 'Dimensions and Measures, Blue and Green', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm' },
+  ],
+  steps: [
+    { id: 'one-mark', label: 'One measure, one mark' },
+    { id: 'split-by-device', label: 'Add Device to Rows' },
+    { id: 'device-on-color', label: 'Move Device to Color' },
+    { id: 'average-pill', label: 'Change the pill to an average' },
+    { id: 'default-aggregation', label: 'Change the default aggregation' },
+    { id: 'disaggregate', label: 'Turn off Aggregate Measures' },
+  ],
+  checkpoints: [
+    {
+      id: 'total-minutes-2025',
+      question: 'With no dimension in the view, what is SUM(Minutes Watched)?',
+      answer: {
+        kind: 'value',
+        says: '1,525,522',
+        spec: { columns: [{ field: 'Minutes Watched' }], filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }] },
+        measure: { field: 'Minutes Watched' },
+      },
+    },
+    {
+      id: 'tablet-minutes-2025',
+      question: 'With Device in the view, what is SUM(Minutes Watched) for Tablet?',
+      answer: {
+        kind: 'value',
+        says: '168,449',
+        spec: {
+          rows: [{ field: 'Device' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { Device: 'Tablet' },
+      },
+    },
+    {
+      id: 'console-average-2025',
+      question: 'What is AVG(Minutes Watched) for Console, to one decimal place?',
+      answer: {
+        kind: 'value',
+        says: '91.1',
+        spec: {
+          rows: [{ field: 'Device' }],
+          columns: [{ field: 'Minutes Watched', agg: 'avg' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Minutes Watched', agg: 'avg' },
+        where: { Device: 'Console' },
+        digits: 1,
+      },
+    },
+  ],
+}
+
+## Goal
+
+Every number in a view depends on two choices: the **aggregation** (SUM, AVG, …) and the **dimensions** in the view, which decide how the rows are grouped (the level of detail). In this challenge you change both, one at a time, in Tableau Desktop Public Edition (Tableau Public for short), and watch the same measure take different values.
+
+## Get the data
+
+Download this file:
+
+<DataFiles />
+
+`sessions_2025.csv` has one row per viewing session in 2025, with the minutes watched. You also need **Tableau Desktop Public Edition**, free from Tableau Public's website.
+
+## Steps
+
+<Step id="one-mark">
+  Open Tableau Public, connect to `sessions_2025.csv` (**Text file** in the Connect pane) and open **Sheet 1**. Drag **Minutes Watched** to Columns. Tableau applies the measure's default aggregation, which it set when you connected: the pill says `SUM(Minutes Watched)`. With no dimension in the view, all the rows form one group, so there's a single bar. Hover over it to read the total.
+</Step>
+
+<Step id="split-by-device">
+  Drag **Device** to Rows. Tableau computes the sum again, once per device: one bar per member, plus a **Null** bar for the sessions with no device recorded. `SUM` is additive, so the bars add up to the total from the previous step. In SQL terms, you've added Device to the `GROUP BY`.
+</Step>
+
+<Step id="device-on-color">
+  Drag **Device** from Rows to **Color** on the Marks card. You're back to one bar, now split into coloured segments: "Encoding a dimension by a property on the Marks card (such as Color or Size) increases the number of marks without adding headers." Every dimension in the view is part of the level of detail, wherever you put it. Drag Device back to Rows.
+</Step>
+
+<Step id="average-pill">
+  Open the menu on the `SUM(Minutes Watched)` pill and choose **Average** under **Measure**. Each bar now shows the typical session length on that device. These bars don't add up to anything: averages per device don't combine into the overall average. The change applies to this pill only.
+</Step>
+
+<Step id="default-aggregation">
+  In the Data pane, right-click **Minutes Watched** and choose **Default Properties > Aggregation > Average**. Open a new sheet and drag Minutes Watched to Columns: the new pill starts as `AVG(Minutes Watched)`. A default changes every new use of the field in the workbook. Set it back to **Sum** afterwards.
+</Step>
+
+<Step id="disaggregate">
+  On a new sheet, put **Minutes Watched** on Columns, then open the **Analysis** menu and clear **Aggregate Measures**. The view is now **disaggregated**: Tableau "displays a separate mark for every data value in every row", one mark per session. Select **Aggregate Measures** again to go back to one mark.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>Aggregations, Default Properties and Aggregate Measures work the same in Tableau Public. One difference from the paid Desktop: you can't set default aggregations for **published data sources**, which Tableau Public can't connect to.</p>
+</Callout>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`1,525,522` or `1.526M`).
+
+<Checkpoint id="total-minutes-2025" />
+
+<Checkpoint id="tablet-minutes-2025" />
+
+<Checkpoint id="console-average-2025" />
+
+## Exam angle
+
+- Numeric measures default to **SUM**, set when you connect. Change it for one view on the pill's menu, or for every new use with **Default Properties > Aggregation**.
+- Adding a dimension anywhere in the view (Rows, Columns, Color, Size, Label, Detail) adds to the level of detail: more marks, smaller values.
+- `SUM` and `COUNT` pieces add back up to the total. `AVG`, `MEDIAN`, `MIN`, `MAX` and `COUNTD` pieces don't.
+- Clearing **Analysis > Aggregate Measures** shows one mark per row. It isn't a filter and it isn't adding a dimension.
+- The [Granularity simulator](/build/sim/granularity) lets you add and remove dimensions and watch the marks change.

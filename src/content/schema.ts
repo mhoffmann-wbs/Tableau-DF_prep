@@ -166,3 +166,41 @@ export const guideMetaSchema = z.object({
 })
 
 export type GuideMeta = z.infer<typeof guideMetaSchema>
+
+// ---- Tableau Public challenges (PLAN.md §7d) ----
+
+/**
+ * A checklist step. Progress stores ticked steps by id, so never rename one.
+ * `optional` marks a step Tableau Public can't do (`PUBLIC_LIMITS`): `free`
+ * needs Desktop Free Edition (documented), `unverified` is one the help doesn't
+ * settle for Public. Optional steps never block completion.
+ */
+const challengeStep = z.object({
+  id: slug,
+  /** A few words for the progress summary; the MDX `<Step>` holds the instructions. */
+  label: nonEmpty,
+  /** The objective this step practises, when it is one in `PUBLIC_LIMITS`. */
+  objective: z.string().regex(/^\d\.\d\.\d$/).optional(),
+  optional: z.enum(['free', 'unverified']).optional(),
+})
+
+export const challengeMetaSchema = z.object({
+  /** Stable slug: progress stores steps and checkpoints by challenge id, so never rename one. */
+  id: slug,
+  taskId: z.string().regex(/^\d\.\d$/),
+  title: nonEmpty,
+  /** One sentence for the challenge list. */
+  summary: nonEmpty,
+  /** Date the steps were last checked against the lessons and the help. */
+  updated: z.iso.date(),
+  objectives: z.array(z.string().regex(/^\d\.\d\.\d$/)).min(1),
+  /** Files from public/data/ the learner downloads. */
+  files: z.array(z.string().regex(/^[a-z0-9_]+\.(csv|xlsx)$/)).min(1),
+  links: z.array(z.object({ title: nonEmpty, url: z.url().regex(LESSON_LINK) })).min(1),
+  steps: z.array(challengeStep).min(1),
+  /** Answers the learner reads from their own viz; each `answer.says` is checked against the data. */
+  checkpoints: z.array(z.object({ id: slug, question: nonEmpty, answer: factSchema })).min(1),
+})
+
+export type ChallengeMeta = z.infer<typeof challengeMetaSchema>
+export type ChallengeStep = ChallengeMeta['steps'][number]

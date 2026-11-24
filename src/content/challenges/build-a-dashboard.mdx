@@ -1,0 +1,144 @@
+export const meta = {
+  id: 'build-a-dashboard',
+  taskId: '3.2',
+  title: 'Build an interactive dashboard and a story',
+  summary: 'Put a genre bar chart and a monthly line on one dashboard, filter one from the other with Use as Filter and a dashboard action, share a Device filter card, add a phone layout and tell it as a two-point story.',
+  updated: '2026-11-24',
+  objectives: ['3.2.1', '3.2.2', '3.2.3', '3.2.4', '3.2.5'],
+  files: ['sessions_2025.csv', 'titles.csv'],
+  links: [
+    { title: 'Create a dashboard', url: 'https://help.tableau.com/current/pro/desktop/en-us/dashboards_create.htm' },
+    { title: 'Size and lay out your dashboard', url: 'https://help.tableau.com/current/pro/desktop/en-us/dashboards_organize_floatingandtiled.htm' },
+    { title: 'Create dashboard layouts for different device types', url: 'https://help.tableau.com/current/pro/desktop/en-us/dashboards_dsd_create.htm' },
+    { title: 'Actions', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions.htm' },
+    { title: 'Filter actions', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions_filter.htm' },
+    { title: 'Highlight actions and highlighters', url: 'https://help.tableau.com/current/pro/desktop/en-us/actions_highlight.htm' },
+    { title: 'Apply filters to multiple sheets', url: 'https://help.tableau.com/current/pro/desktop/en-us/filtering_global.htm' },
+    { title: 'Create a story', url: 'https://help.tableau.com/current/pro/desktop/en-us/story_create.htm' },
+  ],
+  steps: [
+    { id: 'two-sheets', label: 'Build the two sheets' },
+    { id: 'dashboard', label: 'Put both sheets on a dashboard' },
+    { id: 'use-as-filter', label: 'Filter the line from the bars' },
+    { id: 'actions', label: 'Edit the action and add a highlight action' },
+    { id: 'filter-card', label: 'One Device filter for the whole dashboard' },
+    { id: 'layout', label: 'Size, floating items and a phone layout' },
+    { id: 'story', label: 'Tell it as a story' },
+  ],
+  checkpoints: [
+    {
+      id: 'documentary-december',
+      question: 'Click the Documentary bar (no Device filter). How many Documentary minutes does the line show for December?',
+      answer: {
+        kind: 'value',
+        says: '44,273',
+        spec: {
+          rows: [{ field: 'Start', date: { level: 'month', mode: 'part' } }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [
+            { kind: 'datePart', field: 'Start', level: 'year', values: [2025] },
+            { kind: 'values', field: 'Genre', values: ['Documentary'] },
+          ],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { Start: 'December' },
+      },
+    },
+    {
+      id: 'mobile-top-genre',
+      question: 'Clear the selection and set the Device filter card to Mobile only. Which genre has the longest bar?',
+      answer: {
+        kind: 'top',
+        says: 'Comedy',
+        spec: {
+          rows: [{ field: 'Genre' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [
+            { kind: 'datePart', field: 'Start', level: 'year', values: [2025] },
+            { kind: 'values', field: 'Device', values: ['Mobile'] },
+          ],
+        },
+        dimension: { field: 'Genre' },
+        measure: { field: 'Minutes Watched' },
+      },
+    },
+    {
+      id: 'mobile-comedy',
+      question: 'And how many minutes does that bar show?',
+      answer: {
+        kind: 'value',
+        says: '105,506',
+        spec: {
+          rows: [{ field: 'Genre' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [
+            { kind: 'datePart', field: 'Start', level: 'year', values: [2025] },
+            { kind: 'values', field: 'Device', values: ['Mobile'] },
+          ],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { Genre: 'Comedy' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Driftlight's executives want one screen: which genres are watched, and how viewing moves over the year, with a click on a genre filtering the timeline. Then the quarterly review wants the same dashboard as a short story. You build both in Tableau Public and read three numbers from your dashboard.
+
+## Get the data
+
+Download the two files into one folder:
+
+<DataFiles />
+
+`sessions_2025.csv` has one row per viewing session in 2025; `titles.csv` one row per title, with its Genre.
+
+## Steps
+
+<Step id="two-sheets">
+  Connect to `sessions_2025.csv` with the **Text file** connector and relate `titles.csv` on **Title ID** (drop it on the "noodle"). On Sheet 1, put **Genre** on Rows and **Minutes Watched** on Columns, and name the sheet **Genres**. On Sheet 2, put **Start** on Columns as MONTH (a date part, from the pill's menu) and **Minutes Watched** on Rows, and name the sheet **Monthly**.
+</Step>
+
+<Step id="dashboard">
+  "At the bottom of the workbook, click the **New Dashboard** icon." "From the **Sheets** list at left, drag views to your dashboard": drop **Genres** first, then **Monthly** beside or below it. From the **Objects** section, add a **Text** object at the top as a title.
+</Step>
+
+<Step id="use-as-filter">
+  Select the Genres sheet on the dashboard. "In the upper corner of sheet, enable the **Use as Filter** option". Now click the **Documentary** bar: the Monthly line shows only Documentary viewing. Click the bar again (or an empty spot) to clear the selection.
+</Step>
+
+<Step id="actions">
+  Choose **Dashboard > Actions**. Use as Filter created a filter action there: edit it, keep **Run action on: Select**, and under clearing the selection choose **Show all values**. Then click **Add Action > Highlight**, with Genres as the source, Monthly as the target and **Hover**. A filter action removes marks from the target; a highlight action keeps them all and dims the others. Try the [Dashboard actions simulator](/build/sim/dashboard-actions) for the other action types.
+</Step>
+
+<Step id="filter-card">
+  Go to the Genres worksheet, drag **Device** to the Filters shelf (keep every member) and choose **Show Filter** from the pill's menu. Back on the dashboard, find the Device filter card (if it isn't there, add it from the Genres sheet's menu in its upper corner). On the filter card's menu, choose **Apply to Worksheets > Selected worksheets**, then **All on dashboard**: one card now filters both sheets. Edit each sheet's tooltip from **Tooltip** on its Marks card if you like.
+</Step>
+
+<Step id="layout">
+  On the **Dashboard** tab on the left, look at the dashboard's **Size**: **Fixed size** is the default. Switch it to **Automatic** and resize the window to see the views stretch, then go back to a fixed size. Shift-drag the Device filter card to make it **floating** over the chart, and drag it back without Shift to tile it again. Then click **Device Preview**, pick Phone and click **Add Phone Layout**: the phone layout appears under **Default** on the Dashboard tab. The help documents device layouts for Desktop; if your Tableau Public doesn't offer Device Preview, skip that part.
+</Step>
+
+<Step id="story">
+  "Click the **New Story** tab." Drag your dashboard into the story and "click **Add a caption**": "All genres through 2025". Click **Duplicate** to copy the point, click the Documentary bar in it, caption it "Documentaries peak in December", and click **Update** on the story toolbar so the point keeps that selection.
+</Step>
+
+## Checkpoints
+
+Type what your own dashboard shows. A number may be typed as Tableau formats it (`44,273` or `44.3K`).
+
+<Checkpoint id="documentary-december" />
+
+<Checkpoint id="mobile-top-genre" />
+
+<Checkpoint id="mobile-comedy" />
+
+## Exam angle
+
+- **Use as Filter** creates a filter action; custom behaviour (Hover, Select or Menu, targets, what clearing does) lives under **Dashboard > Actions**.
+- **Filter vs. highlight**: if the other values must stay visible, it's a highlight action or a highlighter.
+- A filter card applies to one sheet until you set **Apply to Worksheets** (Selected worksheets > All on dashboard, or All Using This Data Source).
+- **Tiled** objects don't overlap; **floating** ones can (Shift-drag). **Fixed size** is the default; **Automatic** fills the window. Device layouts sit under **Default**.
+- A **story** shows one sheet or dashboard per story point, with captions; **Update** saves a changed point, **Duplicate** copies it.

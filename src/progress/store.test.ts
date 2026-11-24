@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest'
-import { deleteDeck, exportProgress, getProgress, importProgress, rateCard, recordAnswer, recordMockResult, recordCalcExercise, recordSandboxChallenge, reloadProgress, resetProgress, saveCalc, saveDeck, deleteCalc, setLessonRead } from './store'
+import { deleteDeck, exportProgress, getProgress, importProgress, rateCard, recordAnswer, recordMockResult, recordCalcExercise, recordCheckpoint, recordSandboxChallenge, reloadProgress, resetProgress, saveCalc, saveDeck, deleteCalc, setChallengeStep, setLessonRead } from './store'
 
 beforeEach(() => {
   localStorage.clear()
@@ -42,7 +42,7 @@ describe('progress store', () => {
     expect(() => importProgress('nope')).toThrow("isn't valid JSON")
     expect(() => importProgress('{"app":"other"}')).toThrow("isn't a Tableau-DF prep progress export")
     expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 1, items: { x: { attempts: -1 } } } }))).toThrow('damaged')
-    expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 6 } }))).toThrow('newer version')
+    expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 7 } }))).toThrow('newer version')
     expect(getProgress().items['4.1-002']?.attempts).toBe(1)
   })
 
@@ -65,11 +65,11 @@ describe('progress store', () => {
     const v1 = { version: 1, items: { '2.1-001': { attempts: 1, correct: 1, lastCorrect: true, lastAt: 1, streak: 1 } }, mockResults: [] }
     localStorage.setItem('tableau-df:progress', JSON.stringify(v1))
     reloadProgress()
-    expect(getProgress()).toMatchObject({ version: 5, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [] })
+    expect(getProgress()).toMatchObject({ version: 6, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [], challenges: {} })
     expect(getProgress().items['2.1-001']?.attempts).toBe(1)
     resetProgress()
     importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: v1 }))
-    expect(getProgress()).toMatchObject({ version: 5, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [], items: v1.items })
+    expect(getProgress()).toMatchObject({ version: 6, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [], challenges: {}, items: v1.items })
   })
 
   it('saves calcs by source and name, and records calc exercises once', () => {
@@ -113,5 +113,16 @@ describe('progress store', () => {
     expect(getProgress().decks[0]?.name).toBe('Renamed')
     deleteDeck(id)
     expect(getProgress()).toMatchObject({ decks: [], flashcards: {} })
+  })
+
+  it('ticks challenge steps and records checkpoints once', () => {
+    setChallengeStep('connect', 'open', true)
+    setChallengeStep('connect', 'extract', true)
+    setChallengeStep('connect', 'open', false)
+    recordCheckpoint('connect', 'count')
+    recordCheckpoint('connect', 'count')
+    expect(getProgress().challenges).toEqual({ connect: { steps: ['extract'], checkpoints: ['count'] } })
+    importProgress(exportProgress())
+    expect(getProgress().challenges.connect?.checkpoints).toEqual(['count'])
   })
 })

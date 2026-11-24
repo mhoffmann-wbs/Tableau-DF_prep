@@ -1,0 +1,110 @@
+export const meta = {
+  id: 'dimensions-and-measures',
+  taskId: '4.1',
+  title: 'Dimensions, measures and a year that adds up',
+  summary: 'Connect to the titles file, see which fields Tableau makes dimensions and which measures, add up a year by mistake, fix its role and count titles.',
+  updated: '2026-11-24',
+  objectives: ['4.1.1', '4.1.2', '4.1.3'],
+  files: ['titles.csv'],
+  links: [
+    { title: 'Dimensions and Measures, Blue and Green', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm' },
+    { title: 'Data Aggregation in Tableau', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm' },
+  ],
+  steps: [
+    { id: 'connect-titles', label: 'Connect to the titles file' },
+    { id: 'read-data-pane', label: 'Sort the fields into dimensions and measures' },
+    { id: 'sum-a-year', label: 'Add up Release Year' },
+    { id: 'fix-the-role', label: 'Make Release Year a dimension' },
+    { id: 'runtime-by-genre', label: 'Runtime by genre' },
+    { id: 'count-titles', label: 'Count the titles of each type' },
+  ],
+  checkpoints: [
+    {
+      id: 'sum-release-year',
+      question: 'Before you fix it: what does SUM(Release Year) show for all titles?',
+      answer: { kind: 'value', says: '805,858', spec: { source: 'titles', rows: [{ field: 'Release Year', agg: 'sum' }] }, measure: { field: 'Release Year', agg: 'sum' } },
+    },
+    {
+      id: 'top-genre-runtime',
+      question: 'Which genre has the largest SUM(Runtime)?',
+      answer: {
+        kind: 'top',
+        says: 'Comedy',
+        spec: { source: 'titles', rows: [{ field: 'Genre' }], columns: [{ field: 'Runtime' }] },
+        dimension: { field: 'Genre' },
+        measure: { field: 'Runtime' },
+      },
+    },
+    {
+      id: 'movie-count',
+      question: 'How many titles are movies?',
+      answer: {
+        kind: 'value',
+        says: '217',
+        spec: { source: 'titles', rows: [{ field: 'Type' }], columns: [{ field: 'Titles (Count)' }] },
+        measure: { field: 'Titles (Count)' },
+        where: { Type: 'Movie' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+The exam expects you to say what a dimension and a measure usually contain, and what happens when you drag each into a view. In this challenge you connect Tableau Desktop Public Edition (Tableau Public for short) to Driftlight's catalogue of 400 titles, watch Tableau assign the roles, and catch one field it gets wrong.
+
+## Get the data
+
+Download this file:
+
+<DataFiles />
+
+`titles.csv` has one row per film or series: its ID, title, type, genre and sub-genre, release year, rating, runtime in minutes and whether it is a Driftlight original. You also need **Tableau Desktop Public Edition**, free from Tableau Public's website.
+
+## Steps
+
+<Step id="connect-titles">
+  Open Tableau Public, choose **Text file** in the Connect pane and open `titles.csv`. Click **Sheet 1**.
+</Step>
+
+<Step id="read-data-pane">
+  Look at the Data pane. Dimensions sit above a gray line and measures below it. When you connect, Tableau gives each field a role from its values: "a field of numbers is added as a measure", anything else (text, dates, true/false) as a dimension. Before you look closely, write down where you expect Title, Genre, Runtime, Release Year and Original to be. Then compare. Which one is a number that you'd never add up?
+</Step>
+
+<Step id="sum-a-year">
+  Drag **Release Year** to Rows. Tableau aggregates it, as it does every measure: the pill says `SUM(Release Year)` and the bar adds up the years of all 400 titles. The number is meaningless. Digits don't make a field a measure: years, IDs and postal codes are labels.
+</Step>
+
+<Step id="fix-the-role">
+  Undo, then drag **Release Year** in the Data pane up across the gray line, among the dimensions. Drag it to Rows again: now you get one header per year, and nothing is added up.
+</Step>
+
+<Step id="runtime-by-genre">
+  Clear the sheet. Drag **Genre** to Rows and **Runtime** to Columns. The dimension decides how many marks there are (one bar per genre) and the measure decides how big each is (`SUM(Runtime)`). Drag **Type** to Rows as well, to the right of Genre: there are now more bars, and each genre's two bars add up to its bar from before.
+</Step>
+
+<Step id="count-titles">
+  Clear the sheet. Drag **Type** to Rows and the count measure named after the table (it ends in **(Count)**) to Columns. Every table gets one: it counts the table's rows, here one per title. A dimension can be counted too, as `COUNTD(Title ID)` (Count (Distinct)). Doing so "creates a new temporary measure column": Title ID in the Data pane stays a dimension. Lesson [4.3](/learn/4.3) covers aggregations.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>Roles, aggregation and the (Count) field work the same in Tableau Public and in Desktop. Tableau Public is a newer version than the exam's 2022.3, so a menu label may differ slightly from the lesson.</p>
+</Callout>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`805,858` or `805.9K`).
+
+<Checkpoint id="sum-release-year" />
+
+<Checkpoint id="top-genre-runtime" />
+
+<Checkpoint id="movie-count" />
+
+## Exam angle
+
+- Dimensions usually hold **qualitative** values (names, categories, dates, places) and slice the view into headers or marks. Measures usually hold **quantitative** values that Tableau aggregates (`SUM` by default).
+- Dates are dimensions, even though you can draw them on an axis.
+- A number field that's really a label (an ID, a ZIP code, a year) arrives as a measure. The fix is to convert it to a dimension, not to change its aggregation.
+- Counting a dimension (`COUNTD(Title ID)`) makes a temporary measure; the field itself stays a dimension.
+- Role (dimension or measure) is not the same as continuity (blue or green): that's [task 4.2](/learn/4.2) and the [Blue vs. green simulator](/build/sim/blue-green).

@@ -1,0 +1,138 @@
+export const meta = {
+  id: 'format-for-presentation',
+  taskId: '3.1',
+  title: 'Format a scatterplot and a trend line for the board',
+  summary: 'Encode title Type with colour and shape, size the marks, set workbook and sheet fonts, turn on animations and hide and show a legend, on 2025 viewing data.',
+  updated: '2026-11-24',
+  objectives: ['3.1.1', '3.1.2', '3.1.3', '3.1.4', '3.1.5', '3.1.6'],
+  files: ['sessions_2025.csv', 'titles.csv'],
+  links: [
+    { title: 'Color palettes and effects', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm' },
+    { title: 'Control the appearance of marks (shape, size)', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm' },
+    { title: 'Format at the workbook level', url: 'https://help.tableau.com/current/pro/desktop/en-us/formatting_workbook.htm' },
+    { title: 'Format at the worksheet level', url: 'https://help.tableau.com/current/pro/desktop/en-us/formatting_worksheet.htm' },
+    { title: 'Animate visualizations', url: 'https://help.tableau.com/current/pro/desktop/en-us/formatting_animations.htm' },
+    { title: 'Parts of the view (legends)', url: 'https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm' },
+  ],
+  steps: [
+    { id: 'connect', label: 'Connect and relate the titles' },
+    { id: 'color', label: 'Colour a line by Type, then edit the colours' },
+    { id: 'shapes', label: 'A scatterplot with shapes' },
+    { id: 'size', label: 'Size the marks' },
+    { id: 'fonts', label: 'Set the workbook and sheet fonts' },
+    { id: 'animations', label: 'Turn on animations' },
+    { id: 'legends', label: 'Hide and show a legend' },
+  ],
+  checkpoints: [
+    {
+      id: 'movie-minutes',
+      question: 'How many minutes of Movies were watched in 2025?',
+      answer: {
+        kind: 'value',
+        says: '929,489',
+        spec: {
+          rows: [{ field: 'Type' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { Type: 'Movie' },
+      },
+    },
+    {
+      id: 'most-sessions',
+      question: 'In your scatterplot, which title is the mark furthest to the right (the most sessions in 2025)?',
+      answer: {
+        kind: 'top',
+        says: 'The Restless Hive',
+        spec: {
+          rows: [{ field: 'Title' }],
+          columns: [{ field: 'Sessions (Count)' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        dimension: { field: 'Title' },
+        measure: { field: 'Sessions (Count)' },
+      },
+    },
+    {
+      id: 'most-sessions-count',
+      question: 'How many sessions did that title have in 2025?',
+      answer: {
+        kind: 'value',
+        says: '751',
+        spec: {
+          rows: [{ field: 'Title' }],
+          columns: [{ field: 'Sessions (Count)' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Sessions (Count)' },
+        where: { Title: 'The Restless Hive' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Driftlight's board gets two charts: minutes per month split by Movie and Series, and a scatterplot of titles. Your job is to make them readable: colour, shapes, sizes, fonts, animations and legends, all from the Marks card and the Format menu. Along the way you read three numbers from the views.
+
+## Get the data
+
+Download the two files into one folder:
+
+<DataFiles />
+
+`sessions_2025.csv` has one row per viewing session in 2025; `titles.csv` one row per title, with its Type (Movie or Series) and Genre.
+
+## Steps
+
+<Step id="connect">
+  Connect to `sessions_2025.csv` with the **Text file** connector. Drag `titles.csv` onto the canvas and drop it on the "noodle" to relate it to the sessions on **Title ID** (lesson [1.2](/learn/1.2)).
+</Step>
+
+<Step id="color">
+  On Sheet 1, put **Start** on Columns and change it to MONTH (open the pill's menu and pick Month), put **Minutes Watched** on Rows, and drag **Type** to **Color** on the Marks card. A discrete field on Color gets a **categorical palette**, one colour per member, and a colour legend appears. Click **Color > Edit Colors** on the Marks card (or **Edit Colors** in the legend's menu), select Series and give it another colour. Then drag **Minutes Watched** to Color instead, to see a continuous field get a **quantitative** (gradient) legend, and press Undo.
+</Step>
+
+<Step id="shapes">
+  On a new sheet, put the sessions count measure (named after the table, followed by **(Count)**) on Columns and **Minutes Watched** on Rows, and drag **Title** to **Detail** on the Marks card: one mark per title. With measures innermost on both shelves, Automatic picks the **Shape** mark. Drag **Type** to **Shape**: Tableau gives each member its own shape. Click **Shape** on the Marks card (or **Edit Shape** in the shape legend's menu) and pick a different palette, such as filled shapes.
+</Step>
+
+<Step id="size">
+  Still on the scatterplot, click **Size** on the Marks card and move the slider: every mark changes, the view doesn't. Then drag **Minutes Watched** to Size: the largest value gets the largest mark, and a size legend appears. Remove it from Size again (drag the pill off the Marks card).
+</Step>
+
+<Step id="fonts">
+  Choose **Format > Workbook**. The Format Workbook pane replaces the Data pane: pick one font for the whole workbook and a larger size for worksheet titles. Then, on the scatterplot only, choose **Format > Font** and change the header text. Remember the order: workbook first, sheet exceptions after, because a workbook font change overwrites sheet-level font changes.
+</Step>
+
+<Step id="animations">
+  Choose **Format > Animations**. Under **Workbook Default**, click **On**, choose **Simultaneous** and pick a duration. Back on the scatterplot, drag **Genre** to Filters, untick a few genres and watch the marks move instead of jumping. Try **Sequential** under **Selected Sheet** to override the default for this sheet only.
+</Step>
+
+<Step id="legends">
+  On the line chart, hide the colour legend, then show it again. The lesson gives no menu path for this, so look for it yourself: start with the legend card's own menu (the same menu that holds **Edit Colors**). When is a legend safe to hide? When the encoding is obvious, for example when each line is labelled.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>Everything in this challenge is formatting, which Tableau Public does just like the paid Desktop. Tableau Public is a newer version than the exam's 2022.3, so menus may have more entries than the lesson lists.</p>
+</Callout>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`929,489` or `929.5K`).
+
+<Checkpoint id="movie-minutes" />
+
+<Checkpoint id="most-sessions" />
+
+<Checkpoint id="most-sessions-count" />
+
+## Exam angle
+
+- **Encoding vs. formatting**: a field dropped on Color, Size or Shape encodes data and adds a legend; clicking Color, Size or Shape without a field restyles every mark, with no legend.
+- A discrete field on Color gets a **categorical** palette; a continuous one gets a **sequential or diverging** gradient (Stepped Color, Use Full Color Range).
+- Shapes show only with the **Shape** mark type. After ten members the default shapes repeat.
+- **Format > Workbook** for every sheet, **Format > Font** for one sheet.
+- **Format > Animations**: a workbook default, per-sheet overrides, Simultaneous or Sequential, up to 10 seconds.
+- Compare encoding and formatting hands-on in the [sandbox](/build/sandbox).

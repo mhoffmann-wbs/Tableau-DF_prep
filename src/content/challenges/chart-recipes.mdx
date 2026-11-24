@@ -1,0 +1,126 @@
+export const meta = {
+  id: 'chart-recipes',
+  taskId: '2.1',
+  title: 'Seven chart recipes on Driftlight’s viewing',
+  summary: 'Build a sorted bar, a stacked bar, a line over months, a dual axis combo, a scatterplot, a filled map and a highlight table from the sessions data.',
+  updated: '2026-11-24',
+  objectives: ['2.1.1', '2.1.2', '2.1.3', '2.1.4', '2.1.6', '2.1.7', '2.1.9'],
+  files: ['sessions_2024.csv', 'sessions_2025.csv', 'titles.csv', 'subscribers.csv'],
+  links: [
+    { title: 'Build a bar chart', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_bar.htm' },
+    { title: 'Build a line chart', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_line.htm' },
+    { title: 'Build a scatter plot', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_scatter.htm' },
+    { title: 'Build a map', url: 'https://help.tableau.com/current/pro/desktop/en-us/maps_build.htm' },
+    { title: 'Compare multiple measures (blended and dual axes)', url: 'https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm' },
+    { title: 'Stack marks', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_stacking.htm' },
+    { title: 'Build a highlight table or heat map', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_highlight.htm' },
+  ],
+  steps: [
+    { id: 'data-source', label: 'Build the data source' },
+    { id: 'bar-genres', label: 'A sorted bar, then a stacked bar' },
+    { id: 'line-months', label: 'A line over continuous months' },
+    { id: 'dual-axis', label: 'A dual axis combo chart' },
+    { id: 'scatter-titles', label: 'A scatterplot of titles' },
+    { id: 'filled-map', label: 'A filled map of countries' },
+    { id: 'highlight-table', label: 'A highlight table' },
+  ],
+  checkpoints: [
+    {
+      id: 'top-genre',
+      question: 'In your sorted bar chart over both years, which genre has the most minutes watched?',
+      answer: {
+        kind: 'top',
+        says: 'Comedy',
+        spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }] },
+        dimension: { field: 'Genre' },
+        measure: { field: 'Minutes Watched' },
+      },
+    },
+    {
+      id: 'top-title',
+      question: 'In your scatterplot, which title is the highest mark (the most minutes watched)?',
+      answer: {
+        kind: 'top',
+        says: 'The Restless Hive',
+        spec: { rows: [{ field: 'Title' }], columns: [{ field: 'Minutes Watched' }] },
+        dimension: { field: 'Title' },
+        measure: { field: 'Minutes Watched' },
+      },
+    },
+    {
+      id: 'documentary-2024',
+      question: 'In your highlight table, how many minutes of Documentary were watched in 2024?',
+      answer: {
+        kind: 'value',
+        says: '315,240',
+        spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Start' }], marks: { type: 'square', color: { field: 'Minutes Watched' } } },
+        measure: { field: 'Minutes Watched' },
+        where: { Genre: 'Documentary', Start: '2024' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Every chart in task 2.1 is a recipe: which fields go on which shelf, and which mark type the Marks card uses. In this challenge you cook seven of them in Tableau Public from Driftlight's sessions, and read three answers off your charts. Keep [lesson 2.1](/learn/2.1)'s recipe table open beside you.
+
+## Get the data
+
+Download the four files into one folder:
+
+<DataFiles />
+
+The two sessions files hold one row per viewing session, `titles.csv` the genre and type of each title, and `subscribers.csv` each subscriber's country.
+
+## Steps
+
+<Step id="data-source">
+  Build the data source as in the [Union, relate and join challenge](/build/challenges/union-relate-join): union `sessions_2024.csv` and `sessions_2025.csv`, then on the logical layer relate `titles.csv` on **Title ID** and `subscribers.csv` on **Subscriber ID**. On `subscribers.csv`, check that **Country** has the **Country/Region** geographic role (the data type icon's **Geographic Role** menu).
+</Step>
+
+<Step id="bar-genres">
+  "You create a bar chart by placing a dimension on the Rows shelf and a measure on the Columns shelf." Drag **Genre** to Rows and **Minutes Watched** to Columns, then click the sort icon on the axis to sort the bars. Now drag **Type** (Movie or Series) to **Color**: "Marks are automatically stacked", and each bar splits into two segments that add up to the bar's total.
+</Step>
+
+<Step id="line-months">
+  On a new sheet, drag **Start** to Columns and **Minutes Watched** to Rows. With a date and a measure, the Automatic mark is **Line**, but `YEAR(Start)` is a discrete date part, so you get a short line across two headers. Open the pill's menu and pick **Month** from the lower, continuous section: the pill turns green and the line runs along a time axis, month by month.
+</Step>
+
+<Step id="dual-axis">
+  Keep the line. Drag the sessions table's count measure (its name ends in **(Count)**) to the right side of the view "and drop it when you see a black dashed line appear". You now have a dual axis: two measures, each with its own axis. "There is a Marks card for each measure": on the Minutes Watched card, change the mark type to **Bar** for a classic combo chart. The two axes have very different scales, which is exactly why a dual axis fits here.
+</Step>
+
+<Step id="scatter-titles">
+  On a new sheet, put the count measure on Columns and **Minutes Watched** on Rows. With nothing else in the view you get a single mark. Drag **Title** to **Detail**: now each title is one mark, how often it was watched against its total minutes. Hover over the highest mark.
+</Step>
+
+<Step id="filled-map">
+  On a new sheet, drag **Country** to **Detail**: Tableau creates a map. In the Marks card's mark type drop-down, choose **Map**, then drag **Minutes Watched** to **Color**. Each country is filled by its minutes watched.
+</Step>
+
+<Step id="highlight-table">
+  On a new sheet, drag **Genre** to Rows and **Start** to Columns (one column per year). Select **Square** as the mark type and drag **Minutes Watched** to **Color**, then also to **Label** so readers see the exact value with the colour cue. Without the Square mark, a measure on Color only colours the numbers of a crosstab.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>These recipes work the same in Tableau Public and the paid Desktop. Tableau Public is a newer version than the 2022.3 the exam tests, so menu labels can differ slightly from the lesson; the shelves and mark types are what the exam asks about.</p>
+</Callout>
+
+## Checkpoints
+
+Type what your own charts show. A number may be typed as Tableau formats it (`315,240` or `315.2K`).
+
+<Checkpoint id="top-genre" />
+
+<Checkpoint id="top-title" />
+
+<Checkpoint id="documentary-2024" />
+
+## Exam angle
+
+- Read a chart as its shelves: dimension × measure is a bar, date × measure a line, measure × measure a scatterplot, a second dimension on Color a stacked bar.
+- A **dual axis** gives each measure its own axis and its own Marks card; a **combined axis** shares one axis through Measure Values and Measure Names. Use dual for different scales, combined for the same units.
+- A **filled map** uses the Map mark with a measure on Color; a symbol map uses a circle per location, usually with a measure on Size.
+- A **highlight table** is Square + a measure on Color. A crosstab puts the measure on Text.
+- A discrete date part draws headers; a continuous date value draws a timeline. The [Blue vs. green simulator](/build/sim/blue-green) shows the difference.

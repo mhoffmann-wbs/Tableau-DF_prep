@@ -16,6 +16,7 @@ const SandboxPage = lazy(() => import('../pages/SandboxPage'))
 const CalcPage = lazy(() => import('../pages/CalcPage'))
 const FlashcardsPage = lazy(() => import('../pages/FlashcardsPage'))
 const SimPage = lazy(() => import('../pages/SimPage'))
+const ChallengePage = lazy(() => import('../pages/ChallengePage'))
 const GuidesPage = lazy(() => import('../pages/GuidesPage'))
 const ChartGalleryPage = lazy(() => import('../pages/ChartGalleryPage'))
 
@@ -37,6 +38,7 @@ export const routes: RouteObject[] = [
       { path: 'build/calc', element: <CalcPage /> },
       { path: 'build/calc/:exerciseId', element: <CalcPage /> },
       { path: 'build/sim/:simId', element: <SimPage /> },
+      { path: 'build/challenges/:challengeId', element: <ChallengePage /> },
       { path: 'build/flashcards', element: <FlashcardsPage /> },
       { path: 'build/flashcards/deck/:deckId', element: <FlashcardsPage /> },
       { path: 'guides', element: <GuidesPage /> },

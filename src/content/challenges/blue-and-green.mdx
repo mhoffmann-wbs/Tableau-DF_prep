@@ -1,0 +1,122 @@
+export const meta = {
+  id: 'blue-and-green',
+  taskId: '4.2',
+  title: 'Blue headers, green axes and two kinds of month',
+  summary: 'Union the two years of sessions, then turn one date field into discrete headers and a continuous timeline, and see what blue and green do on Color.',
+  updated: '2026-11-24',
+  objectives: ['4.2.1', '4.2.2', '4.2.3'],
+  files: ['sessions_2024.csv', 'sessions_2025.csv'],
+  links: [
+    { title: 'Dimensions and Measures, Blue and Green', url: 'https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm' },
+    { title: 'Change Date Levels', url: 'https://help.tableau.com/current/pro/desktop/en-us/dates_levels.htm' },
+    { title: 'Dates and Times', url: 'https://help.tableau.com/current/pro/desktop/en-us/dates.htm' },
+    { title: 'Union your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/union.htm' },
+  ],
+  steps: [
+    { id: 'union-years', label: 'Union the two session files' },
+    { id: 'year-headers', label: 'Drop Start on Columns and drill down' },
+    { id: 'month-part', label: 'Months as a discrete date part' },
+    { id: 'month-value', label: 'Months as a continuous date value' },
+    { id: 'color-legends', label: 'A discrete and a continuous field on Color' },
+    { id: 'discrete-measure', label: 'Make a measure discrete' },
+  ],
+  checkpoints: [
+    {
+      id: 'busiest-month-part',
+      question: 'With MONTH(Start) as a discrete date part, which month has the most sessions?',
+      answer: {
+        kind: 'top',
+        says: 'December',
+        spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'part' } }], rows: [{ field: 'Sessions (Count)' }] },
+        dimension: { field: 'Start', date: { level: 'month', mode: 'part' } },
+        measure: { field: 'Sessions (Count)' },
+      },
+    },
+    {
+      id: 'december-part',
+      question: 'How many sessions does the December header show (the date part)?',
+      answer: {
+        kind: 'value',
+        says: '4,508',
+        spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'part' } }], rows: [{ field: 'Sessions (Count)' }] },
+        measure: { field: 'Sessions (Count)' },
+        where: { Start: 'December' },
+      },
+    },
+    {
+      id: 'december-2025-value',
+      question: 'On the continuous timeline, how many sessions does the December 2025 point show?',
+      answer: {
+        kind: 'value',
+        says: '2,193',
+        spec: {
+          columns: [{ field: 'Start', date: { level: 'month', mode: 'part' } }],
+          rows: [{ field: 'Sessions (Count)' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Sessions (Count)' },
+        where: { Start: 'December' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Blue pills are discrete and draw headers; green pills are continuous and draw an axis. The exam tests this most often with dates, where the same field can be a discrete **date part** or a continuous **date value**. In this challenge you build both from Driftlight's two years of sessions in Tableau Desktop Public Edition (Tableau Public for short) and read the difference off your own views.
+
+## Get the data
+
+Download both files and keep them in one folder:
+
+<DataFiles />
+
+Each file holds one year of viewing sessions with the same columns. You also need **Tableau Desktop Public Edition**, free from Tableau Public's website.
+
+## Steps
+
+<Step id="union-years">
+  Open Tableau Public, choose **Text file** in the Connect pane and open `sessions_2024.csv`. Then make a **union**: drag `sessions_2025.csv` from the left pane "directly below the first table" on the canvas (or double-click **New Union** and drag both files into the **Union** dialog). A union appends rows, and Tableau adds fields that record where each row came from, such as **Table Name**. Click **Sheet 1**.
+</Step>
+
+<Step id="year-headers">
+  Drag **Start** to Columns. Tableau picks the level "at which there are multiple instances": with two years of data that's **YEAR**, so you get two blue headers, 2024 and 2025. Drag the count measure (its name ends in **(Count)**) to Rows. Click the **+** on the `YEAR(Start)` pill: Tableau drills down and adds `QUARTER(Start)`, another set of blue headers.
+</Step>
+
+<Step id="month-part">
+  Remove the QUARTER pill. Open the menu on the `YEAR(Start)` pill and choose **Month** in the **upper** section of the date levels. The pill stays blue and shows twelve headers, January to December. Each header is "the month of May for any year": January 2024 and January 2025 add up in the same bar. This is the view for seasonality.
+</Step>
+
+<Step id="month-value">
+  Open the pill's menu again and choose **Month** in the **lower**, continuous section. The pill turns green, the headers become an axis, and the marks run through 24 months in order: a date value, "the actual date, truncated to a specific level". This is the view for a trend. Hover over the last point to read December 2025.
+</Step>
+
+<Step id="color-legends">
+  Drag **Device** to **Color**. A discrete field gets a **categorical palette**: one colour per member and a legend that lists them. Remove it and drag **Minutes Watched** to **Color** instead. A continuous field gets a **quantitative legend**: a gradient. Remove it again.
+</Step>
+
+<Step id="discrete-measure">
+  In the Data pane, right-click **Minutes Watched** and choose **Convert to Discrete**, then drag it to Rows in place of the count. The pill is blue and draws headers instead of an axis, but it's **still a measure** and still aggregated (`SUM(Minutes Watched)`). Convert it back with **Convert to Continuous**. Now right-click **Device** in the Data pane and look for **Convert to Continuous**: String and Boolean dimensions "can't be continuous", so you can't make Device green.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>Pills, colours and the date menu work the same in Tableau Public. Tableau Public is a newer version than the exam's 2022.3, so the wording of a menu may differ slightly from the lesson.</p>
+</Callout>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`4,508` or `4.508K`).
+
+<Checkpoint id="busiest-month-part" />
+
+<Checkpoint id="december-part" />
+
+<Checkpoint id="december-2025-value" />
+
+## Exam angle
+
+- **Blue = discrete = headers**; **green = continuous = an axis**. On Color, discrete gives a categorical palette and continuous a gradient.
+- Blue/green is not dimension/measure: a green date pill is still a dimension, and a blue measure is still aggregated.
+- A discrete **date part** (upper section of the date menu) merges the same month of every year; a continuous **date value** (lower section) keeps the years apart on a timeline. "Trend over time" wants the date value; "which month is busiest in any year" wants the date part.
+- Only dates, numbers and measures can be continuous. A text field such as Device or Region can't.
+- The [Blue vs. green simulator](/build/sim/blue-green) shows the same switches on the Driftlight data.

@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { RouterProvider, createMemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { routes } from '../app/routes'
+import { getProgress, resetProgress } from '../progress/store'
 
 /** Renders a route and waits for its lazy page. */
 async function renderAt(path: string, heading: string | RegExp) {
@@ -68,6 +69,28 @@ describe('pages', () => {
     await renderAt('/guides/cheat-sheet', /Cheat sheet/)
     for (const link of screen.getAllByRole('link', { name: '2.2 Organize data and apply filters' })) expect(link).toHaveAttribute('href', '/learn/2.2')
     expect(screen.getByRole('cell', { name: 'Highlight table' })).toBeInTheDocument()
+  })
+
+  it('runs a Tableau Public challenge: downloads, checklist, optional steps and checkpoints', async () => {
+    resetProgress()
+    await renderAt('/build/challenges/connect-and-extract', 'Connect, extract and save a data source')
+    expect(screen.getByRole('link', { name: '⤓ sessions_2025.csv' })).toHaveAttribute('href', '/data/sessions_2025.csv')
+    expect(screen.getAllByText('Optional · may not be in Tableau Public').length).toBeGreaterThan(0)
+    expect(screen.getByText('Optional · Desktop Free Edition')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('checkbox', { name: '1. Connect to the sessions file' }))
+    expect(getProgress().challenges['connect-and-extract']?.steps).toEqual(['connect-csv'])
+    const answer = screen.getByLabelText('How many sessions does sessions_2025.csv hold?')
+    fireEvent.change(answer, { target: { value: '16000' } })
+    fireEvent.click(screen.getAllByRole('button', { name: 'Check' })[0]!)
+    expect(screen.getByText(/Not quite/)).toBeInTheDocument()
+    fireEvent.change(answer, { target: { value: '17,000' } })
+    fireEvent.click(screen.getAllByRole('button', { name: 'Check' })[0]!)
+    expect(getProgress().challenges['connect-and-extract']?.checkpoints).toEqual(['sessions-2025'])
+    expect(screen.getByText(/1 of 3 steps ticked, 1 of 3 checkpoints answered/)).toBeInTheDocument()
+    cleanup()
+    await renderAt('/build', 'Build')
+    expect(screen.getByRole('link', { name: '1. Connect, extract and save a data source' })).toHaveAttribute('href', '/build/challenges/connect-and-extract')
+    resetProgress()
   })
 
   it('shows the non-affiliation footer and a not-found page', async () => {

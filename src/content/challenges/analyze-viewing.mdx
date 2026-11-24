@@ -1,0 +1,133 @@
+export const meta = {
+  id: 'analyze-viewing',
+  taskId: '2.3',
+  title: 'Sort, rank, bin and calculate viewing',
+  summary: 'Sort genres by minutes, add a reference line driven by a parameter, show each genre’s share with a quick table calculation, build a histogram of session lengths, add an Hours Watched calculation and grand totals.',
+  updated: '2026-11-24',
+  objectives: ['2.3.1', '2.3.2', '2.3.3', '2.3.4', '2.3.5', '2.3.6', '2.3.7'],
+  files: ['sessions_2024.csv', 'sessions_2025.csv', 'titles.csv'],
+  links: [
+    { title: 'Sort data in a visualization', url: 'https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sorting_computed_howto.htm' },
+    { title: 'Reference lines, bands, distributions, and boxes', url: 'https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm' },
+    { title: 'Quick table calculations', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm' },
+    { title: 'Create bins from a continuous measure', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm' },
+    { title: 'Build a histogram', url: 'https://help.tableau.com/current/pro/desktop/en-us/buildexamples_histogram.htm' },
+    { title: 'Get started with calculations', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm' },
+    { title: 'Create parameters', url: 'https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm' },
+    { title: 'Show totals in a visualization', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm' },
+  ],
+  steps: [
+    { id: 'union-and-relate', label: 'Union the sessions and relate the titles' },
+    { id: 'computed-sort', label: 'Sort genres by minutes' },
+    { id: 'parameter-line', label: 'A target line from a parameter' },
+    { id: 'percent-of-total', label: 'Each genre’s share with Percent of total' },
+    { id: 'histogram', label: 'A histogram of session lengths' },
+    { id: 'calculated-field', label: 'Hours Watched as a calculated field' },
+    { id: 'totals', label: 'A crosstab with grand totals' },
+  ],
+  checkpoints: [
+    {
+      id: 'comedy-share',
+      question: 'With Percent of total on SUM(Minutes Watched) by Genre (both years), what share does Comedy have? Answer in percent, to one decimal place.',
+      answer: {
+        kind: 'value',
+        says: '24.4%',
+        spec: { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched', tableCalc: { type: 'percentOfTotal' } }] },
+        measure: { field: 'Minutes Watched', tableCalc: { type: 'percentOfTotal' } },
+        where: { Genre: 'Comedy' },
+        digits: 1,
+        percent: true,
+      },
+    },
+    {
+      id: 'top-bin',
+      question: 'In your histogram with bins of 10 minutes, which bin holds the most sessions? Type its lower limit (the bin’s label).',
+      answer: {
+        kind: 'top',
+        says: '80',
+        spec: {
+          bins: [{ name: 'Minutes Watched (bin)', field: 'Minutes Watched', size: 10 }],
+          rows: [{ field: 'Minutes Watched (bin)' }],
+          columns: [{ field: 'Minutes Watched', agg: 'count' }],
+        },
+        dimension: { field: 'Minutes Watched (bin)' },
+        measure: { field: 'Minutes Watched', agg: 'count' },
+      },
+    },
+    {
+      id: 'hours-2025',
+      question: 'How many hours were watched in 2025 (the sum of your Hours Watched field, to the nearest hour)?',
+      answer: {
+        kind: 'value',
+        says: '25,425',
+        spec: {
+          calcs: [{ name: 'Hours Watched', formula: '[Minutes Watched] / 60' }],
+          rows: [{ field: 'Hours Watched' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Hours Watched' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Driftlight's monthly content review asks: which genres lead, which beat the target, what share each has, how long a typical session is, and how many hours were watched. You answer each with one of the analytics tools in this task, in Tableau Public.
+
+## Get the data
+
+Download the three files into one folder:
+
+<DataFiles />
+
+`sessions_2024.csv` and `sessions_2025.csv` have one row per viewing session; `titles.csv` one row per title.
+
+## Steps
+
+<Step id="union-and-relate">
+  Connect to `sessions_2024.csv` with the **Text file** connector. Drag `sessions_2025.csv` "directly below the first table" to union the two years, then drag `titles.csv` onto the canvas and drop it on the "noodle" to relate it on **Title ID**. (Skip this if you saved the data source from the [2.2 challenge](/build/challenges/organize-and-filter).)
+</Step>
+
+<Step id="computed-sort">
+  Put **Genre** on Rows and **Minutes Watched** on Columns. Click the **sort icon** on the axis: "One click sorts descending, two clicks sorts ascending, and three clicks clear the sort." Then right-click the Genre pill and select **Sort** to see the same thing as **Sort By > Field** (Minutes Watched, Sum). This is a computed sort: it follows the data. Dragging a header to a new place, or **Manual** in the Sort dialog, would fix the order instead.
+</Step>
+
+<Step id="parameter-line">
+  Open the menu at the top of the Data pane (the drop-down arrow) and select **Create Parameter**. Name it **Target**, choose a number data type with **All** allowable values (a free text field) and set its value to 400000. Right-click it and select **Show Parameter**. Now right-click the Minutes Watched axis and select **Add Reference Line**: scope **Table**, value **Target** (a parameter, in place of a constant), label **Value**. Type another target into the parameter control and watch the line move. That is the job of a parameter: one value the viewer supplies, which a calculation, filter or reference line uses.
+</Step>
+
+<Step id="percent-of-total">
+  On a new sheet, build the same genre bars. Right-click the `SUM(Minutes Watched)` pill and choose **Quick Table Calculation > Percent of Total**. A delta symbol (△) appears on the pill, and each bar now shows the genre's share of all minutes. Right-click the pill again and open **Edit Table Calculation** to see how it is computed.
+</Step>
+
+<Step id="histogram">
+  On a new sheet, right-click **Minutes Watched** in the Data pane and select **Create > Bins**. Set the **Size of bins** to 10. Tableau creates the dimension **Minutes Watched (bin)**; "the lower limit is inclusive". Put the bin field on Columns and drag Minutes Watched to Rows, then open the pill's menu and choose **Count** under **Measure**. That's a histogram: the number of sessions per 10-minute range. (Show Me's histogram builds the same chart from Minutes Watched alone, choosing its own bin size.)
+</Step>
+
+<Step id="calculated-field">
+  Select **Analysis > Create Calculated Field**, name it **Hours Watched** and type `[Minutes Watched] / 60`. It appears in the Data pane with an equal sign (=) and, because it returns a number, as a measure. Put it on a new sheet as `SUM(Hours Watched)`, then drag **Start** to Filters, choose **Years** and keep 2025. This is a row-level calculation: divided per session, then summed.
+</Step>
+
+<Step id="totals">
+  On a new sheet, put **Genre** on Rows, **Start** on Columns (it shows YEAR(Start)) and **Minutes Watched** on **Text** on the Marks card: a crosstab. Drag **Totals** from the **Analytics** pane and drop it on **Column Grand Totals**, then on **Row Grand Totals**. The Analysis > Totals menu offers the same. To change how totals aggregate, use **Analysis > Totals > Total All Using**.
+</Step>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`25,425` or `25.4K`).
+
+<Checkpoint id="comedy-share" />
+
+<Checkpoint id="top-bin" />
+
+<Checkpoint id="hours-2025" />
+
+## Exam angle
+
+- **Computed sort** (sort icons, Sort > Field) follows the data; **manual sort** (drag headers, Manual) stays fixed.
+- A **reference line** is dropped from the Analytics pane or added from an axis; its value is a constant, a parameter or a computation (Average, Median, Sum…), per Table, Pane or Cell.
+- A **quick table calculation** works on a measure already in the view and shows a △. A **calculated field** is a new Data pane field with an =.
+- **Create > Bins** on a measure makes a dimension; a histogram counts the rows per bin.
+- Use a **parameter** when the viewer should supply one value (a target, a Top N, a choice of measure). Use a filter when they just pick members.
+- Totals need a header and don't work on continuous dimensions. Practise them, and table calcs, in the [sandbox](/build/sandbox).

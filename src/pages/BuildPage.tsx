@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router'
+import { challengeStatus } from '../challenges/answer'
 import { CALC_EXERCISES } from '../content/calc'
+import { CHALLENGES } from '../content/challenges'
 import { FLASHCARDS } from '../content/flashcards'
 import { SIMS } from '../content/sims'
 import { deckStats } from '../flashcards/leitner'
@@ -8,7 +10,7 @@ import { SANDBOX_CHALLENGES } from '../content/sandbox'
 import { useProgress } from '../progress/store'
 
 export default function BuildPage() {
-  const { sandbox: solved, calcExercises, flashcards } = useProgress()
+  const { sandbox: solved, calcExercises, flashcards, challenges } = useProgress()
   const [now] = useState(Date.now)
   const cards = deckStats(
     FLASHCARDS.map((c) => c.id),
@@ -17,6 +19,7 @@ export default function BuildPage() {
   )
   const calcsDone = CALC_EXERCISES.filter((e) => calcExercises[e.id] !== undefined).length
   const done = SANDBOX_CHALLENGES.filter((c) => solved[c.id] !== undefined).length
+  const publicDone = CHALLENGES.filter((c) => challengeStatus(c.meta, challenges[c.meta.id]).done).length
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Build</h1>
@@ -60,6 +63,28 @@ export default function BuildPage() {
             </li>
           ))}
         </ul>
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Tableau Public challenges</h2>
+        <p className="text-sm text-slate-600">
+          Build in the real thing: download the Driftlight files, follow the steps in the free Tableau Desktop Public Edition and check the
+          numbers your views show. {publicDone} of {CHALLENGES.length} complete. Challenges don’t count towards exam readiness.
+        </p>
+        <ol className="grid gap-2 sm:grid-cols-2">
+          {CHALLENGES.map(({ meta }, i) => (
+            <li key={meta.id} className="rounded-lg border border-slate-200 bg-white p-3">
+              <Link to={`/build/challenges/${meta.id}`} className="font-medium text-brand-dark underline">
+                {i + 1}. {meta.title}
+              </Link>
+              {challengeStatus(meta, challenges[meta.id]).done && (
+                <span className="ml-2 text-sm text-green-600" aria-label="complete">
+                  ✓
+                </span>
+              )}
+              <p className="mt-0.5 text-sm text-slate-600">{meta.summary}</p>
+            </li>
+          ))}
+        </ol>
       </section>
       <section className="rounded-lg border border-slate-200 bg-white p-4">
         <h2 className="text-lg font-semibold">

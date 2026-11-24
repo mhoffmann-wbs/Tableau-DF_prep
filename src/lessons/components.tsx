@@ -3,6 +3,7 @@ import { type ComponentProps, type ReactNode, createContext, use } from 'react'
 import { Link } from 'react-router'
 import type { LessonMeta } from '../content/schema'
 import { CALC_EXERCISES } from '../content/calc'
+import { CHALLENGES } from '../content/challenges'
 import { FLASHCARDS } from '../content/flashcards'
 import { SIMS } from '../content/sims'
 import { SANDBOX_CHALLENGES } from '../content/sandbox'
@@ -68,6 +69,7 @@ export function BuildLinks() {
   const exercises = CALC_EXERCISES.filter((e) => e.objectives.some((o) => o.startsWith(`${meta.taskId}.`)))
   const cards = FLASHCARDS.filter((c) => c.taskId === meta.taskId).length
   const sims = SIMS.filter((s) => s.objectives.some((o) => o.startsWith(`${meta.taskId}.`)))
+  const publicChallenges = CHALLENGES.filter((c) => c.meta.taskId === meta.taskId)
   return (
     <ul>
       {challenges.map((c) => (
@@ -90,18 +92,23 @@ export function BuildLinks() {
           Simulator: <Link to={`/build/sim/${s.id}`}>{s.title}</Link>
         </li>
       ))}
+      {publicChallenges.map((c) => (
+        <li key={c.meta.id}>
+          Tableau Public challenge: <Link to={`/build/challenges/${c.meta.id}`}>{c.meta.title}</Link>
+        </li>
+      ))}
       {cards > 0 && (
         <li>
           Flashcards: <Link to={`/build/flashcards?task=${meta.taskId}`}>{cards} cards for this task</Link>
         </li>
       )}
-      {challenges.length + exercises.length + presets.length + sims.length + cards === 0 && <li>Hands-on practice for this task arrives with the simulators and the Tableau Public challenges.</li>}
+      {challenges.length + exercises.length + presets.length + sims.length + publicChallenges.length + cards === 0 && <li>Hands-on practice for this task arrives with the simulators and the Tableau Public challenges.</li>}
     </ul>
   )
 }
 
 /** Links starting with / go through the router (so the Pages base path applies); others open in a new tab. */
-function A({ href = '', ...props }: ComponentProps<'a'>) {
+export function A({ href = '', ...props }: ComponentProps<'a'>) {
   if (href.startsWith('/')) return <Link to={href} {...props} />
   return <a href={href} target="_blank" rel="noreferrer" {...props} />
 }

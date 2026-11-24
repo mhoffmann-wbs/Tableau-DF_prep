@@ -8,9 +8,9 @@ import type { Fact } from './schema.ts'
 /** The text a fact should show, computed from the data. Throws when the fact doesn't pick exactly one row. */
 export function evaluateFact(fact: Fact, data: Dataset): string {
   const result = query(fact.spec, data)
-  const measure = columnOf(result, fact.spec.source, fact.measure)
+  const measure = columnOf(result, fact.spec, fact.measure)
   if (fact.kind === 'top') {
-    const dimension = columnOf(result, fact.spec.source, fact.dimension)
+    const dimension = columnOf(result, fact.spec, fact.dimension)
     const sign = fact.order === 'desc' ? -1 : 1
     const values = result.rows.map((r) => r[measure.id] as number)
     const best = sign * Math.min(...values.map((v) => sign * v))

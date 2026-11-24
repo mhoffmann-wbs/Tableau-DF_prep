@@ -1,0 +1,136 @@
+export const meta = {
+  id: 'organize-and-filter',
+  taskId: '2.2',
+  title: 'Group, set, drill and filter the catalogue',
+  summary: 'Union both years of sessions, relate the titles, then organise the titles with a group, a top-10 set and a Type › Genre hierarchy, and filter by device, by a Top N with context and by quarter.',
+  updated: '2026-11-24',
+  objectives: ['2.2.1', '2.2.2', '2.2.3', '2.2.4', '2.2.5'],
+  files: ['sessions_2024.csv', 'sessions_2025.csv', 'titles.csv'],
+  links: [
+    { title: 'Group your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/sortgroup_groups_creating.htm' },
+    { title: 'Create sets', url: 'https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sets_create.htm' },
+    { title: 'Create hierarchies', url: 'https://help.tableau.com/current/pro/desktop/en-us/qs_hierarchies.htm' },
+    { title: 'Filter data from your views (includes dates)', url: 'https://help.tableau.com/current/pro/desktop/en-us/filtering.htm' },
+    { title: 'Use context filters', url: 'https://help.tableau.com/current/pro/desktop/en-us/filtering_context.htm' },
+    { title: 'Union your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/union.htm' },
+    { title: 'Relate your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/relate_tables.htm' },
+  ],
+  steps: [
+    { id: 'union-and-relate', label: 'Union the sessions and relate the titles' },
+    { id: 'hierarchy', label: 'Build and drill a Type › Genre hierarchy' },
+    { id: 'group', label: 'Group the genres' },
+    { id: 'top-set', label: 'Make a top-10 set of titles' },
+    { id: 'dimension-filter', label: 'Filter to TV sessions' },
+    { id: 'top-n-context', label: 'Top 10 titles on TV, with a context filter' },
+    { id: 'date-filter', label: 'Keep every fourth quarter' },
+  ],
+  checkpoints: [
+    {
+      id: 'scripted-tv',
+      question: 'With Device filtered to TV, how many minutes were watched in your Scripted group (both years)?',
+      answer: {
+        kind: 'value',
+        says: '723,966',
+        spec: {
+          groups: [{ name: 'Genre Category', field: 'Genre', groups: [{ name: 'Scripted', members: ['Comedy', 'Drama', 'Sci-Fi & Fantasy', 'Thriller'] }], other: true }],
+          rows: [{ field: 'Genre Category' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [{ kind: 'values', field: 'Device', values: ['TV'] }],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { 'Genre Category': 'Scripted' },
+      },
+    },
+    {
+      id: 'top-titles-in',
+      question: 'With no filters on the sheet, how many minutes were watched of the titles In your Top Titles set?',
+      answer: {
+        kind: 'value',
+        says: '942,372',
+        spec: {
+          sets: [{ name: 'Top Titles', field: 'Title', rule: { kind: 'top', from: 'top', n: 10, field: 'Minutes Watched', agg: 'sum' } }],
+          rows: [{ field: 'Top Titles' }],
+          columns: [{ field: 'Minutes Watched' }],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { 'Top Titles': 'In' },
+      },
+    },
+    {
+      id: 'tv-q4',
+      question: 'With Device = TV and your Quarters filter keeping only Q4, how many minutes were watched (both years together)?',
+      answer: {
+        kind: 'value',
+        says: '414,140',
+        spec: {
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [
+            { kind: 'values', field: 'Device', values: ['TV'] },
+            { kind: 'datePart', field: 'Start', level: 'quarter', values: [4] },
+          ],
+        },
+        measure: { field: 'Minutes Watched' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+The catalogue team wants to see viewing by broad genre categories, compare the ten most-watched titles with everything else, drill from Type down to Genre, and narrow views to TV and to the busy fourth quarter. You build each of those in Tableau Public and read three numbers from your views.
+
+## Get the data
+
+Download the three files into one folder:
+
+<DataFiles />
+
+`sessions_2024.csv` and `sessions_2025.csv` have the same columns, one row per viewing session. `titles.csv` has one row per title, with its Type, Genre and Sub-Genre.
+
+## Steps
+
+<Step id="union-and-relate">
+  In Tableau Public, connect to `sessions_2024.csv` with the **Text file** connector. On the Data Source page, drag `sessions_2025.csv` "directly below the first table" to **union** them: the sessions of both years become one table. Then drag `titles.csv` onto the canvas and drop it when you see the "noodle" to **relate** it to the sessions. Check that the relationship matches **Title ID** on both sides (lesson [1.2](/learn/1.2) explains unions and relationships).
+</Step>
+
+<Step id="hierarchy">
+  In the Data pane, drag **Genre** and drop it directly on top of **Type**, and name the hierarchy. Drag **Sub-Genre** into it below Genre. Put **Type** on Rows and **Minutes Watched** on Columns, then click the **+** icon on the Type pill to drill down to Genre, and **−** to drill back up.
+</Step>
+
+<Step id="group">
+  Right-click **Genre** in the Data pane and select **Create > Group**. Select Comedy, Drama, Sci-Fi & Fantasy and Thriller, group them, and **Rename** the group **Scripted**. Tick **Include 'Other'** so the remaining genres fall into Other. Then right-click the new group field in the Data pane, choose **Rename** and call it **Genre Category**. (In a view, you could also select headers and click the paperclip **group** icon on the tooltip.) Put Genre Category on Rows and SUM(Minutes Watched) on Columns.
+</Step>
+
+<Step id="top-set">
+  On a new sheet, right-click **Title** in the Data pane and select **Create > Set**. Name it **Top Titles**, and on the **Top** tab keep the top 10 by the Sum of Minutes Watched. Put the set on Rows and Minutes Watched on Columns: the view shows **In** and **Out** of the set. Right-click the set pill to switch between **Show In/Out of Set** and **Show Members in Set**. This set is dynamic: it follows the data. A set made by selecting marks and choosing **Create Set** would be fixed.
+</Step>
+
+<Step id="dimension-filter">
+  Go back to the Genre Category sheet. Drag **Device** to the **Filters** shelf; the Filter dialog opens on the **General** tab. Tick only **TV** and click OK. Device doesn't need to be in the view to filter it. Then open the Device pill's menu on the Filters shelf and choose **Show Filter** to give viewers a filter card.
+</Step>
+
+<Step id="top-n-context">
+  On a new sheet, put **Title** on Rows and Minutes Watched on Columns. Drag Title to Filters and use the **Top** tab to keep the top 10 by Sum of Minutes Watched. Add a Device filter that keeps only TV. The Top 10 still comes from all devices, because both dimension filters run at the same stage. Right-click the Device filter and choose **Add to Context**: it turns gray, runs first, and the list becomes the top 10 titles *on TV*.
+</Step>
+
+<Step id="date-filter">
+  Back on the Genre Category sheet (Device = TV), drag **Start** to Filters. Tableau asks what kind of date filter you want: choose **Quarters** and tick only **Q4**. The view keeps the fourth quarter of both years. Remove the Genre Category pill from Rows to read the single total.
+</Step>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`723,966` or `724.0K`).
+
+<Checkpoint id="scripted-tv" />
+
+<Checkpoint id="top-titles-in" />
+
+<Checkpoint id="tv-q4" />
+
+## Exam angle
+
+- **Group** = merge members into new categories (paperclip, or Create > Group). **Set** = In or Out of a subset (Create > Set, or Create Set from marks). **Hierarchy** = drag one dimension onto another and drill with + and −.
+- A set from selected marks is **fixed**; one built with the Condition or Top tab is **dynamic**.
+- A filter on a field that isn't in the view still works: it filters the rows behind the view.
+- **Top N needs context**: if a Top N ignores another filter, put that other filter in context (gray pill). Practise the order in the [Filter order simulator](/build/sim/filter-order).
+- Date filters: **relative dates** for "the last N days", a **range of dates** for fixed start and end dates, a **date part** (Quarters, Months) for "every Q4".

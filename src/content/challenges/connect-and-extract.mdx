@@ -1,0 +1,127 @@
+export const meta = {
+  id: 'connect-and-extract',
+  taskId: '1.1',
+  title: 'Connect, extract and save a data source',
+  summary: 'Connect Tableau Public to the 2025 sessions file, see that it works on an extract, add the targets workbook as a second connection and save the data source as a .tds.',
+  updated: '2026-11-24',
+  objectives: ['1.1.1', '1.1.2', '1.1.3', '1.1.4', '1.1.5'],
+  files: ['sessions_2025.csv', 'targets.xlsx'],
+  links: [
+    { title: 'Connect to your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/basicconnectoverview.htm' },
+    { title: 'Extract your data', url: 'https://help.tableau.com/current/pro/desktop/en-us/extracting_data.htm' },
+    { title: 'Save data sources', url: 'https://help.tableau.com/current/pro/desktop/en-us/export_connection.htm' },
+    { title: 'Join your data (cross-database joins)', url: 'https://help.tableau.com/current/pro/desktop/en-us/joining_tables.htm' },
+    { title: 'Tableau Public FAQ', url: 'https://help.tableau.com/current/pro/desktop/en-gb/public_faq.htm' },
+    { title: 'Compare Tableau Desktop editions', url: 'https://help.tableau.com/current/pro/desktop/en-us/desktop_comparison.htm' },
+  ],
+  steps: [
+    { id: 'connect-csv', label: 'Connect to the sessions file' },
+    { id: 'count-sessions', label: 'Count the 2025 sessions' },
+    { id: 'minutes-by-device', label: 'Minutes watched by device' },
+    { id: 'live-connection', label: 'A live connection', objective: '1.1.1', optional: 'free' },
+    { id: 'second-connection', label: 'Add the targets workbook as a second connection', objective: '1.1.5', optional: 'unverified' },
+    { id: 'save-tds', label: 'Save the data source as a .tds', objective: '1.1.4', optional: 'unverified' },
+  ],
+  checkpoints: [
+    {
+      id: 'sessions-2025',
+      question: 'How many sessions does sessions_2025.csv hold?',
+      answer: {
+        kind: 'value',
+        says: '17,000',
+        spec: { rows: [{ field: 'Sessions (Count)' }], filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }] },
+        measure: { field: 'Sessions (Count)' },
+      },
+    },
+    {
+      id: 'tv-minutes-2025',
+      question: 'How many minutes were watched on TV in 2025 (the sum of Minutes Watched)?',
+      answer: {
+        kind: 'value',
+        says: '635,361',
+        spec: {
+          rows: [{ field: 'Device' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        measure: { field: 'Minutes Watched' },
+        where: { Device: 'TV' },
+      },
+    },
+    {
+      id: 'top-device-2025',
+      question: 'Which device had the most minutes watched in 2025?',
+      answer: {
+        kind: 'top',
+        says: 'TV',
+        spec: {
+          rows: [{ field: 'Device' }],
+          columns: [{ field: 'Minutes Watched' }],
+          filters: [{ kind: 'datePart', field: 'Start', level: 'year', values: [2025] }],
+        },
+        dimension: { field: 'Device' },
+        measure: { field: 'Minutes Watched' },
+      },
+    },
+  ],
+}
+
+## Goal
+
+Every exam task in domain 1 starts with a data source. In this challenge you make one in Tableau Desktop Public Edition (Tableau Public for short) from Driftlight's 2025 viewing sessions, see what Tableau Public does differently from the paid Desktop the exam assumes, and read three numbers from your first views.
+
+## Get the data
+
+Download these two files and keep them in one folder:
+
+<DataFiles />
+
+`sessions_2025.csv` has one row per viewing session. `targets.xlsx` is finance's workbook of monthly targets by region. You also need **Tableau Desktop Public Edition**, which is free to download from Tableau Public's website.
+
+## Steps
+
+<Step id="connect-csv">
+  Open Tableau Public. In the **Connect** pane on the left, choose **Text file** from the file connectors and open `sessions_2025.csv`. Tableau opens the **Data Source page** with the table on the canvas and a preview grid below it. Check the data type icon above each column in the grid: `Start` should be a date and time, `Minutes Watched` a number.
+</Step>
+
+<Callout title="Public vs. Desktop">
+  <p>In the paid Desktop, the upper-right corner of the Data Source page lets you choose **Live** or **Extract**. Tableau Public "only supports extracted data sources and does not support live connections to data", so whatever your Tableau Public shows there, your data source is an extract. Tableau Public is also a newer version than the 2022.3 the exam tests, so a few labels may differ from the lesson.</p>
+</Callout>
+
+<Step id="count-sessions">
+  Click the **Sheet 1** tab. In the Data pane, find the count measure named after the table and followed by **(Count)**, and drag it to Rows. It counts the table's rows: one per session. Hover over the bar to read the count.
+</Step>
+
+<Step id="minutes-by-device">
+  Clear the sheet. Drag **Device** to Rows and **Minutes Watched** to Columns. Tableau sums the minutes for each device (`SUM(Minutes Watched)`). Click the **sort icon** on the axis to sort the bars (one click sorts descending), and hover over a bar to read its value.
+</Step>
+
+<Step id="live-connection">
+  This step needs **Desktop Free Edition**, which can "work with live data" (Tableau Public can't). Connect to `sessions_2025.csv` there and leave the connection **Live**. Then select **Extract** in the upper-right corner, click **Edit**, add a filter on **Device** that keeps only TV, choose **Save Settings** and click the sheet tab: Tableau builds the extract, and only that month's rows are in it. Compare the session count with the count from the live connection. The lesson explains why the other rows aren't just hidden but gone.
+</Step>
+
+<Step id="second-connection">
+  Back on the Data Source page, click **Add** next to **Connections** in the left pane, choose **Microsoft Excel** and open `targets.xlsx`. That "creates a second connection rather than an entirely different data source", and the canvas colours each table by its connection. Drag the targets sheet onto the canvas next to the sessions table. You don't need to finish the relationship here: task 1.2 is about that. Tableau's help doesn't say whether Tableau Public allows two connections in one data source. If yours has no **Add** button, read the steps in lesson 1.1 and the [Data model lab](/build/sim/data-model) instead.
+</Step>
+
+<Step id="save-tds">
+  In the Data pane, right-click (Control-click on a Mac) the data source's name and select **Add to Saved Data Sources**. Choose `.tds`, then save. The help documents this for Desktop and doesn't mention Tableau Public. If your edition lacks the command, skip the step. Either way, remember what the file holds: the connection and your metadata (renamed fields, calculations, default properties), never the rows. A `.tdsx` adds the local data.
+</Step>
+
+## Checkpoints
+
+Type what your own views show. A number may be typed as Tableau formats it (`635,361` or `635.4K`).
+
+<Checkpoint id="sessions-2025" />
+
+<Checkpoint id="tv-minutes-2025" />
+
+<Checkpoint id="top-device-2025" />
+
+## Exam angle
+
+- **Live vs. extract** is a choice of freshness against speed and offline use. In the exam, "the database changed a minute ago" points to live (or a refresh), and "slow database" or "work offline" points to an extract.
+- An extract filter removes rows from the extract itself. That's different from a filter in a view.
+- `.tds` = connection + metadata, no data. `.tdsx` = the same plus local data. `.twbx` = a workbook with its data.
+- Two files from different sources in **one** data source means two **connections**, added with **Add** on the Data Source page. That is what a cross-database join needs.
+- Tableau Public can't publish to Tableau Server or Tableau Cloud, and the exam's share-to-Server questions (task 3.3) assume the paid Desktop: the [Live vs. extract simulator](/build/sim/live-extract) covers that side.
