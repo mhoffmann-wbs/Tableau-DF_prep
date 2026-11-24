@@ -99,8 +99,10 @@ export const itemSchema = z.discriminatedUnion('kind', [single, multi, viz]).sup
   const select = item.kind === 'single' ? 1 : item.select
   const correct = item.options.filter((o) => o.correct).length
   if (correct !== select) issue(`${correct} correct options, expected ${select}`, ['options'])
-  const phrase = /\(Choose \d answers\.\)/.exec(item.stem)?.[0]
+  const phrases = item.stem.match(/\(Choose \d answers\.\)/g) ?? []
+  const phrase = phrases[0]
   if (select > 1 && phrase !== choosePhrase(select)) issue(`stem must say "${choosePhrase(select)}"`, ['stem'])
+  if (phrases.length > 1) issue('stem says how many to choose more than once', ['stem'])
   if (select === 1 && phrase) issue('single-choice stem must not say how many to choose', ['stem'])
   if (item.kind === 'viz' && select > 1 && item.options.length < 5) issue('multi-select needs at least 5 options', ['options'])
 

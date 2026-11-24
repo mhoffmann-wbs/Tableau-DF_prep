@@ -1856,5 +1856,986 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
     ]
+  },
+  {
+    "id": "2.3-051",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.1"
+    ],
+    "stem": "The chart shows `Channel` sorted by subscriber count, ascending. The analyst wants the channel with the most subscribers at the top. What should they change?",
+    "options": [
+      {
+        "text": "Change Sort By to Alphabetic and the order to descending",
+        "correct": false,
+        "rationale": "This orders by channel name, so the channel at the top would be the last name alphabetically, not the largest."
+      },
+      {
+        "text": "Apply the Rank quick table calculation to the measure",
+        "correct": false,
+        "rationale": "Rank adds numbers to the marks and does not reorder the bars."
+      },
+      {
+        "text": "Add a Table-scope reference line at the maximum",
+        "correct": false,
+        "rationale": "A line marks a value on the axis and does not change the order of the members."
+      },
+      {
+        "text": "Switch the sort to descending",
+        "correct": true,
+        "rationale": "A computed sort follows the measure, and descending puts the largest value first."
+      }
+    ],
+    "explanation": "The direction of a computed sort is part of the sort: one click on the sort icon gives descending, a second gives ascending. Switching the direction keeps the sort tied to the data.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Channel",
+            "sort": {
+              "order": "asc",
+              "field": "Subscribers (Count)",
+              "agg": "sum"
+            }
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sorting_computed_howto.htm"
+    ]
+  },
+  {
+    "id": "2.3-052",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.1"
+    ],
+    "stem": "The `Plan` bars follow an order that matches neither their lengths nor the alphabet. Which kind of sort produces such a view?",
+    "options": [
+      {
+        "text": "A manual sort that places the plans in a chosen order",
+        "correct": true,
+        "rationale": "Only a manual order can put members in a sequence unrelated to their values or names, such as price tiers."
+      },
+      {
+        "text": "A computed sort by the subscriber count, descending",
+        "correct": false,
+        "rationale": "This would put the longest bar first, and the bars here are not in that order."
+      },
+      {
+        "text": "A computed sort by the subscriber count, ascending",
+        "correct": false,
+        "rationale": "This would put the shortest bar first, and the bars here are not in that order."
+      },
+      {
+        "text": "An alphabetic sort in either direction",
+        "correct": false,
+        "rationale": "Alphabetical order would give Basic, Basic with Ads, Premium, Standard or the reverse, which is not what the chart shows."
+      }
+    ],
+    "explanation": "Computed sorts follow a value and alphabetic sorts follow names. When the sequence follows neither, such as plan tiers by price, the order was set by hand with a manual sort.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Plan",
+            "sort": {
+              "order": "asc",
+              "manual": [
+                "Basic with Ads",
+                "Basic",
+                "Standard",
+                "Premium"
+              ]
+            }
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sorting_computed_howto.htm"
+    ]
+  },
+  {
+    "id": "2.3-053",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.1"
+    ],
+    "stem": "`Genre` is sorted by `Titles (Count)`, descending, while the bars show `AVG(Runtime)`. Which statement is correct?",
+    "options": [
+      {
+        "text": "The bars must get shorter down the chart, because a sort always uses the measure that is drawn",
+        "correct": false,
+        "rationale": "A computed sort can use any measure, not only the one on the axis."
+      },
+      {
+        "text": "The genres run from most titles to fewest, so the bars need not shorten",
+        "correct": true,
+        "rationale": "The sort field and the measure drawn are independent, so bar lengths can go up and down."
+      },
+      {
+        "text": "A sort by a field other than the one in the view is not allowed in Tableau",
+        "correct": false,
+        "rationale": "The Sort dialog lets you pick any field and an aggregation for the Field option."
+      },
+      {
+        "text": "The order is manual, because it does not follow the bar lengths",
+        "correct": false,
+        "rationale": "A sort by a field is computed even when it does not follow the bars you see."
+      }
+    ],
+    "explanation": "Sort By > Field takes the field and aggregation that determine the order. That field can differ from the measure on the axis, which is why the bar lengths here do not run in order.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "rows": [
+          {
+            "field": "Genre",
+            "sort": {
+              "order": "desc",
+              "field": "Titles (Count)",
+              "agg": "sum"
+            }
+          }
+        ],
+        "columns": [
+          {
+            "field": "Runtime",
+            "agg": "avg"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sorting_computed_howto.htm"
+    ]
+  },
+  {
+    "id": "2.3-054",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.3.1"
+    ],
+    "stem": "The view has `Region` and then `Channel` on Rows, with the bars of `Subscribers (Count)` on Columns. The analyst clicks the sort icon on the measure axis. Which two statements are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It is a computed sort, so it follows the data when values change",
+        "correct": true,
+        "rationale": "Clicking a sort icon sorts by the measure, not by a hand-set order."
+      },
+      {
+        "text": "It sorts the regions themselves by their totals",
+        "correct": false,
+        "rationale": "Sorting from the axis orders the members inside each pane, not the panes."
+      },
+      {
+        "text": "It is a manual sort that copies the same order into every region",
+        "correct": false,
+        "rationale": "Manual sorts come from dragging headers or the Manual option."
+      },
+      {
+        "text": "It is a nested sort, so the channels are ordered within each region",
+        "correct": true,
+        "rationale": "Sorting from an axis gives a nested sort by default."
+      },
+      {
+        "text": "Sorting from the field label would nest too",
+        "correct": false,
+        "rationale": "Only sorting from an axis nests by default; a field label sort does not."
+      }
+    ],
+    "explanation": "A sort from the axis is computed and nested: it orders the inner members within each pane, so panes can show different orders. Sorting from a field label does not nest.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Region"
+          },
+          {
+            "field": "Channel",
+            "sort": {
+              "order": "desc",
+              "field": "Subscribers (Count)",
+              "agg": "sum"
+            }
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/sortgroup_sorting_computed_howto.htm"
+    ]
+  },
+  {
+    "id": "2.3-055",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.2"
+    ],
+    "stem": "A bar chart shows minutes per genre. The analyst wants a line at the tallest bar of the whole chart. Which computation should the reference line use?",
+    "options": [
+      {
+        "text": "Minimum",
+        "correct": false,
+        "rationale": "Minimum would mark the shortest bar."
+      },
+      {
+        "text": "Maximum",
+        "correct": true,
+        "rationale": "Maximum draws the line at the largest mark."
+      },
+      {
+        "text": "Average",
+        "correct": false,
+        "rationale": "Average marks the mean of the bars, which sits below the tallest."
+      },
+      {
+        "text": "Total",
+        "correct": false,
+        "rationale": "Total sums all the marks and would sit far above any single bar."
+      }
+    ],
+    "explanation": "A reference line computation is Total, Sum, Minimum, Maximum, Average or Median. Maximum marks the largest mark in the scope.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
+  },
+  {
+    "id": "2.3-056",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.2"
+    ],
+    "stem": "A line chart of daily minutes has a couple of extreme spikes. The analyst wants a reference line for the typical day that the spikes barely move. Which computation fits?",
+    "options": [
+      {
+        "text": "Average",
+        "correct": false,
+        "rationale": "The average is pulled up by extreme values, so the line would drift toward the spikes."
+      },
+      {
+        "text": "Maximum",
+        "correct": false,
+        "rationale": "Maximum marks the highest spike itself, not a typical day."
+      },
+      {
+        "text": "Total",
+        "correct": false,
+        "rationale": "Total sums every day and is not a typical value."
+      },
+      {
+        "text": "Median",
+        "correct": true,
+        "rationale": "The median is the middle value, so a few extreme days hardly move it."
+      }
+    ],
+    "explanation": "Median draws the middle value of the marks. Average includes every value in its calculation, so a few extremes shift it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
+  },
+  {
+    "id": "2.3-057",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.2"
+    ],
+    "stem": "An analyst wants to shade the area within one standard deviation of the average on a continuous axis. Which item from the Add Reference Line dialog fits?",
+    "options": [
+      {
+        "text": "A distribution",
+        "correct": true,
+        "rationale": "Distributions are built from percentages, percentiles, quantiles or standard deviations."
+      },
+      {
+        "text": "A box plot",
+        "correct": false,
+        "rationale": "A box plot draws quartiles and whiskers, not a standard deviation range."
+      },
+      {
+        "text": "A reference line with the Median computation",
+        "correct": false,
+        "rationale": "A line marks one value and is not a shaded range."
+      },
+      {
+        "text": "A reference line with the Total computation",
+        "correct": false,
+        "rationale": "A line marks one summed value and does not shade a range."
+      }
+    ],
+    "explanation": "The dialog builds reference lines, bands, distributions and box plots. A distribution is the one defined by percentages, percentiles, quantiles or standard deviations.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
+  },
+  {
+    "id": "2.3-058",
+    "taskId": "2.3",
+    "kind": "multi",
+    "select": 3,
+    "objectives": [
+      "2.3.2"
+    ],
+    "stem": "Which three settings are part of the Add Reference Line dialog? (Choose 3 answers.)",
+    "options": [
+      {
+        "text": "Size of bins",
+        "correct": false,
+        "rationale": "This is set when creating bins, not on a reference line."
+      },
+      {
+        "text": "Scope: Table, Pane or Cell",
+        "correct": true,
+        "rationale": "Scope sets how many lines are drawn."
+      },
+      {
+        "text": "Label: None, Value, Computation or Custom",
+        "correct": true,
+        "rationale": "The label setting chooses the text shown with the line."
+      },
+      {
+        "text": "Allowable values: All, List or Range",
+        "correct": false,
+        "rationale": "These belong to parameters."
+      },
+      {
+        "text": "Value: a constant or a computation",
+        "correct": true,
+        "rationale": "The value sets where the line is drawn, such as Constant or Average."
+      }
+    ],
+    "explanation": "A reference line has a scope (Table, Pane or Cell), a value (a constant or a computation) and a label (None, Value, Computation or Custom).",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
+  },
+  {
+    "id": "2.3-059",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.3"
+    ],
+    "stem": "The analyst wants each month's `SUM(Minutes Watched)` shown as a percent change from the previous month. Which quick table calculation does that?",
+    "options": [
+      {
+        "text": "Difference",
+        "correct": false,
+        "rationale": "Difference gives the change in minutes, not as a percentage."
+      },
+      {
+        "text": "Percent of total",
+        "correct": false,
+        "rationale": "Percent of total gives each month's share of the whole."
+      },
+      {
+        "text": "Percent difference",
+        "correct": true,
+        "rationale": "It compares each mark with the previous one and expresses the change as a percentage."
+      },
+      {
+        "text": "Running total by month",
+        "correct": false,
+        "rationale": "Running total accumulates minutes month by month."
+      }
+    ],
+    "explanation": "Difference shows the absolute change from the previous mark and Percent difference the relative change. Percent of total is a share and Running total is cumulative.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm"
+    ]
+  },
+  {
+    "id": "2.3-060",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.3"
+    ],
+    "stem": "A line of daily sessions jumps around from day to day. Which quick table calculation smooths the line by averaging neighbouring days?",
+    "options": [
+      {
+        "text": "Percentile",
+        "correct": false,
+        "rationale": "Percentile ranks each mark within the distribution and does not smooth."
+      },
+      {
+        "text": "Rank",
+        "correct": false,
+        "rationale": "Rank numbers the marks and does not smooth."
+      },
+      {
+        "text": "Moving average",
+        "correct": true,
+        "rationale": "It averages each mark with those around it, which smooths short-term swings."
+      },
+      {
+        "text": "Running total, by day",
+        "correct": false,
+        "rationale": "Running total accumulates and the line would only climb."
+      }
+    ],
+    "explanation": "A moving average computes the average over a window of marks, so day-to-day spikes are damped.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm"
+    ]
+  },
+  {
+    "id": "2.3-061",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.3"
+    ],
+    "stem": "In Edit Table Calculation, what does the Compute Using setting decide?",
+    "options": [
+      {
+        "text": "The direction and marks the calculation runs across",
+        "correct": true,
+        "rationale": "Compute Using sets which way the calculation moves through the view's marks."
+      },
+      {
+        "text": "The field of the data source that gets aggregated",
+        "correct": false,
+        "rationale": "Aggregation is set on the pill, not through Compute Using."
+      },
+      {
+        "text": "The size of each bin in the view",
+        "correct": false,
+        "rationale": "Bin size is set in the Create Bins dialog."
+      },
+      {
+        "text": "Whether the field is treated as a dimension or measure",
+        "correct": false,
+        "rationale": "That is determined by the field itself and changed through the Data pane."
+      }
+    ],
+    "explanation": "A table calculation computes over the marks in the view. Compute Using tells it in which direction and across which dimensions to run, which matters when the view has several.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm"
+    ]
+  },
+  {
+    "id": "2.3-062",
+    "taskId": "2.3",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.3.3"
+    ],
+    "stem": "Which two Driftlight questions are answered with a quick table calculation? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Which genres lie above the content team's target?",
+        "correct": false,
+        "rationale": "That calls for a reference line."
+      },
+      {
+        "text": "What share of all viewing does each genre have?",
+        "correct": true,
+        "rationale": "Percent of total gives each mark's share."
+      },
+      {
+        "text": "In what order should the plan tiers appear?",
+        "correct": false,
+        "rationale": "That is a sort."
+      },
+      {
+        "text": "How many sessions fall into each range of minutes?",
+        "correct": false,
+        "rationale": "That is a histogram built from bins."
+      },
+      {
+        "text": "Which ten titles are highest by minutes?",
+        "correct": true,
+        "rationale": "Rank numbers the marks, so a top-ten table can be built on it."
+      }
+    ],
+    "explanation": "Quick table calculations such as Percent of total and Rank compute over the marks in the view. Targets, ordering and distributions use other tools.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm"
+    ]
+  },
+  {
+    "id": "2.3-063",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "A histogram uses bins of size 10 starting at 0. In which bin does a session of exactly 30 minutes fall?",
+    "options": [
+      {
+        "text": "The bin that ends at 30, because the upper limit is inclusive",
+        "correct": false,
+        "rationale": "The upper limit is not inclusive."
+      },
+      {
+        "text": "The bin that starts at 30, because the lower limit is inclusive",
+        "correct": true,
+        "rationale": "A value on the lower limit counts in that bin."
+      },
+      {
+        "text": "Both neighbouring bins, which each count it once",
+        "correct": false,
+        "rationale": "A record is counted in exactly one bin."
+      },
+      {
+        "text": "Neither, since values on a boundary are left out of the histogram",
+        "correct": false,
+        "rationale": "Boundary values are included, in the bin they start."
+      }
+    ],
+    "explanation": "Each bin includes its lower limit and runs up to, but not including, the next one. So 30 belongs to the bin that starts at 30.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-064",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "An analyst halves the size of bins from 10 minutes to 5. What changes in the histogram?",
+    "options": [
+      {
+        "text": "There are fewer, wider bars, each covering a larger range",
+        "correct": false,
+        "rationale": "Wider bars would need a larger bin size."
+      },
+      {
+        "text": "The bars are the same but their aggregation changes to SUM",
+        "correct": false,
+        "rationale": "The size does not change the aggregation, which stays CNT."
+      },
+      {
+        "text": "The bin field turns into a measure",
+        "correct": false,
+        "rationale": "A bin field is a dimension whatever its size."
+      },
+      {
+        "text": "More, narrower bars, each covering a smaller range",
+        "correct": true,
+        "rationale": "Smaller bins cut the same range into more ranges."
+      }
+    ],
+    "explanation": "The size of bins sets the width of each range. A smaller size gives more bars of narrower ranges, a larger size gives fewer, wider bars.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-065",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "An analyst tries to use `Minutes Watched (bin)` inside a calculated field. What is the limitation?",
+    "options": [
+      {
+        "text": "Binned fields can't be used in calculations",
+        "correct": true,
+        "rationale": "Tableau doesn't allow a bin field in a formula."
+      },
+      {
+        "text": "It works, but only inside an aggregate function such as COUNT",
+        "correct": false,
+        "rationale": "The limit applies whether or not an aggregate is used."
+      },
+      {
+        "text": "It works once the bin is converted to continuous",
+        "correct": false,
+        "rationale": "Changing the pill type does not lift the limit."
+      },
+      {
+        "text": "It works only when the data source is a cube",
+        "correct": false,
+        "rationale": "Bins themselves only work with relational sources, and the limit on calculations has nothing to do with cubes."
+      }
+    ],
+    "explanation": "Creating bins gives a new dimension, but the help notes that binned fields can't be used in calculations. Use the original measure in the formula instead.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-066",
+    "taskId": "2.3",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "Which two are ways to start a histogram of `Runtime`? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Drag Histogram from the Analytics pane into the view",
+        "correct": false,
+        "rationale": "The Analytics pane has no Histogram item."
+      },
+      {
+        "text": "Select the measure and pick histogram in Show Me",
+        "correct": true,
+        "rationale": "With one measure and no dimensions, Show Me can build it."
+      },
+      {
+        "text": "Right-click a `Genre` pill and choose Create > Bins",
+        "correct": false,
+        "rationale": "Bins are created from a measure, not from a dimension."
+      },
+      {
+        "text": "Right-click the measure in the Data pane, choose Create > Bins and use the bin field in the view",
+        "correct": true,
+        "rationale": "The bin field gives the ranges, and the measure is counted per bin."
+      },
+      {
+        "text": "Apply the Percentile quick table calculation to the measure",
+        "correct": false,
+        "rationale": "Percentile ranks marks and creates no bins."
+      }
+    ],
+    "explanation": "A histogram needs a bin field. Show Me creates it for you, or you create it with Create > Bins and place it in the view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_histogram.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-067",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "What does the formula `DATETRUNC('month', [Start])` return?",
+    "options": [
+      {
+        "text": "The number of months since the first session",
+        "correct": false,
+        "rationale": "Counting between dates is done by DATEDIFF."
+      },
+      {
+        "text": "The name of the month as text",
+        "correct": false,
+        "rationale": "A text result would need a function that formats the date as a string."
+      },
+      {
+        "text": "The number of sessions in that month",
+        "correct": false,
+        "rationale": "Counting sessions needs an aggregate such as COUNT."
+      },
+      {
+        "text": "A date, cut back to the month",
+        "correct": true,
+        "rationale": "DATETRUNC truncates a date to the given level and returns a date."
+      }
+    ],
+    "explanation": "`DATETRUNC` keeps the date type, while `DATEDIFF` returns a number of date parts between two dates.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/functions_functions_date.htm"
+    ]
+  },
+  {
+    "id": "2.3-068",
+    "taskId": "2.3",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "Which two formulas return text? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`DATEDIFF('day', [Signup Date], [Cancel Date])`",
+        "correct": false,
+        "rationale": "It returns a number of days."
+      },
+      {
+        "text": "`LEFT([Subscriber ID], 3)`",
+        "correct": true,
+        "rationale": "LEFT returns characters of a string."
+      },
+      {
+        "text": "`[Minutes Watched] / 60`",
+        "correct": false,
+        "rationale": "It returns a number."
+      },
+      {
+        "text": "`DATETRUNC('month', [Start])`",
+        "correct": false,
+        "rationale": "It returns a date."
+      },
+      {
+        "text": "`UPPER([Plan Code])`",
+        "correct": true,
+        "rationale": "UPPER returns a string in capital letters."
+      }
+    ],
+    "explanation": "String functions such as `LEFT` and `UPPER` return text. Date functions return numbers or dates, and arithmetic returns numbers.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/functions_functions_string.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/functions_functions_date.htm"
+    ]
+  },
+  {
+    "id": "2.3-069",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "The analyst created a parameter named Measure and showed it, but picking Sessions changes nothing in the chart. What is missing?",
+    "options": [
+      {
+        "text": "Range as the allowable values",
+        "correct": false,
+        "rationale": "The allowable values only define what can be chosen."
+      },
+      {
+        "text": "A calculation, filter or reference line using it",
+        "correct": true,
+        "rationale": "A parameter has no effect until something uses it."
+      },
+      {
+        "text": "A copy of the parameter on each worksheet",
+        "correct": false,
+        "rationale": "Parameters are global and work in any worksheet."
+      },
+      {
+        "text": "A quick table calculation on the measure",
+        "correct": false,
+        "rationale": "Table calculations do not read parameters automatically."
+      }
+    ],
+    "explanation": "A parameter is only a stored value. To swap measures it has to feed a calculation, for example an IF test that returns one measure or the other, placed in the view.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_swap.htm"
+    ]
+  },
+  {
+    "id": "2.3-070",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "Which kind of value does a parameter hold?",
+    "options": [
+      {
+        "text": "Several members at once, as in a multi-select filter",
+        "correct": false,
+        "rationale": "A parameter holds one value, not a set of members."
+      },
+      {
+        "text": "A new value computed for every row of the data",
+        "correct": false,
+        "rationale": "That describes a row-level calculated field."
+      },
+      {
+        "text": "A single number, date or string chosen by the viewer",
+        "correct": true,
+        "rationale": "A parameter is one value of a given data type."
+      },
+      {
+        "text": "A set of rows picked by the viewer",
+        "correct": false,
+        "rationale": "Choosing rows to keep is what a filter does."
+      }
+    ],
+    "explanation": "A parameter is a workbook variable such as a number, date or string. It holds one value that stays the same until the viewer changes it.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-071",
+    "taskId": "2.3",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "Which two needs call for a filter rather than a parameter? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Show only the Mobile and TV sessions",
+        "correct": true,
+        "rationale": "Choosing members of a field to show is what a filter does."
+      },
+      {
+        "text": "Let the viewer swap between minutes and sessions",
+        "correct": false,
+        "rationale": "That is a parameter used in a calculation."
+      },
+      {
+        "text": "Let the viewer type a target value for a reference line",
+        "correct": false,
+        "rationale": "A single typed value is a parameter."
+      },
+      {
+        "text": "Let the viewer pick which genres appear in a chart",
+        "correct": true,
+        "rationale": "Picking members of `Genre` is a filter."
+      },
+      {
+        "text": "Let the viewer choose N for a top N titles table",
+        "correct": false,
+        "rationale": "N is one value, which a parameter supplies."
+      }
+    ],
+    "explanation": "A filter removes data based on a field's members. A parameter supplies one value, such as a target, an N or the choice of a measure.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-072",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "A scatter plot has `AVG(Runtime)` on Columns and `SUM(Minutes Watched)` on Rows, with no discrete fields. Totals can't be added. Which requirement is not met?",
+    "options": [
+      {
+        "text": "The view must have at least one header",
+        "correct": true,
+        "rationale": "Totals attach to headers, and this view has none."
+      },
+      {
+        "text": "The view must contain a table calculation",
+        "correct": false,
+        "rationale": "Totals can't be applied to table calculations, so this is not a requirement."
+      },
+      {
+        "text": "The view must contain a continuous dimension",
+        "correct": false,
+        "rationale": "Grand totals can't be applied to continuous dimensions."
+      },
+      {
+        "text": "The view must be filtered by a parameter",
+        "correct": false,
+        "rationale": "Parameters have nothing to do with totals."
+      }
+    ],
+    "explanation": "Totals need at least one header in the view. A view of two continuous measures has axes but no headers.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-073",
+    "taskId": "2.3",
+    "kind": "single",
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "A table lists `Country` within `Region`. The analyst wants a line that adds up each region's countries. Which drop target in the Add Totals dialog fits?",
+    "options": [
+      {
+        "text": "Row Grand Totals",
+        "correct": false,
+        "rationale": "Grand totals sum the whole table, not each region."
+      },
+      {
+        "text": "Column Grand Totals",
+        "correct": false,
+        "rationale": "Grand totals sum the whole table, not each region."
+      },
+      {
+        "text": "Filters",
+        "correct": false,
+        "rationale": "This is a shelf, not a drop target in the dialog."
+      },
+      {
+        "text": "Subtotals",
+        "correct": true,
+        "rationale": "Subtotals add up the inner members of each outer member, here the countries of a region."
+      }
+    ],
+    "explanation": "Totals can be dropped on Subtotals, Row Grand Totals or Column Grand Totals. Subtotals sum within the outer header; grand totals cover the whole table.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-074",
+    "taskId": "2.3",
+    "kind": "multi",
+    "select": 2,
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "Which two items can be dragged from the Analytics pane into the view? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Totals",
+        "correct": true,
+        "rationale": "Totals are in the Analytics pane."
+      },
+      {
+        "text": "Create Parameter",
+        "correct": false,
+        "rationale": "Parameters are created from the Data pane's menu."
+      },
+      {
+        "text": "Bins",
+        "correct": false,
+        "rationale": "Bins are created from a measure in the Data pane."
+      },
+      {
+        "text": "Quick Table Calculation",
+        "correct": false,
+        "rationale": "Quick table calculations are applied from a pill's menu."
+      },
+      {
+        "text": "Reference Line",
+        "correct": true,
+        "rationale": "Reference Line is in the Analytics pane."
+      }
+    ],
+    "explanation": "The Analytics pane holds items such as Totals and Reference Line. Parameters and bins are created from the Data pane, and quick table calculations from a pill's menu.",
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
   }
 ]

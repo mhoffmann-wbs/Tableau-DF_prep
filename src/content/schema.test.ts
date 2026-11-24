@@ -36,6 +36,7 @@ describe('item schema', () => {
   it('checks the key count and the "Choose N answers" phrase', () => {
     expect(problems({ ...MULTI, select: 3 })).toEqual(expect.arrayContaining(['2 correct options, expected 3', 'stem must say "(Choose 3 answers.)"']))
     expect(problems({ ...SINGLE, stem: `${SINGLE.stem} (Choose 2 answers.)` })).toContain('single-choice stem must not say how many to choose')
+    expect(problems({ ...MULTI, stem: `${MULTI.stem} (Choose 2 answers.)` })).toContain('stem says how many to choose more than once')
     expect(problems({ ...VIZ, select: 2, stem: `${VIZ.stem} (Choose 2 answers.)` })).toContain('multi-select needs at least 5 options')
   })
 
