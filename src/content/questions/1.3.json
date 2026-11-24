@@ -1669,5 +1669,468 @@
     "id": "1.3-045",
     "taskId": "1.3",
     "select": 2
+  },
+  {
+    "id": "1.3-046",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "The chart lists plans by their codes. The analyst wants the rows to read Basic, Standard, Premium and Basic with Ads in every view, without touching the source data. What should the analyst do?",
+    "options": [
+      {
+        "text": "Rename the `Plan Code` field to Plan in the Data pane.",
+        "correct": false,
+        "rationale": "Renaming changes the field's name, not the labels of its members, so the rows would still show the codes."
+      },
+      {
+        "text": "Open Default Properties on `Subscribers (Count)` and set a Number Format.",
+        "correct": false,
+        "rationale": "A number format changes how the measure's values look. It does not relabel the members of a dimension."
+      },
+      {
+        "text": "Right-click `Plan Code`, choose Aliases and type a label for each member.",
+        "correct": true,
+        "rationale": "An alias is an alternate display name for a member, and it applies to every view that uses the field."
+      },
+      {
+        "text": "Change the data type of `Plan Code` to Number so Tableau can replace the text.",
+        "correct": false,
+        "rationale": "A type change does not relabel anything. Codes such as BAS are text and would become Null as numbers."
+      }
+    ],
+    "explanation": "Members of a discrete dimension are relabelled with aliases: right-click the dimension in the Data pane and choose Aliases. The underlying data stays unchanged, and Clear Aliases restores the original names.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Plan Code"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ]
+  },
+  {
+    "id": "1.3-047",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "1.3.2"
+    ],
+    "stem": "The chart shows the same German city twice, as Cologne and Köln. Which two statements are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Aliasing Köln as Cologne merges the two bars into one bar.",
+        "correct": false,
+        "rationale": "An alias only changes a member's label. Two members stay two members."
+      },
+      {
+        "text": "Each spelling is a separate member of `City` because the values differ in the data.",
+        "correct": true,
+        "rationale": "Tableau creates one member per distinct value, so two spellings give two bars."
+      },
+      {
+        "text": "Renaming the `City` field to a single spelling combines the members.",
+        "correct": false,
+        "rationale": "Renaming changes the field's name, never its members."
+      },
+      {
+        "text": "Combining the spellings needs a group, because aliases only relabel members.",
+        "correct": true,
+        "rationale": "Merging members is the job of a group, while an alias is a display label for one member."
+      },
+      {
+        "text": "Changing the data type of `City` to Number removes the duplicate spelling.",
+        "correct": false,
+        "rationale": "A type change does not merge text values, and city names would not convert to numbers."
+      }
+    ],
+    "explanation": "Members come from the distinct values in the data. An alias changes how one member is displayed, so it can't join two members. A group combines members into one.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "City"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ],
+        "filters": [
+          {
+            "kind": "values",
+            "field": "Country",
+            "values": [
+              "Germany"
+            ]
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties_aliases_ex1editing.htm"
+    ]
+  },
+  {
+    "id": "1.3-048",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "This filled map colours each country by subscribers. Which statement explains how the map can be drawn from a `Country` field?",
+    "options": [
+      {
+        "text": "`Country` has the Country/Region role, so Tableau generates the latitude and longitude.",
+        "correct": true,
+        "rationale": "The role lets Tableau place each member and adds the generated fields to the measures area."
+      },
+      {
+        "text": "`Subscribers (Count)` on Color carries the coordinates of each subscriber.",
+        "correct": false,
+        "rationale": "A count measure holds no locations. It only sets the colour of each country."
+      },
+      {
+        "text": "The `Latitude` and `Longitude` columns from the file are summed for each country.",
+        "correct": false,
+        "rationale": "The pills on the shelves are the generated fields, not the file's columns, and summing coordinates would not locate anything."
+      },
+      {
+        "text": "Dragging `Country` onto Detail changes its data type to Number.",
+        "correct": false,
+        "rationale": "A map view comes from the geographic role. The type of the field stays text."
+      }
+    ],
+    "explanation": "Assigning a geographic role (via the field's data type icon) makes Tableau add Latitude (generated) and Longitude (generated). Putting the field on Detail then creates the map.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "map",
+          "detail": [
+            {
+              "field": "Country"
+            }
+          ],
+          "color": {
+            "field": "Subscribers (Count)"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ]
+  },
+  {
+    "id": "1.3-049",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "1.3.3"
+    ],
+    "stem": "The `City` field has the City role, and the view is limited to Germany. What does each circle on this map represent?",
+    "options": [
+      {
+        "text": "One subscriber, placed at the latitude and longitude typed in their row.",
+        "correct": false,
+        "rationale": "The generated coordinates belong to the field's members, and the view has no subscriber-level pill."
+      },
+      {
+        "text": "One postal code, because the map is built from the finest field in the data.",
+        "correct": false,
+        "rationale": "`Postal Code` is not in the view. Marks follow the fields on the shelves and Marks card."
+      },
+      {
+        "text": "One country, since the filter keeps a single `Country` member.",
+        "correct": false,
+        "rationale": "`Country` only filters the view. The mark level comes from `City` on Detail."
+      },
+      {
+        "text": "One distinct `City` member, placed by the generated latitude and longitude.",
+        "correct": true,
+        "rationale": "Detail sets one mark per member, so two spellings of one city would be two circles."
+      }
+    ],
+    "explanation": "Marks on a map are made per member of the dimension on Detail, and the generated Latitude and Longitude pill positions them. The geographic role is what allows Tableau to place text values.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "detail": [
+            {
+              "field": "City"
+            }
+          ]
+        },
+        "filters": [
+          {
+            "kind": "values",
+            "field": "Country",
+            "values": [
+              "Germany"
+            ]
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/maps_geographicroles.htm"
+    ]
+  },
+  {
+    "id": "1.3-050",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "`Postal Code` sits on Rows as a blue pill. Which statement about the field is correct?",
+    "options": [
+      {
+        "text": "Tableau has summed the codes into one total per code, which is why the pill is blue.",
+        "correct": false,
+        "rationale": "A summed measure would show as SUM(…) in green. This pill has no aggregation."
+      },
+      {
+        "text": "It is a string dimension, so each code is its own member and leading zeros stay.",
+        "correct": true,
+        "rationale": "Text codes stay exact members and are never added up. Read as a number, a code such as 07106 would lose its zero."
+      },
+      {
+        "text": "It is a date field, because blue pills are always date parts.",
+        "correct": false,
+        "rationale": "Blue means discrete. It does not identify dates, and a date would show its level, such as `YEAR(…)`."
+      },
+      {
+        "text": "It is a measure that Tableau converts to text each time it is placed on a shelf.",
+        "correct": false,
+        "rationale": "Measures are aggregated and would show a function in the pill. This one is a plain dimension."
+      }
+    ],
+    "explanation": "A postal code is an identifier, not a quantity. As a string dimension it yields one member per code, keeps leading zeros and can take the ZIP Code/Postcode role. Wrong types are changed from the field's type icon.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Postal Code"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ]
+  },
+  {
+    "id": "1.3-051",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "1.3.4"
+    ],
+    "stem": "The chart splits sessions by `Completed`, which gives exactly two headers. What data type does `Completed` have?",
+    "options": [
+      {
+        "text": "Date, since the members are two points in time.",
+        "correct": false,
+        "rationale": "Date members would show as dates or date parts, not as True and False."
+      },
+      {
+        "text": "Number, since the bars are counts.",
+        "correct": false,
+        "rationale": "The counts come from `Sessions (Count)`. The headers belong to `Completed`, which holds no numbers."
+      },
+      {
+        "text": "Boolean, since its members are True and False.",
+        "correct": true,
+        "rationale": "A Boolean field holds true/false values, and Tableau shows them as True and False members."
+      },
+      {
+        "text": "Geographic, since it splits the view into regions.",
+        "correct": false,
+        "rationale": "Geographic fields show a globe icon and hold places. True and False are not places."
+      }
+    ],
+    "explanation": "Boolean is one of the data types shown by a field's icon (alongside text, date, date & time and number). Its members are True and False, plus Null where a value is missing.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Completed"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles_datatypes.htm"
+    ]
+  },
+  {
+    "id": "1.3-052",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "The default aggregation of `Monthly Price` is SUM, yet this view has `AVG(Monthly Price)` on Columns. What best explains this?",
+    "options": [
+      {
+        "text": "Tableau switches to AVG whenever a measure is split by `Plan`.",
+        "correct": false,
+        "rationale": "No automatic switch exists. The default aggregation is applied as set."
+      },
+      {
+        "text": "The default was changed once in Default Properties, so every view now uses AVG.",
+        "correct": false,
+        "rationale": "Then SUM would no longer be the default, which contradicts the stem."
+      },
+      {
+        "text": "The analyst changed this pill's aggregation, which affects this view only.",
+        "correct": true,
+        "rationale": "A pill's aggregation can be overridden per view. The Default Properties setting stays as it was."
+      },
+      {
+        "text": "Averages replace sums when the field has a currency Number Format.",
+        "correct": false,
+        "rationale": "A number format changes how values look, never how they are aggregated."
+      }
+    ],
+    "explanation": "The default aggregation applies when a measure is first added to a view. Changing the aggregation in a pill's menu overrides it for that pill only, so other sheets still start with the default.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Monthly Price",
+            "agg": "avg"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ]
+  },
+  {
+    "id": "1.3-053",
+    "taskId": "1.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "1.3.5"
+    ],
+    "stem": "The axis of this chart shows plain numbers. The analyst wants `Monthly Price` to show as currency with two decimals in every new view. Which two statements are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Formatting the axis on this sheet changes this sheet only.",
+        "correct": true,
+        "rationale": "Format changes made on a pill or axis apply to that view, not to the field."
+      },
+      {
+        "text": "A default Number Format on `Monthly Price` applies when the field is dragged into a new view.",
+        "correct": true,
+        "rationale": "Default Properties are field-level settings that new views start from."
+      },
+      {
+        "text": "A default Number Format rewrites the stored prices in the source file.",
+        "correct": false,
+        "rationale": "Default properties live in Tableau's metadata and leave the source data untouched."
+      },
+      {
+        "text": "A pill's format on one sheet is automatically copied to every worksheet of the workbook.",
+        "correct": false,
+        "rationale": "Only things like colour encodings are shared. A pill's format stays with its own sheet."
+      },
+      {
+        "text": "A Number Format can only be set on the Data Source page, never in the Data pane.",
+        "correct": false,
+        "rationale": "Default Properties is available from the Data pane by right-clicking the field."
+      }
+    ],
+    "explanation": "Set a default once in the Data pane (Default Properties > Number Format) so every new view starts with it. Formatting a single axis or pill changes just that view.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "rows": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Monthly Price",
+            "agg": "avg"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_fieldproperties.htm"
+    ]
   }
 ]
