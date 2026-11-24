@@ -1,0 +1,22 @@
+{
+  "id": "filter-order",
+  "title": "Filter order",
+  "summary": "Turn filters on and off, add one to context, and watch which rows survive each stage, including a Top N with and without context.",
+  "objectives": ["2.2.4", "2.2.5"],
+  "intro": "Tick filters on the Filters shelf and follow the rows through Tableau's stages, from extract filters to measure filters. Then switch the Country filter between Normal and Add to Context while the Top N is on: the same two filters give different marks, because the order they run in changes.",
+  "copy": {
+    "sample": "These twelve rows are an invented sample, not the real Driftlight data. Every number on this page is computed from them.",
+    "order": "Tableau applies filters in a fixed order: \"1. Extract filters 2. Data source filters 3. Context filters 4. Filters on dimensions… 5. Filters on measures\", with table calculation filters \"applied last\".",
+    "extract": "Extract filters run first.",
+    "source": "Data source filters run second.",
+    "context": "Context filters run before the dimension filters. To force a dimension filter to run first, right-click it and choose Add to Context. Context filters appear at the top of the Filters shelf and are identified by a gray color.",
+    "dimension": "Dimension filters, including Top N, run at the same stage: each one works on the rows that reached this stage, not on the result of the others.",
+    "measure": "A measure filter is applied to the aggregated value of each mark, like SQL's `HAVING`.",
+    "tableCalc": "Table calculation filters are applied last. This sample has none.",
+    "topWithout": "Country and the Top N are both dimension filters, so they run at the same stage. The Top N was computed over every row that reached the stage, so it ignored the Country filter, and Country then removed rows from that result.",
+    "topWith": "Country is in context, so it ran first. The Top N was then computed among the rows that were left, so the top titles are the top titles within that country.",
+    "topOff": "Turn the Top N on to see the difference that context makes.",
+    "trap": "Exam trap: if a Top N result ignores another filter, the fix is Add to Context on the other filter, so it runs first. Context filters show as gray pills."
+  },
+  "items": ["2.2-031", "2.2-035", "2.2-050"]
+}

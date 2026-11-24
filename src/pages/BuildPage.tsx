@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router'
 import { CALC_EXERCISES } from '../content/calc'
 import { FLASHCARDS } from '../content/flashcards'
+import { SIMS } from '../content/sims'
 import { deckStats } from '../flashcards/leitner'
 import { SANDBOX_CHALLENGES } from '../content/sandbox'
 import { useProgress } from '../progress/store'
@@ -45,6 +46,20 @@ export default function BuildPage() {
           Tableau’s errors, such as mixing aggregate and row-level values. {CALC_EXERCISES.length} exercises, {calcsDone} solved. Saved
           calculations show up in the sandbox’s Data pane.
         </p>
+      </section>
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold">Concept simulators</h2>
+        <p className="text-sm text-slate-600">Change one thing and watch what Tableau does. Each ends with a few exam questions.</p>
+        <ul className="grid gap-2 sm:grid-cols-2">
+          {SIMS.map((s) => (
+            <li key={s.id} className="rounded-lg border border-slate-200 bg-white p-3">
+              <Link to={`/build/sim/${s.id}`} className="font-medium text-brand-dark underline">
+                {s.title}
+              </Link>
+              <p className="mt-0.5 text-sm text-slate-600">{s.summary}</p>
+            </li>
+          ))}
+        </ul>
       </section>
       <section className="rounded-lg border border-slate-200 bg-white p-4">
         <h2 className="text-lg font-semibold">

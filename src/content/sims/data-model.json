@@ -1,0 +1,21 @@
+{
+  "id": "data-model",
+  "title": "Data model lab",
+  "summary": "Combine two small tables as a join, a union, a relationship or a blend and watch the row counts and the SUMs: a join duplicates a price, a relationship doesn't.",
+  "objectives": ["1.2.1", "1.2.2", "1.2.3", "1.1.5"],
+  "intro": "Two tiny tables share the key `Plan`: each plan has one row in Plans and many rows in Sessions. Pick how to combine them and compare the row count and the SUMs with what each table says on its own. Plans has one plan with no sessions, and Sessions has one session with no plan.",
+  "copy": {
+    "sample": "These are invented sample rows, not the Driftlight data. Every number on this page is computed from them.",
+    "inner": "Inner keeps only rows with matches in both tables, so the unmatched plan and the unmatched session are both gone. The tables are merged into a single table with a fixed combination of data.",
+    "left": "Left keeps every row of the left table (Plans here). Where the right table has no match, you see null values. The tables are merged into a single table with a fixed combination of data.",
+    "right": "Right is the mirror of left: every row of the right table (Sessions here) is kept, with nulls where the left table has no match. The tables are merged into a single table with a fixed combination of data.",
+    "full": "Full outer keeps all values from both tables, with nulls wherever a row has no match on the other side. The tables are merged into a single table with a fixed combination of data.",
+    "union": "A union appends rows from one table to another, so the tables need the same columns. Tableau adds fields that record where each row came from, such as Table Name. Here the two session tables stack into one. It adds rows; a join adds columns.",
+    "relationship": "A relationship keeps each table at its own level of detail: relationships do not duplicate aggregate values, and unmatched measure values aren't dropped. Tableau defers the join to the time and context of analysis and selects the join type from the fields used in the view, so there is no merged table here.",
+    "blend": "Blending combines a primary and a secondary data source in a single view. The first data source used in the view becomes the primary one. The secondary's fields are aggregated, and the blend simulates a traditional left join. Separate data sources can't be joined: they can only be combined in a view by blending.",
+    "inflated": "A SUM is larger than the table's own total: when tables are at different levels of detail, a join may duplicate aggregate values, here once per matching session.",
+    "dropped": "A SUM is smaller than the table's own total: rows without a match were dropped by this method, so their values are missing.",
+    "exact": "Both SUMs equal what each table says on its own: nothing was duplicated and nothing was dropped."
+  },
+  "items": ["1.2-016", "1.2-022", "1.2-021"]
+}

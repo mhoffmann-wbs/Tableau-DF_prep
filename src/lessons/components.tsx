@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import type { LessonMeta } from '../content/schema'
 import { CALC_EXERCISES } from '../content/calc'
 import { FLASHCARDS } from '../content/flashcards'
+import { SIMS } from '../content/sims'
 import { SANDBOX_CHALLENGES } from '../content/sandbox'
 import { specHash } from '../engine/edit'
 import { Shelves } from '../engine/Shelves'
@@ -66,6 +67,7 @@ export function BuildLinks() {
   const presets = Object.values(meta.vizzes)
   const exercises = CALC_EXERCISES.filter((e) => e.objectives.some((o) => o.startsWith(`${meta.taskId}.`)))
   const cards = FLASHCARDS.filter((c) => c.taskId === meta.taskId).length
+  const sims = SIMS.filter((s) => s.objectives.some((o) => o.startsWith(`${meta.taskId}.`)))
   return (
     <ul>
       {challenges.map((c) => (
@@ -83,12 +85,17 @@ export function BuildLinks() {
           Sandbox preset: <Link to={`/build/sandbox${specHash(v.spec)}`}>{v.caption}</Link>
         </li>
       ))}
+      {sims.map((s) => (
+        <li key={s.id}>
+          Simulator: <Link to={`/build/sim/${s.id}`}>{s.title}</Link>
+        </li>
+      ))}
       {cards > 0 && (
         <li>
           Flashcards: <Link to={`/build/flashcards?task=${meta.taskId}`}>{cards} cards for this task</Link>
         </li>
       )}
-      {challenges.length + exercises.length + presets.length + cards === 0 && <li>Hands-on practice for this task arrives with the simulators and the Tableau Public challenges.</li>}
+      {challenges.length + exercises.length + presets.length + sims.length + cards === 0 && <li>Hands-on practice for this task arrives with the simulators and the Tableau Public challenges.</li>}
     </ul>
   )
 }

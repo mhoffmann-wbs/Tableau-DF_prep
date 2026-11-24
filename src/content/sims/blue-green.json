@@ -1,0 +1,27 @@
+{
+  "id": "blue-green",
+  "title": "Blue vs. green",
+  "summary": "Switch a field between discrete and continuous on Columns or Color, and a date between parts and values, and watch headers turn into an axis.",
+  "objectives": [
+    "4.2.1",
+    "4.2.2",
+    "4.2.3"
+  ],
+  "intro": "Pick a field and a shelf, then switch the pill between discrete (blue) and continuous (green). The view keeps `SUM(Minutes Watched)` as the other half of the chart, so only the pill you change differs. Watch what each colour draws, and which fields refuse to turn green.",
+  "copy": {
+    "discrete": "Blue on Rows or Columns draws headers: one label per member, in separate panes with nothing in between two members.",
+    "continuous": "Green on Rows or Columns draws an axis: a range from a minimum to a maximum with tick marks, where any value in between has a place.",
+    "discreteColor": "Blue on Color gives a categorical palette: a distinct colour per member and a legend that lists them.",
+    "continuousColor": "Green on Color gives a quantitative legend: a gradient, a continuous range of colours instead of one colour per member.",
+    "stringOnly": "Dimensions with a data type of String or Boolean can't be continuous: there's no number line for \"Drama\". Date and numeric dimensions, and all measures, can be either.",
+    "datePart": "A date part is discrete. It is one part of the date, aggregated across everything else: as a part, MONTH or QUARTER merges the years, so each header adds up the same month or quarter of every year. Good for seasonality.",
+    "dateValue": "A date value (a truncated date, from the lower, continuous section of the date menu) keeps the year, so the periods run along a timeline in order. Good for a trend.",
+    "measureDiscrete": "A measure made discrete is still a measure, so it is still aggregated. It just draws headers instead of an axis.",
+    "role": "Switching between blue and green never changes whether a field is a dimension or a measure."
+  },
+  "items": [
+    "4.2-004",
+    "4.2-016",
+    "4.2-029"
+  ]
+}

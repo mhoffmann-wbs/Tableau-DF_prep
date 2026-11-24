@@ -1,0 +1,26 @@
+{
+  "id": "granularity",
+  "title": "Granularity slider",
+  "summary": "Add dimensions one by one to a view of Minutes Watched and watch the marks split, the values shrink and the aggregation decide whether the pieces add back up.",
+  "objectives": [
+    "4.3.1",
+    "4.3.2",
+    "4.1.3"
+  ],
+  "intro": "Slide to add dimensions to a view of `Minutes Watched`, each on a different shelf, and switch the aggregation. Every dimension in the view, wherever it sits, adds to the level of detail: the rows are split into more, smaller groups, and the measure is computed again for each one.",
+  "copy": {
+    "none": "No dimension in the view: all the sessions form one group, so the view has a single mark.",
+    "headers": "A dimension on Rows or Columns adds headers, and Tableau computes the measure again once per member.",
+    "color": "\"Encoding a dimension by a property on the Marks card (such as Color or Size) increases the number of marks without adding headers.\" Each bar splits into one segment per device.",
+    "detail": "Detail adds a dimension to the level of detail without colour, size or headers: more marks, smaller values, nothing new to read on the axes.",
+    "marks": "The number of marks can be at most the number of member combinations; combinations that have no rows draw no mark.",
+    "additive": "SUM is additive: the pieces add back up to the total.",
+    "nonAdditive": "This aggregation isn't additive: adding up the pieces doesn't give the value for the whole.",
+    "sql": "In SQL terms, the aggregation is the function in `SELECT SUM(minutes)`, and the dimensions in the view are the `GROUP BY` list. The slider adds columns to `GROUP BY`."
+  },
+  "items": [
+    "4.3-008",
+    "4.3-011",
+    "4.3-013"
+  ]
+}

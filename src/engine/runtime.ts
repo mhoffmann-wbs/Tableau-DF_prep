@@ -2,7 +2,7 @@
 // with a dynamic import, so pages without charts never download it.
 import embed from 'vega-embed'
 import { loadDataset, type SourceRef } from './model'
-import { partFromLabel, query } from './query'
+import { partFromLabel, query, type QueryResult } from './query'
 import { type Theme, type Topology, needsWorld, toVegaLite } from './render'
 import { type Pill, type VizSpec, vizSpecSchema } from './spec'
 
@@ -32,4 +32,9 @@ export async function membersOf(ref: SourceRef, pill: Pill): Promise<Member[]> {
   return (result.columns[0]?.order ?? [])
     .filter((m) => !(level && m === 'Null'))
     .map((m) => ({ label: m, value: level ? partFromLabel(m, level) : m }))
+}
+
+/** Runs a spec over the dataset, for components that read numbers rather than draw. */
+export async function runQuery(spec: VizSpec): Promise<QueryResult> {
+  return query(spec, await loadDataset())
 }
