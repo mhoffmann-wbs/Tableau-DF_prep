@@ -1,12 +1,13 @@
 import { useSyncExternalStore } from 'react'
 import { z } from 'zod'
 import { SOURCES, type SourceId } from '../engine/spec'
+import { type CardState, type Rating, rate, TOP_BOX } from '../flashcards/leitner'
 
 // All persisted learner state lives behind this module. Bump VERSION, add a
 // migration in `load()` and keep ProgressSchema in step whenever the shape
 // changes; never read localStorage elsewhere.
 const STORAGE_KEY = 'tableau-df:progress'
-const VERSION = 4
+const VERSION = 5
 
 export interface ItemStat {
   attempts: number
@@ -41,6 +42,21 @@ export interface SavedCalc {
   savedAt: number
 }
 
+export interface DeckCard {
+  /** `my-…`, unique across decks: review state is stored by card id. */
+  id: string
+  front: string
+  back: string
+}
+
+/** A flashcard deck the learner made or imported. */
+export interface Deck {
+  id: string
+  name: string
+  cards: DeckCard[]
+  createdAt: number
+}
+
 export interface Progress {
   version: typeof VERSION
   items: Record<string, ItemStat>
@@ -52,10 +68,13 @@ export interface Progress {
   /** Calc playground exercises: id → when first solved. Like sandbox challenges, they don't count towards readiness. */
   calcExercises: Record<string, number>
   calcs: SavedCalc[]
+  /** Flashcard review state by card id, built-in and own cards alike. */
+  flashcards: Record<string, CardState>
+  decks: Deck[]
 }
 
 function empty(): Progress {
-  return { version: VERSION, items: {}, mockResults: [], sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [] }
+  return { version: VERSION, items: {}, mockResults: [], sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [] }
 }
 
 /** Brings stored or imported progress from an older version up to VERSION; other versions are returned unchanged. */
@@ -67,6 +86,8 @@ function migrate(raw: { version?: unknown }): { version?: unknown } {
   if (doc.version === 2) doc = { ...doc, version: 3, lessonsRead: [] }
   // v3 → v4: calc exercises and saved calcs.
   if (doc.version === 3) doc = { ...doc, version: 4, calcExercises: {}, calcs: [] }
+  // v4 → v5: flashcard review state and own decks.
+  if (doc.version === 4) doc = { ...doc, version: 5, flashcards: {}, decks: [] }
   return doc
 }
 
@@ -154,6 +175,40 @@ export function deleteCalc(source: SourceId, name: string) {
   commit({ ...state, calcs: state.calcs.filter((c) => !(c.source === source && c.name === name)) })
 }
 
+export function rateCard(cardId: string, rating: Rating, at: number = Date.now()) {
+  commit({ ...state, flashcards: { ...state.flashcards, [cardId]: rate(state.flashcards[cardId], rating, at) } })
+}
+
+const newId = () => `my-${crypto.randomUUID()}`
+
+/** Creates a deck or replaces one's name and cards; cards without an id get one. Returns the deck id. */
+export function saveDeck(deck: { id?: string; name: string; cards: { id?: string; front: string; back: string }[] }, at: number = Date.now()): string {
+  const prev = state.decks.find((d) => d.id === deck.id)
+  const id = prev?.id ?? newId()
+  const cards = deck.cards.map((c) => ({ id: c.id ?? newId(), front: c.front, back: c.back }))
+  const next: Deck = { id, name: deck.name, cards, createdAt: prev?.createdAt ?? at }
+  // Cards removed from the deck take their review state with them.
+  const kept = new Set(cards.map((c) => c.id))
+  const dropped = new Set(prev?.cards.filter((c) => !kept.has(c.id)).map((c) => c.id))
+  commit({
+    ...state,
+    decks: prev ? state.decks.map((d) => (d.id === id ? next : d)) : [...state.decks, next],
+    flashcards: Object.fromEntries(Object.entries(state.flashcards).filter(([cardId]) => !dropped.has(cardId))),
+  })
+  return id
+}
+
+export function deleteDeck(deckId: string) {
+  const deck = state.decks.find((d) => d.id === deckId)
+  if (!deck) return
+  const dropped = new Set(deck.cards.map((c) => c.id))
+  commit({
+    ...state,
+    decks: state.decks.filter((d) => d.id !== deckId),
+    flashcards: Object.fromEntries(Object.entries(state.flashcards).filter(([cardId]) => !dropped.has(cardId))),
+  })
+}
+
 // Imports come from files people pick, so they are validated in full before replacing anything.
 const count = z.number().int().nonnegative()
 const row = z.object({ id: z.string(), correct: count, total: count })
@@ -167,6 +222,15 @@ const ProgressSchema = z.object({
   lessonsRead: z.array(z.string()),
   calcExercises: z.record(z.string(), z.number()),
   calcs: z.array(z.object({ source: z.enum(SOURCES), name: z.string().min(1), formula: z.string(), savedAt: z.number() })),
+  flashcards: z.record(z.string(), z.object({ box: count.max(TOP_BOX), due: z.number(), lastAt: z.number() })),
+  decks: z.array(
+    z.object({
+      id: z.string().min(1),
+      name: z.string().min(1),
+      cards: z.array(z.object({ id: z.string().min(1), front: z.string(), back: z.string() })),
+      createdAt: z.number(),
+    }),
+  ),
 })
 
 const EXPORT_APP = 'tableau-df-prep'

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "3.3-c001",
+    "objectives": ["3.3.1"],
+    "kind": "file",
+    "front": "What is a `.twbx` file?",
+    "back": "A packaged workbook. It saves the workbook with all referenced local file data sources and images in a single file, so the recipient needs no separate data access."
+  },
+  {
+    "id": "3.3-c002",
+    "objectives": ["3.3.1"],
+    "kind": "file",
+    "front": "`.twb` vs. `.twbx`",
+    "back": "A `.twb` holds only the workbook, so the recipient also needs access to the data. A `.twbx` packages the workbook with its local data."
+  },
+  {
+    "id": "3.3-c003",
+    "objectives": ["3.3.1"],
+    "kind": "menu",
+    "front": "How do you save a packaged workbook?",
+    "back": "Select File > Save As, then choose Tableau Packaged Workbooks in the Save as type drop-down list."
+  },
+  {
+    "id": "3.3-c004",
+    "objectives": ["3.3.1"],
+    "kind": "menu",
+    "front": "How do you export a sheet as an image?",
+    "back": "Select Worksheet > Export > Image, choose what to include, and save as BMP, JPEG, PNG or SVG."
+  },
+  {
+    "id": "3.3-c005",
+    "objectives": ["3.3.1"],
+    "kind": "menu",
+    "front": "How do you create a PDF of your workbook?",
+    "back": "Select File > Print to PDF. Choose Entire Workbook, Active Sheet or Selected Sheets, plus a paper size."
+  },
+  {
+    "id": "3.3-c006",
+    "objectives": ["3.3.1"],
+    "kind": "menu",
+    "front": "How do you publish a workbook to Tableau Server or Tableau Cloud?",
+    "back": "Select Server > Publish Workbook with a worksheet or dashboard tab active, sign in, then pick the project, a name and tags."
+  },
+  {
+    "id": "3.3-c007",
+    "objectives": ["3.3.1"],
+    "kind": "rule",
+    "front": ".twbx vs. publishing",
+    "back": "A `.twbx` is one file for someone who has Tableau. Publishing puts the workbook on Tableau Server or Tableau Cloud for viewers in a browser, with permissions."
+  },
+  {
+    "id": "3.3-c008",
+    "objectives": ["3.3.1"],
+    "kind": "rule",
+    "front": "Does hiding sheets before publishing protect them?",
+    "back": "No. Hiding sheets is not a security measure: anyone with access can still reach hidden sheets. Use permissions."
+  },
+  {
+    "id": "3.3-c009",
+    "objectives": ["3.3.2"],
+    "kind": "term",
+    "front": "View Data",
+    "back": "Shows the data behind a view or a mark. Open it from a mark tooltip, by right-clicking the view, or from the Analysis menu."
+  },
+  {
+    "id": "3.3-c010",
+    "objectives": ["3.3.2"],
+    "kind": "rule",
+    "front": "Summary tab vs. Full Data tab in View Data",
+    "back": "Summary shows the dimensions that define the view and the aggregated measures that make up the mark. Full Data lists the underlying rows. For the records behind a bar, use Full Data."
+  },
+  {
+    "id": "3.3-c011",
+    "objectives": ["3.3.2"],
+    "kind": "menu",
+    "front": "How do you export all data in a View Data tab?",
+    "back": "Click the Download button. It saves a CSV file and is not limited to the rows currently displayed."
+  },
+  {
+    "id": "3.3-c012",
+    "objectives": ["3.3.2"],
+    "kind": "rule",
+    "front": "Export > Data vs. Export > Crosstab to Excel",
+    "back": "Worksheet > Export > Data exports the data behind the view (Access database on Windows, .csv on Mac). Crosstab to Excel exports the table as laid out in the view."
+  },
+  {
+    "id": "3.3-c013",
+    "objectives": ["3.3.3"],
+    "kind": "menu",
+    "front": "How do you export to PowerPoint?",
+    "back": "Select File > Export as PowerPoint and choose the sheets."
+  },
+  {
+    "id": "3.3-c014",
+    "objectives": ["3.3.3"],
+    "kind": "rule",
+    "front": "What do PowerPoint slides from Tableau contain?",
+    "back": "Selected sheets become static PNG images on separate slides. Filters currently applied are reflected, but slides are not interactive and do not update with the data."
+  },
+  {
+    "id": "3.3-c015",
+    "objectives": ["3.3.3"],
+    "kind": "rule",
+    "front": "How do story points export to PowerPoint?",
+    "back": "Story points export as separate slides."
+  }
+]

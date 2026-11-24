@@ -1,0 +1,296 @@
+[
+  {
+    "id": "2.3-c001",
+    "objectives": ["2.3.1"],
+    "kind": "term",
+    "front": "Computed sort",
+    "back": "Orders members by a value (a field, with an aggregation such as Sum) and updates when the data changes."
+  },
+  {
+    "id": "2.3-c002",
+    "objectives": ["2.3.1"],
+    "kind": "term",
+    "front": "Manual sort",
+    "back": "Fixes an order you choose and does not react to the data. Good for a natural order such as plan tiers or weekdays."
+  },
+  {
+    "id": "2.3-c003",
+    "objectives": ["2.3.1"],
+    "kind": "rule",
+    "front": "Sort icon on an axis, header or field label: what do 1, 2 and 3 clicks do?",
+    "back": "One click sorts descending, two clicks sort ascending, and three clicks clear the sort."
+  },
+  {
+    "id": "2.3-c004",
+    "objectives": ["2.3.1"],
+    "kind": "menu",
+    "front": "Where are the Sort By options for a field on a shelf?",
+    "back": "Right-click the field on its shelf and select Sort. Options: Data Source Order, Alphabetic, Field, Manual and Nested."
+  },
+  {
+    "id": "2.3-c005",
+    "objectives": ["2.3.1"],
+    "kind": "recipe",
+    "front": "How do you sort manually by dragging?",
+    "back": "Select a header in a viz or on a legend and drag it to the correct location. Or choose Manual in the Sort dialog and move members up and down."
+  },
+  {
+    "id": "2.3-c006",
+    "objectives": ["2.3.1"],
+    "kind": "rule",
+    "front": "What kind of sort does sorting from an axis give by default?",
+    "back": "A nested sort, which sorts within each pane. Sorting from a field label does not."
+  },
+  {
+    "id": "2.3-c007",
+    "objectives": ["2.3.1"],
+    "kind": "rule",
+    "front": "Exam trap: \"the order must stay the same when the data changes\". Which sort?",
+    "back": "A manual sort. \"Always biggest first\" wants a computed sort."
+  },
+  {
+    "id": "2.3-c008",
+    "objectives": ["2.3.1"],
+    "kind": "menu",
+    "front": "How do you undo a sort?",
+    "back": "Right-click the field and choose Clear Sort, or clear every sort with Clear Sorts from the toolbar's clear sheet menu."
+  },
+  {
+    "id": "2.3-c009",
+    "objectives": ["2.3.2"],
+    "kind": "menu",
+    "front": "How do you add a reference line from the Analytics pane?",
+    "back": "Drag Reference Line from the Analytics pane into the view and drop it on the scope you want."
+  },
+  {
+    "id": "2.3-c010",
+    "objectives": ["2.3.2"],
+    "kind": "menu",
+    "front": "How do you add a reference line from an axis?",
+    "back": "Right-click a quantitative axis and select Add Reference Line."
+  },
+  {
+    "id": "2.3-c011",
+    "objectives": ["2.3.2"],
+    "kind": "term",
+    "front": "Reference line scope: Table, Pane, Cell",
+    "back": "Table gives one line for the whole table, Pane one per pane, Cell one per cell."
+  },
+  {
+    "id": "2.3-c012",
+    "objectives": ["2.3.2"],
+    "kind": "rule",
+    "front": "What values can a reference line use?",
+    "back": "A Constant (a target, or a parameter), or a computation over the marks: Total, Sum, Minimum, Maximum, Average or Median."
+  },
+  {
+    "id": "2.3-c013",
+    "objectives": ["2.3.2"],
+    "kind": "term",
+    "front": "Reference band",
+    "back": "Shades an area behind the marks between two constant or computed values."
+  },
+  {
+    "id": "2.3-c014",
+    "objectives": ["2.3.2"],
+    "kind": "term",
+    "front": "Distribution and box plot (from the reference line dialog)",
+    "back": "A distribution uses percentages, percentiles, quantiles or standard deviations. A box plot adds quartiles and whiskers to a continuous axis."
+  },
+  {
+    "id": "2.3-c015",
+    "objectives": ["2.3.2"],
+    "kind": "menu",
+    "front": "How do you remove a reference line?",
+    "back": "Click the line and select Remove."
+  },
+  {
+    "id": "2.3-c016",
+    "objectives": ["2.3.3"],
+    "kind": "term",
+    "front": "Quick table calculation",
+    "back": "A table calculation applied with the most typical settings for its type. It computes over the marks already in the view, like a window function."
+  },
+  {
+    "id": "2.3-c017",
+    "objectives": ["2.3.3"],
+    "kind": "menu",
+    "front": "How do you apply a quick table calculation?",
+    "back": "Right-click a measure pill in the view and choose Quick Table Calculation, then pick the calculation."
+  },
+  {
+    "id": "2.3-c018",
+    "objectives": ["2.3.3"],
+    "kind": "rule",
+    "front": "What shows that a quick table calculation is applied to a pill?",
+    "back": "A delta symbol appears on the field."
+  },
+  {
+    "id": "2.3-c019",
+    "objectives": ["2.3.3"],
+    "kind": "rule",
+    "front": "Which fields can get a quick table calculation?",
+    "back": "Only measures in the view."
+  },
+  {
+    "id": "2.3-c020",
+    "objectives": ["2.3.3"],
+    "kind": "menu",
+    "front": "How do you change how a quick table calculation computes?",
+    "back": "Right-click the pill and choose Edit Table Calculation. There you set the calculation type and Compute Using (direction and marks)."
+  },
+  {
+    "id": "2.3-c021",
+    "objectives": ["2.3.3"],
+    "kind": "recipe",
+    "front": "Quick table calc for a running total, and for each genre's share?",
+    "back": "Running total on a monthly line shows cumulative values. Percent of total on bars per genre shows each genre's share."
+  },
+  {
+    "id": "2.3-c022",
+    "objectives": ["2.3.3"],
+    "kind": "rule",
+    "front": "Exam trap: quick table calculation vs. calculated field",
+    "back": "A quick table calc is applied to a measure in the view from the pill's menu and shows a delta. A calculated field is a new field in the Data pane with an equal sign."
+  },
+  {
+    "id": "2.3-c023",
+    "objectives": ["2.3.4"],
+    "kind": "menu",
+    "front": "How do you create bins from a measure?",
+    "back": "In the Data pane, right-click a measure and select Create > Bins. Enter the Size of bins or let Tableau suggest one."
+  },
+  {
+    "id": "2.3-c024",
+    "objectives": ["2.3.4"],
+    "kind": "rule",
+    "front": "What does Create > Bins make, and what is it named?",
+    "back": "A new dimension of ranges, named like `Minutes Watched (bin)`. The lower limit of each bin is inclusive."
+  },
+  {
+    "id": "2.3-c025",
+    "objectives": ["2.3.4"],
+    "kind": "term",
+    "front": "Histogram",
+    "back": "Counts the marks in each bin. The bin field goes on Columns, and the measure on Rows changes from SUM to CNT (Count)."
+  },
+  {
+    "id": "2.3-c026",
+    "objectives": ["2.3.4"],
+    "kind": "recipe",
+    "front": "Fastest way to build a histogram",
+    "back": "Select one measure and pick the histogram in Show Me. It is available when the view contains a single measure and no dimensions."
+  },
+  {
+    "id": "2.3-c027",
+    "objectives": ["2.3.4"],
+    "kind": "rule",
+    "front": "Limits of bins",
+    "back": "Bins only work with relational data sources, and binned fields can't be used in calculations."
+  },
+  {
+    "id": "2.3-c028",
+    "objectives": ["2.3.5"],
+    "kind": "menu",
+    "front": "How do you create a calculated field?",
+    "back": "Select Analysis > Create Calculated Field, name the field and type a formula. Right-click it in the Data pane and select Edit to change it."
+  },
+  {
+    "id": "2.3-c029",
+    "objectives": ["2.3.5"],
+    "kind": "rule",
+    "front": "How do you spot a calculated field in the Data pane?",
+    "back": "It has an equal sign (=) next to it. Tableau makes it a measure when it returns a number."
+  },
+  {
+    "id": "2.3-c030",
+    "objectives": ["2.3.5"],
+    "kind": "term",
+    "front": "Row-level calculation vs. aggregate calculation",
+    "back": "Row-level: computed for every row, then aggregated in the view. Aggregate: aggregates first, then calculates, such as `SUM([Minutes Watched]) / COUNT([Session ID])`."
+  },
+  {
+    "id": "2.3-c031",
+    "objectives": ["2.3.5"],
+    "kind": "rule",
+    "front": "What happens with `[Minutes Watched] / COUNT([Session ID])`?",
+    "back": "It mixes a row-level and an aggregate argument, which is an error: \"Cannot mix aggregate and non-aggregate arguments with this function.\""
+  },
+  {
+    "id": "2.3-c032",
+    "objectives": ["2.3.5"],
+    "kind": "rule",
+    "front": "Can a calculation use a table's `(Count)` field?",
+    "back": "No. Count an ID field instead, such as `COUNT([Session ID])`."
+  },
+  {
+    "id": "2.3-c033",
+    "objectives": ["2.3.5"],
+    "kind": "recipe",
+    "front": "Calculated field for the days between two dates",
+    "back": "`DATEDIFF('day', [Signup Date], [Cancel Date])` returns a number of days."
+  },
+  {
+    "id": "2.3-c034",
+    "objectives": ["2.3.6"],
+    "kind": "term",
+    "front": "Parameter",
+    "back": "A workbook variable (a number, date or string) that can replace a constant value in a calculation, filter or reference line. It holds one value, which the viewer can change."
+  },
+  {
+    "id": "2.3-c035",
+    "objectives": ["2.3.6"],
+    "kind": "menu",
+    "front": "How do you create a parameter?",
+    "back": "Open the menu at the top of the Data pane (the drop-down arrow) and select Create Parameter. Choose its data type and allowable values."
+  },
+  {
+    "id": "2.3-c036",
+    "objectives": ["2.3.6"],
+    "kind": "rule",
+    "front": "Parameter allowable values: All, List, Range",
+    "back": "All is a free text field. List lets the viewer pick from given values. Range sets a minimum, a maximum and steps. A string parameter doesn't support Range."
+  },
+  {
+    "id": "2.3-c037",
+    "objectives": ["2.3.6"],
+    "kind": "menu",
+    "front": "How do you give viewers a parameter control?",
+    "back": "Right-click the parameter and select Show Parameter. A parameter does nothing until a calculation, filter or reference line uses it."
+  },
+  {
+    "id": "2.3-c038",
+    "objectives": ["2.3.6"],
+    "kind": "rule",
+    "front": "Exam trap: parameter vs. filter",
+    "back": "A filter removes data based on a field's values. A parameter is one free-standing value. \"Let the user choose which measure to show\" calls for a parameter."
+  },
+  {
+    "id": "2.3-c039",
+    "objectives": ["2.3.6"],
+    "kind": "recipe",
+    "front": "How does a parameter swap the measure in a chart?",
+    "back": "Use it in a calculation, such as `IF [Measure] = \"Minutes\" THEN SUM([Minutes Watched]) ELSE COUNT([Session ID]) END`."
+  },
+  {
+    "id": "2.3-c040",
+    "objectives": ["2.3.7"],
+    "kind": "menu",
+    "front": "How do you add totals from the Analytics pane?",
+    "back": "Drag Totals into the Add Totals dialog and drop it on Subtotals, Row Grand Totals or Column Grand Totals."
+  },
+  {
+    "id": "2.3-c041",
+    "objectives": ["2.3.7"],
+    "kind": "menu",
+    "front": "Where is the totals aggregation set?",
+    "back": "Analysis > Totals > Total All Using sets it for all measures. For one field, right-click it in the view and select Total using."
+  },
+  {
+    "id": "2.3-c042",
+    "objectives": ["2.3.7"],
+    "kind": "rule",
+    "front": "Limits of totals",
+    "back": "The view must have at least one header. Grand totals can't be applied to continuous dimensions, and totals can't be applied to table calculations."
+  }
+]

@@ -1,0 +1,170 @@
+[
+  {
+    "id": "2.2-c001",
+    "objectives": ["2.2.1"],
+    "kind": "term",
+    "front": "Group",
+    "back": "Combines related members of a field into a single member, such as merging city spellings into one."
+  },
+  {
+    "id": "2.2-c002",
+    "objectives": ["2.2.1"],
+    "kind": "menu",
+    "front": "Three ways to create a group",
+    "back": "Select marks or headers and click the group icon (a paperclip) on the tooltip or the toolbar. Or, in the Data pane, right-click a field and select Create > Group."
+  },
+  {
+    "id": "2.2-c003",
+    "objectives": ["2.2.1"],
+    "kind": "menu",
+    "front": "How do you edit or undo a group later?",
+    "back": "Right-click the group field and choose Edit Group. Select members and click Ungroup to take them out."
+  },
+  {
+    "id": "2.2-c004",
+    "objectives": ["2.2.1"],
+    "kind": "rule",
+    "front": "What does Include 'Other' do in the Edit Group dialog?",
+    "back": "It puts all remaining, non-grouped members in an Other group. Use it to keep a few named groups and lump the long tail together."
+  },
+  {
+    "id": "2.2-c005",
+    "objectives": ["2.2.2"],
+    "kind": "term",
+    "front": "Set",
+    "back": "A custom field that defines a subset of data based on some conditions. Every member is either In the set or Out of it."
+  },
+  {
+    "id": "2.2-c006",
+    "objectives": ["2.2.2"],
+    "kind": "rule",
+    "front": "Fixed set vs. dynamic set",
+    "back": "A fixed set's members do not change, even if the data changes. A dynamic set's members change when the underlying data changes."
+  },
+  {
+    "id": "2.2-c007",
+    "objectives": ["2.2.2"],
+    "kind": "menu",
+    "front": "How do you create a fixed set, and how a dynamic set?",
+    "back": "Fixed: right-click marks and select Create Set. Dynamic: in the Data pane, right-click a dimension and select Create > Set, then use the General, Condition or Top tab."
+  },
+  {
+    "id": "2.2-c008",
+    "objectives": ["2.2.2"],
+    "kind": "rule",
+    "front": "Which dialog tabs define a dynamic set?",
+    "back": "General (pick values or Use all), Condition (rules, for example on a measure) and Top (limits, such as the top N by a measure)."
+  },
+  {
+    "id": "2.2-c009",
+    "objectives": ["2.2.2"],
+    "kind": "menu",
+    "front": "How do you show a set as In and Out categories?",
+    "back": "Right-click the set and choose Show In/Out of Set. Show Members in Set shows the members instead."
+  },
+  {
+    "id": "2.2-c010",
+    "objectives": ["2.2.3"],
+    "kind": "term",
+    "front": "Hierarchy",
+    "back": "Several related dimensions stacked from general to detailed, so you can drill down and up in the view."
+  },
+  {
+    "id": "2.2-c011",
+    "objectives": ["2.2.3"],
+    "kind": "menu",
+    "front": "How do you create a hierarchy in the Data pane?",
+    "back": "Drag a field and drop it directly on top of another field, then name the hierarchy. Drag more fields into it in order, general to detailed."
+  },
+  {
+    "id": "2.2-c012",
+    "objectives": ["2.2.3"],
+    "kind": "menu",
+    "front": "How do you drill down or up a hierarchy in the view?",
+    "back": "Click the + or - icon on the hierarchy field. Drilling down adds the next field as nested headers."
+  },
+  {
+    "id": "2.2-c013",
+    "objectives": ["2.2.1", "2.2.2", "2.2.3"],
+    "kind": "rule",
+    "front": "Group vs. set vs. hierarchy: which fits which job?",
+    "back": "Merging spellings is a group. \"Top 10 customers\" is a set (or a Top filter). Category > Sub-Category drilling is a hierarchy."
+  },
+  {
+    "id": "2.2-c014",
+    "objectives": ["2.2.4"],
+    "kind": "rule",
+    "front": "Where do you drag a field to filter a view?",
+    "back": "To the Filters shelf. The Filter dialog opens when you add it."
+  },
+  {
+    "id": "2.2-c015",
+    "objectives": ["2.2.4"],
+    "kind": "rule",
+    "front": "What are the four tabs of a dimension filter?",
+    "back": "General (tick members), Wildcard (match text), Condition (a rule on a measure) and Top (top or bottom N by a measure)."
+  },
+  {
+    "id": "2.2-c016",
+    "objectives": ["2.2.4"],
+    "kind": "rule",
+    "front": "In what order does Tableau apply filters?",
+    "back": "Extract filters, data source filters, context filters, dimension filters, then measure filters. Table calculation filters are applied last."
+  },
+  {
+    "id": "2.2-c017",
+    "objectives": ["2.2.4"],
+    "kind": "menu",
+    "front": "How do you make a dimension filter run first?",
+    "back": "Right-click it and choose Add to Context. Context filters appear at the top of the Filters shelf and are gray."
+  },
+  {
+    "id": "2.2-c018",
+    "objectives": ["2.2.4"],
+    "kind": "rule",
+    "front": "A Top N filter ignores another dimension filter. What is the fix?",
+    "back": "Add the other filter to context so it runs first. Dimension filters, including Top N, otherwise run at the same stage."
+  },
+  {
+    "id": "2.2-c019",
+    "objectives": ["2.2.4"],
+    "kind": "menu",
+    "front": "How do you let viewers filter a sheet themselves?",
+    "back": "Open the field's drop-down menu and select Show Filter to put a filter card on the sheet."
+  },
+  {
+    "id": "2.2-c020",
+    "objectives": ["2.2.4"],
+    "kind": "rule",
+    "front": "What is a measure filter applied to?",
+    "back": "The aggregated value of each mark (like SQL's `HAVING`). You choose the aggregation, then Range of Values, At Least, At Most or Special."
+  },
+  {
+    "id": "2.2-c021",
+    "objectives": ["2.2.5"],
+    "kind": "rule",
+    "front": "Relative date filter vs. range of dates filter",
+    "back": "Relative: a range that updates with the date you open the view, such as the last 3 months. Range of dates: a fixed range, or only a starting or ending date."
+  },
+  {
+    "id": "2.2-c022",
+    "objectives": ["2.2.5"],
+    "kind": "rule",
+    "front": "\"Show every December\": which date filter?",
+    "back": "A date-part filter (Months). If you select Quarters, you can choose to filter specific quarters."
+  },
+  {
+    "id": "2.2-c023",
+    "objectives": ["2.2.5"],
+    "kind": "rule",
+    "front": "\"Always show the last 30 days\": which date filter?",
+    "back": "A relative date filter. \"Show 1 January to 31 March 2025\" is a range of dates."
+  },
+  {
+    "id": "2.2-c024",
+    "objectives": ["2.2.5"],
+    "kind": "term",
+    "front": "What does the Special option of a date filter offer?",
+    "back": "Null dates, non-null dates, or all dates."
+  }
+]

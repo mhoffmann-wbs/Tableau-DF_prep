@@ -1,10 +1,19 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { CALC_EXERCISES } from '../content/calc'
+import { FLASHCARDS } from '../content/flashcards'
+import { deckStats } from '../flashcards/leitner'
 import { SANDBOX_CHALLENGES } from '../content/sandbox'
 import { useProgress } from '../progress/store'
 
 export default function BuildPage() {
-  const { sandbox: solved, calcExercises } = useProgress()
+  const { sandbox: solved, calcExercises, flashcards } = useProgress()
+  const [now] = useState(Date.now)
+  const cards = deckStats(
+    FLASHCARDS.map((c) => c.id),
+    flashcards,
+    now,
+  )
   const calcsDone = CALC_EXERCISES.filter((e) => calcExercises[e.id] !== undefined).length
   const done = SANDBOX_CHALLENGES.filter((c) => solved[c.id] !== undefined).length
   return (
@@ -35,6 +44,17 @@ export default function BuildPage() {
           Write calculated fields (string, date, arithmetic, logic and aggregate formulas), see their values on the Driftlight data and learn
           Tableau’s errors, such as mixing aggregate and row-level values. {CALC_EXERCISES.length} exercises, {calcsDone} solved. Saved
           calculations show up in the sandbox’s Data pane.
+        </p>
+      </section>
+      <section className="rounded-lg border border-slate-200 bg-white p-4">
+        <h2 className="text-lg font-semibold">
+          <Link to="/build/flashcards" className="text-brand-dark underline">
+            Flashcards
+          </Link>
+        </h2>
+        <p className="mt-1 text-sm text-slate-600">
+          {FLASHCARDS.length} cards on terms, menu paths, file types, chart recipes and the blue/green rules, reviewed in Leitner boxes:{' '}
+          {cards.due} due, {cards.fresh} new. Make and share your own decks too.
         </p>
       </section>
       <section className="space-y-3">

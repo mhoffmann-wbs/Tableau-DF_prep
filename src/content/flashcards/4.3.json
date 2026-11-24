@@ -1,0 +1,72 @@
+[
+  {
+    "id": "4.3-c001",
+    "objectives": ["4.3.1"],
+    "kind": "term",
+    "front": "Default aggregation",
+    "back": "Every measure has one, set by Tableau when you connect to a data source. For numeric measures it is usually a sum, so dropping the field gives `SUM(Field)`."
+  },
+  {
+    "id": "4.3-c002",
+    "objectives": ["4.3.1"],
+    "kind": "menu",
+    "front": "How do you change a measure's aggregation for one view?",
+    "back": "Open the pill's menu and choose another aggregation under Measure. It affects that pill only."
+  },
+  {
+    "id": "4.3-c003",
+    "objectives": ["4.3.1"],
+    "kind": "menu",
+    "front": "How do you change a measure's default aggregation for the whole workbook?",
+    "back": "In the Data pane, right-click the measure and choose Default Properties > Aggregation."
+  },
+  {
+    "id": "4.3-c004",
+    "objectives": ["4.3.1"],
+    "kind": "term",
+    "front": "`ATTR` (Attribute)",
+    "back": "Returns the value if it has a single value for all rows in the group, otherwise it shows an asterisk (*). The asterisk is not an error in the data."
+  },
+  {
+    "id": "4.3-c005",
+    "objectives": ["4.3.1"],
+    "kind": "menu",
+    "front": "What does Analysis > Aggregate Measures do when cleared?",
+    "back": "The view is disaggregated: Tableau shows a separate mark for every data value in every row. It is not the same as adding a dimension or a filter."
+  },
+  {
+    "id": "4.3-c006",
+    "objectives": ["4.3.2"],
+    "kind": "term",
+    "front": "Level of detail (in a view)",
+    "back": "The combinations of dimension members in the view. They decide how the rows are grouped, and each group becomes one mark."
+  },
+  {
+    "id": "4.3-c007",
+    "objectives": ["4.3.2"],
+    "kind": "rule",
+    "front": "What happens to a total when you add a dimension to the view?",
+    "back": "Tableau computes the measure again once per member. You get more marks, each with a smaller value."
+  },
+  {
+    "id": "4.3-c008",
+    "objectives": ["4.3.2"],
+    "kind": "rule",
+    "front": "Does a dimension on Color change the numbers?",
+    "back": "Yes. A dimension on Color, Size, Label or Detail increases the number of marks without adding headers, just like one on Rows or Columns."
+  },
+  {
+    "id": "4.3-c009",
+    "objectives": ["4.3.2"],
+    "kind": "term",
+    "front": "Detail (Marks card)",
+    "back": "Adds a dimension to the level of detail without colour, size or headers. For example, one circle per member in a scatterplot."
+  },
+  {
+    "id": "4.3-c010",
+    "objectives": ["4.3.2"],
+    "kind": "rule",
+    "front": "Which aggregations add back up after splitting by a dimension?",
+    "back": "`SUM` and `COUNT` do. `AVG`, `MEDIAN`, `MIN`, `MAX` and `COUNTD` do not."
+  }
+]

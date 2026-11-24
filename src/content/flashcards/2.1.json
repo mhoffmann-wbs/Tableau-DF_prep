@@ -1,0 +1,275 @@
+[
+  {
+    "id": "2.1-c001",
+    "objectives": ["2.1.1"],
+    "kind": "recipe",
+    "front": "Bar chart: what goes on which shelf?",
+    "back": "A dimension on Rows and a measure on Columns, or vice versa. Dimension on Columns and measure on Rows gives vertical bars; the reverse gives horizontal bars."
+  },
+  {
+    "id": "2.1-c002",
+    "objectives": ["2.1.1"],
+    "kind": "rule",
+    "front": "With the mark type on Automatic, when does Tableau pick Bar?",
+    "back": "\"When there is a dimension and a measure as inner fields on Rows and Columns shelves.\""
+  },
+  {
+    "id": "2.1-c003",
+    "objectives": ["2.1.1"],
+    "kind": "rule",
+    "front": "Vertical or horizontal bars: which shelf holds the dimension?",
+    "back": "Dimension on Columns and measure on Rows gives vertical bars. Dimension on Rows and measure on Columns gives horizontal bars."
+  },
+  {
+    "id": "2.1-c004",
+    "objectives": ["2.1.1"],
+    "kind": "rule",
+    "front": "What makes a bar chart easy to read as a ranking?",
+    "back": "Sort the dimension by the measure (a computed sort, task 2.3)."
+  },
+  {
+    "id": "2.1-c005",
+    "objectives": ["2.1.2"],
+    "kind": "recipe",
+    "front": "Line chart: what goes on which shelf?",
+    "back": "A date on Columns and a measure on Rows. With a date and a measure as the inner fields, Automatic chooses Line."
+  },
+  {
+    "id": "2.1-c006",
+    "objectives": ["2.1.2"],
+    "kind": "rule",
+    "front": "Continuous date vs. discrete date part on a line chart?",
+    "back": "A continuous date value draws one line along a time axis. A discrete date part such as `YEAR(Start)` creates headers rather than an axis, and the line runs across the headers."
+  },
+  {
+    "id": "2.1-c007",
+    "objectives": ["2.1.2"],
+    "kind": "rule",
+    "front": "With the mark type on Automatic, when does Tableau pick Line?",
+    "back": "\"When there is a date field and a measure as the inner fields.\""
+  },
+  {
+    "id": "2.1-c008",
+    "objectives": ["2.1.2"],
+    "kind": "term",
+    "front": "Why does a continuous date pill draw an axis?",
+    "back": "Continuous dimensions visualize data with a linear, continuous axis. A discrete one draws headers."
+  },
+  {
+    "id": "2.1-c009",
+    "objectives": ["2.1.3"],
+    "kind": "recipe",
+    "front": "Scatterplot: what goes on which shelf?",
+    "back": "At least one measure on Columns and at least one measure on Rows. Add a dimension to Detail (or Color) to get one mark per member."
+  },
+  {
+    "id": "2.1-c010",
+    "objectives": ["2.1.3"],
+    "kind": "rule",
+    "front": "A scatterplot has two measures and no dimension in the view. How many marks?",
+    "back": "One. Both measures are aggregated over all the data. Add a dimension to Detail for more marks."
+  },
+  {
+    "id": "2.1-c011",
+    "objectives": ["2.1.3"],
+    "kind": "rule",
+    "front": "A dimension on Columns or Rows of a scatterplot: what happens?",
+    "back": "It creates panes of scatterplots, not more points in one plot. For more marks in one plot, put the dimension on Detail or Color."
+  },
+  {
+    "id": "2.1-c012",
+    "objectives": ["2.1.3"],
+    "kind": "term",
+    "front": "Scatterplot is measure by what?",
+    "back": "Measure by measure: a measure on each shelf."
+  },
+  {
+    "id": "2.1-c013",
+    "objectives": ["2.1.4"],
+    "kind": "recipe",
+    "front": "Symbol (point) map: what goes where?",
+    "back": "Longitude on Columns, Latitude on Rows, the geographic field on Detail: one mark per location. Add a measure to Size for a proportional symbol map."
+  },
+  {
+    "id": "2.1-c014",
+    "objectives": ["2.1.4"],
+    "kind": "recipe",
+    "front": "Filled map: what goes where?",
+    "back": "Select Map as the mark type, put a geographic dimension on Detail, and a measure or continuous dimension on Color."
+  },
+  {
+    "id": "2.1-c015",
+    "objectives": ["2.1.4"],
+    "kind": "term",
+    "front": "`Latitude (generated)` and `Longitude (generated)`",
+    "back": "Fields Tableau gives you when a field has a geographic role. Double-clicking them in the Data pane puts them on Rows and Columns."
+  },
+  {
+    "id": "2.1-c016",
+    "objectives": ["2.1.4"],
+    "kind": "rule",
+    "front": "Filled map vs. symbol map: which mark type and encoding?",
+    "back": "Filled map: the Map mark type with the measure on Color. Symbol map: a circle or shape per location, usually with the measure on Size."
+  },
+  {
+    "id": "2.1-c017",
+    "objectives": ["2.1.5"],
+    "kind": "term",
+    "front": "Combined axis chart",
+    "back": "Two or more measures on one shared axis. Tableau's help calls it a blended axis."
+  },
+  {
+    "id": "2.1-c018",
+    "objectives": ["2.1.5"],
+    "kind": "recipe",
+    "front": "How do you make a combined (blended) axis?",
+    "back": "Drag one measure or axis and drop it onto an existing axis. Tableau replaces the measure with Measure Values and adds Measure Names to Color."
+  },
+  {
+    "id": "2.1-c019",
+    "objectives": ["2.1.5"],
+    "kind": "rule",
+    "front": "When do you use a combined axis?",
+    "back": "For measures in the same units, such as Target Hours vs. Actual Hours, so one axis lets you compare them directly."
+  },
+  {
+    "id": "2.1-c020",
+    "objectives": ["2.1.5"],
+    "kind": "rule",
+    "front": "Combined axis: which two fields does Tableau use?",
+    "back": "Measure Values on the shelf and Measure Names on Color. Each measure gets its own colour on the same scale."
+  },
+  {
+    "id": "2.1-c021",
+    "objectives": ["2.1.6"],
+    "kind": "term",
+    "front": "Dual axis chart",
+    "back": "Two measures layered in one view, each with its own axis: one on the left (or bottom) and one on the right (or top)."
+  },
+  {
+    "id": "2.1-c022",
+    "objectives": ["2.1.6"],
+    "kind": "recipe",
+    "front": "Two ways to make a dual axis chart",
+    "back": "Drag the second measure to the right side of the view until a black dashed line appears. Or put both measures on Rows (or Columns), right-click one and select Dual Axis."
+  },
+  {
+    "id": "2.1-c023",
+    "objectives": ["2.1.6"],
+    "kind": "rule",
+    "front": "Dual axis: how many Marks cards, and why does it matter?",
+    "back": "One Marks card per measure, so each measure can have its own mark type, like bars for one and a line for the other."
+  },
+  {
+    "id": "2.1-c024",
+    "objectives": ["2.1.6"],
+    "kind": "menu",
+    "front": "How do you put both axes of a dual axis on the same scale?",
+    "back": "Right-click the secondary axis and select Synchronize Axis."
+  },
+  {
+    "id": "2.1-c025",
+    "objectives": ["2.1.6"],
+    "kind": "rule",
+    "front": "How many layered axes can a view have?",
+    "back": "Up to four: two on the Columns shelf and two on the Rows shelf."
+  },
+  {
+    "id": "2.1-c026",
+    "objectives": ["2.1.5", "2.1.6"],
+    "kind": "rule",
+    "front": "Combined axis vs. dual axis: how many axes, and best for?",
+    "back": "Combined: one shared axis, for the same units. Dual: two independent axes (can be synchronized), for different units or scales."
+  },
+  {
+    "id": "2.1-c027",
+    "objectives": ["2.1.5", "2.1.6"],
+    "kind": "rule",
+    "front": "Which has its own mark type per measure, a combined or a dual axis?",
+    "back": "Only the dual axis. A combined axis uses one mark type for both measures."
+  },
+  {
+    "id": "2.1-c028",
+    "objectives": ["2.1.7"],
+    "kind": "recipe",
+    "front": "Stacked bar: how do you build one?",
+    "back": "Start with a bar chart and drag a second dimension to Color. Marks are automatically stacked."
+  },
+  {
+    "id": "2.1-c029",
+    "objectives": ["2.1.7"],
+    "kind": "menu",
+    "front": "Where do you control whether marks stack?",
+    "back": "Analysis > Stack Marks. Choose Automatic, On or Off. The default is Automatic."
+  },
+  {
+    "id": "2.1-c030",
+    "objectives": ["2.1.7"],
+    "kind": "rule",
+    "front": "What does each segment of a stacked bar show?",
+    "back": "Each bar splits into coloured segments, one per member of the Color dimension, and the segments add up to the bar's total."
+  },
+  {
+    "id": "2.1-c031",
+    "objectives": ["2.1.7"],
+    "kind": "rule",
+    "front": "Stacked bar: which shelf holds the second dimension?",
+    "back": "Color on the Marks card."
+  },
+  {
+    "id": "2.1-c032",
+    "objectives": ["2.1.8"],
+    "kind": "recipe",
+    "front": "Density map: what goes where?",
+    "back": "Longitude on Columns, Latitude on Rows, a field with many underlying data points (such as an ID) on Detail, and the mark type set to Density."
+  },
+  {
+    "id": "2.1-c033",
+    "objectives": ["2.1.8"],
+    "kind": "menu",
+    "front": "How do you switch a view to the Density mark?",
+    "back": "Open the mark type drop-down to the right of Automatic on the Marks card and select Density."
+  },
+  {
+    "id": "2.1-c034",
+    "objectives": ["2.1.8"],
+    "kind": "rule",
+    "front": "Density map: what do the Intensity slider and the palettes do?",
+    "back": "Intensity increases or decreases the vividness of the map. You can choose from ten density colour palettes."
+  },
+  {
+    "id": "2.1-c035",
+    "objectives": ["2.1.8"],
+    "kind": "rule",
+    "front": "When is a density map the right choice?",
+    "back": "For data with many overlapping points, to show where points cluster."
+  },
+  {
+    "id": "2.1-c036",
+    "objectives": ["2.1.9"],
+    "kind": "recipe",
+    "front": "Crosstab (text table): what goes where?",
+    "back": "One dimension on Rows, another on Columns, then drag one or more measures to Text on the Marks card."
+  },
+  {
+    "id": "2.1-c037",
+    "objectives": ["2.1.9"],
+    "kind": "recipe",
+    "front": "Highlight table: what goes where?",
+    "back": "Dimensions on Columns and Rows, Square as the mark type, and a measure of interest on Color. Keep the measure on Label too for the exact value."
+  },
+  {
+    "id": "2.1-c038",
+    "objectives": ["2.1.9"],
+    "kind": "rule",
+    "front": "Crosstab vs. highlight table: what differs?",
+    "back": "A crosstab puts the measure on Text. A highlight table changes the mark type to Square and puts the measure on Color."
+  },
+  {
+    "id": "2.1-c039",
+    "objectives": ["2.1.9"],
+    "kind": "term",
+    "front": "Crosstab",
+    "back": "A text table, also called a cross-tab or pivot table. Use a table when readers need exact numbers rather than shapes."
+  }
+]

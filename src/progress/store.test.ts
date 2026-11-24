@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { beforeEach, describe, expect, it } from 'vitest'
-import { exportProgress, getProgress, importProgress, recordAnswer, recordMockResult, recordCalcExercise, recordSandboxChallenge, reloadProgress, resetProgress, saveCalc, deleteCalc, setLessonRead } from './store'
+import { deleteDeck, exportProgress, getProgress, importProgress, rateCard, recordAnswer, recordMockResult, recordCalcExercise, recordSandboxChallenge, reloadProgress, resetProgress, saveCalc, saveDeck, deleteCalc, setLessonRead } from './store'
 
 beforeEach(() => {
   localStorage.clear()
@@ -42,7 +42,7 @@ describe('progress store', () => {
     expect(() => importProgress('nope')).toThrow("isn't valid JSON")
     expect(() => importProgress('{"app":"other"}')).toThrow("isn't a Tableau-DF prep progress export")
     expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 1, items: { x: { attempts: -1 } } } }))).toThrow('damaged')
-    expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 5 } }))).toThrow('newer version')
+    expect(() => importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: { version: 6 } }))).toThrow('newer version')
     expect(getProgress().items['4.1-002']?.attempts).toBe(1)
   })
 
@@ -65,11 +65,11 @@ describe('progress store', () => {
     const v1 = { version: 1, items: { '2.1-001': { attempts: 1, correct: 1, lastCorrect: true, lastAt: 1, streak: 1 } }, mockResults: [] }
     localStorage.setItem('tableau-df:progress', JSON.stringify(v1))
     reloadProgress()
-    expect(getProgress()).toMatchObject({ version: 4, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [] })
+    expect(getProgress()).toMatchObject({ version: 5, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [] })
     expect(getProgress().items['2.1-001']?.attempts).toBe(1)
     resetProgress()
     importProgress(JSON.stringify({ app: 'tableau-df-prep', progress: v1 }))
-    expect(getProgress()).toMatchObject({ version: 4, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], items: v1.items })
+    expect(getProgress()).toMatchObject({ version: 5, sandbox: {}, lessonsRead: [], calcExercises: {}, calcs: [], flashcards: {}, decks: [], items: v1.items })
   })
 
   it('saves calcs by source and name, and records calc exercises once', () => {
@@ -87,5 +87,31 @@ describe('progress store', () => {
     expect(getProgress().calcExercises).toEqual({ 'hours-watched': 5 })
     importProgress(exportProgress())
     expect(getProgress().calcs).toHaveLength(1)
+  })
+
+  it('rates flashcards into Leitner boxes', () => {
+    rateCard('2.1-c001', 'good', 0)
+    expect(getProgress().flashcards['2.1-c001']).toEqual({ box: 1, due: 86_400_000, lastAt: 0 })
+    rateCard('2.1-c001', 'easy', 10)
+    expect(getProgress().flashcards['2.1-c001']?.box).toBe(3)
+    rateCard('2.1-c001', 'again', 20)
+    expect(getProgress().flashcards['2.1-c001']).toEqual({ box: 0, due: 20, lastAt: 20 })
+  })
+
+  it('saves own decks and drops the review state of removed cards', () => {
+    const id = saveDeck({ name: 'Mine', cards: [{ front: 'a', back: 'b' }, { front: 'c', back: 'd' }] }, 1)
+    const [first, second] = getProgress().decks[0]!.cards
+    expect(first!.id).toMatch(/^my-/)
+    rateCard(first!.id, 'good', 2)
+    rateCard(second!.id, 'good', 2)
+    saveDeck({ id, name: 'Renamed', cards: [first!] }, 3)
+    expect(getProgress().decks).toEqual([{ id, name: 'Renamed', cards: [first], createdAt: 1 }])
+    expect(Object.keys(getProgress().flashcards)).toEqual([first!.id])
+    const file = exportProgress()
+    resetProgress()
+    importProgress(file)
+    expect(getProgress().decks[0]?.name).toBe('Renamed')
+    deleteDeck(id)
+    expect(getProgress()).toMatchObject({ decks: [], flashcards: {} })
   })
 })

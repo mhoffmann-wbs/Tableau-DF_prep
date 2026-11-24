@@ -1,0 +1,107 @@
+[
+  {
+    "id": "4.2-c001",
+    "objectives": ["4.2.1", "4.2.2"],
+    "kind": "rule",
+    "front": "What colour is a discrete pill, and what does it draw on Rows or Columns?",
+    "back": "Blue. It draws headers: one label per member, like the row labels of a pivot table."
+  },
+  {
+    "id": "4.2-c002",
+    "objectives": ["4.2.1", "4.2.2"],
+    "kind": "rule",
+    "front": "What colour is a continuous pill, and what does it draw on Rows or Columns?",
+    "back": "Green. It draws an axis: a range from a minimum to a maximum where any value in between has a place."
+  },
+  {
+    "id": "4.2-c003",
+    "objectives": ["4.2.1"],
+    "kind": "term",
+    "front": "Discrete",
+    "back": "\"Individually separate and distinct.\" Each member is a separate bucket with nothing in between, like a `groupby` key."
+  },
+  {
+    "id": "4.2-c004",
+    "objectives": ["4.2.1"],
+    "kind": "term",
+    "front": "Continuous",
+    "back": "\"Forming an unbroken whole, without interruption.\" Values sit on a number line or timeline, where 2.5 lies between 2 and 3."
+  },
+  {
+    "id": "4.2-c005",
+    "objectives": ["4.2.1", "4.2.2"],
+    "kind": "rule",
+    "front": "Is blue/green the same as dimension/measure?",
+    "back": "No. Blue/green is discrete/continuous. A green date pill is still a dimension, and a blue (discrete) measure is still aggregated."
+  },
+  {
+    "id": "4.2-c006",
+    "objectives": ["4.2.1"],
+    "kind": "rule",
+    "front": "Which data types can't be continuous?",
+    "back": "String and Boolean dimensions. Date and numeric dimensions, and all measures, can be discrete or continuous."
+  },
+  {
+    "id": "4.2-c007",
+    "objectives": ["4.2.2"],
+    "kind": "rule",
+    "front": "A discrete field on Color gives what kind of legend?",
+    "back": "A categorical palette: one distinct colour per member, with a legend that lists the members."
+  },
+  {
+    "id": "4.2-c008",
+    "objectives": ["4.2.2"],
+    "kind": "rule",
+    "front": "A continuous field on Color gives what kind of legend?",
+    "back": "A quantitative legend: a gradient, a continuous range of colours from low to high."
+  },
+  {
+    "id": "4.2-c009",
+    "objectives": ["4.2.1"],
+    "kind": "menu",
+    "front": "How do you switch a field between discrete and continuous?",
+    "back": "Right-click it in the Data pane (or a pill in the view) and choose Convert to Discrete or Convert to Continuous. Converting a pill affects only that view."
+  },
+  {
+    "id": "4.2-c010",
+    "objectives": ["4.2.3"],
+    "kind": "rule",
+    "front": "Date part vs. date value: which is discrete and which is continuous?",
+    "back": "Date parts (such as `MONTH(Start)` from the upper section of the menu) are discrete: headers. Date values, or truncated dates (the lower section), are continuous: an axis."
+  },
+  {
+    "id": "4.2-c011",
+    "objectives": ["4.2.3"],
+    "kind": "rule",
+    "front": "What does a discrete MONTH date part do with several years of data?",
+    "back": "It merges the years: one header per month, January to December, each adding up that month in every year. Good for seasonality, not for a trend."
+  },
+  {
+    "id": "4.2-c012",
+    "objectives": ["4.2.3"],
+    "kind": "term",
+    "front": "Date value (truncated date)",
+    "back": "The actual date truncated to a level, such as May 2015 or May 8, 2015. Continuous, so months run along a timeline in order. SQL: `DATE_TRUNC('month', start)`."
+  },
+  {
+    "id": "4.2-c013",
+    "objectives": ["4.2.3"],
+    "kind": "rule",
+    "front": "Which level does Tableau use when you drop a date on a shelf?",
+    "back": "The level at which there are multiple instances: YEAR when the data spans several years, MONTH when it covers a single year."
+  },
+  {
+    "id": "4.2-c014",
+    "objectives": ["4.2.3"],
+    "kind": "term",
+    "front": "Exact Date",
+    "back": "The most granular date level: one member per distinct date-time (row-level or record-level data)."
+  },
+  {
+    "id": "4.2-c015",
+    "objectives": ["4.2.3"],
+    "kind": "menu",
+    "front": "What does the + on a discrete `YEAR(Start)` pill do?",
+    "back": "It drills down: Tableau adds `QUARTER(Start)` next to it. Clicking + again adds MONTH, and so on."
+  }
+]

@@ -1,0 +1,107 @@
+[
+  {
+    "id": "1.2-c001",
+    "objectives": ["1.2.1"],
+    "kind": "term",
+    "front": "Relationship",
+    "back": "Combines tables side by side, but only when a view needs them, at each table's own level of detail. Shown as a noodle on the logical layer."
+  },
+  {
+    "id": "1.2-c002",
+    "objectives": ["1.2.1"],
+    "kind": "recipe",
+    "front": "How do you add a relationship?",
+    "back": "Drag the first table to the canvas, then drag another. When you see the noodle between the two tables, drop it. Tableau tries to set the matching fields; check them below the canvas."
+  },
+  {
+    "id": "1.2-c003",
+    "objectives": ["1.2.1"],
+    "kind": "rule",
+    "front": "What must be true of the fields that match in a relationship?",
+    "back": "The fields on both sides must have the same data type."
+  },
+  {
+    "id": "1.2-c004",
+    "objectives": ["1.2.1", "1.2.3"],
+    "kind": "rule",
+    "front": "What is special about how relationships combine data?",
+    "back": "They defer joins to the time and context of analysis. Tableau picks join types from the fields in the view, and each table keeps its level of detail, so aggregate values are not duplicated."
+  },
+  {
+    "id": "1.2-c005",
+    "objectives": ["1.2.1"],
+    "kind": "term",
+    "front": "Cardinality and referential integrity",
+    "back": "The performance options of a relationship. Cardinality is One or Many on each side. Referential integrity is Some Records Match or All Records Match. If unsure, use Tableau's recommended defaults."
+  },
+  {
+    "id": "1.2-c006",
+    "objectives": ["1.2.1", "1.2.2"],
+    "kind": "rule",
+    "front": "Noodle or Venn diagram: which is a relationship, which a join?",
+    "back": "A noodle is a relationship on the logical layer. A Venn diagram is a join on the physical layer. Double-click a logical table to open it and see its joins and unions."
+  },
+  {
+    "id": "1.2-c007",
+    "objectives": ["1.2.2"],
+    "kind": "rule",
+    "front": "What are the four join types?",
+    "back": "Inner (only rows with matches in both tables), left (all rows of the left table, nulls where the right has no match), right (the mirror of left) and full outer (all values from both tables)."
+  },
+  {
+    "id": "1.2-c008",
+    "objectives": ["1.2.2"],
+    "kind": "rule",
+    "front": "Why can a join give inflated totals?",
+    "back": "Tables are merged into one table with a fixed combination of data. If they are at different levels of detail, the join may duplicate aggregate values, so a `SUM` grows too large."
+  },
+  {
+    "id": "1.2-c009",
+    "objectives": ["1.2.2"],
+    "kind": "term",
+    "front": "Union",
+    "back": "Appends rows from one table to another, like `UNION ALL` or `pd.concat`. Use it for tables with the same column structure, such as monthly files."
+  },
+  {
+    "id": "1.2-c010",
+    "objectives": ["1.2.2"],
+    "kind": "rule",
+    "front": "What are the rules for a union?",
+    "back": "The tables must come from the same connection, and their fields should match by name and data type. Fields with mismatched names contain nulls; `Merge mismatched fields` combines them."
+  },
+  {
+    "id": "1.2-c011",
+    "objectives": ["1.2.2"],
+    "kind": "term",
+    "front": "Wildcard (automatic) union",
+    "back": "A union that picks up every table whose name matches a pattern, such as `sessions_*`."
+  },
+  {
+    "id": "1.2-c012",
+    "objectives": ["1.2.3"],
+    "kind": "rule",
+    "front": "When do you use a relationship, a join or a union?",
+    "back": "Relate to combine data at different levels of detail. Join to add more columns across the same row structure. Union to add more rows with the same column structure."
+  },
+  {
+    "id": "1.2-c013",
+    "objectives": ["1.2.3"],
+    "kind": "rule",
+    "front": "What is the default way to combine data in Tableau Desktop?",
+    "back": "Relationships. The help calls them the recommended method of combining data in most instances."
+  },
+  {
+    "id": "1.2-c014",
+    "objectives": ["1.2.3"],
+    "kind": "rule",
+    "front": "Relationship vs. join: which handles different levels of detail?",
+    "back": "The relationship, without duplicating values. A join may duplicate measure values. A join also lets you fix the type and deliberately filter rows, for example with an inner join."
+  },
+  {
+    "id": "1.2-c015",
+    "objectives": ["1.2.3"],
+    "kind": "rule",
+    "front": "Is blending the same as a join?",
+    "back": "No. Blending combines a primary and a secondary data source in one view. The first source used becomes primary, the secondary's fields are aggregated, and it simulates a left join."
+  }
+]

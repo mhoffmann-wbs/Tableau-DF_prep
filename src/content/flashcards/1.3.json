@@ -1,0 +1,184 @@
+[
+  {
+    "id": "1.3-c001",
+    "objectives": ["1.3.1"],
+    "kind": "recipe",
+    "front": "How do you rename a field in the Data pane?",
+    "back": "Select the field and press `F2`, or right-click it and choose `Rename`. Type the new name and press Enter."
+  },
+  {
+    "id": "1.3-c002",
+    "objectives": ["1.3.1"],
+    "kind": "rule",
+    "front": "Does renaming a field change the source data?",
+    "back": "No. It changes only what appears in Tableau. The new name is saved with the workbook and when you export the data source."
+  },
+  {
+    "id": "1.3-c003",
+    "objectives": ["1.3.1"],
+    "kind": "rule",
+    "front": "How do you restore a field's original name?",
+    "back": "Click the small circular arrow at the right of the edit box. For several fields at once, select them, right-click and choose `Reset Names`."
+  },
+  {
+    "id": "1.3-c004",
+    "objectives": ["1.3.1", "1.3.2"],
+    "kind": "rule",
+    "front": "Rename vs. alias",
+    "back": "Rename changes a field's name (Signup Date). An alias changes how a member is displayed (`PRM` shows as Premium). Neither changes the underlying data."
+  },
+  {
+    "id": "1.3-c005",
+    "objectives": ["1.3.2"],
+    "kind": "term",
+    "front": "Alias",
+    "back": "An alternate name for a member (value) of a dimension, so its label appears differently in the view."
+  },
+  {
+    "id": "1.3-c006",
+    "objectives": ["1.3.2"],
+    "kind": "menu",
+    "front": "Menu path to create aliases",
+    "back": "In the Data pane, right-click a dimension and select `Aliases`. Type the new label next to each member. `Clear Aliases` sets members back to their original names."
+  },
+  {
+    "id": "1.3-c007",
+    "objectives": ["1.3.2"],
+    "kind": "rule",
+    "front": "For which fields can you create aliases?",
+    "back": "Only members of discrete dimensions. Not continuous dimensions, dates or measures."
+  },
+  {
+    "id": "1.3-c008",
+    "objectives": ["1.3.2"],
+    "kind": "rule",
+    "front": "Why can you not alias a measure?",
+    "back": "Tableau does not permit re-aliasing measures because it involves modifying data values themselves."
+  },
+  {
+    "id": "1.3-c009",
+    "objectives": ["1.3.2"],
+    "kind": "rule",
+    "front": "Can you create aliases on a published data source?",
+    "back": "No. When using a published data source, you cannot create or edit aliases."
+  },
+  {
+    "id": "1.3-c010",
+    "objectives": ["1.3.2"],
+    "kind": "rule",
+    "front": "Can an alias merge two spellings of the same city?",
+    "back": "No. An alias is a display label for one member. To merge members you need a group."
+  },
+  {
+    "id": "1.3-c011",
+    "objectives": ["1.3.3"],
+    "kind": "menu",
+    "front": "Menu path to assign a geographic role",
+    "back": "In the Data pane, click the data type icon next to the field, select `Geographic Role`, then pick the role."
+  },
+  {
+    "id": "1.3-c012",
+    "objectives": ["1.3.3"],
+    "kind": "rule",
+    "front": "Which fields can get the Latitude and Longitude roles?",
+    "back": "Only numeric fields."
+  },
+  {
+    "id": "1.3-c013",
+    "objectives": ["1.3.3"],
+    "kind": "rule",
+    "front": "What happens when you assign a geographic role?",
+    "back": "The field's icon becomes a globe, and Tableau adds `Latitude (generated)` and `Longitude (generated)` to the measures. Adding the field to Detail on the Marks card creates a map view."
+  },
+  {
+    "id": "1.3-c014",
+    "objectives": ["1.3.3"],
+    "kind": "rule",
+    "front": "What does \"unknown\" mean in the corner of a map?",
+    "back": "Tableau cannot match some values to locations. Click the indicator and choose `Edit Locations`, or use `Map > Edit Locations`."
+  },
+  {
+    "id": "1.3-c015",
+    "objectives": ["1.3.3"],
+    "kind": "rule",
+    "front": "What can you do in Edit Locations?",
+    "back": "Add a Country or State field to remove ambiguity (Paris, France vs. Paris, Texas), match unrecognized values to known ones, or enter latitude and longitude yourself."
+  },
+  {
+    "id": "1.3-c016",
+    "objectives": ["1.3.4"],
+    "kind": "recipe",
+    "front": "Where can you change a field's data type?",
+    "back": "Click its data type icon in the Data Source page grid or in the Data pane, or right-click the field in a view and choose `Change Data Type`."
+  },
+  {
+    "id": "1.3-c017",
+    "objectives": ["1.3.4"],
+    "kind": "rule",
+    "front": "What data types does Tableau show by icon?",
+    "back": "Text (string), date, date and time, number (whole or decimal), Boolean, and geographic values for fields with a geographic role."
+  },
+  {
+    "id": "1.3-c018",
+    "objectives": ["1.3.4"],
+    "kind": "rule",
+    "front": "Why should a postal code be a string, not a number?",
+    "back": "A number loses the leading zero (`07106` becomes `7106`) and Tableau would offer to add the codes up. Make it a string, then give it the ZIP Code/Postcode role."
+  },
+  {
+    "id": "1.3-c019",
+    "objectives": ["1.3.4"],
+    "kind": "rule",
+    "front": "What happens to text in a field typed as a number?",
+    "back": "Text is treated as Null."
+  },
+  {
+    "id": "1.3-c020",
+    "objectives": ["1.3.4"],
+    "kind": "rule",
+    "front": "When should you change data types if you use an extract?",
+    "back": "Before you create the extract."
+  },
+  {
+    "id": "1.3-c021",
+    "objectives": ["1.3.5"],
+    "kind": "menu",
+    "front": "Menu path for default properties",
+    "back": "Right-click a field in the Data pane and open `Default Properties`. It holds settings for aggregation, comments, number formatting, color, shape and totals, depending on the field type."
+  },
+  {
+    "id": "1.3-c022",
+    "objectives": ["1.3.5"],
+    "kind": "rule",
+    "front": "Which default properties apply to dimensions?",
+    "back": "Color, Shape and Sort. Sort also controls how the field values are listed in a filter."
+  },
+  {
+    "id": "1.3-c023",
+    "objectives": ["1.3.5"],
+    "kind": "rule",
+    "front": "Which default properties apply to measures, numbers and dates?",
+    "back": "Aggregation for measures, Number Format for numbers and Date Format for dates."
+  },
+  {
+    "id": "1.3-c024",
+    "objectives": ["1.3.5"],
+    "kind": "rule",
+    "front": "What does the Comment default property do?",
+    "back": "It adds a note, shown in the field's tooltip in the Data pane. It works for any field."
+  },
+  {
+    "id": "1.3-c025",
+    "objectives": ["1.3.5"],
+    "kind": "rule",
+    "front": "Default property or formatting a pill: what is the difference?",
+    "back": "A default property applies to every future view when you drag the field in. Formatting a single pill or view changes only that view."
+  },
+  {
+    "id": "1.3-c026",
+    "objectives": ["1.3.5"],
+    "kind": "rule",
+    "front": "Are default colour encodings shared across sheets?",
+    "back": "Yes. Color encodings are shared across multiple worksheets that use the same data source."
+  }
+]

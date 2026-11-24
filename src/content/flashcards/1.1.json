@@ -1,0 +1,212 @@
+[
+  {
+    "id": "1.1-c001",
+    "objectives": ["1.1.1"],
+    "kind": "term",
+    "front": "Live connection",
+    "back": "Tableau sends every query to the original database or file, so you always see what the source holds right now. Speed depends on that source."
+  },
+  {
+    "id": "1.1-c002",
+    "objectives": ["1.1.1"],
+    "kind": "recipe",
+    "front": "How do you create a live connection?",
+    "back": "On the Start page, pick a connector in the Connect pane (files or servers) and point it at your file or sign in. Tableau opens the Data Source page. If you do not select Extract there, it stays live."
+  },
+  {
+    "id": "1.1-c003",
+    "objectives": ["1.1.1"],
+    "kind": "rule",
+    "front": "Where on the Data Source page do you choose between live and extract?",
+    "back": "In the upper-right corner. Select `Extract` to make an extract. If you leave it alone, the data source stays a live connection."
+  },
+  {
+    "id": "1.1-c004",
+    "objectives": ["1.1.1", "1.1.2"],
+    "kind": "rule",
+    "front": "Which kind of data source does Tableau Public support?",
+    "back": "Only extracted data sources. Public does not support live connections, so a CSV you connect to there is always an extract."
+  },
+  {
+    "id": "1.1-c005",
+    "objectives": ["1.1.2", "1.1.3"],
+    "kind": "term",
+    "front": "Extract",
+    "back": "A copy of the data saved in Tableau's own fast file format, `.hyper`. It is a snapshot: it changes only when you refresh it."
+  },
+  {
+    "id": "1.1-c006",
+    "objectives": ["1.1.2"],
+    "kind": "rule",
+    "front": "Live vs. extract: which is fresher?",
+    "back": "Live. It always shows what the source holds now. An extract is a snapshot that changes only when you refresh it."
+  },
+  {
+    "id": "1.1-c007",
+    "objectives": ["1.1.2"],
+    "kind": "rule",
+    "front": "Live vs. extract: which usually gives better performance?",
+    "back": "The extract. Views on extracts usually perform better than views connected directly to the original data, especially when the source is slow or busy."
+  },
+  {
+    "id": "1.1-c008",
+    "objectives": ["1.1.2"],
+    "kind": "rule",
+    "front": "Live vs. extract: which works offline?",
+    "back": "The extract. A live connection needs the source to be reachable."
+  },
+  {
+    "id": "1.1-c009",
+    "objectives": ["1.1.2"],
+    "kind": "rule",
+    "front": "Why can an extract reduce load on a database?",
+    "back": "Queries hit the extract instead of the database, which can prevent resource drains on the database system."
+  },
+  {
+    "id": "1.1-c010",
+    "objectives": ["1.1.2"],
+    "kind": "rule",
+    "front": "When should you choose a live connection?",
+    "back": "When people need up-to-the-minute data and the database is fast enough to answer interactively."
+  },
+  {
+    "id": "1.1-c011",
+    "objectives": ["1.1.2"],
+    "kind": "rule",
+    "front": "When should you choose an extract?",
+    "back": "When the source is slow or busy, when you need to work offline or share a packaged workbook, or when a snapshot (refreshed daily, say) is fresh enough."
+  },
+  {
+    "id": "1.1-c012",
+    "objectives": ["1.1.3"],
+    "kind": "recipe",
+    "front": "How do you create an extract?",
+    "back": "On the Data Source page, select `Extract` in the upper-right corner, click `Edit` to open the Extract Data dialog, choose settings (all optional), choose `Save Settings`, then click a sheet tab to start building it."
+  },
+  {
+    "id": "1.1-c013",
+    "objectives": ["1.1.3"],
+    "kind": "rule",
+    "front": "What can you set in the Extract Data dialog?",
+    "back": "Data Storage (logical or physical tables), Filters, Aggregation (including roll up dates), Number of Rows (all, top N or sample), Incremental refresh and Hide All Unused Fields."
+  },
+  {
+    "id": "1.1-c014",
+    "objectives": ["1.1.3"],
+    "kind": "rule",
+    "front": "Can you filter an extract?",
+    "back": "Yes. An extract filter keeps only the rows you need, for example one year. Other rows are not hidden, they are not in the file."
+  },
+  {
+    "id": "1.1-c015",
+    "objectives": ["1.1.3"],
+    "kind": "menu",
+    "front": "Menu path to refresh an extract",
+    "back": "Select the data source on the `Data` menu, then `Extract > Refresh`. `Extract > History` lists past refreshes and `Extract > Remove` removes the extract."
+  },
+  {
+    "id": "1.1-c016",
+    "objectives": ["1.1.3"],
+    "kind": "term",
+    "front": "Full refresh vs. incremental refresh",
+    "back": "Full (the default) replaces all data in the extract with the latest from the source. Incremental adds only new rows since the previous refresh, found with a column you choose."
+  },
+  {
+    "id": "1.1-c017",
+    "objectives": ["1.1.3"],
+    "kind": "rule",
+    "front": "What are the limits of incremental refresh?",
+    "back": "It needs All rows in the extract, it uses a column you name to find new rows, and you cannot use it together with aggregation."
+  },
+  {
+    "id": "1.1-c018",
+    "objectives": ["1.1.3"],
+    "kind": "file",
+    "front": ".hyper",
+    "back": "An extract: the extracted data itself, saved in Tableau's fast file format."
+  },
+  {
+    "id": "1.1-c019",
+    "objectives": ["1.1.4"],
+    "kind": "file",
+    "front": ".tds",
+    "back": "A Tableau data source file. It saves the connection information and metadata (groups, sets, calculated fields, bins, default properties, renamed fields), but not the data."
+  },
+  {
+    "id": "1.1-c020",
+    "objectives": ["1.1.4"],
+    "kind": "file",
+    "front": ".tdsx",
+    "back": "A packaged data source. It has everything in a `.tds` plus a copy of any local file-based data or extracts."
+  },
+  {
+    "id": "1.1-c021",
+    "objectives": ["1.1.4"],
+    "kind": "file",
+    "front": ".twb",
+    "back": "A workbook: one or more worksheets, plus zero or more dashboards and stories. It holds no data."
+  },
+  {
+    "id": "1.1-c022",
+    "objectives": ["1.1.4"],
+    "kind": "file",
+    "front": ".twbx",
+    "back": "A packaged workbook: one zip file with the workbook plus any supporting local file data and background images."
+  },
+  {
+    "id": "1.1-c023",
+    "objectives": ["1.1.4"],
+    "kind": "menu",
+    "front": "Menu path to save a data source as .tds",
+    "back": "In the Data pane, right-click the data source name and select `Add to Saved Data Sources`. Enter a file name, choose `.tds` or `.tdsx`, and click `Save`."
+  },
+  {
+    "id": "1.1-c024",
+    "objectives": ["1.1.4"],
+    "kind": "rule",
+    "front": "Where does a saved .tds go by default?",
+    "back": "The `Datasources` folder of your `My Tableau Repository`, which Tableau creates in your Documents folder."
+  },
+  {
+    "id": "1.1-c025",
+    "objectives": ["1.1.4"],
+    "kind": "rule",
+    "front": "A .tds file must travel with its local data. What do you use?",
+    "back": "A `.tdsx`. A `.tds` has the connection and metadata only. For a workbook, the packaged version is `.twbx`."
+  },
+  {
+    "id": "1.1-c026",
+    "objectives": ["1.1.5"],
+    "kind": "recipe",
+    "front": "How do you add a second connection to a data source?",
+    "back": "Connect to the first source and drag a table to the canvas. Click `Add` next to the Connections heading in the left pane and connect to the second source. Then drag a table from it and relate or join it."
+  },
+  {
+    "id": "1.1-c027",
+    "objectives": ["1.1.5"],
+    "kind": "term",
+    "front": "Cross-database join",
+    "back": "A join between tables from different connections. Both tables must be in one data source, added as connections, not as separate data sources."
+  },
+  {
+    "id": "1.1-c028",
+    "objectives": ["1.1.5"],
+    "kind": "rule",
+    "front": "How does Tableau show which connection a table comes from?",
+    "back": "It colours the tables in the canvas and the columns in the data grid by connection."
+  },
+  {
+    "id": "1.1-c029",
+    "objectives": ["1.1.5"],
+    "kind": "rule",
+    "front": "Which sources do not support cross-database joins?",
+    "back": "Not every source supports them, including cube data, most extract-only connectors and published Tableau data sources."
+  },
+  {
+    "id": "1.1-c030",
+    "objectives": ["1.1.5"],
+    "kind": "rule",
+    "front": "Can you join two separate data sources?",
+    "back": "No. Tables in different databases must be added as connections within one data source. Separate data sources can only be combined in a view by blending."
+  }
+]

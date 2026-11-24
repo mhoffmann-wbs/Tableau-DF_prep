@@ -1,0 +1,184 @@
+[
+  {
+    "id": "3.2-c001",
+    "objectives": ["3.2.1"],
+    "kind": "recipe",
+    "front": "How do you start a dashboard and put a sheet on it?",
+    "back": "Click the New Dashboard icon at the bottom of the workbook. Then drag views from the Sheets list at the left onto the dashboard at the right."
+  },
+  {
+    "id": "3.2-c002",
+    "objectives": ["3.2.1"],
+    "kind": "term",
+    "front": "Dashboard objects",
+    "back": "Items you add from the Objects section besides sheets: Horizontal and Vertical layout containers, Text, Image, Web Page, Blank (spacing) and Navigation."
+  },
+  {
+    "id": "3.2-c003",
+    "objectives": ["3.2.1"],
+    "kind": "term",
+    "front": "Navigation object",
+    "back": "A dashboard object that lets the audience move from one dashboard to another, or to other sheets or stories."
+  },
+  {
+    "id": "3.2-c004",
+    "objectives": ["3.2.1"],
+    "kind": "rule",
+    "front": "Worksheet, dashboard, story: what is each?",
+    "back": "A worksheet holds one view. A dashboard arranges several worksheets (plus text, images and controls) on one screen. A story is a sequence of sheets or dashboards, one per story point."
+  },
+  {
+    "id": "3.2-c005",
+    "objectives": ["3.2.2"],
+    "kind": "recipe",
+    "front": "How do you make one filter card filter every sheet on a dashboard?",
+    "back": "Open the card menu and choose Apply to Worksheets > Selected worksheets, then click All on dashboard."
+  },
+  {
+    "id": "3.2-c006",
+    "objectives": ["3.2.2"],
+    "kind": "term",
+    "front": "Use as Filter",
+    "back": "A button in the upper corner of a dashboard sheet. It makes the selected marks filter the other sheets on the dashboard. It is a one-click filter action."
+  },
+  {
+    "id": "3.2-c007",
+    "objectives": ["3.2.2"],
+    "kind": "term",
+    "front": "Data highlighter",
+    "back": "Lets viewers search for data points with keywords or pick from a drop-down list. Matching marks stand out and the rest fade. It also appears on dashboards and stories."
+  },
+  {
+    "id": "3.2-c008",
+    "objectives": ["3.2.2"],
+    "kind": "menu",
+    "front": "How do you edit what a tooltip shows?",
+    "back": "On the Marks card, select Tooltip. Use the Insert menu at the top of the dialog box to add dynamic text such as field values."
+  },
+  {
+    "id": "3.2-c009",
+    "objectives": ["3.2.2"],
+    "kind": "recipe",
+    "front": "How do you put a whole sheet inside a tooltip?",
+    "back": "Use a Viz in Tooltip: in the Tooltip Editor, choose Insert > Sheets and pick the sheet."
+  },
+  {
+    "id": "3.2-c010",
+    "objectives": ["3.2.2"],
+    "kind": "term",
+    "front": "Show/Hide button",
+    "back": "Added from the pop-up menu in the upper corner of a dashboard object (Add Show/Hide Button). For example, it can fold away a panel of filters."
+  },
+  {
+    "id": "3.2-c011",
+    "objectives": ["3.2.3"],
+    "kind": "menu",
+    "front": "Where do you create dashboard actions?",
+    "back": "On a dashboard, select Dashboard > Actions, then Add Action and choose the type."
+  },
+  {
+    "id": "3.2-c012",
+    "objectives": ["3.2.3"],
+    "kind": "rule",
+    "front": "Which action types can you add under Dashboard > Actions?",
+    "back": "Filter, Highlight, Go to URL, Go to Sheet, Change Parameter and Change Set Values."
+  },
+  {
+    "id": "3.2-c013",
+    "objectives": ["3.2.3"],
+    "kind": "rule",
+    "front": "Filter action vs. highlight action",
+    "back": "A filter action removes marks from the target sheets. A highlight action keeps all marks and dims the others. If other values must stay visible, use highlight."
+  },
+  {
+    "id": "3.2-c014",
+    "objectives": ["3.2.3"],
+    "kind": "rule",
+    "front": "What can \"Run action on\" be set to?",
+    "back": "Hover, Select (optionally single-select only) or Menu, which is a link in the tooltip."
+  },
+  {
+    "id": "3.2-c015",
+    "objectives": ["3.2.3"],
+    "kind": "rule",
+    "front": "What happens when a filter action selection is cleared?",
+    "back": "You choose: Leave the filter, Show all values or Exclude all values. Parameter actions offer Keep current value or Set value to."
+  },
+  {
+    "id": "3.2-c016",
+    "objectives": ["3.2.3"],
+    "kind": "recipe",
+    "front": "How do you write a URL action link that uses a field value?",
+    "back": "Put the field name in angle brackets, as in `https://example.com/title?id=<Title ID>`. The field must be used in the view; Detail is enough."
+  },
+  {
+    "id": "3.2-c017",
+    "objectives": ["3.2.3"],
+    "kind": "rule",
+    "front": "Is Use as Filter the same as a dashboard action?",
+    "back": "Use as Filter creates a filter action from that sheet to the others. Custom behaviour (hover, menu, targets, clearing) is set under Dashboard > Actions."
+  },
+  {
+    "id": "3.2-c018",
+    "objectives": ["3.2.4"],
+    "kind": "rule",
+    "front": "Tiled vs. floating items",
+    "back": "Tiled items do not overlap and form a single-layer grid. Floating items can be layered over other objects. Hold Shift while dragging to float an item."
+  },
+  {
+    "id": "3.2-c019",
+    "objectives": ["3.2.4"],
+    "kind": "rule",
+    "front": "Horizontal vs. vertical layout container",
+    "back": "A horizontal container resizes the width of the views and objects it holds. A vertical container adjusts height."
+  },
+  {
+    "id": "3.2-c020",
+    "objectives": ["3.2.4"],
+    "kind": "rule",
+    "front": "Which dashboard sizes exist, and which is the default?",
+    "back": "Fixed size (the default, can pick a preset such as Desktop Browser), Range (between a minimum and a maximum) and Automatic (fills the window)."
+  },
+  {
+    "id": "3.2-c021",
+    "objectives": ["3.2.4"],
+    "kind": "recipe",
+    "front": "How do you add a phone or tablet layout to a dashboard?",
+    "back": "On the Dashboard tab, click Device Preview, pick a device type, then click Add Layout (for example Add Tablet Layout). Device layouts appear under Default."
+  },
+  {
+    "id": "3.2-c022",
+    "objectives": ["3.2.4"],
+    "kind": "rule",
+    "front": "What must you check when publishing a dashboard with device layouts?",
+    "back": "Make sure the Show sheets as tabs check box is cleared, so the device layouts are used."
+  },
+  {
+    "id": "3.2-c023",
+    "objectives": ["3.2.5"],
+    "kind": "recipe",
+    "front": "How do you create a story?",
+    "back": "Click the New Story tab. Drag a sheet or dashboard into the story, then click Add a caption to summarize the story point."
+  },
+  {
+    "id": "3.2-c024",
+    "objectives": ["3.2.5"],
+    "kind": "rule",
+    "front": "Blank vs. Duplicate when adding a story point",
+    "back": "Blank starts a fresh story point. Duplicate copies the current one so you can change it, for example with a filter or highlight."
+  },
+  {
+    "id": "3.2-c025",
+    "objectives": ["3.2.5"],
+    "kind": "rule",
+    "front": "You changed a filter in a story point. How do you keep it?",
+    "back": "Click Update on the story toolbar above the navigator box. Save as New keeps both versions."
+  },
+  {
+    "id": "3.2-c026",
+    "objectives": ["3.2.5"],
+    "kind": "rule",
+    "front": "Story point vs. dashboard",
+    "back": "A dashboard shows several sheets at once. A story shows one sheet or dashboard per story point, in sequence, with captions."
+  }
+]
