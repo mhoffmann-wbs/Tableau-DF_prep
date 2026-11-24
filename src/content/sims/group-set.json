@@ -9,7 +9,7 @@
     "2.3.4",
     "2.3.6"
   ],
-  "intro": "Each card is a request from a Driftlight analyst. Decide which tool it calls for: a group, a set, a hierarchy, a bin or a parameter. After you answer, you see a sketch of what it builds and how to create it. To build a group, set, bin or hierarchy for real, open a field's menu in the sandbox's Data pane.",
+  "intro": "Each card is a request from a Driftlight analyst. Decide which tool it calls for: a group, a set, a hierarchy, a bin or a parameter. After you answer, you see a sketch of what it builds and how to create it. After each answer you can open the result, built on the Driftlight data, in the sandbox, or build your own from a field's menu in the sandbox's Data pane.",
   "copy": {
     "s1": "Combine the spelling variants Cologne and Köln into one city, so the board sees a single bar.",
     "s1Answer": "group",
@@ -55,7 +55,8 @@
     "right": "Right.",
     "wrong": "Not quite.",
     "howLabel": "How to build it",
-    "done": "All scenarios answered. Use Start over to try them again."
+    "done": "All scenarios answered. Use Start over to try them again.",
+    "openSandbox": "Open it built on the Driftlight data in the sandbox: look at the field in the Data pane and open its menu to edit it."
   },
   "items": [
     "2.2-009",

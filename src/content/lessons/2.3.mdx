@@ -18,6 +18,51 @@ export const meta = {
     { title: 'Show totals in a visualization', url: 'https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm' },
   ],
   vizzes: {
+    'average-line': {
+      spec: {
+        rows: [{ field: 'Genre' }],
+        columns: [{ field: 'Minutes Watched' }],
+        refs: [{ kind: 'line', measure: { field: 'Minutes Watched' }, scope: 'table', value: { kind: 'computed', agg: 'avg' } }],
+      },
+      caption: 'A reference line at the average of the genre bars (scope Table): genres to its right are above average.',
+    },
+    'running-total': {
+      spec: { columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }], rows: [{ field: 'Minutes Watched', tableCalc: { type: 'runningTotal' } }] },
+      caption: 'Running total of SUM(Minutes Watched) by month: each point adds the month to all the months before it.',
+    },
+    'percent-of-total': {
+      spec: {
+        rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }],
+        columns: [{ field: 'Minutes Watched', tableCalc: { type: 'percentOfTotal' } }],
+        marks: { label: { field: 'Minutes Watched', tableCalc: { type: 'percentOfTotal' } } },
+      },
+      caption: 'Percent of total: each genre’s share of all minutes watched. The bars add up to 100%.',
+    },
+    histogram: {
+      spec: {
+        bins: [{ name: 'Minutes Watched (bin)', field: 'Minutes Watched', size: 10 }],
+        columns: [{ field: 'Minutes Watched (bin)' }],
+        rows: [{ field: 'Minutes Watched', agg: 'count' }],
+      },
+      caption: 'Histogram: Minutes Watched (bin) with bins of 10 minutes on Columns, CNT(Minutes Watched) on Rows.',
+    },
+    'hours-calc': {
+      spec: {
+        calcs: [{ name: 'Hours Watched', formula: '[Minutes Watched] / 60' }],
+        rows: [{ field: 'Device', sort: { order: 'desc', field: 'Hours Watched', agg: 'sum' } }],
+        columns: [{ field: 'Hours Watched' }],
+      },
+      caption: 'A row-level calculated field, Hours Watched = [Minutes Watched] / 60, summed per device like any measure.',
+    },
+    'grand-totals': {
+      spec: {
+        rows: [{ field: 'Region' }],
+        columns: [{ field: 'Start' }],
+        marks: { label: { field: 'Minutes Watched' } },
+        totals: { row: true, column: true },
+      },
+      caption: 'A crosstab of minutes by region and year with row grand totals (a Grand Total column) and column grand totals (a Grand Total row).',
+    },
     'computed-sort': {
       spec: { rows: [{ field: 'Plan', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }], columns: [{ field: 'Minutes Watched' }] },
       caption: 'A computed sort: Plan sorted by SUM(Minutes Watched), descending. It re-sorts whenever the data changes.',
@@ -93,6 +138,8 @@ Two more details: "Sorting from an axis gives a nested sort by default", which s
 
 The same dialog builds relatives of the line: **reference bands** "shade an area behind the marks in the view between two constant or computed values"; **distributions** use percentages, percentiles, quantiles or standard deviations; and **box plots** add quartiles and whiskers to a continuous axis. To remove one, click the line and select **Remove**.
 
+<LessonViz id="average-line" />
+
 ### Use a quick table calculation
 
 A table calculation computes over the marks already in the view, like a window function over an aggregated result. A **quick table calculation** applies one "using the most typical settings for that calculation type": right-click a measure pill, such as `SUM(Minutes Watched)`, and choose **Quick Table Calculation**, then:
@@ -105,11 +152,17 @@ Running total · Difference · Percent difference · Percent of total · Rank ·
 
 Example: a line of monthly minutes with **Running total** shows cumulative viewing; bars of minutes per genre with **Percent of total** show each genre's share.
 
+<LessonViz id="running-total" />
+
+<LessonViz id="percent-of-total" />
+
 ### Use bins and histograms
 
 **Bins** cut a continuous measure into equal ranges: "In the Data pane, right-click … a measure and select **Create > Bins**." Enter the **Size of bins** or let Tableau suggest one. "When you create bins from a measure you create a new dimension", named like `Minutes Watched (bin)`, and "the lower limit is inclusive". Bins only work with relational data sources, and binned fields can't be used in calculations.
 
-A **histogram** counts the marks in each bin. The quick way: select one measure and pick histogram in **Show Me**, which "is available in Show Me when the view contains a single measure and no dimensions". Tableau creates the bin field and puts it on Columns; the measure moves to Rows and "the aggregation changes from SUM to CNT (Count)". A histogram of Minutes Watched per session shows how long typical sessions are.
+A **histogram** counts the marks in each bin. The quick way: select one measure and pick histogram in **Show Me**, which "is available in Show Me when the view contains a single measure and no dimensions". Tableau creates the bin field and puts it on Columns; the measure moves to Rows and "the aggregation changes from SUM to CNT (Count)". A histogram of Minutes Watched per session shows how long typical sessions are:
+
+<LessonViz id="histogram" />
 
 ### Create a calculated field (for example, string, date, simple arithmetic)
 
@@ -123,6 +176,8 @@ A **histogram** counts the marks in each bin. The quick way: select one measure 
 | Ratio | `SUM([Minutes Watched]) / COUNT([Session ID])` | average minutes per session |
 
 The first three kinds are **row-level**: computed for every row, then aggregated in the view. The ratio is an **aggregate calculation**: it aggregates first, then divides, so it gives the right value at any level of detail. Mixing the two in one formula, such as `[Minutes Watched] / COUNT([Session ID])`, is an error. (A table's `(Count)` field can't be used in calculations at all, so count an ID field instead.)
+
+<LessonViz id="hours-calc" />
 
 ### Explain when to use a parameter
 
@@ -145,6 +200,8 @@ A parameter does nothing until something uses it. Right-click it and select **Sh
 Drag **Totals** from the Analytics pane into the **Add Totals** dialog and drop it on **Subtotals**, **Row Grand Totals** or **Column Grand Totals**. The **Analysis > Totals** menu offers totals too. To choose the aggregation a total uses for all measures, choose **Analysis > Totals > Total All Using** and pick an aggregation; for one field, right-click it in the view and select **Total using**.
 
 Limits: "The view must have at least one header", and "Grand totals cannot be applied to continuous dimensions". Totals can't be applied to table calculations.
+
+<LessonViz id="grand-totals" />
 
 ## At Driftlight
 

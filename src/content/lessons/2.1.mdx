@@ -17,6 +17,23 @@ export const meta = {
     { title: 'Mark types', url: 'https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_marktypes.htm' },
   ],
   vizzes: {
+    'combined-axis': {
+      spec: {
+        columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }],
+        rows: [{ field: 'Measure Values' }],
+        marks: { color: { field: 'Measure Names' } },
+        measureValues: [{ field: 'Minutes Watched', agg: 'avg' }, { field: 'Runtime', agg: 'avg' }],
+      },
+      caption: 'Combined axis: average minutes watched and average runtime per session share one axis in minutes; Measure Names on Color tells them apart.',
+    },
+    'dual-axis': {
+      spec: {
+        columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }],
+        rows: [{ field: 'Minutes Watched', mark: 'bar' }, { field: 'Sessions (Count)', mark: 'line' }],
+        axes: { rows: { dual: true } },
+      },
+      caption: 'Dual axis: minutes watched as bars on the left axis, sessions as a line on the right axis, each with its own Marks card.',
+    },
     bar: {
       spec: { rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }], columns: [{ field: 'Minutes Watched' }] },
       caption: 'Bar chart: Genre on Rows, SUM(Minutes Watched) on Columns gives horizontal bars.',
@@ -162,7 +179,9 @@ A field with a geographic role (task 1.3) gives Tableau the generated coordinate
 
 A **combined axis**, which Tableau's help calls a **blended axis**, shows two or more measures on **one shared axis**. "To blend multiple measures, drag one measure or axis and drop it onto an existing axis." Tableau then replaces the measure with **Measure Values** (on the shelf) and adds **Measure Names** to Color, so each measure gets its own colour on the same scale.
 
-Use it for measures in the **same units**, such as Target Hours vs. Actual Hours: one axis lets you compare them directly.
+Use it for measures in the **same units**, such as Target Hours vs. Actual Hours: one axis lets you compare them directly. Average minutes watched and average runtime are both in minutes:
+
+<LessonViz id="combined-axis" />
 
 ### Create a dual axis chart
 
@@ -175,7 +194,9 @@ Then:
 - The two axes are independent. To put them on the same scale, "right-click … the secondary axis, and select **Synchronize Axis**".
 - "You can add up to four layered axes: two on the Columns shelf and two on the Rows shelf."
 
-Use it for measures with **different units or scales**, such as minutes watched (in millions) and number of sessions (in thousands).
+Use it for measures with **different units or scales**, such as minutes watched (in millions) and number of sessions (in thousands):
+
+<LessonViz id="dual-axis" />
 
 | | Combined (blended) axis | Dual axis |
 |---|---|---|

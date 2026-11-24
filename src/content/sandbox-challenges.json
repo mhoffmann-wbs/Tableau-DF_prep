@@ -267,5 +267,212 @@
     ],
     "hints": ["Drag Start to Filters. Either keep the year 2025, or set a range of dates covering the whole year."],
     "debrief": "A date filter can keep date parts (the year 2025) or a range of dates (1 January to 31 December 2025). Both give the same view here; relative dates are a third option in Tableau."
+  },
+  {
+    "id": "combined-axis-minutes-runtime",
+    "title": "Combined axis: two kinds of minutes",
+    "objectives": ["2.1.5"],
+    "prompt": "Show average minutes watched and average runtime per session month by month, as two lines on one shared axis.",
+    "start": {
+      "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+      "rows": [{ "field": "Minutes Watched", "agg": "avg" }]
+    },
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+        "rows": [{ "field": "Measure Values" }],
+        "marks": { "color": { "field": "Measure Names" } },
+        "measureValues": [{ "field": "Minutes Watched", "agg": "avg" }, { "field": "Runtime", "agg": "avg" }]
+      }
+    ],
+    "hints": [
+      "Set Runtime's default aggregation to Average, or change it on the card afterwards.",
+      "Open Runtime in the Data pane and choose Drop on the Rows axis: the two measures then share the axis."
+    ],
+    "debrief": "Dropping a measure on an existing axis makes a combined (blended) axis: Measure Values on the shelf, the measures on the Measure Values card and Measure Names on Color. It suits measures in the same units, as here, where both are minutes."
+  },
+  {
+    "id": "dual-axis-combo",
+    "title": "Dual axis: bars and a line",
+    "objectives": ["2.1.6"],
+    "prompt": "Show minutes watched per month as bars and the number of sessions per month as a line, each on its own axis.",
+    "start": {
+      "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+      "rows": [{ "field": "Minutes Watched" }, { "field": "Sessions (Count)" }]
+    },
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+        "rows": [{ "field": "Minutes Watched", "mark": "bar" }, { "field": "Sessions (Count)", "mark": "line" }],
+        "axes": { "rows": { "dual": true } }
+      }
+    ],
+    "hints": [
+      "Open the second measure's pill menu and choose Dual Axis.",
+      "With two measures on a shelf the Marks card has a tab for each: set the minutes tab to Bar."
+    ],
+    "debrief": "A dual axis layers two measures in one pane, each with its own axis and its own Marks card, so one can be bars and the other a line. It suits measures with different units or scales, such as minutes and sessions."
+  },
+  {
+    "id": "average-reference-line",
+    "title": "Above or below average",
+    "objectives": ["2.3.2", "2.1.1"],
+    "prompt": "Draw minutes watched per genre as bars, with one reference line at the average of the bars across the whole table.",
+    "start": { "rows": [{ "field": "Genre" }], "columns": [{ "field": "Minutes Watched" }] },
+    "accept": [
+      {
+        "rows": [{ "field": "Genre" }],
+        "columns": [{ "field": "Minutes Watched" }],
+        "refs": [
+          { "kind": "line", "measure": { "field": "Minutes Watched" }, "scope": "table", "value": { "kind": "computed", "agg": "avg" } }
+        ]
+      }
+    ],
+    "hints": ["Open the Analytics pane and add an Average Line.", "Choose Table as the scope: one line for the whole view."],
+    "debrief": "A reference line's scope decides how many lines you get: Table draws one, Pane one per pane, Cell one per cell. Its value is a constant or a computation over the marks, such as the average."
+  },
+  {
+    "id": "genre-share",
+    "title": "Each genre's share",
+    "objectives": ["2.3.3"],
+    "prompt": "Show each genre's share of all minutes watched as bars that add up to 100%.",
+    "start": { "rows": [{ "field": "Genre" }], "columns": [{ "field": "Minutes Watched" }] },
+    "accept": [
+      {
+        "rows": [{ "field": "Genre" }],
+        "columns": [{ "field": "Minutes Watched", "tableCalc": { "type": "percentOfTotal" } }]
+      }
+    ],
+    "hints": ["Open the SUM(Minutes Watched) pill's menu and choose Quick Table Calculation."],
+    "debrief": "Percent of total is a quick table calculation: it divides each mark by the total of the marks it computes over. The pill gets a delta (△) to show a table calculation is applied."
+  },
+  {
+    "id": "running-total-months",
+    "title": "The year building up",
+    "objectives": ["2.3.3", "2.1.2"],
+    "prompt": "Show minutes watched as a continuous line by month, where each point is the total so far.",
+    "start": { "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }], "rows": [{ "field": "Minutes Watched" }] },
+    "accept": [
+      {
+        "columns": [{ "field": "Start", "date": { "level": "month", "mode": "value" } }],
+        "rows": [{ "field": "Minutes Watched", "tableCalc": { "type": "runningTotal" } }]
+      }
+    ],
+    "hints": ["A total so far is a running total, one of the quick table calculations on the measure's pill."],
+    "debrief": "A running total adds each mark to all the marks before it along the Compute Using direction. Quick table calculations compute over the marks in the view, not over the rows."
+  },
+  {
+    "id": "session-length-histogram",
+    "title": "How long are sessions?",
+    "objectives": ["2.3.4"],
+    "prompt": "Count sessions in 10-minute ranges of minutes watched: a histogram.",
+    "accept": [
+      {
+        "bins": [{ "name": "Minutes Watched (bin)", "field": "Minutes Watched", "size": 10 }],
+        "columns": [{ "field": "Minutes Watched (bin)" }],
+        "rows": [{ "field": "Minutes Watched", "agg": "count" }]
+      }
+    ],
+    "hints": [
+      "Open Minutes Watched in the Data pane and choose Create > Bins, with a size of 10.",
+      "Put the bin field on Columns and Minutes Watched on Rows, then change its aggregation to Count."
+    ],
+    "debrief": "Bins cut a measure into equal ranges and create a new dimension; the lower limit of each bin is inclusive. A histogram counts the marks in each bin, which is why the measure aggregates as CNT."
+  },
+  {
+    "id": "hours-by-device",
+    "title": "Hours, not minutes",
+    "objectives": ["2.3.5"],
+    "prompt": "Create a calculated field Hours Watched (minutes divided by 60) and show its total per device as bars.",
+    "accept": [
+      {
+        "calcs": [{ "name": "Hours Watched", "formula": "[Minutes Watched] / 60" }],
+        "rows": [{ "field": "Device" }],
+        "columns": [{ "field": "Hours Watched" }]
+      }
+    ],
+    "hints": [
+      "In the Data pane, create a calculated field named Hours Watched.",
+      "The formula divides [Minutes Watched] by 60. It's a row-level number, so Tableau treats it as a measure and sums it."
+    ],
+    "debrief": "A row-level calculation is computed for every row and then aggregated in the view, so SUM(Hours Watched) is the total minutes divided by 60. A number calc becomes a measure in the Data pane."
+  },
+  {
+    "id": "crosstab-grand-totals",
+    "title": "Crosstab with grand totals",
+    "objectives": ["2.3.7", "2.1.9"],
+    "prompt": "Show minutes watched in a crosstab of region by year, with a grand total for every region and every year.",
+    "start": { "rows": [{ "field": "Region" }], "columns": [{ "field": "Start" }], "marks": { "label": { "field": "Minutes Watched" } } },
+    "accept": [
+      {
+        "rows": [{ "field": "Region" }],
+        "columns": [{ "field": "Start" }],
+        "marks": { "label": { "field": "Minutes Watched" } },
+        "totals": { "row": true, "column": true }
+      }
+    ],
+    "hints": [
+      "Totals are in the Totals menu (Analysis > Totals), or drag Totals from the Analytics pane.",
+      "You need both: row grand totals (a column at the right) and column grand totals (a row at the bottom)."
+    ],
+    "debrief": "Row grand totals add a Grand Total column; column grand totals add a Grand Total row. Totals need at least one header, and Total All Using chooses how they aggregate."
+  },
+  {
+    "id": "merge-city-spellings",
+    "title": "One Cologne",
+    "objectives": ["2.2.1"],
+    "prompt": "Count German subscribers by city, with Cologne and Köln combined into one bar and Munich and München into another.",
+    "start": {
+      "source": "subscribers",
+      "rows": [{ "field": "City" }],
+      "columns": [{ "field": "Subscribers (Count)" }],
+      "filters": [{ "kind": "values", "field": "Country", "values": ["Germany"] }]
+    },
+    "accept": [
+      {
+        "source": "subscribers",
+        "groups": [
+          {
+            "name": "City (group)",
+            "field": "City",
+            "groups": [{ "name": "Cologne", "members": ["Cologne", "Köln"] }, { "name": "Munich", "members": ["Munich", "München"] }]
+          }
+        ],
+        "rows": [{ "field": "City (group)" }],
+        "columns": [{ "field": "Subscribers (Count)" }],
+        "filters": [{ "kind": "values", "field": "Country", "values": ["Germany"] }]
+      }
+    ],
+    "hints": [
+      "Open City in the Data pane and choose Create > Group, or select two bars and click Group.",
+      "Keep the default name City (group), put it on Rows in place of City, and make two groups: Cologne with Köln, Munich with München."
+    ],
+    "debrief": "A group combines members of a field into bigger members, the classic fix for spelling variants. The other cities stay as they are unless you include Other."
+  },
+  {
+    "id": "top-titles-set",
+    "title": "Where the top 10 titles sit",
+    "objectives": ["2.2.2"],
+    "prompt": "Show minutes watched per genre as bars, coloured by whether the minutes come from the top 10 titles by minutes or not.",
+    "start": { "rows": [{ "field": "Genre" }], "columns": [{ "field": "Minutes Watched" }] },
+    "accept": [
+      {
+        "sets": [
+          {
+            "name": "Title Set",
+            "field": "Title",
+            "rule": { "kind": "top", "from": "top", "n": 10, "field": "Minutes Watched", "agg": "sum" }
+          }
+        ],
+        "rows": [{ "field": "Genre" }],
+        "columns": [{ "field": "Minutes Watched" }],
+        "marks": { "color": { "field": "Title Set" } }
+      }
+    ],
+    "hints": [
+      "Open Title in the Data pane and choose Create > Set; use the Top tab: top 10 by SUM(Minutes Watched).",
+      "Put the set on Color: it shows In and Out."
+    ],
+    "debrief": "A set made on the Top tab is dynamic: when viewing changes, so do its members. On Color it splits each bar into In and Out of the set."
   }
 ]

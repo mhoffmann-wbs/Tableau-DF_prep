@@ -418,7 +418,7 @@ describe('make this chart', () => {
 
   it('lists the challenges with their solved state', async () => {
     await renderAt('/build', 'Build')
-    expect(screen.getByText(/0 of 15 solved/)).toBeInTheDocument()
+    expect(screen.getByText(/0 of 25 solved/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '1. Bar chart: minutes by genre' })).toHaveAttribute('href', '/build/sandbox/bar-genre-minutes')
   })
 

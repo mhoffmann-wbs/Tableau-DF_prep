@@ -9,7 +9,7 @@ The exam blueprint, the item schema and question bank, lessons, guides, calc exe
   - `viz`: `select` 1–3, 4–6 options, plus `viz: {spec, show: chart|shelves|both}` and optional `checks[]`: every Driftlight number or member the item states, as a lesson-style fact (`factSchema`, shared with lesson `meta.facts`).
 
   Multi-select stems must contain `(Choose N answers.)` exactly once, and single-answer stems must not. `selectCount()` gives N.
-- `src/content/questions/<taskId>.json`: one JSON array per task, 600 items in all (346 `single`, 153 `multi`, 101 `viz`; every objective has at least 9), loaded by `bank.ts` (`ITEMS`, `QUESTION_FILES`). Tableau facts come from the task's lesson, which was checked against the help. `bank.test.ts` checks file/task match, objectives, unique ids, the `quality.ts` checks, and that every `viz` item draws over the data and states each `checks` value exactly as `evaluateFact` computes it. The checks cover single-answer items (`single`, and `viz` with `select` 1):
+- `src/content/questions/<taskId>.json`: one JSON array per task, 626 items in all (346 `single`, 153 `multi`, 127 `viz`; every objective has at least 9), loaded by `bank.ts` (`ITEMS`, `QUESTION_FILES`). Tableau facts come from the task's lesson, which was checked against the help. `bank.test.ts` checks file/task match, objectives, unique ids, the `quality.ts` checks, and that every `viz` item draws over the data and states each `checks` value exactly as `evaluateFact` computes it. The checks cover single-answer items (`single`, and `viz` with `select` 1):
   - no key letter in more than 40% of items
   - the key is the strictly longest option in at most 40%
   - no duplicate stems (stem + viz spec)

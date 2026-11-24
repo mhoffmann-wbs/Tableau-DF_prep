@@ -4310,5 +4310,569 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
     ]
+  },
+  {
+    "id": "2.1-096",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "`SUM(Minutes Watched)` and `SUM(Runtime)` share one axis in this view. How was it most likely built?",
+    "options": [
+      {
+        "text": "`Runtime` was dropped on the right edge of the view, then the axes were synchronized.",
+        "correct": false,
+        "rationale": "The right edge makes a dual axis: two axes, even when synchronized. This view has a single axis."
+      },
+      {
+        "text": "Both measures were put on Rows, then Dual Axis was chosen from the second pill’s menu.",
+        "correct": false,
+        "rationale": "Dual Axis layers the measures with an axis each, and keeps the measures themselves on Rows instead of Measure Values."
+      },
+      {
+        "text": "`Runtime` was dragged to Color on the Marks card of a line chart of minutes.",
+        "correct": false,
+        "rationale": "A measure on Color shades the marks by its value; it doesn’t draw a second line."
+      },
+      {
+        "text": "`Runtime` was dropped onto the existing `SUM(Minutes Watched)` axis.",
+        "correct": true,
+        "rationale": "Dropping a measure onto an existing axis blends it: Tableau puts Measure Values on the shelf and Measure Names on Color."
+      }
+    ],
+    "explanation": "A combined (blended) axis comes from dragging a measure onto an existing axis. Tableau swaps the measures for Measure Values on the shelf and adds Measure Names to Color, so each measure gets its own colour on one shared scale.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Measure Values"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Measure Names"
+          }
+        },
+        "measureValues": [
+          {
+            "field": "Minutes Watched"
+          },
+          {
+            "field": "Runtime"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-097",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "Why does a combined axis suit these two measures better than a dual axis?",
+    "options": [
+      {
+        "text": "Both are in minutes, so one shared scale compares them directly.",
+        "correct": true,
+        "rationale": "A combined axis is for measures in the same units; Minutes Watched and Runtime are both minutes."
+      },
+      {
+        "text": "A combined axis is the only way to give each measure its own mark type.",
+        "correct": false,
+        "rationale": "One mark type covers a combined axis. A mark type per measure comes with a dual axis, which has a Marks card for each measure."
+      },
+      {
+        "text": "A dual axis can’t be drawn when the date on Columns is a discrete year.",
+        "correct": false,
+        "rationale": "A dual axis doesn’t depend on the date being discrete or continuous; it needs two measures on one shelf."
+      },
+      {
+        "text": "Their values are so far apart that a single axis would hide the smaller one.",
+        "correct": false,
+        "rationale": "Very different scales argue for a dual axis, not a shared one."
+      }
+    ],
+    "explanation": "Choose a combined axis for measures in the same units, so their marks sit on one comparable scale. Choose a dual axis for different units or scales, where each measure needs its own axis.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Measure Values"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Measure Names"
+          }
+        },
+        "measureValues": [
+          {
+            "field": "Minutes Watched"
+          },
+          {
+            "field": "Runtime"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-098",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "Which two statements describe this view? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Measure Names` on Color gives each measure a colour of its own.",
+        "correct": true,
+        "rationale": "Blending adds Measure Names to Color, so the colour tells you which measure a mark shows."
+      },
+      {
+        "text": "Both measures are drawn against one shared axis.",
+        "correct": true,
+        "rationale": "That is what a combined (blended) axis is: two or more measures on one axis."
+      },
+      {
+        "text": "Each measure has its own Marks card, so one could be drawn as bars.",
+        "correct": false,
+        "rationale": "A Marks card per measure belongs to a dual axis. A combined axis has one mark type for all its measures."
+      },
+      {
+        "text": "The right-hand axis can be synchronized with the left one.",
+        "correct": false,
+        "rationale": "There is no second axis to synchronize; Synchronize Axis is a dual axis option."
+      },
+      {
+        "text": "`Measure Values` on Color separates the two lines.",
+        "correct": false,
+        "rationale": "Measure Values sits on the Rows shelf here. Measure Names, the field holding the measures’ names, is on Color."
+      }
+    ],
+    "explanation": "In a combined axis chart the measures are replaced by Measure Values on the shelf and Measure Names on Color. All the measures share one axis and one mark type.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Measure Values"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Measure Names"
+          }
+        },
+        "measureValues": [
+          {
+            "field": "Minutes Watched"
+          },
+          {
+            "field": "Runtime"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-099",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.5"
+    ],
+    "stem": "You want a third measure, `SUM(Monthly Price)`, on the same shared axis as the two shown. What do you do?",
+    "options": [
+      {
+        "text": "Right-click the axis and choose Dual Axis, then drop the third measure on Rows.",
+        "correct": false,
+        "rationale": "Dual Axis gives a measure its own axis; it doesn’t add one to a shared axis."
+      },
+      {
+        "text": "Drag `Monthly Price` and drop it onto the existing axis as well.",
+        "correct": true,
+        "rationale": "A combined axis takes two or more measures: dropping another measure onto the axis adds it to the Measure Values card."
+      },
+      {
+        "text": "Drag `Monthly Price` to Color, replacing `Measure Names`.",
+        "correct": false,
+        "rationale": "That would colour the marks by price and lose the colour that tells the measures apart; it adds nothing to the axis."
+      },
+      {
+        "text": "Drag `Monthly Price` to the right edge of the view and drop it on the dashed line.",
+        "correct": false,
+        "rationale": "Dropping on the right edge creates a second, independent axis: a dual axis."
+      }
+    ],
+    "explanation": "\"To blend multiple measures, drag one measure or axis and drop it onto an existing axis.\" The same gesture adds a third measure to a combined axis, and Measure Values then stands for all three.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Measure Values"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Measure Names"
+          }
+        },
+        "measureValues": [
+          {
+            "field": "Minutes Watched"
+          },
+          {
+            "field": "Runtime"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-100",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "Minutes are drawn as bars and sessions as a line, each against its own axis. Which step made the two measures share one pane?",
+    "options": [
+      {
+        "text": "Dropping `Sessions (Count)` onto the `SUM(Minutes Watched)` axis.",
+        "correct": false,
+        "rationale": "That blends the measures onto one shared axis, with Measure Values and Measure Names. This view has two axes."
+      },
+      {
+        "text": "Right-clicking the secondary axis and selecting Synchronize Axis.",
+        "correct": false,
+        "rationale": "Synchronize Axis puts two axes that already share a pane on the same scale; it doesn’t layer them."
+      },
+      {
+        "text": "Choosing Dual Axis from the `SUM(Sessions (Count))` pill on Rows.",
+        "correct": true,
+        "rationale": "With both measures on Rows, Dual Axis on the second one layers them in one pane with an axis each."
+      },
+      {
+        "text": "Dragging `Measure Names` to Color on the All tab of the Marks card.",
+        "correct": false,
+        "rationale": "Measure Names colours measures on a combined axis. It doesn’t layer two measures with separate axes."
+      }
+    ],
+    "explanation": "A dual axis layers two measures, each with its own axis. Put both on Rows (or Columns) and choose Dual Axis from the second one’s menu, or drop the second measure on the right edge of the view. Each measure then has its own Marks card, so bars and a line can share the pane.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "mark": "bar"
+          },
+          {
+            "field": "Sessions (Count)",
+            "mark": "line"
+          }
+        ],
+        "axes": {
+          "rows": {
+            "dual": true
+          }
+        }
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-101",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "Which two statements are true of this view? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "There is a Marks card for each measure, so each can have its own mark type.",
+        "correct": true,
+        "rationale": "A dual axis gives each measure its own Marks card: here bars for minutes and a line for sessions."
+      },
+      {
+        "text": "The two axes are independent until you choose Synchronize Axis.",
+        "correct": true,
+        "rationale": "Each measure gets its own axis and scale; Synchronize Axis puts them on the same scale."
+      },
+      {
+        "text": "Both measures are drawn against one shared axis.",
+        "correct": false,
+        "rationale": "A shared axis is a combined (blended) axis. A dual axis has one axis per measure."
+      },
+      {
+        "text": "Tableau replaced the two measures with `Measure Values` on Rows.",
+        "correct": false,
+        "rationale": "Measure Values comes with a combined axis. A dual axis keeps the two measures themselves on the shelf."
+      },
+      {
+        "text": "No view can layer more than two axes in all.",
+        "correct": false,
+        "rationale": "You can add up to four layered axes: two on Columns and two on Rows."
+      }
+    ],
+    "explanation": "A dual axis keeps both measures on the shelf, gives each its own axis (independent unless synchronized) and its own Marks card.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "mark": "bar"
+          },
+          {
+            "field": "Sessions (Count)",
+            "mark": "line"
+          }
+        ],
+        "axes": {
+          "rows": {
+            "dual": true
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-102",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "For TV the view shows 1,187,645 minutes but 13,368 sessions. Why is a dual axis a better fit here than a combined axis?",
+    "options": [
+      {
+        "text": "A dual axis is the only way to show two measures for each device in one view.",
+        "correct": false,
+        "rationale": "A combined axis also shows two measures per device. The difference is the axes, not the number of measures."
+      },
+      {
+        "text": "A combined axis can’t be drawn when a dimension is on Rows.",
+        "correct": false,
+        "rationale": "A combined axis works with any dimension in the view; it only needs the measures on one axis."
+      },
+      {
+        "text": "Dual axes add up the two measures, so you can read the total per device.",
+        "correct": false,
+        "rationale": "A dual axis layers the measures; it doesn’t add them together."
+      },
+      {
+        "text": "The measures differ in units and scale, so each needs its own axis.",
+        "correct": true,
+        "rationale": "On one shared axis the session marks would be squeezed near zero beside the minutes. A dual axis gives sessions their own scale."
+      }
+    ],
+    "explanation": "Use a dual axis for measures with different units or scales, like minutes in the hundreds of thousands and sessions in the thousands. Use a combined axis for measures in the same units.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Device"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched",
+            "mark": "bar"
+          },
+          {
+            "field": "Sessions (Count)",
+            "mark": "circle"
+          }
+        ],
+        "axes": {
+          "columns": {
+            "dual": true
+          }
+        }
+      },
+      "show": "both"
+    },
+    "checks": [
+      {
+        "kind": "value",
+        "says": "1,187,645",
+        "spec": {
+          "rows": [
+            {
+              "field": "Device"
+            }
+          ],
+          "columns": [
+            {
+              "field": "Minutes Watched"
+            }
+          ]
+        },
+        "measure": {
+          "field": "Minutes Watched"
+        },
+        "where": {
+          "Device": "TV"
+        }
+      },
+      {
+        "kind": "value",
+        "says": "13,368",
+        "spec": {
+          "rows": [
+            {
+              "field": "Device"
+            }
+          ],
+          "columns": [
+            {
+              "field": "Sessions (Count)"
+            }
+          ]
+        },
+        "measure": {
+          "field": "Sessions (Count)"
+        },
+        "where": {
+          "Device": "TV"
+        }
+      }
+    ],
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
+  },
+  {
+    "id": "2.1-103",
+    "taskId": "2.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.1.6"
+    ],
+    "stem": "Both measures here are in minutes, but each axis has its own range, so the bars and the line can’t be read against one scale. What do you do?",
+    "options": [
+      {
+        "text": "Right-click the secondary axis and select Synchronize Axis.",
+        "correct": true,
+        "rationale": "Synchronize Axis puts the two axes of a dual axis on the same scale, which suits measures in the same units."
+      },
+      {
+        "text": "Select Dual Axis again from the `SUM(Runtime)` pill’s menu.",
+        "correct": false,
+        "rationale": "Dual Axis is already on; choosing it again would take the measures back out of the shared pane."
+      },
+      {
+        "text": "Drag `Measure Names` to Color on the `SUM(Runtime)` Marks card.",
+        "correct": false,
+        "rationale": "Colour doesn’t change the axes’ ranges; the scales stay independent."
+      },
+      {
+        "text": "Set the mark type on each measure’s Marks card to Bar.",
+        "correct": false,
+        "rationale": "The mark type changes how each measure is drawn, not the scale of its axis."
+      }
+    ],
+    "explanation": "The two axes of a dual axis are independent. \"Right-click … the secondary axis, and select Synchronize Axis\" to put both on the same scale.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "mark": "bar"
+          },
+          {
+            "field": "Runtime",
+            "mark": "line"
+          }
+        ],
+        "axes": {
+          "rows": {
+            "dual": true
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/multiple_measures.htm"
+    ]
   }
 ]

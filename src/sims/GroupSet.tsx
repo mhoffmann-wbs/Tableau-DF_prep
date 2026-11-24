@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
 import type { SimProps } from '.'
+import { specHash } from '../engine/edit'
+import { type VizSpec, vizSpecSchema } from '../engine/spec'
 import { Choice } from './Choice'
 
 export const KINDS = ['group', 'set', 'hierarchy', 'bin', 'parameter'] as const
@@ -19,6 +22,7 @@ export const COPY_KEYS = [
   'right',
   'wrong',
   'howLabel',
+  'openSandbox',
   'done',
 ] as const
 
@@ -39,6 +43,65 @@ export function scenariosOf(copy: Record<string, string>): Scenario[] {
     return { id: n, text: copy[`s${n}`]!, answer, why: copy[`s${n}Why`]!, how: copy[`s${n}How`]! }
   })
 }
+
+const topTitles = (n: number) => ({ name: `Top ${n} Titles`, field: 'Title', rule: { kind: 'top', from: 'top', n, field: 'Minutes Watched', agg: 'sum' } })
+const byGenre = { rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }], columns: [{ field: 'Minutes Watched' }] }
+
+/**
+ * The result of each request built on the Driftlight data, opened in the
+ * sandbox from the answer (parameters have none: the engine has no parameters).
+ */
+export const PRESETS: Record<number, VizSpec> = Object.fromEntries(
+  Object.entries({
+    1: {
+      source: 'subscribers',
+      groups: [{ name: 'City (merged)', field: 'City', groups: [{ name: 'Cologne', members: ['Cologne', 'Köln'] }] }],
+      rows: [{ field: 'City (merged)' }],
+      columns: [{ field: 'Subscribers (Count)' }],
+      filters: [{ kind: 'values', field: 'Country', values: ['Germany'] }],
+    },
+    2: { sets: [topTitles(20)], ...byGenre, marks: { color: { field: 'Top 20 Titles' } } },
+    3: {
+      source: 'titles',
+      hierarchies: [{ name: 'Catalogue', fields: ['Type', 'Genre', 'Sub-Genre'] }],
+      rows: [{ field: 'Type' }],
+      columns: [{ field: 'Titles (Count)' }],
+    },
+    4: {
+      bins: [{ name: 'Minutes Watched (bin)', field: 'Minutes Watched', size: 10 }],
+      columns: [{ field: 'Minutes Watched (bin)' }],
+      rows: [{ field: 'Minutes Watched', agg: 'count' }],
+    },
+    6: {
+      groups: [
+        {
+          name: 'Genre (scripted)',
+          field: 'Genre',
+          groups: [
+            { name: 'Scripted', members: ['Comedy', 'Drama', 'Sci-Fi & Fantasy', 'Thriller'] },
+            { name: 'Unscripted', members: ['Documentary'] },
+          ],
+          other: true,
+        },
+      ],
+      rows: [{ field: 'Genre (scripted)' }],
+      columns: [{ field: 'Minutes Watched' }],
+    },
+    7: {
+      sets: [
+        {
+          name: 'Picked Titles',
+          field: 'Title',
+          fixed: true,
+          rule: { kind: 'members', members: ['The Restless Hive', 'The Midnight Atlas', 'The Electric Tide', 'The Crooked Archive', 'The Amber Kettle'] },
+        },
+      ],
+      rows: [{ field: 'Picked Titles', setView: 'members' }],
+      columns: [{ field: 'Minutes Watched' }],
+    },
+    9: { sets: [topTitles(10)], ...byGenre, marks: { color: { field: 'Top 10 Titles' } } },
+  }).map(([id, spec]) => [Number(id), vizSpecSchema.parse(spec)]),
+)
 
 /** Right answers so far. `picks` maps a scenario id to the kind chosen. */
 export function score(scenarios: Scenario[], picks: Record<number, Kind>) {
@@ -182,6 +245,13 @@ export default function GroupSet({ copy }: SimProps) {
             <p>
               <strong>{copy.howLabel}:</strong> {s.how}
             </p>
+            {PRESETS[s.id] && (
+              <p>
+                <Link to={`/build/sandbox${specHash(PRESETS[s.id]!)}`} className="text-brand-dark underline">
+                  {copy.openSandbox}
+                </Link>
+              </p>
+            )}
           </div>
         )}
         {stats.finished && (

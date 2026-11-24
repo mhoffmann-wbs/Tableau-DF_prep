@@ -11,6 +11,25 @@ export const meta = {
     { title: 'Use context filters', url: 'https://help.tableau.com/current/pro/desktop/en-us/filtering_context.htm' },
   ],
   vizzes: {
+    'city-group': {
+      spec: {
+        source: 'subscribers',
+        groups: [{ name: 'City (merged)', field: 'City', groups: [{ name: 'Cologne', members: ['Cologne', 'Köln'] }, { name: 'Munich', members: ['Munich', 'München'] }] }],
+        rows: [{ field: 'City (merged)' }],
+        columns: [{ field: 'Subscribers (Count)' }],
+        filters: [{ kind: 'values', field: 'Country', values: ['Germany'] }],
+      },
+      caption: 'A group merges spelling variants: Cologne and Köln become one bar, Munich and München another. The members not in a group keep their own bars.',
+    },
+    'top-set': {
+      spec: {
+        sets: [{ name: 'Top 10 Titles', field: 'Title', rule: { kind: 'top', from: 'top', n: 10, field: 'Minutes Watched', agg: 'sum' } }],
+        rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }],
+        columns: [{ field: 'Minutes Watched' }],
+        marks: { color: { field: 'Top 10 Titles' } },
+      },
+      caption: 'A dynamic set (Top tab: the top 10 titles by minutes) on Color splits each genre into In and Out of the set.',
+    },
     hierarchy: {
       spec: { source: 'titles', rows: [{ field: 'Type' }, { field: 'Genre' }], columns: [{ field: 'Titles (Count)' }] },
       caption: 'Drilled from Type down to Genre: the Genre headers nest inside each Type.',
@@ -94,7 +113,9 @@ In pandas terms: a group is a `.replace()` or `.map()` onto a coarser category, 
 
 **Include 'Other'.** "You have the option to group all remaining, or non-grouped members in an Other group": select **Include 'Other'** in the Edit Group dialog. Use it to keep a few named groups and lump the long tail together.
 
-Driftlight uses groups to merge city spellings (Cologne and Köln) and to bundle genres into broader categories for the board.
+Driftlight uses groups to merge city spellings (Cologne and Köln) and to bundle genres into broader categories for the board:
+
+<LessonViz id="city-group" />
 
 ### Create sets by using marks and the data pane
 
@@ -112,7 +133,11 @@ The three tabs of the dynamic set dialog:
 - **Condition:** "define rules that determine which members to include", for example `SUM(Minutes Watched) > 20000`
 - **Top:** "define limits on what members to include", for example the top 10 titles by minutes.
 
-In the view, a set can show its members, or "aggregate the members into In/Out categories": right-click the set and choose **Show In/Out of Set** or **Show Members in Set**. Sets can also be combined into a **Combined Set** (all members in both, shared members, or except shared members) when they're based on the same dimensions.
+In the view, a set can show its members, or "aggregate the members into In/Out categories": right-click the set and choose **Show In/Out of Set** or **Show Members in Set**. On Color, In/Out shows how much of each genre the top 10 titles account for:
+
+<LessonViz id="top-set" />
+
+ Sets can also be combined into a **Combined Set** (all members in both, shared members, or except shared members) when they're based on the same dimensions.
 
 ### Organize dimensions into a hierarchy
 

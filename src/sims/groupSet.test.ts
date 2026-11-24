@@ -1,9 +1,12 @@
 // @vitest-environment jsdom
 import { createElement } from 'react'
 import { fireEvent, render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
 import { SIM_BY_ID } from '../content/sims'
-import GroupSet, { COPY_KEYS, KINDS, scenariosOf, score } from './GroupSet'
+import { query } from '../engine/query'
+import { testDataset } from '../test/dataset'
+import GroupSet, { COPY_KEYS, KINDS, PRESETS, scenariosOf, score } from './GroupSet'
 
 const sim = SIM_BY_ID.get('group-set')!
 
@@ -29,7 +32,7 @@ describe('Group, set or hierarchy?', () => {
   })
 
   it('answers a scenario and shows feedback', () => {
-    render(createElement(GroupSet, { copy: sim.copy }))
+    render(createElement(MemoryRouter, null, createElement(GroupSet, { copy: sim.copy })))
     const first = scenarios[0]!
     expect(screen.getByText(first.text)).toBeTruthy()
     fireEvent.click(screen.getByRole('button', { name: 'Parameter' }))
@@ -37,5 +40,16 @@ describe('Group, set or hierarchy?', () => {
     expect(screen.getByText(first.how, { exact: false })).toBeTruthy()
     expect(screen.getByRole('img')).toBeTruthy()
     expect(screen.getByText(/0 right of 1 answered/)).toBeTruthy()
+    expect(screen.getByRole('link', { name: sim.copy.openSandbox }).getAttribute('href')).toMatch(/^\/build\/sandbox#spec=/)
+  })
+
+  it('opens a preset in the sandbox for every request but parameters, built with the answer’s tool', () => {
+    const derived = { group: 'groups', set: 'sets', hierarchy: 'hierarchies', bin: 'bins' } as const
+    expect(Object.keys(PRESETS).map(Number)).toEqual(scenarios.filter((s) => s.answer !== 'parameter').map((s) => s.id))
+    for (const s of scenarios.filter((x) => x.answer !== 'parameter')) {
+      const preset = PRESETS[s.id]!
+      expect(preset[derived[s.answer as keyof typeof derived]].length, `request ${s.id}`).toBe(1)
+      expect(query(preset, testDataset()).rows.length, `request ${s.id}`).toBeGreaterThan(1)
+    }
   })
 })

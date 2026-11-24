@@ -50,8 +50,56 @@ describe('matchSpec', () => {
   })
 
   it('takes hints from the closest accepted spec and reports broken pills', () => {
-    const other = spec({ rows: [{ field: 'Region' }] })
+    const other = spec({ rows: [{ field: 'Region' }], marks: { size: { field: 'Runtime' } } })
     expect(matchSpec(spec({ columns: [month] }), [other, target]).hints).toEqual(['Rows should hold 1 pill; it holds 0.', 'Something belongs on Color.'])
     expect(matchSpec(spec({ rows: [{ field: 'Nope' }] }), [target]).hints[0]).toMatch(/broken/)
+  })
+
+  it('compares each measure’s mark, dual and synchronized axes and the Measure Values card', () => {
+    const dual = spec({
+      columns: [month],
+      rows: [{ field: 'Minutes Watched', mark: 'bar' }, { field: 'Sessions (Count)', mark: 'line' }],
+      axes: { rows: { dual: true } },
+    })
+    // The line measure's mark can come from Automatic (a date and a measure).
+    expect(matchSpec(spec({ ...dual, rows: [{ field: 'Minutes Watched', mark: 'bar' }, { field: 'Sessions (Count)' }] }), [dual]).ok).toBe(true)
+    expect(matchSpec(spec({ ...dual, rows: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }] }), [dual]).hints).toEqual([
+      'The mark type for SUM(Minutes Watched) isn’t right yet.',
+    ])
+    expect(matchSpec(spec({ ...dual, axes: {} }), [dual]).hints).toEqual(['The two measures on Rows share one pane in the target: use Dual Axis.'])
+    expect(matchSpec(spec({ ...dual, axes: { rows: { dual: true, sync: true } } }), [dual]).hints[0]).toMatch(/isn’t synchronized/)
+
+    const combined = spec({
+      columns: [month],
+      rows: [{ field: 'Measure Values' }],
+      marks: { color: { field: 'Measure Names' } },
+      measureValues: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }],
+    })
+    expect(matchSpec(spec({ ...combined, measureValues: [{ field: 'Sessions (Count)' }, { field: 'Minutes Watched' }] }), [combined]).hints).toEqual([
+      'The Measure Values card should hold 2 pills: check which measures are there, and their order.',
+    ])
+  })
+
+  it('compares reference items without their labels, and totals', () => {
+    const bars = { rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }] }
+    const ref = { kind: 'line', measure: { field: 'Minutes Watched' }, scope: 'table', value: { kind: 'computed', agg: 'avg' } }
+    const t = spec({ ...bars, refs: [ref], totals: { column: true } })
+    expect(matchSpec(spec({ ...bars, refs: [{ ...ref, label: 'value' }], totals: { column: true, using: 'automatic' } }), [t]).ok).toBe(true)
+    expect(matchSpec(spec({ ...bars, refs: [{ ...ref, scope: 'pane' }], totals: { column: true } }), [t]).hints[0]).toMatch(/reference lines/)
+    expect(matchSpec(spec({ ...bars, refs: [ref] }), [t]).hints).toEqual(['The totals aren’t right yet: check Analysis > Totals.'])
+  })
+
+  it('compares the calcs, groups, sets and bins the target defines', () => {
+    const t = spec({
+      calcs: [{ name: 'Hours', formula: '[Minutes Watched] / 60' }],
+      bins: [{ name: 'Minutes (bin)', field: 'Minutes Watched', size: 10 }],
+      groups: [{ name: 'G', field: 'Genre', groups: [{ name: 'A', members: ['Comedy', 'Drama'] }] }],
+      rows: [{ field: 'Minutes (bin)' }],
+      columns: [{ field: 'Hours' }],
+    })
+    const same = { ...t, calcs: [{ name: 'Hours', formula: '[Minutes Watched]/60' }], groups: [{ ...t.groups[0]!, groups: [{ name: 'A', members: ['Drama', 'Comedy'] }] }] }
+    expect(matchSpec(spec(same), [t]).ok).toBe(true)
+    expect(matchSpec(spec({ ...same, bins: [{ name: 'Minutes (bin)', field: 'Minutes Watched', size: 5 }] }), [t]).hints).toEqual(['Minutes (bin) isn’t defined the way the target’s bin field is yet.'])
+    expect(matchSpec(spec({ ...same, groups: [] }), [t]).hints).toEqual(['The target uses a group named G: create it (or rename yours to that name).'])
   })
 })

@@ -2837,5 +2837,1158 @@
       "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm",
       "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
     ]
+  },
+  {
+    "id": "2.3-075",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.2"
+    ],
+    "stem": "The view has one reference line on the `SUM(Minutes Watched)` axis, with Scope set to Table and the value set to Average. What does the line mark?",
+    "options": [
+      {
+        "text": "The average of the genre bars, drawn once across the whole view",
+        "correct": true,
+        "rationale": "Table scope draws one line for the whole table, and Average is computed over the marks in the view."
+      },
+      {
+        "text": "Each genre’s average minutes per session, one line per bar",
+        "correct": false,
+        "rationale": "One line per bar would need Cell scope, and the computation runs over the marks, not over the sessions inside each bar."
+      },
+      {
+        "text": "The total minutes of every genre added together",
+        "correct": false,
+        "rationale": "That is the Total computation, not Average."
+      },
+      {
+        "text": "A shaded area between the shortest and the longest bar",
+        "correct": false,
+        "rationale": "Shading between two values is a reference band, not a line."
+      }
+    ],
+    "explanation": "A reference line’s scope (Table, Pane or Cell) decides how many lines appear, and its value is a constant or a computation over the marks: Total, Sum, Minimum, Maximum, Average or Median.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "refs": [
+          {
+            "kind": "line",
+            "measure": {
+              "field": "Minutes Watched"
+            },
+            "scope": "table",
+            "value": {
+              "kind": "computed",
+              "agg": "avg"
+            }
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
+  },
+  {
+    "id": "2.3-076",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.3.2"
+    ],
+    "stem": "This view draws one average line across both `Type` panes. The analyst wants a separate average line for Movie and for Series. Which two settings should the edited reference line have? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Scope: Pane",
+        "correct": true,
+        "rationale": "Pane scope draws one line per pane, so Movie and Series each get their own."
+      },
+      {
+        "text": "Value: Average, computed over the marks",
+        "correct": true,
+        "rationale": "The line should still be an average, now computed within each pane."
+      },
+      {
+        "text": "Scope: Table",
+        "correct": false,
+        "rationale": "Table scope is what the view has now: one line for everything."
+      },
+      {
+        "text": "Scope: Cell",
+        "correct": false,
+        "rationale": "Cell scope draws a line in every cell, here one per bar, not one per type."
+      },
+      {
+        "text": "Value: Constant",
+        "correct": false,
+        "rationale": "A constant is the same fixed number in every pane, not each pane’s own average."
+      },
+      {
+        "text": "Label: Custom",
+        "correct": false,
+        "rationale": "The label changes the text next to the line, not how many lines there are or where they sit."
+      }
+    ],
+    "explanation": "Scope sets how many lines appear: one for the table, one per pane, or one per cell. With Type as the outer dimension on Rows, each type is a pane, so Pane scope with Average gives one average per type.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Type"
+          },
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "refs": [
+          {
+            "kind": "line",
+            "measure": {
+              "field": "Minutes Watched"
+            },
+            "scope": "table",
+            "value": {
+              "kind": "computed",
+              "agg": "avg"
+            }
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
+  },
+  {
+    "id": "2.3-077",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.2"
+    ],
+    "stem": "The dashed line sits at exactly 500,000 minutes on every device’s axis, Driftlight’s target per device. How was it most likely added?",
+    "options": [
+      {
+        "text": "A reference line with the Average computation",
+        "correct": false,
+        "rationale": "An average line would sit at the mean of the bars, which moves with the data."
+      },
+      {
+        "text": "A reference line with a Constant value",
+        "correct": true,
+        "rationale": "A target that doesn’t depend on the data is a Constant reference line, optionally from a parameter."
+      },
+      {
+        "text": "A reference band from Minimum to Maximum",
+        "correct": false,
+        "rationale": "A band shades an area between two values; this is a single line."
+      },
+      {
+        "text": "A Running total quick table calculation",
+        "correct": false,
+        "rationale": "A table calculation changes the bars’ values; it doesn’t draw a line on the axis."
+      }
+    ],
+    "explanation": "A reference line’s value is either a constant, such as a target (or a parameter), or a computation over the marks. A fixed target is a constant.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Device"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "refs": [
+          {
+            "kind": "line",
+            "measure": {
+              "field": "Minutes Watched"
+            },
+            "scope": "table",
+            "label": "value",
+            "value": {
+              "kind": "constant",
+              "value": 500000
+            }
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/reference_lines.htm"
+    ]
+  },
+  {
+    "id": "2.3-078",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.3"
+    ],
+    "stem": "The pill on Columns shows a delta symbol, and Comedy’s bar reads 24.4%. Which quick table calculation was applied to `SUM(Minutes Watched)`?",
+    "options": [
+      {
+        "text": "Running total",
+        "correct": false,
+        "rationale": "A running total adds up the bars one after another; it doesn’t give each genre a share."
+      },
+      {
+        "text": "Rank",
+        "correct": false,
+        "rationale": "Rank gives each bar a position number, not a percentage."
+      },
+      {
+        "text": "Percent of total",
+        "correct": true,
+        "rationale": "Percent of total divides each mark by the total of all marks, so each bar is a genre’s share."
+      },
+      {
+        "text": "Percent difference",
+        "correct": false,
+        "rationale": "Percent difference compares each mark with the one before it, not with the total."
+      }
+    ],
+    "explanation": "A quick table calculation computes over the marks already in the view, and the delta on the pill marks it. Percent of total turns each genre’s minutes into its share of all minutes.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched",
+            "tableCalc": {
+              "type": "percentOfTotal"
+            }
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "checks": [
+      {
+        "kind": "value",
+        "says": "24.4%",
+        "spec": {
+          "rows": [
+            {
+              "field": "Genre"
+            }
+          ],
+          "columns": [
+            {
+              "field": "Minutes Watched",
+              "tableCalc": {
+                "type": "percentOfTotal"
+              }
+            }
+          ]
+        },
+        "measure": {
+          "field": "Minutes Watched",
+          "tableCalc": {
+            "type": "percentOfTotal"
+          }
+        },
+        "where": {
+          "Genre": "Comedy"
+        },
+        "digits": 1,
+        "percent": true
+      }
+    ],
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm"
+    ]
+  },
+  {
+    "id": "2.3-079",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.3.3"
+    ],
+    "stem": "The line of 2025 minutes climbs every month and never falls, because the measure has the Running total quick table calculation. Which two statements are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Each point adds that month’s minutes to the minutes of all earlier months",
+        "correct": true,
+        "rationale": "That is what a running total shows: cumulative viewing."
+      },
+      {
+        "text": "A delta symbol on the pill marks the table calculation",
+        "correct": true,
+        "rationale": "Tableau adds a delta to a field that has a quick table calculation."
+      },
+      {
+        "text": "The extract now stores cumulative minutes for each session",
+        "correct": false,
+        "rationale": "A table calculation works on the marks in the view; the data source is unchanged."
+      },
+      {
+        "text": "The same option is offered on dimension pills such as Device",
+        "correct": false,
+        "rationale": "Quick table calculations work only on measures in the view."
+      },
+      {
+        "text": "Removing the calculation leaves the line exactly as it is",
+        "correct": false,
+        "rationale": "Without it, each point shows only its own month’s minutes, which rise and fall."
+      }
+    ],
+    "explanation": "A quick table calculation applies the most typical settings for its type to a measure in the view, and its result depends only on the marks shown. Running total accumulates them, so a line of minutes can only climb.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "tableCalc": {
+              "type": "runningTotal"
+            }
+          }
+        ],
+        "filters": [
+          {
+            "kind": "datePart",
+            "field": "Start",
+            "level": "year",
+            "values": [
+              2025
+            ]
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm"
+    ]
+  },
+  {
+    "id": "2.3-080",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.3"
+    ],
+    "stem": "The analyst right-clicks `Genre` on Rows to add a running total, but the menu has no Quick Table Calculation item. Why?",
+    "options": [
+      {
+        "text": "Quick table calculations can only be applied to measures in the view",
+        "correct": true,
+        "rationale": "Genre is a dimension; the calculation belongs on SUM(Minutes Watched)."
+      },
+      {
+        "text": "Genre must be converted to continuous first",
+        "correct": false,
+        "rationale": "Converting a dimension to continuous doesn’t make it a measure to calculate on."
+      },
+      {
+        "text": "Running totals need a date field somewhere in the view",
+        "correct": false,
+        "rationale": "A running total can accumulate over any marks, such as bars of genres."
+      },
+      {
+        "text": "The data source must be an extract before table calculations work",
+        "correct": false,
+        "rationale": "Table calculations work on live connections and extracts alike."
+      }
+    ],
+    "explanation": "\"You can only perform quick table calculations on measures in the view.\" Right-click the measure pill, here SUM(Minutes Watched), and choose Quick Table Calculation.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_tablecalculations_quick.htm"
+    ]
+  },
+  {
+    "id": "2.3-081",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "Each bar counts titles in a 30-minute range of `Runtime (bin)`. Into which bar does a title that runs exactly 60 minutes fall?",
+    "options": [
+      {
+        "text": "The bar labelled 30",
+        "correct": false,
+        "rationale": "That bin holds runtimes from 30 up to, but not including, 60."
+      },
+      {
+        "text": "The bar labelled 60",
+        "correct": true,
+        "rationale": "Bins are labelled by their lower limit, and the lower limit is inclusive, so 60 starts the 60 bin."
+      },
+      {
+        "text": "Both bars, because 60 sits on their shared edge",
+        "correct": false,
+        "rationale": "Every value falls into exactly one bin."
+      },
+      {
+        "text": "Neither: edge values go to a Null bin",
+        "correct": false,
+        "rationale": "Only missing values are Null; a runtime of 60 has a bin."
+      }
+    ],
+    "explanation": "Bins cut a measure into equal ranges and create a new dimension. Each bin is named by its lower limit, and \"the lower limit is inclusive\".",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "bins": [
+          {
+            "name": "Runtime (bin)",
+            "field": "Runtime",
+            "size": 30
+          }
+        ],
+        "columns": [
+          {
+            "field": "Runtime (bin)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Titles (Count)"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-082",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "The analyst built this histogram by selecting only `Minutes Watched` and choosing histogram in Show Me. Which two things did Tableau do? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Created a new dimension, `Minutes Watched (bin)`, and put it on Columns",
+        "correct": true,
+        "rationale": "Show Me creates the bin field and places it on Columns."
+      },
+      {
+        "text": "Changed the measure on Rows from SUM to CNT (Count)",
+        "correct": true,
+        "rationale": "A histogram counts the marks in each bin, so the aggregation becomes a count."
+      },
+      {
+        "text": "Converted `Minutes Watched` to a string",
+        "correct": false,
+        "rationale": "The measure keeps its data type; a separate bin field is created."
+      },
+      {
+        "text": "Applied a Percent of total quick table calculation",
+        "correct": false,
+        "rationale": "A histogram counts; it doesn’t turn the counts into shares."
+      },
+      {
+        "text": "Created a set of the most common session lengths",
+        "correct": false,
+        "rationale": "Sets split members into In and Out; a histogram uses bins."
+      }
+    ],
+    "explanation": "Histogram \"is available in Show Me when the view contains a single measure and no dimensions\". Tableau creates the bin field on Columns, moves the measure to Rows and \"the aggregation changes from SUM to CNT (Count)\".",
+    "viz": {
+      "spec": {
+        "bins": [
+          {
+            "name": "Minutes Watched (bin)",
+            "field": "Minutes Watched",
+            "size": 10
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched (bin)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "agg": "count"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/buildexamples_histogram.htm"
+    ]
+  },
+  {
+    "id": "2.3-083",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.4"
+    ],
+    "stem": "The analyst wants to use `Runtime (bin)` from this view in a calculated field that labels titles as short or long. What happens?",
+    "options": [
+      {
+        "text": "It works like any other dimension in the formula",
+        "correct": false,
+        "rationale": "Binned fields are the exception: they can’t be used in calculations."
+      },
+      {
+        "text": "It works, but only inside an aggregation such as ATTR",
+        "correct": false,
+        "rationale": "No aggregation makes a bin usable in a formula."
+      },
+      {
+        "text": "It works once the bin is converted to a measure",
+        "correct": false,
+        "rationale": "Converting doesn’t change the rule; bins can’t be used in calculations."
+      },
+      {
+        "text": "It can’t: binned fields can’t be used in calculations",
+        "correct": true,
+        "rationale": "The help says so; write the calculation on Runtime itself instead."
+      }
+    ],
+    "explanation": "Bins only work with relational data sources, and binned fields can’t be used in calculations. A calculation on the measure (for example an IF on Runtime) is the way to label ranges.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "bins": [
+          {
+            "name": "Runtime (bin)",
+            "field": "Runtime",
+            "size": 30
+          }
+        ],
+        "columns": [
+          {
+            "field": "Runtime (bin)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Titles (Count)"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_bins.htm"
+    ]
+  },
+  {
+    "id": "2.3-084",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "The calculated field `Hours` on Columns has the formula `[Minutes Watched] / 60`, and the pill reads `SUM(Hours)`. What kind of calculation is it?",
+    "options": [
+      {
+        "text": "An aggregate calculation, computed once per bar",
+        "correct": false,
+        "rationale": "An aggregate calculation aggregates inside the formula, as SUM([Minutes Watched]) / 60 would."
+      },
+      {
+        "text": "A row-level calculation: computed for every session, then summed in the view",
+        "correct": true,
+        "rationale": "The formula has no aggregation, so it runs per row, and the view aggregates the result."
+      },
+      {
+        "text": "A quick table calculation over the bars",
+        "correct": false,
+        "rationale": "A quick table calculation is set on a pill’s menu; this is a calculated field."
+      },
+      {
+        "text": "A string calculation, since the result is labelled Hours",
+        "correct": false,
+        "rationale": "The result is a number, so Tableau makes it a measure."
+      }
+    ],
+    "explanation": "Row-level calculations, such as [Minutes Watched] / 60, are computed for every row and then aggregated in the view. Because it returns a number, Tableau makes it a measure with SUM.",
+    "viz": {
+      "spec": {
+        "calcs": [
+          {
+            "name": "Hours",
+            "formula": "[Minutes Watched] / 60"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Type"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Hours"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-085",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "The bars show `Avg Minutes`, a calculated field with the formula `SUM([Minutes Watched]) / COUNT([Session ID])`. Which two statements are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "It aggregates first and then divides, so it is right at any level of detail",
+        "correct": true,
+        "rationale": "That is an aggregate calculation: the ratio of the sums, per mark."
+      },
+      {
+        "text": "It returns a number, so Tableau makes it a measure",
+        "correct": true,
+        "rationale": "Calculated fields that return numbers become measures."
+      },
+      {
+        "text": "`[Minutes Watched] / COUNT([Session ID])` would give the same bars",
+        "correct": false,
+        "rationale": "Mixing a row-level field and an aggregate in one formula is an error."
+      },
+      {
+        "text": "`Sessions (Count)` could replace `COUNT([Session ID])` in the formula",
+        "correct": false,
+        "rationale": "A table’s (Count) field can’t be used in calculations; count an ID field."
+      },
+      {
+        "text": "It is computed for every session and then summed for each device",
+        "correct": false,
+        "rationale": "That describes a row-level calculation; this one aggregates inside the formula."
+      }
+    ],
+    "explanation": "A ratio of aggregates, such as SUM(...) / COUNT(...), is an aggregate calculation: it aggregates first and gives the right value at any level of detail. Mixing aggregate and non-aggregate arguments is an error.",
+    "viz": {
+      "spec": {
+        "calcs": [
+          {
+            "name": "Avg Minutes",
+            "formula": "SUM([Minutes Watched]) / COUNT([Session ID])"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Device"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Avg Minutes"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_aggregate_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-086",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.5"
+    ],
+    "stem": "`Plan Label` on Rows is a calculated field with the formula `UPPER([Plan Code])`. How does the Data pane mark it as a calculated field, and how do you change its formula?",
+    "options": [
+      {
+        "text": "A delta symbol next to it; choose Edit Table Calculation",
+        "correct": false,
+        "rationale": "The delta marks a table calculation on a pill, not a calculated field."
+      },
+      {
+        "text": "A paperclip icon next to it; choose Edit Group",
+        "correct": false,
+        "rationale": "The paperclip marks a group."
+      },
+      {
+        "text": "An equal sign next to it; right-click it and select Edit",
+        "correct": true,
+        "rationale": "\"All calculated fields have equal signs (=) next to them in the Data pane\", and Edit opens the formula."
+      },
+      {
+        "text": "A globe icon next to it; choose Geographic Role",
+        "correct": false,
+        "rationale": "The globe marks a field with a geographic role."
+      }
+    ],
+    "explanation": "Calculated fields are created with Analysis > Create Calculated Field and show an equal sign in the Data pane. Right-click one and select Edit to change its formula.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "calcs": [
+          {
+            "name": "Plan Label",
+            "formula": "UPPER([Plan Code])"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Plan Label"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_calculatedfields_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-087",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "The line on this view is a constant target. Managers want to type their own target on the dashboard and see the line move. What does that need?",
+    "options": [
+      {
+        "text": "A parameter used as the line’s value, with its control shown",
+        "correct": true,
+        "rationale": "A parameter holds one value the viewer can change, and a reference line can use it in place of a constant."
+      },
+      {
+        "text": "A filter on Minutes Watched shown as a slider",
+        "correct": false,
+        "rationale": "A filter removes bars; it doesn’t move a line."
+      },
+      {
+        "text": "A set of the genres that reach the target",
+        "correct": false,
+        "rationale": "A set splits genres into In and Out; it doesn’t let the viewer type a value."
+      },
+      {
+        "text": "A Percent of total quick table calculation",
+        "correct": false,
+        "rationale": "Shares of the total don’t take a typed target."
+      }
+    ],
+    "explanation": "\"A parameter is a workbook variable such as a number, date, or string that can replace a constant value in a calculation, filter, or reference line.\" Show Parameter gives viewers the control.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "refs": [
+          {
+            "kind": "line",
+            "measure": {
+              "field": "Minutes Watched"
+            },
+            "scope": "table",
+            "label": "value",
+            "value": {
+              "kind": "constant",
+              "value": 500000
+            }
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-088",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "Which two requests for this view call for a parameter? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "Let viewers switch the bars between minutes and number of sessions",
+        "correct": true,
+        "rationale": "Swapping measures takes a parameter used in a calculation."
+      },
+      {
+        "text": "Let viewers type a growth rate that a calculation applies to the minutes",
+        "correct": true,
+        "rationale": "A what-if rate is a single value the viewer supplies: a parameter."
+      },
+      {
+        "text": "Let viewers pick which genres appear",
+        "correct": false,
+        "rationale": "Picking members to show is a filter, which is simpler."
+      },
+      {
+        "text": "Combine two genres into one bar",
+        "correct": false,
+        "rationale": "Combining members is a group."
+      },
+      {
+        "text": "Show each genre’s share of all minutes",
+        "correct": false,
+        "rationale": "A share of the total is a quick table calculation."
+      }
+    ],
+    "explanation": "Use a parameter when the viewer should supply a single value, such as a choice of measure, a threshold or a what-if rate, that parts of the workbook react to. To pick members of a field, a filter is simpler.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_swap.htm"
+    ]
+  },
+  {
+    "id": "2.3-089",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.6"
+    ],
+    "stem": "The analyst created a parameter, `Target`, and chose Show Parameter. Changing the value in its control changes nothing in this view. Why?",
+    "options": [
+      {
+        "text": "Parameters only work on the sheet they were created on",
+        "correct": false,
+        "rationale": "Parameters are global across the workbook and can be used in any worksheet."
+      },
+      {
+        "text": "Its allowable values must be a List before the control works",
+        "correct": false,
+        "rationale": "All, List and Range all give working controls."
+      },
+      {
+        "text": "Nothing in the view uses the parameter yet",
+        "correct": true,
+        "rationale": "A parameter does nothing until a calculation, filter or reference line uses it."
+      },
+      {
+        "text": "It has to be dragged to the Filters shelf first",
+        "correct": false,
+        "rationale": "Parameters aren’t used by dropping them on Filters; something has to reference them."
+      }
+    ],
+    "explanation": "\"A parameter does nothing until something uses it.\" Use it in a calculation, a Top N filter or a reference line.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/parameters_create.htm"
+    ]
+  },
+  {
+    "id": "2.3-090",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "The crosstab ends with a total row, where Movie reads 1,726,946 minutes. Which option added that row?",
+    "options": [
+      {
+        "text": "Row Grand Totals",
+        "correct": false,
+        "rationale": "Row grand totals add a total for each row, at the right, across the columns."
+      },
+      {
+        "text": "Column Grand Totals",
+        "correct": true,
+        "rationale": "Column grand totals total each column down the rows, giving a total row at the bottom."
+      },
+      {
+        "text": "Subtotals",
+        "correct": false,
+        "rationale": "Subtotals total within the outer headers; this view has one header per shelf."
+      },
+      {
+        "text": "A Total reference line",
+        "correct": false,
+        "rationale": "A reference line draws on an axis; this view is a text table."
+      }
+    ],
+    "explanation": "Totals come from the Analytics pane (drop Totals on Subtotals, Row Grand Totals or Column Grand Totals) or Analysis > Totals. Column grand totals sum each column, here each type, over all devices.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Device"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Type"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Minutes Watched"
+          }
+        },
+        "totals": {
+          "column": true
+        }
+      },
+      "show": "both"
+    },
+    "checks": [
+      {
+        "kind": "value",
+        "says": "1,726,946",
+        "spec": {
+          "rows": [
+            {
+              "field": "Type"
+            }
+          ],
+          "columns": [
+            {
+              "field": "Minutes Watched"
+            }
+          ]
+        },
+        "measure": {
+          "field": "Minutes Watched"
+        },
+        "where": {
+          "Type": "Movie"
+        }
+      }
+    ],
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-091",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "Which two statements about totals on a worksheet such as this one are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The view must have at least one header for totals",
+        "correct": true,
+        "rationale": "\"The view must have at least one header.\""
+      },
+      {
+        "text": "Analysis > Totals > Total All Using sets the aggregation of the totals for all measures",
+        "correct": true,
+        "rationale": "Total All Using picks the aggregation the totals use."
+      },
+      {
+        "text": "Grand totals can be added for continuous dimensions",
+        "correct": false,
+        "rationale": "\"Grand totals cannot be applied to continuous dimensions.\""
+      },
+      {
+        "text": "Totals can be applied to a quick table calculation",
+        "correct": false,
+        "rationale": "Totals can’t be applied to table calculations."
+      },
+      {
+        "text": "Totals can only be added from the Analytics pane",
+        "correct": false,
+        "rationale": "The Analysis > Totals menu offers them too."
+      }
+    ],
+    "explanation": "Drag Totals from the Analytics pane or use Analysis > Totals. Total All Using chooses the aggregation for all measures; one field’s Total using is on its pill menu. A view needs a header, and continuous dimensions get no grand totals.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Device"
+          }
+        ],
+        "columns": [
+          {
+            "field": "Type"
+          }
+        ],
+        "marks": {
+          "label": {
+            "field": "Minutes Watched"
+          }
+        },
+        "totals": {
+          "column": true,
+          "row": true
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
+  },
+  {
+    "id": "2.3-092",
+    "taskId": "2.3",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "2.3.7"
+    ],
+    "stem": "The analyst opens Analysis > Totals to add Row Grand Totals to this line of monthly minutes, but no total appears. Why?",
+    "options": [
+      {
+        "text": "Totals need an extract of the data",
+        "correct": false,
+        "rationale": "Totals work on any connection."
+      },
+      {
+        "text": "Totals can only sum, and this measure is an average",
+        "correct": false,
+        "rationale": "The measure is SUM, and totals can use other aggregations too."
+      },
+      {
+        "text": "Totals need a filter on the date first",
+        "correct": false,
+        "rationale": "Filters don’t enable totals."
+      },
+      {
+        "text": "The view has no header, and grand totals can’t be applied to continuous dimensions",
+        "correct": true,
+        "rationale": "The months are a continuous axis, not headers, so there is nothing to total."
+      }
+    ],
+    "explanation": "\"The view must have at least one header\", and \"Grand totals cannot be applied to continuous dimensions.\" A continuous month axis has neither headers nor totals.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "value"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_totals_grandtotal_turnon.htm"
+    ]
   }
 ]

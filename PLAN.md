@@ -133,7 +133,7 @@ Versioned progress store with export/import; readiness per task (coverage × acc
 2. **Quiz engine** (done 2026-11-23): the three item kinds, practice, bank, mock, readiness, review, shortcuts.
 3. **Sandbox v1** (done 2026-11-23): shelves, Marks card, filters, pills with menus, drag and drop with menu alternatives, `#spec=` with Undo, 15 "make this chart" challenges.
 4. **Lessons** (done 2026-11-23): 12 lessons with live charts, sandbox presets and data facts checked by a test.
-5. **Question bank** (done 2026-11-24): 600 items (346 `single`, 153 `multi`, 101 `viz`; `viz` at 17% until the sandbox can draw 2.1.5–2.1.6 and 2.3.2–2.3.7).
+5. **Question bank** (done 2026-11-24): 600 items (346 `single`, 153 `multi`, 101 `viz`); 626 after 8.7.
 6. **Calc playground** (done 2026-11-24): `engine/calc/`, calcs in the spec everywhere in the engine, `/build/calc`, 17 exercises.
 7. **Simulators and flashcards** (done 2026-11-24): 7 simulators, 287 flashcards, own decks.
 8. **Sandbox v2, challenges and guides**, one substep at a time:
@@ -143,7 +143,7 @@ Versioned progress store with export/import; readiness per task (coverage × acc
    4. **Quick table calcs and totals** (done 2026-11-24): 7 quick table calcs with Compute Using (pill menu); row and column grand totals, subtotals, Total All Using (Totals menu).
    5. **Reference lines** (done 2026-11-24): Analytics pane (Constant/Average Line, Median with Quartiles, Totals, custom line, band, distribution) with Table/Pane/Cell targets; the reference dialog.
    6. **Simple dashboard** (done 2026-11-24): Sheet 1, Sheet 2 and Dashboard 1 tabs in the free sandbox (`#wb=`); horizontal or vertical layout, Use as Filter, and filter actions from Dashboard > Actions (Hover/Select/Menu, the three clearing options, All or Selected fields).
-   7. **Content on the new features**: `viz` items for 2.1.5–2.1.6 and 2.3.2–2.3.7, new sandbox challenges, lesson charts that replace the text-only parts, and the Group/set/hierarchy simulator building in the sandbox. First make `match.ts` compare `mark`, `axes` and the Measure Values card.
+   7. **Content on the new features** (done 2026-11-24): `match.ts` compares each measure's mark, axes, the Measure Values card, reference items, totals and the calcs/groups/sets/bins the target defines; 26 `viz` items (bank 626: 346 `single`, 153 `multi`, 127 `viz`); 10 sandbox challenges (25 in all); 10 lesson charts in 2.1–2.3; sandbox presets in the Group/set/hierarchy simulator.
    8. **Tableau Public challenges** (done 2026-11-24): 12 challenges, one per task, at `/build/challenges/:id`, with checklists and checkpoints in progress (v6); the steps for the three `unverified` limits are optional until checked.
    9. **Cheat sheet and exam-day guide** (done 2026-11-24): `/guides`, facts restated from the lessons and `EXAM_FORMAT`. Recheck the cheat sheet whenever a lesson is corrected.
    10. **Mobile pass and sandbox accessibility** (keyboard alternatives to dragging pills).
@@ -168,6 +168,7 @@ Facts to verify in Tableau (not settled by the help) and known limits, from fini
 - Totals: the "Grand Total"/"Total" header labels; the Analysis > Totals item names (only "Show column grand totals" is in the help); the help's bar chart where "only column totals are calculated because the table contains only column headers" (the sandbox totals across Columns headers as Row Grand Totals); what a total of a table calculation shows.
 - Reference lines: whether Average, Median, Sum, Minimum and Maximum use the marks (we do) or the rows (only Total is documented as the rows); the default label (we use Computation) and its text; the dialog's starting values (Percentages 60, 80 of Average is only documented for Show Me's bullet graph; Quantiles 4; Standard deviation 1, sample); whether lines extend the axis.
 - Dashboard: what Use as Filter's generated action runs on and does on clearing (we use Select and Show all values); whether a Hover action clears when the pointer leaves the marks (we clear); whether Exclude all values empties the target before the first selection (we show all, as the simulator does); how "All fields" matches fields across data sources (we match by name).
+- Items 2.1-099 (a third measure dropped on a combined axis joins it) and 2.1-103 (choosing Dual Axis again separates the measures) rest on inference from the help, not a stated fact.
 - Display-unit names "Thousands (K)" / "Millions (M)".
 - Default names of groups, sets and hierarchies, and a group's name from its members.
 - How Measure Names members are named; Automatic mark for a continuous dimension against a measure (sandbox draws Circle).
@@ -175,7 +176,8 @@ Facts to verify in Tableau (not settled by the help) and known limits, from fini
 **Known limits** (fix when the area is next touched)
 - Engine: filled maps for countries only; density marks approximated with translucent circles.
 - Sandbox: headers can't be selected (groups from headers go through the Data pane); selected marks aren't highlighted; groups, sets and bins can't be used in or built on calcs; no Combined Sets; dynamic sets ignore context filters (none yet); axis drops are menu items, not drag targets; only one shelf holds several measures and a dual axis takes exactly two; the per-measure Marks card sets only the mark type.
-- Totals: no per-field Total using, no Row Totals to Left / Column Totals to Top, no Remove All Subtotals separate from the toggle; totals of table calculations are null; `match.ts` ignores totals and only compares table calcs through pill keys.
+- Totals: no per-field Total using, no Row Totals to Left / Column Totals to Top, no Remove All Subtotals separate from the toggle; totals of table calculations are null; `match.ts` only compares table calcs through pill keys.
+- `match.ts` compares calc formulas as text (spaces and case aside), so an equivalent formula written differently fails; derived fields must carry the target's name.
 - Reference lines: no Box Plot, Average/Median with 95% CI, Trend Line or Forecast; no Parameter values (no parameters yet), confidence intervals, tooltips, line formatting or fill above/below; no reference items on Measure Values or a map; none on totals marks; dropping an item asks for its target instead of showing drop areas over the view; lines can't be dragged off the view.
 - Dashboard: two sheets and one dashboard only; filter actions only (highlight, URL and parameter actions stay in the simulator); an action filters each field to the members of the selected marks, not to their combinations; date fields can't be action fields; no Go to Sheet, objects, sizes or device layouts.
 - Simulators leave out Go to Sheet, Change Set Values, Viz in Tooltip, Show/Hide buttons, relative-date filters and extract row-limit options.
