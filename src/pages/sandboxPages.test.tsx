@@ -322,6 +322,14 @@ describe('sandbox', () => {
     expect(hash()).toMatchObject({ marks: { type: 'bar' }, rows: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }] })
   })
 
+  it('reorders pills on a shelf from the pill menu, without dragging', async () => {
+    const router = await renderAt(`/build/sandbox#spec=${encodeURIComponent('{"rows":[{"field":"Genre"},{"field":"Device"}]}')}`, 'Viz builder sandbox')
+    await user.click(within(shelf('Rows')).getByRole('button', { name: /^Genre/ }))
+    expect(screen.queryByRole('menuitem', { name: 'Move earlier' })).toBeNull()
+    await user.click(screen.getByRole('menuitem', { name: 'Move later' }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ rows: [{ field: 'Device' }, { field: 'Genre' }] })
+  })
+
   it('opens a preset from the URL', async () => {
     await renderAt(`/build/sandbox#spec=${encodeURIComponent('{"source":"titles","rows":[{"field":"Genre"}]}')}`, 'Viz builder sandbox')
     expect(screen.getByRole('combobox', { name: 'Data source' })).toHaveDisplayValue('Titles')

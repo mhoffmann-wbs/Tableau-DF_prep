@@ -151,10 +151,10 @@ function FreePlayground() {
       </p>
       <section className={`${card} space-y-3`}>
         <div className="flex flex-wrap items-end gap-3">
-          <label className="flex flex-col gap-1 text-sm font-medium">
+          <label className="flex min-w-0 max-w-full flex-col gap-1 text-sm font-medium">
             Data source
             <select
-              className={inputClass}
+              className={`${inputClass} max-w-full`}
               value={source}
               onChange={(e) => {
                 setSource(e.target.value as SourceId)
@@ -168,10 +168,10 @@ function FreePlayground() {
               ))}
             </select>
           </label>
-          <label className="flex flex-col gap-1 text-sm font-medium">
+          <label className="flex min-w-0 max-w-full flex-col gap-1 text-sm font-medium">
             Start from an example
             <select
-              className={inputClass}
+              className={`${inputClass} max-w-full`}
               value=""
               onChange={(e) => {
                 const ex = EXAMPLES[Number(e.target.value)]
@@ -232,9 +232,9 @@ function FreePlayground() {
           <div className="flex flex-wrap items-center gap-3">
             <h2 className="font-semibold">Result</h2>
             {aggregate && (
-              <label className="flex items-center gap-2 text-sm">
+              <label className="flex min-w-0 max-w-full items-center gap-2 text-sm">
                 Compute per
-                <select className={inputClass} value={by} onChange={(e) => setBy(e.target.value)}>
+                <select className={`${inputClass} min-w-0 max-w-full`} value={by} onChange={(e) => setBy(e.target.value)}>
                   <option value="">Nothing (the whole data source)</option>
                   {dimensions.map((d) => (
                     <option key={d.name}>{d.name}</option>

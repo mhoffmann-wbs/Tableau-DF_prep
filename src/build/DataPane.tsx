@@ -87,7 +87,7 @@ export function DataPane({ lockSource, ...actions }: PaneActions & { lockSource:
   }
 
   return (
-    <aside aria-label="Data pane" {...drop.props} className={`${card} space-y-3 self-start p-2 ${drop.over ? 'ring-2 ring-accent' : ''}`}>
+    <aside aria-label="Data pane" {...drop.props} className={`${card} max-h-96 space-y-3 self-start overflow-y-auto p-2 lg:max-h-none lg:overflow-visible ${drop.over ? 'ring-2 ring-accent' : ''}`}>
       <label className="flex flex-col gap-1 px-1 text-xs font-semibold tracking-wide text-slate-500 uppercase">
         Data source
         <select

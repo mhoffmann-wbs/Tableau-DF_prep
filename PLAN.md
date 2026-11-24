@@ -103,7 +103,7 @@ One engine (model, query, calc, Vega-Lite renderer) shared by the sandbox, `viz`
 ## 7. Build: the hands-on replacement
 
 ### 7a. Viz builder sandbox (`/build/sandbox`)
-A schematic Tableau-style workspace (not a visual copy): Data pane, Filters/Columns/Rows shelves, Marks card, blue/green pills with menus, the spec in `#spec=`. "Make this chart" challenges check the learner's spec with `engine/match.ts`; they don't count towards readiness. Two sheets and a dashboard with filter actions (8.6). Remaining: phase 8.10.
+A schematic Tableau-style workspace (not a visual copy): Data pane, Filters/Columns/Rows shelves, Marks card, blue/green pills with menus, the spec in `#spec=`. "Make this chart" challenges check the learner's spec with `engine/match.ts`; they don't count towards readiness. Two sheets and a dashboard with filter actions (8.6).
 
 ### 7b. Calc playground (`/build/calc`)
 A documented subset of Tableau's calculation language: operators, `IF/IIF/CASE`, string, date (`TODAY` pinned), number, null, type-conversion and aggregate functions, with Tableau's "Cannot mix aggregate and non-aggregate arguments" error. Exercises compare outputs with a reference calc; saved calcs become sandbox fields. LOD expressions and table-calc functions are out of scope (the outline asks only for quick table calcs, 2.3.3, and simple calculated fields, 2.3.5).
@@ -146,7 +146,7 @@ Versioned progress store with export/import; readiness per task (coverage × acc
    7. **Content on the new features** (done 2026-11-24): `match.ts` compares each measure's mark, axes, the Measure Values card, reference items, totals and the calcs/groups/sets/bins the target defines; 26 `viz` items (bank 626: 346 `single`, 153 `multi`, 127 `viz`); 10 sandbox challenges (25 in all); 10 lesson charts in 2.1–2.3; sandbox presets in the Group/set/hierarchy simulator.
    8. **Tableau Public challenges** (done 2026-11-24): 12 challenges, one per task, at `/build/challenges/:id`, with checklists and checkpoints in progress (v6); the steps for the three `unverified` limits are optional until checked.
    9. **Cheat sheet and exam-day guide** (done 2026-11-24): `/guides`, facts restated from the lessons and `EXAM_FORMAT`. Recheck the cheat sheet whenever a lesson is corrected.
-   10. **Mobile pass and sandbox accessibility** (keyboard alternatives to dragging pills).
+   10. **Mobile pass and sandbox accessibility** (done 2026-11-24): every route checked at 390px for horizontal overflow (the calc playground's selects fixed); the Data pane scrolls in its own box below `lg`; Move earlier/later in the pill menu, so every drag has a menu path.
 
 ## 10. Open checks
 
@@ -175,6 +175,7 @@ Facts to verify in Tableau (not settled by the help) and known limits, from fini
 
 **Known limits** (fix when the area is next touched)
 - Engine: filled maps for countries only; density marks approximated with translucent circles.
+- Sandbox: marks can only be selected with a pointer (groups and sets from marks, dashboard actions); the Data pane's Create menus and filter cards are the keyboard paths.
 - Sandbox: headers can't be selected (groups from headers go through the Data pane); selected marks aren't highlighted; groups, sets and bins can't be used in or built on calcs; no Combined Sets; dynamic sets ignore context filters (none yet); axis drops are menu items, not drag targets; only one shelf holds several measures and a dual axis takes exactly two; the per-measure Marks card sets only the mark type.
 - Totals: no per-field Total using, no Row Totals to Left / Column Totals to Top, no Remove All Subtotals separate from the toggle; totals of table calculations are null; `match.ts` only compares table calcs through pill keys.
 - `match.ts` compares calc formulas as text (spaces and case aside), so an equivalent formula written differently fails; derived fields must carry the target's name.

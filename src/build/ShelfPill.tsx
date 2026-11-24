@@ -11,9 +11,11 @@ import {
   drillDown,
   drillState,
   drillUp,
+  isChannel,
   movePill,
   pillAt,
   removePill,
+  reorderPill,
   replacePill,
   setDualAxis,
   setSyncAxis,
@@ -93,6 +95,7 @@ export function ShelfPill({
     twoMeasures = false
   }
   const axes = axisShelf ? spec.axes[axisShelf] : undefined
+  const listLength = isChannel(at.shelf) ? 1 : at.shelf === 'detail' || at.shelf === 'tooltip' ? spec.marks[at.shelf].length : spec[at.shelf].length
 
   return (
     <span {...(onDropBefore && drop.props)} className={`inline-flex items-center ${drop.over ? 'border-l-4 border-accent pl-1' : ''}`}>
@@ -210,6 +213,13 @@ export function ShelfPill({
               )}
               {rp && !rp.continuous && (at.shelf === 'columns' || at.shelf === 'rows') && (
                 <MenuItem onSelect={act(() => onEditSort(at))}>Sort…</MenuItem>
+              )}
+              {!isChannel(at.shelf) && listLength > 1 && (
+                <>
+                  <MenuHeading>Order on {where}</MenuHeading>
+                  {at.index > 0 && <MenuItem onSelect={act(() => onChange(reorderPill(spec, at, -1)))}>Move earlier</MenuItem>}
+                  {at.index < listLength - 1 && <MenuItem onSelect={act(() => onChange(reorderPill(spec, at, 1)))}>Move later</MenuItem>}
+                </>
               )}
               <MenuHeading>Move to</MenuHeading>
               {[...LIST_SHELVES, ...CHANNELS]

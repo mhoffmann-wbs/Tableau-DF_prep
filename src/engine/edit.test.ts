@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { combineOnAxis, continuousOn, defaultFilter, emptySpec, setDualAxis, setPillMark, setSyncAxis, isCompleteFilter, movePill, parseSpecHash, pillFor, placePill, removeCalc, removePill, setCalc, specHash, usesField } from './edit'
+import { combineOnAxis, continuousOn, defaultFilter, emptySpec, setDualAxis, setPillMark, setSyncAxis, isCompleteFilter, movePill, parseSpecHash, pillFor, placePill, removeCalc, removePill, reorderPill, setCalc, specHash, usesField } from './edit'
 import { vizSpecSchema } from './spec'
 
 const genre = pillFor('Genre')
@@ -27,6 +27,16 @@ describe('spec edits', () => {
     expect(s.marks.detail).toEqual([])
     s = movePill(placePill(s, device, 'size'), { shelf: 'size', index: 0 }, 'label')
     expect([s.marks.size, s.marks.label]).toEqual([undefined, device])
+  })
+
+  it('reorders a pill one place at a time, the keyboard alternative to dragging', () => {
+    const s = vizSpecSchema.parse({ columns: [genre, device, minutes], marks: { color: genre } })
+    const order = (x: typeof s) => x.columns.map((p) => p.field)
+    expect(order(reorderPill(s, { shelf: 'columns', index: 0 }, 1))).toEqual(['Device', 'Genre', 'Minutes Watched'])
+    expect(order(reorderPill(s, { shelf: 'columns', index: 2 }, -1))).toEqual(['Genre', 'Minutes Watched', 'Device'])
+    expect(reorderPill(s, { shelf: 'columns', index: 2 }, 1)).toBe(s)
+    expect(reorderPill(s, { shelf: 'columns', index: 0 }, -1)).toBe(s)
+    expect(reorderPill(s, { shelf: 'color', index: 0 }, 1)).toBe(s)
   })
 
   it('starts filters the way the field type suggests', () => {

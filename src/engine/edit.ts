@@ -109,6 +109,17 @@ export function movePill(spec: VizSpec, from: PillAt, shelf: ShelfId, index?: nu
   return placePill(removePill(spec, from), pill, shelf, target)
 }
 
+/**
+ * Moves a pill on a list shelf one place earlier (-1) or later (+1), the
+ * keyboard alternative to dragging it; unchanged at either end or on a channel.
+ */
+export function reorderPill(spec: VizSpec, at: PillAt, delta: -1 | 1): VizSpec {
+  if (isChannel(at.shelf)) return spec
+  const to = at.index + delta
+  if (to < 0 || to >= listOf(spec, at.shelf).length) return spec
+  return movePill(spec, at, at.shelf, delta === 1 ? to + 1 : to)
+}
+
 /** The pill a field becomes when dropped on a shelf: its default aggregation or date level comes from the engine. */
 export function pillFor(field: string): Pill {
   return { field }
