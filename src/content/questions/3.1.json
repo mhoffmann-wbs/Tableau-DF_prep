@@ -2042,5 +2042,586 @@
     "sourceLinks": [
       "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
     ]
+  },
+  {
+    "id": "3.1-056",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "The chart has the dimension `Plan` on Color. How does Tableau tell the viewer which colour belongs to which plan?",
+    "options": [
+      {
+        "text": "A quantitative legend shows one gradient bar that runs from the smallest plan total to the largest.",
+        "correct": false,
+        "rationale": "A gradient legend belongs to a continuous field on Color. `Plan` is discrete."
+      },
+      {
+        "text": "A categorical legend lists each plan with its own distinct colour, and the palette assigns them by member.",
+        "correct": true,
+        "rationale": "A discrete field on Color gets a categorical palette, one colour and one legend entry per member."
+      },
+      {
+        "text": "No legend appears, because every bar is already drawn in the default colour of the Marks card.",
+        "correct": false,
+        "rationale": "Dropping a field on Color is encoding, so a legend is created to explain it."
+      },
+      {
+        "text": "A stepped legend groups the plans into a few uniform bins and colours each bin.",
+        "correct": false,
+        "rationale": "Stepped Color is an option for continuous colour and bins values. Plans are separate members."
+      }
+    ],
+    "explanation": "A discrete field such as a dimension on Color gets a categorical palette. Each member gets a distinct colour, and the legend lists them so the viewer can match a colour to a plan.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Channel"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ],
+        "marks": {
+          "type": "bar",
+          "color": {
+            "field": "Plan"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-057",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "On this sheet, `AVG(Monthly Price)` sits on Color, and its pill is blue instead of green. What does that mean for the colours?",
+    "options": [
+      {
+        "text": "Tableau draws a smooth gradient anyway, because a measure always gets a continuous range of colours.",
+        "correct": false,
+        "rationale": "The palette follows how the pill is treated. A blue pill is discrete, so there is no continuous gradient."
+      },
+      {
+        "text": "Tableau shows a diverging palette centred on zero, because the aggregate is an average.",
+        "correct": false,
+        "rationale": "Diverging is a choice of continuous palette. An average does not trigger it, and this pill is discrete."
+      },
+      {
+        "text": "Tableau colours every mark the same, because only dimensions can create different colours.",
+        "correct": false,
+        "rationale": "A discrete measure can encode colour. It is simply handled like a discrete field."
+      },
+      {
+        "text": "Tableau treats each distinct value as a member, with a categorical palette and one legend entry per value.",
+        "correct": true,
+        "rationale": "A discrete pill on Color gets a categorical palette, even when the field is a measure."
+      }
+    ],
+    "explanation": "Continuity, not the field type, decides the legend. A discrete (blue) pill on Color gets a categorical palette with one entry per value. The same measure made continuous (green) gets a quantitative gradient.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Country"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Subscribers (Count)"
+          }
+        ],
+        "marks": {
+          "type": "bar",
+          "color": {
+            "field": "Monthly Price",
+            "agg": "avg",
+            "as": "discrete"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-058",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "3.1.1"
+    ],
+    "stem": "The filled map colours each country by `AVG(Monthly Price)`, a continuous field. Which statements about its colours are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "The legend is a quantitative legend showing a continuous range of colours from the lowest to the highest value.",
+        "correct": true,
+        "rationale": "A continuous field on Color produces a gradient legend."
+      },
+      {
+        "text": "Each country gets its own distinct colour from a categorical palette such as Tableau 10.",
+        "correct": false,
+        "rationale": "Categorical palettes are for discrete fields, where each member gets a colour."
+      },
+      {
+        "text": "Edit Colors lets the analyst select one country at a time and assign it a colour by hand.",
+        "correct": false,
+        "rationale": "Picking a colour per member is for discrete fields. A continuous field is edited as a range."
+      },
+      {
+        "text": "Edit Colors offers Stepped Color, which groups the values into uniform bins instead of a smooth range.",
+        "correct": true,
+        "rationale": "Stepped Color is an option for continuous colour."
+      },
+      {
+        "text": "Moving the Size slider on the Marks card is what switches the legend from categorical to gradient.",
+        "correct": false,
+        "rationale": "Size formats mark size. The legend type follows the field on Color."
+      }
+    ],
+    "explanation": "A continuous field on Color shows a gradient, and Edit Colors then works on the range: sequential or diverging palettes, Stepped Color, Reversed. Per-member colours and categorical palettes belong to discrete fields.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "type": "map",
+          "detail": [
+            {
+              "field": "Country"
+            }
+          ],
+          "color": {
+            "field": "Monthly Price",
+            "agg": "avg"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties_color.htm"
+    ]
+  },
+  {
+    "id": "3.1-059",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "Each mark in this scatterplot is a Genre. What does one shape stand for?",
+    "options": [
+      {
+        "text": "One member of `Type`, so all marks with the same shape share the same `Type`.",
+        "correct": true,
+        "rationale": "The Shape shelf holds `Type`, and each member of a dimension on Shape gets its own shape."
+      },
+      {
+        "text": "One `Genre`, so the chart uses a different shape for every genre on the view.",
+        "correct": false,
+        "rationale": "`Genre` is on Detail. It sets how many marks there are, not what the shapes mean."
+      },
+      {
+        "text": "One band of `AVG(Runtime)`, so marks with a similar runtime share a shape.",
+        "correct": false,
+        "rationale": "Shapes do not bin a measure. The runtime sets only the vertical position."
+      },
+      {
+        "text": "One range of `Titles (Count)`, so marks further right get a different shape.",
+        "correct": false,
+        "rationale": "The count sets the horizontal position. Shapes come from the field on Shape."
+      }
+    ],
+    "explanation": "A dimension on Shape splits the marks by its members and assigns a unique shape to each. Detail only decides how many marks there are, and position comes from the axes.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "columns": [
+          {
+            "field": "Titles (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Runtime",
+            "agg": "avg"
+          }
+        ],
+        "marks": {
+          "type": "shape",
+          "detail": [
+            {
+              "field": "Genre"
+            }
+          ],
+          "shape": {
+            "field": "Type"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-060",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "In this scatterplot, the Shape mark type is set and `Device` is on Shape with `Genre` on Detail. What does one mark show?",
+    "options": [
+      {
+        "text": "All the sessions of one genre, because Shape on its own does not split the marks.",
+        "correct": false,
+        "rationale": "A dimension on Shape does split the marks, just as Detail does."
+      },
+      {
+        "text": "All the sessions of one device, because Detail is only used for text labels.",
+        "correct": false,
+        "rationale": "Detail adds a dimension to the level of detail. It is not limited to labels."
+      },
+      {
+        "text": "The sessions for one combination of `Genre` and `Device`, drawn with the shape of that device.",
+        "correct": true,
+        "rationale": "Both Detail and Shape dimensions set the level of detail, so there is one mark per combination."
+      },
+      {
+        "text": "A single value for the whole sheet, because two aggregated measures on the axes collapse the view.",
+        "correct": false,
+        "rationale": "The dimensions in the view keep the marks apart, so the measures are aggregated per combination."
+      }
+    ],
+    "explanation": "Every dimension in the view sets the level of detail, including one on Shape. Here each mark is a unique Genre and Device combination, and its shape tells the viewer which device it is.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "agg": "avg"
+          }
+        ],
+        "marks": {
+          "type": "shape",
+          "detail": [
+            {
+              "field": "Genre"
+            }
+          ],
+          "shape": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-061",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "3.1.3"
+    ],
+    "stem": "Each mark in the chart is a `Genre`, drawn as a circle. The analyst wants Movie and Series titles to have different symbols while keeping one mark per genre. What should they do?",
+    "options": [
+      {
+        "text": "Drag `Type` to Detail on the Marks card, which gives each member its own symbol.",
+        "correct": false,
+        "rationale": "Detail splits the marks but never changes the symbol. It keeps the circle."
+      },
+      {
+        "text": "Drag `Type` to Shape while the mark type stays Circle, because shapes show on every mark type.",
+        "correct": false,
+        "rationale": "Shapes only show when the mark type is Shape. With Circle the marks stay circles."
+      },
+      {
+        "text": "Set the mark type to Shape and drag `Type` to Size, so each member gets its own symbol.",
+        "correct": false,
+        "rationale": "Size changes how big marks are. The symbol comes from the field on Shape."
+      },
+      {
+        "text": "Set the mark type to Shape and drag `Type` to Shape on the Marks card.",
+        "correct": true,
+        "rationale": "Both steps are needed: the Shape mark type, and a dimension on Shape that assigns one shape per member."
+      }
+    ],
+    "explanation": "The Shape card only takes effect with the Shape mark type. Pairing it with a dimension such as `Type` gives each member its own symbol, while `Genre` on Detail still keeps one mark per genre.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "columns": [
+          {
+            "field": "Titles (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Runtime",
+            "agg": "avg"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "Genre"
+            }
+          ]
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-062",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "In the symbol map, `Subscribers (Count)` is on Size with `City` on Detail. What does a larger circle mean?",
+    "options": [
+      {
+        "text": "The city has more subscribers than the cities with smaller circles.",
+        "correct": true,
+        "rationale": "A continuous measure on Size gives the largest mark to the largest value."
+      },
+      {
+        "text": "The city covers a larger geographic area on the map.",
+        "correct": false,
+        "rationale": "Circle size comes from the field on Size, not from geography."
+      },
+      {
+        "text": "The city lies further from the centre of the map.",
+        "correct": false,
+        "rationale": "Position comes from latitude and longitude. Size is a separate encoding."
+      },
+      {
+        "text": "The city was added to the data more recently than the other cities.",
+        "correct": false,
+        "rationale": "Nothing on the Marks card refers to dates. Size shows the measure."
+      }
+    ],
+    "explanation": "A continuous measure on Size is scaled from the smallest mark for the smallest value to the largest mark for the largest. A bigger circle therefore means a bigger count of subscribers.",
+    "viz": {
+      "spec": {
+        "source": "subscribers",
+        "columns": [
+          {
+            "field": "Longitude (generated)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Latitude (generated)"
+          }
+        ],
+        "marks": {
+          "detail": [
+            {
+              "field": "City"
+            }
+          ],
+          "size": {
+            "field": "Subscribers (Count)"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-063",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "3.1.5"
+    ],
+    "stem": "The scatterplot has one circle per `Genre`, with `SUM(Minutes Watched)` on Size. Which statement is correct?",
+    "options": [
+      {
+        "text": "A genre drawn higher up has the larger circle, because height decides size.",
+        "correct": false,
+        "rationale": "Height shows `AVG(Minutes Watched)`. Size is its own encoding."
+      },
+      {
+        "text": "A larger circle means a larger `SUM(Minutes Watched)`, wherever the genre sits on the axes.",
+        "correct": true,
+        "rationale": "The measure on Size sets the circle size, independently of position."
+      },
+      {
+        "text": "A larger circle means more sessions, because Tableau sizes marks by their row count.",
+        "correct": false,
+        "rationale": "Only the measure on Size is used. `Sessions (Count)` sets position on the horizontal axis."
+      },
+      {
+        "text": "All the circles have the same size, because a dimension on Detail fixes the size of its marks.",
+        "correct": false,
+        "rationale": "Detail does not fix sizes. The measure on Size varies them."
+      }
+    ],
+    "explanation": "A measure on Size adds a third quantity to a two-axis scatterplot. Position still reads from the axes, while circle size reads the Size field, here the total minutes watched.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "agg": "avg"
+          }
+        ],
+        "marks": {
+          "type": "circle",
+          "detail": [
+            {
+              "field": "Genre"
+            }
+          ],
+          "size": {
+            "field": "Minutes Watched"
+          }
+        }
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/viewparts_marks_markproperties.htm"
+    ]
+  },
+  {
+    "id": "3.1-064",
+    "taskId": "3.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "3.1.6"
+    ],
+    "stem": "In this view, which pills produce a legend on the sheet? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Plan` on Color",
+        "correct": true,
+        "rationale": "A field on Color is encoded, so a legend explains it."
+      },
+      {
+        "text": "`Device` on Shape",
+        "correct": true,
+        "rationale": "A field on Shape is encoded, so a legend lists its shapes."
+      },
+      {
+        "text": "`Genre` on Detail",
+        "correct": false,
+        "rationale": "Detail adds marks but encodes nothing visible, so it has no legend."
+      },
+      {
+        "text": "`Country` on Tooltip",
+        "correct": false,
+        "rationale": "A tooltip shows a value on hover. It does not create a legend."
+      },
+      {
+        "text": "`Sessions (Count)` on Columns",
+        "correct": false,
+        "rationale": "A field on a shelf gets an axis, not a legend."
+      },
+      {
+        "text": "`AVG(Minutes Watched)` on Rows",
+        "correct": false,
+        "rationale": "A field on a shelf gets an axis, not a legend."
+      }
+    ],
+    "explanation": "Legends appear for fields on Color, Size and Shape, which encode data in the marks. Detail and Tooltip add marks or hover text, and Columns and Rows produce axes or headers.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched",
+            "agg": "avg"
+          }
+        ],
+        "marks": {
+          "type": "shape",
+          "color": {
+            "field": "Plan"
+          },
+          "shape": {
+            "field": "Device"
+          },
+          "detail": [
+            {
+              "field": "Genre"
+            }
+          ],
+          "tooltip": [
+            {
+              "field": "Country"
+            }
+          ]
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/view_parts.htm"
+    ]
   }
 ]
