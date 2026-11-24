@@ -5,6 +5,7 @@ import {
   SHELF_LABEL,
   aggregationChoices,
   canToggleContinuity,
+  continuousOn,
   drillDown,
   drillState,
   drillUp,
@@ -12,6 +13,8 @@ import {
   pillAt,
   removePill,
   replacePill,
+  setDualAxis,
+  setSyncAxis,
   withAggregation,
   withContinuity,
   withDateLevel,
@@ -76,6 +79,15 @@ export function ShelfPill({
   const where = SHELF_LABEL[at.shelf]
   const color = !rp ? 'bg-red-600' : rp.continuous ? 'bg-continuous' : 'bg-discrete'
   const drill = rp ? drillState(spec, at) : { up: false }
+  // Dual Axis needs exactly two continuous pills on the shelf (a broken pill there rules it out).
+  const axisShelf = at.shelf === 'columns' || at.shelf === 'rows' ? at.shelf : undefined
+  let twoMeasures = false
+  try {
+    twoMeasures = !!rp?.continuous && axisShelf !== undefined && continuousOn(spec, axisShelf).length === 2
+  } catch {
+    twoMeasures = false
+  }
+  const axes = axisShelf ? spec.axes[axisShelf] : undefined
 
   return (
     <span {...(onDropBefore && drop.props)} className={`inline-flex items-center ${drop.over ? 'border-l-4 border-accent pl-1' : ''}`}>
@@ -154,6 +166,19 @@ export function ShelfPill({
                   <MenuItem checked={pill.setView === 'members'} onSelect={act(() => set({ ...withoutSetView(pill), setView: 'members' }))}>
                     Show Members in Set
                   </MenuItem>
+                </>
+              )}
+              {twoMeasures && axisShelf && (
+                <>
+                  <MenuHeading>Axis</MenuHeading>
+                  <MenuItem checked={axes?.dual === true} onSelect={act(() => onChange(setDualAxis(spec, axisShelf, axes?.dual !== true)))}>
+                    Dual Axis
+                  </MenuItem>
+                  {axes?.dual && (
+                    <MenuItem checked={axes.sync === true} onSelect={act(() => onChange(setSyncAxis(spec, axisShelf, axes.sync !== true)))}>
+                      Synchronize Axis
+                    </MenuItem>
+                  )}
                 </>
               )}
               {rp && !rp.continuous && (at.shelf === 'columns' || at.shelf === 'rows') && (

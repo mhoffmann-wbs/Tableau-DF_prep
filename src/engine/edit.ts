@@ -11,6 +11,8 @@ import {
   type FieldEdit,
   type Filter,
   type Group,
+  MEASURE_NAMES,
+  MEASURE_VALUES,
   type MarkType,
   type Pill,
   type SetDef,
@@ -20,8 +22,8 @@ import {
   vizSpecSchema,
 } from './spec.ts'
 
-/** Shelves that hold a list of pills. */
-export const LIST_SHELVES = ['columns', 'rows', 'detail', 'tooltip'] as const
+/** Shelves that hold a list of pills; `measureValues` is the Measure Values card. */
+export const LIST_SHELVES = ['columns', 'rows', 'detail', 'tooltip', 'measureValues'] as const
 /** Marks card channels that hold one pill. */
 export const CHANNELS = ['color', 'size', 'label', 'shape'] as const
 export type ListShelf = (typeof LIST_SHELVES)[number]
@@ -37,6 +39,7 @@ export const SHELF_LABEL: Record<ShelfId, string> = {
   size: 'Size',
   label: 'Label',
   shape: 'Shape',
+  measureValues: 'Measure Values',
 }
 
 /** Where a pill sits: a shelf, and its position on list shelves. */
@@ -52,11 +55,11 @@ export function emptySpec(source: SourceId = 'sessions'): VizSpec {
 }
 
 function listOf(spec: VizSpec, shelf: ListShelf): Pill[] {
-  return shelf === 'columns' || shelf === 'rows' ? spec[shelf] : spec.marks[shelf]
+  return shelf === 'columns' || shelf === 'rows' || shelf === 'measureValues' ? spec[shelf] : spec.marks[shelf]
 }
 
 function withList(spec: VizSpec, shelf: ListShelf, pills: Pill[]): VizSpec {
-  if (shelf === 'columns' || shelf === 'rows') return { ...spec, [shelf]: pills }
+  if (shelf === 'columns' || shelf === 'rows' || shelf === 'measureValues') return { ...spec, [shelf]: pills }
   return { ...spec, marks: { ...spec.marks, [shelf]: pills } }
 }
 
@@ -119,7 +122,7 @@ const OTHER_AGGS: Aggregation[] = ['count', 'countd', 'min', 'max', 'attr']
  */
 export function aggregationChoices(source: SourceRef, pill: Pill): (Aggregation | undefined)[] {
   const field = fieldOf(source, pill.field)
-  if (!field || field.generated || field.calc?.error || field.calc?.compiled?.aggregate) return []
+  if (!field || field.generated || field.special || field.calc?.error || field.calc?.compiled?.aggregate) return []
   if (field.role === 'measure') return NUMBER_AGGS
   return [undefined, ...(field.type === 'number' ? NUMBER_AGGS : OTHER_AGGS)]
 }
@@ -153,7 +156,7 @@ export function withContinuity(source: SourceRef, pill: Pill, continuous: boolea
 /** The filter Tableau would start from when a field is dropped on Filters, before the learner picks members or a range. */
 export function defaultFilter(source: SourceRef, name: string): Filter | undefined {
   const field = fieldOf(source, name)
-  if (!field || field.generated || field.calc?.error) return undefined
+  if (!field || field.generated || field.calc?.error || field.special === 'values') return undefined
   if (field.type === 'date' || field.type === 'datetime') return { kind: 'datePart', field: name, level: 'year', values: [] }
   if (field.role === 'measure') return { kind: 'range', field: name, agg: field.agg }
   return { kind: 'values', field: name, values: [] }
@@ -191,6 +194,7 @@ function mapPills(spec: VizSpec, fn: (p: Pill) => Pill | undefined): VizSpec {
     ...spec,
     columns: list(spec.columns),
     rows: list(spec.rows),
+    measureValues: list(spec.measureValues),
     marks: { ...marks, color: one(marks.color), size: one(marks.size), label: one(marks.label), shape: one(marks.shape), detail: list(marks.detail), tooltip: list(marks.tooltip) },
   }
 }
@@ -243,6 +247,53 @@ export function setCalc(spec: VizSpec, index: number | undefined, calc: Calc): V
 /** Removes a calc with the pills and filters on it; sorts by it go back to the default. */
 export function removeCalc(spec: VizSpec, name: string): VizSpec {
   return { ...dropRefs(spec, name), calcs: spec.calcs.filter((c) => c.name !== name) }
+}
+
+// ---- several measures: combined and dual axes ----
+
+/** The continuous pills on Columns or Rows: one is an axis, more are measure panes or a dual axis. */
+export const continuousOn = (spec: VizSpec, shelf: 'columns' | 'rows'): Pill[] => spec[shelf].filter((p) => resolvePill(spec, p).continuous)
+
+/**
+ * Drops a measure onto the axis of Columns or Rows (a combined axis): the
+ * axis becomes Measure Values, its measure and the new one go on the Measure
+ * Values card, and Measure Names goes on Color when Color is free. On an
+ * axis that already shows Measure Values, the measure joins the card.
+ */
+export function combineOnAxis(spec: VizSpec, shelf: 'columns' | 'rows', field: string): VizSpec {
+  const axis = spec[shelf].findIndex((p) => resolvePill(spec, p).continuous)
+  if (axis < 0) throw new EngineError(`There is no axis on ${SHELF_LABEL[shelf]} to drop ${field} on.`)
+  const added = { field }
+  if (resolvePill(spec, added).kind !== 'measure') throw new EngineError(`Only measures share an axis: ${field} is a dimension.`)
+  const pill = spec[shelf][axis]!
+  if (pill.field === MEASURE_VALUES) return { ...spec, measureValues: [...spec.measureValues, added] }
+  const { mark: _m, ...measure } = pill
+  const next = withList(
+    spec,
+    shelf,
+    spec[shelf].map((p, i) => (i === axis ? { field: MEASURE_VALUES } : p)),
+  )
+  return {
+    ...next,
+    measureValues: [measure, added],
+    marks: next.marks.color ? next.marks : { ...next.marks, color: { field: MEASURE_NAMES } },
+    axes: { ...next.axes, [shelf]: undefined },
+  }
+}
+
+/** Dual Axis on the last two measures of a shelf, or back to one pane each; turning it off clears Synchronize Axis. */
+export function setDualAxis(spec: VizSpec, shelf: 'columns' | 'rows', dual: boolean): VizSpec {
+  return { ...spec, axes: { ...spec.axes, [shelf]: dual ? { ...spec.axes[shelf], dual: true } : undefined } }
+}
+
+export function setSyncAxis(spec: VizSpec, shelf: 'columns' | 'rows', sync: boolean): VizSpec {
+  return { ...spec, axes: { ...spec.axes, [shelf]: { ...spec.axes[shelf], dual: true, ...(sync ? { sync: true } : { sync: undefined }) } } }
+}
+
+/** A measure's own mark type (its Marks card), when its shelf holds several measures. */
+export function setPillMark(spec: VizSpec, at: PillAt, mark: MarkType): VizSpec {
+  const { mark: _m, ...pill } = pillAt(spec, at)!
+  return replacePill(spec, at, mark === 'automatic' ? pill : { ...pill, mark })
 }
 
 // ---- groups, sets, bins and hierarchies ----
@@ -385,7 +436,7 @@ export function resetField(spec: VizSpec, original: string): VizSpec {
 
 /** Whether the view uses a field: on a shelf, in a filter or in a sort. */
 export function usesField(spec: VizSpec, name: string): boolean {
-  return pillsOf(spec).some((p) => p.field === name || p.sort?.field === name) || spec.filters.some((f) => f.field === name)
+  return [...pillsOf(spec), ...spec.measureValues].some((p) => p.field === name || p.sort?.field === name) || spec.filters.some((f) => f.field === name)
 }
 
 // ---- the spec in the URL (#spec=…) ----
@@ -396,7 +447,8 @@ export function compactSpec(spec: VizSpec): Record<string, unknown> {
   if (spec.source !== 'sessions') out.source = spec.source
   if (spec.calcs.length) out.calcs = spec.calcs
   if (spec.fields.length) out.fields = spec.fields
-  for (const k of ['groups', 'sets', 'bins', 'hierarchies'] as const) if (spec[k].length) out[k] = spec[k]
+  for (const k of ['groups', 'sets', 'bins', 'hierarchies', 'measureValues'] as const) if (spec[k].length) out[k] = spec[k]
+  if (spec.axes.columns || spec.axes.rows) out.axes = spec.axes
   if (spec.columns.length) out.columns = spec.columns
   if (spec.rows.length) out.rows = spec.rows
   const marks: Record<string, unknown> = {}

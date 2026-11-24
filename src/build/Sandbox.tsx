@@ -5,6 +5,7 @@ import {
   type PillAt,
   SHELF_LABEL,
   type ShelfId,
+  continuousOn,
   createHierarchy,
   defaultFilter,
   editField,
@@ -19,12 +20,13 @@ import {
   setDerived,
   setFilter,
   setMarkType,
+  setPillMark,
 } from '../engine/edit'
 import { type Field, fieldOf, fieldsOf, isEditable, SOURCE_INFO } from '../engine/model'
 import type { MarkMembers } from '../engine/runtime'
-import { AGG_LABEL, EngineError, resolvePill } from '../engine/pills'
+import { AGG_LABEL, EngineError, type ResolvedPill, resolvePill } from '../engine/pills'
 import { automaticMark } from '../engine/render'
-import { type Bin, type Calc, type FieldEdit, type Group, MARK_TYPES, type Filter, type MarkType, type SetDef, type VizSpec, pillsOf } from '../engine/spec'
+import { type Bin, type Calc, type FieldEdit, type Group, MARK_TYPES, MEASURE_NAMES, MEASURE_VALUES, type Filter, type MarkType, type SetDef, type VizSpec, pillsOf } from '../engine/spec'
 import { Viz } from '../engine/Viz'
 import { type Dragged, useDropTarget } from './dnd'
 import { FilterEditor } from './FilterEditor'
@@ -53,6 +55,15 @@ const MARK_NAME: Record<MarkType, string> = {
 }
 
 const card = 'rounded-lg border border-slate-200 bg-white'
+
+/** A value, or `fallback` when computing it throws (a broken pill): the shelves still draw. */
+function safe<T>(fn: () => T, fallback: T): T {
+  try {
+    return fn()
+  } catch {
+    return fallback
+  }
+}
 
 /**
  * The viz builder: a Data pane, the Filters shelf, the Marks card, Columns and
@@ -109,6 +120,10 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
           {(['columns', 'rows'] as const).map((shelf) => (
             <ListShelfRow key={shelf} shelf={shelf} spec={spec} dropOn={dropOn} pillProps={pillProps} />
           ))}
+          {/* The Measure Values card: the measures Measure Names and Measure Values stand for. */}
+          {(spec.measureValues.length > 0 || pillsOf(spec).some((p) => p.field === MEASURE_VALUES || p.field === MEASURE_NAMES)) && (
+            <ListShelfRow shelf="measureValues" spec={spec} dropOn={dropOn} pillProps={pillProps} />
+          )}
         </div>
         {editor?.kind === 'filter' && (
           <FilterEditor
@@ -307,33 +322,60 @@ function MarksCard({
   dropOn: (shelf: ShelfId, index?: number) => (d: Dragged) => void
   pillProps: PillProps
 }) {
-  let auto: string | undefined
-  try {
-    const inner = (shelf: 'columns' | 'rows') => {
-      const p = spec[shelf].at(-1)
-      return p ? resolvePill(spec, p) : undefined
-    }
-    auto = MARK_NAME[automaticMark(inner('columns'), inner('rows'))]
-  } catch {
-    auto = undefined
+  // Several measures on one shelf: a Marks card per measure, as tabs beside All.
+  const shelfOf = (['rows', 'columns'] as const).find((sh) => safe(() => continuousOn(spec, sh).length, 0) > 1)
+  const measures = shelfOf ? spec[shelfOf].flatMap((p, index) => (safe(() => resolvePill(spec, p).continuous, false) ? [{ index, label: safe(() => resolvePill(spec, p).label, p.field) }] : [])) : []
+  const [tab, setTab] = useState<number>()
+  const current = measures.find((m) => m.index === tab)
+  const inner = (sh: 'columns' | 'rows', index?: number) => {
+    const p = index === undefined ? spec[sh].at(-1) : spec[sh][index]
+    return p ? safe<ResolvedPill | undefined>(() => resolvePill(spec, p), undefined) : undefined
   }
+  const autoFor = (index?: number) => {
+    const x = shelfOf === 'columns' && index !== undefined ? inner('columns', index) : inner('columns')
+    const y = shelfOf === 'rows' && index !== undefined ? inner('rows', index) : inner('rows')
+    return safe<string | undefined>(() => MARK_NAME[automaticMark(x, y)], undefined)
+  }
+  const pill = current && shelfOf ? spec[shelfOf][current.index] : undefined
+  const value = current ? (pill?.mark ?? 'automatic') : spec.marks.type
+  const choose = (t: MarkType) => {
+    if (current && shelfOf) return onChange(setPillMark(spec, { shelf: shelfOf, index: current.index }, t))
+    // All sets every measure's mark.
+    let next = setMarkType(spec, t)
+    for (const m of measures) next = setPillMark(next, { shelf: shelfOf!, index: m.index }, 'automatic')
+    onChange(next)
+  }
+  const auto = current ? (spec.marks.type === 'automatic' ? autoFor(current.index) : `All: ${MARK_NAME[spec.marks.type]}`) : measures.length ? undefined : autoFor()
   return (
     <div className={`${card} space-y-2 p-2`}>
       <h3 className="text-xs font-semibold tracking-wide text-slate-500 uppercase">Marks</h3>
+      {measures.length > 0 && (
+        <div role="tablist" aria-label="Marks cards" className="flex flex-wrap gap-1 text-xs">
+          {[{ index: undefined, label: 'All' }, ...measures].map((m) => (
+            <button
+              key={m.label + (m.index ?? '')}
+              type="button"
+              role="tab"
+              aria-selected={(current?.index ?? undefined) === m.index}
+              onClick={() => setTab(m.index)}
+              className={`rounded px-2 py-0.5 ${(current?.index ?? undefined) === m.index ? 'bg-brand text-chalk' : 'border border-slate-300'}`}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+      )}
       <label className="flex items-center gap-2 text-sm">
-        <span className="sr-only">Mark type</span>
-        <select
-          value={spec.marks.type}
-          onChange={(e) => onChange(setMarkType(spec, e.target.value as MarkType))}
-          className="w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm"
-        >
-          {MARK_TYPES.map((t) => (
+        <span className="sr-only">{current ? `Mark type for ${current.label}` : 'Mark type'}</span>
+        <select value={value} onChange={(e) => choose(e.target.value as MarkType)} className="w-full rounded border border-slate-300 bg-white px-2 py-1 text-sm">
+          {MARK_TYPES.filter((t) => !current || t !== 'map').map((t) => (
             <option key={t} value={t}>
               {t === 'automatic' && auto ? `Automatic (${auto})` : MARK_NAME[t]}
             </option>
           ))}
         </select>
       </label>
+      {measures.length > 0 && <p className="text-xs text-slate-500">Each measure can have its own mark type. Color, Size, Label and the rest apply to all of them here.</p>}
       <div className="grid grid-cols-3 gap-1">
         {CHANNELS.map((ch) => (
           <ChannelSlot key={ch} shelf={ch} onDrop={dropOn(ch)}>
@@ -373,7 +415,7 @@ function ListShelfRow({
   dropOn,
   pillProps,
 }: {
-  shelf: Extract<ListShelf, 'columns' | 'rows'>
+  shelf: Extract<ListShelf, 'columns' | 'rows' | 'measureValues'>
   spec: VizSpec
   dropOn: (shelf: ShelfId, index?: number) => (d: Dragged) => void
   pillProps: PillProps

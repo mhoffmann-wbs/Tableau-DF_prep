@@ -29,7 +29,7 @@ export function SortEditor({
   onApply: (sort: Sort | undefined) => void
   onCancel: () => void
 }) {
-  const measures = fieldsOf(source).filter((f) => f.role === 'measure' && !f.generated && !f.calc?.error)
+  const measures = fieldsOf(source).filter((f) => f.role === 'measure' && !f.generated && !f.special && !f.calc?.error)
   const [by, setBy] = useState<By>(initial?.manual ? 'manual' : initial?.field ? 'field' : 'members')
   const [order, setOrder] = useState<'asc' | 'desc'>(initial?.order ?? 'asc')
   const [field, setField] = useState(initial?.field ?? measures[0]!.name)

@@ -168,7 +168,7 @@ function ByField({ measures, field, agg, onChange }: { measures: Field[]; field:
 }
 
 export function SetEditor({ source, field, initial, editing, onApply, onCancel, error }: DialogProps<SetDef>) {
-  const measures = fieldsOf(source).filter((f) => f.role === 'measure' && !f.generated && !f.calc && !f.derived)
+  const measures = fieldsOf(source).filter((f) => f.role === 'measure' && !f.generated && !f.special && !f.calc && !f.derived)
   const rule = initial?.rule
   const [name, setName] = useState(initial?.name ?? `${field} Set`)
   const [tab, setTab] = useState<SetTab>(rule?.kind ?? 'members')

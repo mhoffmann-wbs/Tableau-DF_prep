@@ -32,16 +32,22 @@ const topLevel = (spec: Obj) => ({ $schema: SCHEMA, ...spec }) as unknown as Top
 const TIME_FORMAT: Record<string, string> = { year: '%Y', quarter: 'Q%q %Y', month: '%b %Y', week: '%b %d, %Y', day: '%b %d, %Y' }
 const NUMBER_FORMAT = ',.2~f'
 
-type AxisPill = Pick<Column, 'field' | 'continuous' | 'date'>
+type AxisPill = Pick<Column, 'field' | 'continuous' | 'date' | 'kind'>
 
-/** Which mark Tableau's Automatic would draw (PLAN.md §7a), from the innermost pills on Columns and Rows. */
+/**
+ * Which mark Tableau's Automatic would draw (PLAN.md §7a), from the innermost
+ * pills on Columns and Rows: Line for a date (part or value) and a measure,
+ * Shape for a measure on both, Bar for a dimension and a measure, Text when
+ * nothing is continuous.
+ */
 export function automaticMark(x: AxisPill | undefined, y: AxisPill | undefined): Exclude<MarkType, 'automatic'> {
   if (x?.field.geo === 'longitude' && y?.field.geo === 'latitude') return 'circle'
   const xc = x?.continuous ?? false
   const yc = y?.continuous ?? false
   if (!xc && !yc) return 'text'
-  if ((xc && x!.date) || (yc && y!.date)) return 'line'
-  if (xc && yc) return 'circle'
+  if ((xc && x!.date) || (yc && y!.date) || (x?.date && yc) || (y?.date && xc)) return 'line'
+  // The help names Shape for measures on both shelves; a continuous dimension (no rule given) keeps Circle.
+  if (xc && yc) return x!.kind === 'measure' && y!.kind === 'measure' ? 'shape' : 'circle'
   return 'bar'
 }
 
@@ -89,16 +95,31 @@ function combine(rows: Row[], cols: Column[], id: string): { field: Obj | undefi
   }
 }
 
-function shelf(spec: VizSpec, result: QueryResult, pills: Pill[], name: string): { inner?: Column; outer: Column[] } {
+/**
+ * A shelf's pills: discrete ones split the view into panes (`outer`), then
+ * either one innermost pill (an axis or a band of headers) or several
+ * continuous ones (`measures`: one pane each, or two on a dual axis).
+ */
+interface ShelfLayout {
+  outer: Column[]
+  inner?: Column
+  measures: Column[]
+}
+
+function shelf(spec: VizSpec, result: QueryResult, pills: Pill[], name: string): ShelfLayout {
   const cols = pills.map((p) => {
     const key = resolvePill(spec, p).key
     return result.columns.find((c) => c.key === key)!
   })
-  const outer = cols.slice(0, -1)
-  if (outer.some((c) => c.continuous))
-    throw new EngineError(`Only the last pill on ${name} can be continuous here: move the green pill to the end, or make it discrete.`)
-  return { inner: cols.at(-1), outer }
+  const first = cols.findIndex((c) => c.continuous)
+  if (first < 0) return { outer: cols.slice(0, -1), inner: cols.at(-1), measures: [] }
+  const rest = cols.slice(first)
+  if (rest.some((c) => !c.continuous)) throw new EngineError(`On ${name}, put the discrete (blue) pills before the continuous (green) ones.`)
+  return rest.length === 1 ? { outer: cols.slice(0, first), inner: rest[0], measures: [] } : { outer: cols.slice(0, first), measures: rest }
 }
+
+/** Colours of the two measures on a dual axis when nothing is on Color (the first two of the categorical scheme). */
+const DUAL_COLORS = ['#4e79a7', '#f28e2b']
 
 /** Whether the spec draws a map, so the world shapes must be loaded first. */
 export function needsWorld(spec: VizSpec): boolean {
@@ -111,11 +132,21 @@ const ISO_BY_COUNTRY = new Map(COUNTRIES.map((c) => [c.country, c.iso]))
 export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?: Theme; world?: Topology } = {}): TopLevelSpec {
   const theme = options.theme ?? LIGHT_THEME
   const col = (p: Pill | undefined) => (p ? result.columns.find((c) => c.key === resolvePill(spec, p).key) : undefined)
-  const { inner: x, outer: xOuter } = shelf(spec, result, spec.columns, 'Columns')
-  const { inner: y, outer: yOuter } = shelf(spec, result, spec.rows, 'Rows')
-  const isGeo = x?.field.geo === 'longitude' && y?.field.geo === 'latitude'
-  const mark = spec.marks.type === 'automatic' ? automaticMark(x, y) : spec.marks.type
-  if (mark === 'map' && !isGeo) throw new EngineError('A map needs Longitude on Columns and Latitude on Rows.')
+  const X = shelf(spec, result, spec.columns, 'Columns')
+  const Y = shelf(spec, result, spec.rows, 'Rows')
+  if (X.measures.length && Y.measures.length) throw new EngineError('Several measures on both Columns and Rows can’t be drawn here: keep the extra measures on one shelf.')
+  // The shelf with several measures, if any: measure panes, or a dual axis.
+  const multi = X.measures.length ? 'columns' : Y.measures.length ? 'rows' : undefined
+  const channel = multi === 'columns' ? 'x' : 'y'
+  const measures = multi === 'columns' ? X.measures : Y.measures
+  const dual = multi !== undefined && spec.axes[multi]?.dual === true
+  if (dual && measures.length !== 2) throw new EngineError(`Dual Axis needs exactly two measures on ${multi === 'columns' ? 'Columns' : 'Rows'}.`)
+  const ownMark = (c: Column) => (c.pill.mark && c.pill.mark !== 'automatic' ? c.pill.mark : undefined)
+  /** A measure's mark: its own Marks card, else the sheet's, else Automatic's for its axes. */
+  const markOf = (x: Column | undefined, y: Column | undefined, m?: Column) => {
+    const t = (m && ownMark(m)) ?? spec.marks.type
+    return t === 'automatic' ? automaticMark(x, y) : t
+  }
 
   const formatted = result.columns.filter((c) => formatOf(c))
   let rows = formatted.length
@@ -126,78 +157,134 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
       })
     : result.rows
 
-  const enc: Obj = {}
-  if (isGeo) {
-    enc.longitude = { field: x!.id, type: 'quantitative' }
-    enc.latitude = { field: y!.id, type: 'quantitative' }
-  } else {
-    if (x) enc.x = encodingOf(x, { axis: axisOf(x) ?? { labelAngle: 0, labelLimit: 116 } })
-    if (y) enc.y = encodingOf(y, { axis: axisOf(y) ?? {} })
+  let x = X.inner
+  let y = Y.inner
+  const xOuter = [...X.outer]
+  const yOuter = [...Y.outer]
+  // Measure panes: the measures fold into one value column, split by a measure-name pane.
+  let folded: { value: Column; byMark: Map<string, string[]> } | undefined
+  if (multi && !dual) {
+    const plain = (c: Column) => ({ ...c, field: { ...c.field, format: undefined } })
+    const value: Column = { ...plain(measures[0]!), id: '__v', label: '' }
+    const name: Column = { ...plain(measures[0]!), id: '__m', label: '', kind: 'dimension', continuous: false, date: undefined, order: measures.map((m) => m.label) }
+    rows = rows.flatMap((r) => measures.map((m) => ({ ...r, __m: m.label, __v: r[m.id] ?? null })))
+    if (multi === 'columns') {
+      x = value
+      xOuter.push(name)
+    } else {
+      y = value
+      yOuter.push(name)
+    }
+    const byMark = new Map<string, string[]>()
+    for (const m of measures) {
+      const mk = markOf(multi === 'columns' ? m : x, multi === 'rows' ? m : y, m)
+      byMark.set(mk, [...(byMark.get(mk) ?? []), m.label])
+    }
+    folded = { value, byMark }
   }
+
+  const isGeo = x?.field.geo === 'longitude' && y?.field.geo === 'latitude'
+  if (isGeo && multi) throw new EngineError('Maps can’t have several measures on a shelf here.')
+  const mark = markOf(x, y)
+  if (mark === 'map' && !isGeo) throw new EngineError('A map needs Longitude on Columns and Latitude on Rows.')
+
+  // The Marks card's encodings, shared by every layer.
+  const shared: Obj = {}
   const color = col(spec.marks.color)
-  if (color) enc.color = encodingOf(color, { scale: color.continuous ? { scheme: 'blues' } : { scheme: 'tableau10' } })
+  if (color) shared.color = encodingOf(color, { scale: color.continuous ? { scheme: 'blues' } : { scheme: 'tableau10' } })
   const size = col(spec.marks.size)
-  if (size) enc.size = encodingOf(size)
+  if (size) shared.size = encodingOf(size)
   const shape = col(spec.marks.shape)
-  if (shape) enc.shape = encodingOf(shape)
+  if (shape) shared.shape = encodingOf(shape)
   const detail = spec.marks.detail.map(col).filter((c): c is Column => c !== undefined)
-  if (detail.length) enc.detail = detail.map((c) => ({ field: c.id, type: c.continuous ? 'quantitative' : 'nominal' }))
-  enc.tooltip = result.columns.map(tooltipOf)
+  if (detail.length) shared.detail = detail.map((c) => ({ field: c.id, type: c.continuous ? 'quantitative' : 'nominal' }))
+  shared.tooltip = [...(folded ? [{ field: '__m', title: 'Measure', type: 'nominal' }] : []), ...result.columns.map(tooltipOf)]
   const label = col(spec.marks.label)
   const labelEnc = label ? { ...tooltipOf(label), title: undefined } : undefined
-
-  const bothDiscrete = !x?.continuous && !y?.continuous
+  // A dual axis has no single inner pill on its shelf, but it is an axis all the same.
+  const xAxis = x?.continuous || (dual && multi === 'columns')
+  const yAxis = y?.continuous || (dual && multi === 'rows')
+  const bothDiscrete = !xAxis && !yAxis
   const inCells = bothDiscrete && (mark === 'text' || mark === 'square')
-  let markDef: Obj
-  switch (mark) {
-    case 'bar':
-    case 'line':
-    case 'area':
-      markDef = { type: mark }
-      break
-    case 'circle':
-      markDef = { type: 'circle', size: 60, opacity: 0.8 }
-      break
-    case 'square':
-      // Two discrete shelves: squares fill their cells, as in a highlight table.
-      markDef = bothDiscrete ? { type: 'rect' } : { type: 'square', size: 60 }
-      break
-    case 'shape':
-      markDef = { type: 'point', filled: false, size: 60 }
-      break
-    case 'density':
-      // Vega-Lite has no density mark; overlapping translucent circles approximate one.
-      markDef = { type: 'circle', size: 140, opacity: 0.08, color: '#c2410c' }
-      break
-    case 'map':
-      markDef = { type: 'geoshape' }
-      break
-    case 'text':
-      markDef = { type: 'text', color: theme.text }
-      // Without a measure on Label, Tableau's text marks read "Abc".
-      enc.text = labelEnc ?? { value: 'Abc' }
-      break
+
+  /** The mark layer (and a label layer) for one pair of axes and one mark type. */
+  const layersFor = (lx: Column | undefined, ly: Column | undefined, mk: Exclude<MarkType, 'automatic'>, opts: { filter?: string; fixedColor?: string } = {}): Obj[] => {
+    const enc: Obj = { ...shared }
+    if (isGeo) {
+      enc.longitude = { field: lx!.id, type: 'quantitative' }
+      enc.latitude = { field: ly!.id, type: 'quantitative' }
+    } else {
+      if (lx) enc.x = encodingOf(lx, { axis: axisOf(lx) ?? { labelAngle: 0, labelLimit: 116 }, ...(lx === folded?.value && { title: null }) })
+      if (ly) enc.y = encodingOf(ly, { axis: axisOf(ly) ?? {}, ...(ly === folded?.value && { title: null }) })
+    }
+    const cells = !lx?.continuous && !ly?.continuous && (mk === 'text' || mk === 'square')
+    let markDef: Obj
+    switch (mk) {
+      case 'bar':
+      case 'line':
+      case 'area':
+        markDef = { type: mk }
+        break
+      case 'circle':
+        markDef = { type: 'circle', size: 60, opacity: 0.8 }
+        break
+      case 'square':
+        // Two discrete shelves: squares fill their cells, as in a highlight table.
+        markDef = cells ? { type: 'rect' } : { type: 'square', size: 60 }
+        break
+      case 'shape':
+        markDef = { type: 'point', filled: false, size: 60 }
+        break
+      case 'density':
+        // Vega-Lite has no density mark; overlapping translucent circles approximate one.
+        markDef = { type: 'circle', size: 140, opacity: 0.08, color: '#c2410c' }
+        break
+      case 'map':
+        markDef = { type: 'geoshape' }
+        break
+      case 'text':
+        markDef = { type: 'text', color: theme.text }
+        // Without a measure on Label, Tableau's text marks read "Abc".
+        enc.text = labelEnc ?? { value: 'Abc' }
+        break
+    }
+    if (opts.fixedColor && !color) markDef.color = opts.fixedColor
+    const transform = opts.filter ? { transform: [{ filter: opts.filter }] } : {}
+    const out: Obj[] = []
+    if (mk !== 'map') out.push({ ...transform, mark: markDef, encoding: enc })
+    if (labelEnc && mk !== 'text' && mk !== 'map') {
+      const horizontal = lx?.continuous && !ly?.continuous
+      const { color: _c, size: _s, shape: _sh, tooltip: _t, ...positional } = enc
+      const placement = cells
+        ? { align: 'center', baseline: 'middle' }
+        : horizontal
+          ? { align: 'left', dx: 3 }
+          : { baseline: 'bottom', dy: -3 }
+      const encoding: Obj = { ...positional, text: labelEnc }
+      // The blue scale is the same in both themes, so highlight-table labels
+      // follow the cell, not the theme: white on the darkest cells, dark elsewhere.
+      if (cells && color?.continuous) {
+        const max = Math.max(...result.rows.map((r) => (typeof r[color.id] === 'number' ? (r[color.id] as number) : -Infinity)))
+        encoding.color = { condition: { test: `datum.${color.id} > ${max * 0.65}`, value: 'white' }, value: '#1e293b' }
+      }
+      out.push({ ...transform, mark: { type: 'text', color: theme.text, ...placement }, encoding })
+    }
+    return out
   }
 
-  const layers: Obj[] = []
-  if (mark !== 'map') layers.push({ mark: markDef, encoding: enc })
-  if (labelEnc && mark !== 'text' && mark !== 'map') {
-    const horizontal = x?.continuous && !y?.continuous
-    const { color: _c, size: _s, shape: _sh, tooltip: _t, ...positional } = enc
-    const placement = inCells
-      ? { align: 'center', baseline: 'middle' }
-      : horizontal
-        ? { align: 'left', dx: 3 }
-        : { baseline: 'bottom', dy: -3 }
-    const encoding: Obj = { ...positional, text: labelEnc }
-    // The blue scale is the same in both themes, so highlight-table labels
-    // follow the cell, not the theme: white on the darkest cells, dark elsewhere.
-    if (inCells && color?.continuous) {
-      const max = Math.max(...result.rows.map((r) => (typeof r[color.id] === 'number' ? (r[color.id] as number) : -Infinity)))
-      encoding.color = { condition: { test: `datum.${color.id} > ${max * 0.65}`, value: 'white' }, value: '#1e293b' }
-    }
-    layers.push({ mark: { type: 'text', color: theme.text, ...placement }, encoding })
-  }
+  let layers: Obj[]
+  let resolve: Obj | undefined
+  if (dual) {
+    const sync = spec.axes[multi!]?.sync === true
+    layers = measures.flatMap((m, i) => {
+      const [lx, ly] = multi === 'columns' ? [m, y] : [x, m]
+      return layersFor(lx, ly, markOf(lx, ly, m), { fixedColor: DUAL_COLORS[i] })
+    })
+    // Two axes; Synchronize Axis gives them one scale.
+    resolve = { scale: { [channel]: sync ? 'shared' : 'independent' }, axis: { [channel]: 'independent' } }
+  } else if (folded && folded.byMark.size > 1) {
+    layers = [...folded.byMark].flatMap(([mk, labels]) => layersFor(x, y, mk as Exclude<MarkType, 'automatic'>, { filter: `indexof(${JSON.stringify(labels)}, datum.__m) >= 0` }))
+  } else layers = layersFor(x, y, folded ? ([...folded.byMark.keys()][0] as Exclude<MarkType, 'automatic'>) : mark)
 
   const config: Obj = {
     background: null,
@@ -219,12 +306,11 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
       if (!country) throw new EngineError('A filled map needs Country on Detail or Color (only countries have shapes here).')
       rows = rows.map((r) => ({ ...r, __iso: ISO_BY_COUNTRY.get(String(r[country.id])) ?? null }))
       const fields = [...result.columns.map((c) => c.id), ...formatted.map((c) => `${c.id}f`)]
-      const { longitude: _lo, latitude: _la, detail: _d, ...rest } = enc
       geoLayers.push({
         data: world('countries'),
         transform: [{ lookup: 'id', from: { data: { values: rows }, key: '__iso', fields } }, { filter: `datum.${country.id} != null` }],
         mark: { type: 'geoshape', stroke: theme.grid },
-        encoding: rest,
+        encoding: shared,
       })
     } else geoLayers.push(...layers.map((l) => ({ ...l, data: { values: rows } })))
     return topLevel({ width: 640, height: 340, projection: { type: 'equalEarth' }, layer: geoLayers, config })
@@ -237,17 +323,19 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
   const numberChars = label && inCells ? Math.max(...rows.map((r) => (typeof r[label.id] === 'number' ? (r[label.id] as number).toLocaleString('en').length : 1))) : 0
   const step = Math.min(120, Math.max(28, 7 * Math.max(...(x?.order ?? ['']).map((m) => m.length), numberChars) + 14))
   const size2d: Obj = {
-    width: x?.continuous ? 420 : x ? { step } : Math.max(120, 7 * numberChars + 14),
-    height: y?.continuous ? 260 : y ? { step: 24 } : 40,
+    width: xAxis ? (folded && multi === 'columns' ? 260 : 420) : x ? { step } : Math.max(120, 7 * numberChars + 14),
+    height: yAxis ? (folded && multi === 'rows' ? 160 : 260) : y ? { step: 24 } : 40,
   }
   const view = layers.length === 1 ? layers[0]! : { layer: layers }
   if (fx.field || fy.field) {
     return topLevel({
       data: { values: rows },
       facet: { ...(fx.field && { column: fx.field }), ...(fy.field && { row: fy.field }) },
-      spec: { ...size2d, ...view },
+      spec: { ...size2d, ...view, ...(resolve && { resolve }) },
+      // Measure panes each get their own axis.
+      ...(folded && { resolve: { scale: { [channel]: 'independent' } } }),
       config,
     })
   }
-  return topLevel({ data: { values: rows }, ...size2d, ...view, config })
+  return topLevel({ data: { values: rows }, ...size2d, ...view, ...(resolve && { resolve }), config })
 }

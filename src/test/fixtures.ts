@@ -43,6 +43,8 @@ export const VIZ: Item = {
       sets: [],
       bins: [],
       hierarchies: [],
+      measureValues: [],
+      axes: {},
       columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }],
       rows: [{ field: 'Minutes Watched', agg: 'sum' }],
       marks: { type: 'line', detail: [], tooltip: [] },

@@ -149,3 +149,29 @@ describe('query', () => {
     expect(() => run({ rows: [{ field: 'Genre', date: { level: 'year', mode: 'part' } }] })).toThrow(EngineError)
   })
 })
+
+describe('Measure Names and Measure Values', () => {
+  it('unpivot: one row per mark and measure, in card order, filtered by Measure Names', () => {
+    const view = {
+      rows: [{ field: 'Device' }],
+      columns: [{ field: 'Measure Values' }],
+      marks: { color: { field: 'Measure Names' } },
+      measureValues: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }],
+    }
+    const { v, result } = run(view)
+    const device = columnOf(result, v, { field: 'Device' })
+    const names = columnOf(result, v, { field: 'Measure Names' })
+    const values = columnOf(result, v, { field: 'Measure Values' })
+    expect(names.order).toEqual(['SUM(Minutes Watched)', 'SUM(Sessions (Count))'])
+    const got = Object.fromEntries(result.rows.map((r) => [`${r[device.id]}|${r[names.id]}`, r[values.id]]))
+    const minutes = sumBy(ref.sessions, (s) => s.device || 'Null', (s) => s.minutes ?? 0)
+    const sessions = sumBy(ref.sessions, (s) => s.device || 'Null', () => 1)
+    for (const d of Object.keys(minutes)) {
+      expect(got[`${d}|SUM(Minutes Watched)`]).toBe(minutes[d])
+      expect(got[`${d}|SUM(Sessions (Count))`]).toBe(sessions[d])
+    }
+    expect(result.rows.length).toBe(2 * Object.keys(minutes).length)
+    const filtered = run({ ...view, filters: [{ kind: 'values', field: 'Measure Names', values: ['SUM(Sessions (Count))'] }] }).result
+    expect(new Set(filtered.rows.map((r) => r[names.id]))).toEqual(new Set(['SUM(Sessions (Count))']))
+  })
+})

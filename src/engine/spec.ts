@@ -39,6 +39,8 @@ export const pillSchema = z
     date: z.object({ level: z.enum(DATE_LEVELS), mode: z.enum(['part', 'value']) }).optional(),
     /** Overrides the default: date parts and dimensions are discrete, date values and measures continuous. */
     as: z.enum(['discrete', 'continuous']).optional(),
+    /** A measure's own mark type when a shelf holds several measures (each has its own Marks card). */
+    mark: z.enum(MARK_TYPES).optional(),
     /** A set pill shows In/Out by default; `members` shows the members in the set instead (Show Members in Set). */
     setView: z.literal('members').optional(),
     /** Discrete pills only; overrides the field's default sort. */
@@ -157,6 +159,15 @@ export const vizSpecSchema = z.object({
   sets: z.array(setSchema).default([]),
   bins: z.array(binSchema).default([]),
   hierarchies: z.array(hierarchySchema).default([]),
+  /** The Measure Values card: the measures Measure Values and Measure Names stand for, in order. */
+  measureValues: z.array(pillSchema).default([]),
+  /** Dual Axis (the last two measures on the shelf share the pane, each with its own axis) and Synchronize Axis. */
+  axes: z
+    .object({
+      columns: z.object({ dual: z.boolean().optional(), sync: z.boolean().optional() }).optional(),
+      rows: z.object({ dual: z.boolean().optional(), sync: z.boolean().optional() }).optional(),
+    })
+    .default({}),
   columns: z.array(pillSchema).default([]),
   rows: z.array(pillSchema).default([]),
   marks: z
@@ -175,7 +186,11 @@ export const vizSpecSchema = z.object({
 
 export type VizSpec = z.infer<typeof vizSpecSchema>
 
-/** Every pill in a spec, for field checks. */
+/** Tableau's generated fields for several measures at once (a combined axis, a table of measures). */
+export const MEASURE_NAMES = 'Measure Names'
+export const MEASURE_VALUES = 'Measure Values'
+
+/** Every pill in the view (not the Measure Values card), for field checks and query columns. */
 export const pillsOf = (spec: VizSpec): Pill[] => [
   ...spec.columns,
   ...spec.rows,

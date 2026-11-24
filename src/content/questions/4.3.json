@@ -1014,10 +1014,10 @@
     "objectives": [
       "4.3.2"
     ],
-    "stem": "This scatterplot has `Country` on Detail. How many circles does it contain?",
+    "stem": "This scatterplot has `Country` on Detail. How many marks does it contain?",
     "options": [
       {
-        "text": "1, a single circle for all of Driftlight",
+        "text": "1, a single mark for all of Driftlight",
         "correct": false,
         "rationale": "That is what the view shows without `Country` on Detail."
       },

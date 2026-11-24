@@ -17,7 +17,7 @@ describe('item schema', () => {
     const parsed = itemSchema.parse({ ...VIZ, viz: { spec: { rows: [{ field: 'Genre' }] } } })
     expect(parsed.kind === 'viz' && parsed.viz).toEqual({
       show: 'chart',
-      spec: { source: 'sessions', calcs: [], fields: [], groups: [], sets: [], bins: [], hierarchies: [], columns: [], rows: [{ field: 'Genre' }], marks: { type: 'automatic', detail: [], tooltip: [] }, filters: [] },
+      spec: { source: 'sessions', calcs: [], fields: [], groups: [], sets: [], bins: [], hierarchies: [], measureValues: [], axes: {}, columns: [], rows: [{ field: 'Genre' }], marks: { type: 'automatic', detail: [], tooltip: [] }, filters: [] },
     })
   })
 

@@ -238,6 +238,35 @@ describe('sandbox', () => {
     expect(screen.queryByRole('region', { name: 'Selected marks' })).not.toBeInTheDocument()
   })
 
+  it('combines measures on one axis, and makes a dual axis with a mark per measure', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    const hash = () => parseSpecHash(router.state.location.hash)
+    await addField('Genre', 'Add to Columns')
+    await addField('Minutes Watched', 'Add to Rows')
+    await addField('Runtime', 'Drop on the Rows axis')
+    expect(shelf('Rows')).toHaveTextContent('Measure Values')
+    expect(shelf('Color')).toHaveTextContent('Measure Names')
+    expect(shelf('Measure Values')).toHaveTextContent(/SUM\(Minutes Watched\).*SUM\(Runtime\)/)
+
+    await user.click(screen.getByRole('button', { name: 'Clear sheet' }))
+    await addField('Genre', 'Add to Columns')
+    await addField('Minutes Watched', 'Add to Rows')
+    await addField('Sessions (Count)', 'Add to Rows')
+    await user.click(within(shelf('Rows')).getByRole('button', { name: /SUM\(Sessions \(Count\)\)/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Dual Axis' }))
+    expect(hash()).toMatchObject({ axes: { rows: { dual: true } } })
+    await user.click(within(shelf('Rows')).getByRole('button', { name: /SUM\(Sessions \(Count\)\)/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Synchronize Axis' }))
+    expect(hash()).toMatchObject({ axes: { rows: { dual: true, sync: true } } })
+
+    await user.click(screen.getByRole('tab', { name: 'SUM(Sessions (Count))' }))
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Mark type for SUM(Sessions (Count))' }), 'line')
+    expect(hash()).toMatchObject({ rows: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)', mark: 'line' }] })
+    await user.click(screen.getByRole('tab', { name: 'All' }))
+    await user.selectOptions(screen.getByRole('combobox', { name: 'Mark type' }), 'bar')
+    expect(hash()).toMatchObject({ marks: { type: 'bar' }, rows: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }] })
+  })
+
   it('opens a preset from the URL', async () => {
     await renderAt(`/build/sandbox#spec=${encodeURIComponent('{"source":"titles","rows":[{"field":"Genre"}]}')}`, 'Viz builder sandbox')
     expect(screen.getByRole('combobox', { name: 'Data source' })).toHaveDisplayValue('Titles')

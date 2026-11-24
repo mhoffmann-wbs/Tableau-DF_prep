@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { defaultFilter, emptySpec, isCompleteFilter, movePill, parseSpecHash, pillFor, placePill, removeCalc, removePill, setCalc, specHash, usesField } from './edit'
+import { combineOnAxis, continuousOn, defaultFilter, emptySpec, setDualAxis, setPillMark, setSyncAxis, isCompleteFilter, movePill, parseSpecHash, pillFor, placePill, removeCalc, removePill, setCalc, specHash, usesField } from './edit'
 import { vizSpecSchema } from './spec'
 
 const genre = pillFor('Genre')
@@ -87,5 +87,33 @@ describe('calculated fields', () => {
     const s = setCalc(emptySpec(), undefined, hours)
     expect(parseSpecHash(specHash(s))).toEqual(s)
     expect(specHash(emptySpec())).not.toContain('calcs')
+  })
+})
+
+describe('axes', () => {
+  const month = { field: 'Start', date: { level: 'month' as const, mode: 'value' as const } }
+
+  it('a measure dropped on an axis makes a combined axis of Measure Values', () => {
+    let s = vizSpecSchema.parse({ columns: [month], rows: [{ field: 'Minutes Watched', agg: 'avg' }] })
+    s = combineOnAxis(s, 'rows', 'Runtime')
+    expect(s.rows).toEqual([{ field: 'Measure Values' }])
+    expect(s.measureValues).toEqual([{ field: 'Minutes Watched', agg: 'avg' }, { field: 'Runtime' }])
+    expect(s.marks.color).toEqual({ field: 'Measure Names' })
+    s = combineOnAxis(s, 'rows', 'Sessions (Count)')
+    expect(s.measureValues.map((p) => p.field)).toEqual(['Minutes Watched', 'Runtime', 'Sessions (Count)'])
+    expect(() => combineOnAxis(s, 'rows', 'Genre')).toThrow(/Only measures/)
+    expect(() => combineOnAxis(vizSpecSchema.parse({ rows: [genre] }), 'rows', 'Runtime')).toThrow(/no axis/)
+  })
+
+  it('Dual Axis, Synchronize Axis and a mark per measure', () => {
+    let s = vizSpecSchema.parse({ columns: [month], rows: [minutes, pillFor('Sessions (Count)')] })
+    expect(continuousOn(s, 'rows')).toHaveLength(2)
+    s = setSyncAxis(setDualAxis(s, 'rows', true), 'rows', true)
+    expect(s.axes.rows).toEqual({ dual: true, sync: true })
+    s = setPillMark(s, { shelf: 'rows', index: 0 }, 'bar')
+    expect(s.rows[0]).toEqual({ ...minutes, mark: 'bar' })
+    expect(parseSpecHash(specHash(s))).toEqual(s)
+    s = setDualAxis(setPillMark(s, { shelf: 'rows', index: 0 }, 'automatic'), 'rows', false)
+    expect([s.rows[0], s.axes.rows]).toEqual([minutes, undefined])
   })
 })

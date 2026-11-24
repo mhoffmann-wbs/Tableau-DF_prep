@@ -8,6 +8,8 @@ import {
   SHELF_LABEL,
   type ShelfId,
   addToHierarchy,
+  combineOnAxis,
+  continuousOn,
   emptySpec,
   fieldEdit,
   hierarchyOf,
@@ -22,6 +24,7 @@ import {
   usesField,
 } from '../engine/edit'
 import { type Field, fieldsOf, isEditable, SOURCE_INFO, TYPE_CHANGES } from '../engine/model'
+import { resolvePill } from '../engine/pills'
 import { type Aggregation, type FieldEdit, type GeoRole, type Group, type Hierarchy, type SetDef, SOURCES, type SourceId, type VizSpec } from '../engine/spec'
 import { useProgress } from '../progress/store'
 import { startDrag, useDropTarget } from './dnd'
@@ -174,7 +177,19 @@ function FieldItem({ field, ...actions }: { field: Field } & PaneActions) {
   const { spec, onChange, onAddFilter, onOpen } = actions
   const calcIndex = spec.calcs.findIndex((c) => c.name === field.name)
   const problem = field.calc?.error?.message ?? field.broken
-  const targets: ShelfId[] = ['columns', 'rows', ...CHANNELS, 'detail', 'tooltip']
+  const isMeasure = field.role === 'measure' && !field.special && !field.generated
+  const targets: ShelfId[] = ['columns', 'rows', ...CHANNELS, 'detail', 'tooltip', ...(isMeasure ? (['measureValues'] as const) : [])]
+  // A measure can join the axis of Columns or Rows when that shelf has one continuous measure (a combined axis).
+  const axes = isMeasure
+    ? (['columns', 'rows'] as const).filter((sh) => {
+        try {
+          const cont = continuousOn(spec, sh)
+          return cont.length === 1 && resolvePill(spec, cont[0]!).kind === 'measure'
+        } catch {
+          return false
+        }
+      })
+    : []
   // A dimension dropped on a dimension: into this one's hierarchy, or a new hierarchy of the two.
   const drop = useDropTarget(
     (d) => {
@@ -218,9 +233,15 @@ function FieldItem({ field, ...actions }: { field: Field } & PaneActions) {
                   Add to {SHELF_LABEL[shelf]}
                 </MenuItem>
               ))}
-              {!field.generated && !problem && <MenuItem onSelect={act(() => onAddFilter(field.name))}>Add to Filters…</MenuItem>}
+              {!field.generated && !problem && field.special !== 'values' && <MenuItem onSelect={act(() => onAddFilter(field.name))}>Add to Filters…</MenuItem>}
+              {axes.length > 0 && <MenuHeading>Combined axis</MenuHeading>}
+              {axes.map((sh) => (
+                <MenuItem key={sh} onSelect={act(() => onChange(combineOnAxis(spec, sh, field.name)))}>
+                  Drop on the {SHELF_LABEL[sh]} axis
+                </MenuItem>
+              ))}
               {isEditable(field, spec.source) && <FieldMenu field={field} act={act} {...actions} />}
-              {field.role === 'dimension' && !field.generated && <HierarchyMenu field={field} act={act} {...actions} />}
+              {field.role === 'dimension' && !field.generated && !field.special && <HierarchyMenu field={field} act={act} {...actions} />}
               {field.derived && (
                 <>
                   <MenuHeading>{DERIVED_NAME[field.derived.kind]}</MenuHeading>

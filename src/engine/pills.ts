@@ -42,6 +42,14 @@ export function resolvePill(ref: SourceRef, pill: Pill): ResolvedPill {
   if (!field) throw new EngineError(`There is no field "${pill.field}" in the ${SOURCE_INFO[source].label} data source.`)
   if (field.calc?.error) throw new EngineError(`The calculation ${field.name} has an error: ${field.calc.error.message}`)
   if (field.broken) throw new EngineError(field.broken)
+  if (field.special) {
+    if (pill.agg || pill.date || pill.setView) throw new EngineError(`${field.name} can’t be aggregated: each measure on the Measure Values card keeps its own aggregation.`)
+    // Measure Values is a measure without an aggregation of its own, like an aggregate calc.
+    const values = field.special === 'values'
+    const continuous = pill.as ? pill.as === 'continuous' : values
+    const key = [values ? 'agg' : '', '', field.name, continuous ? 'c' : 'd', ''].join('|')
+    return { pill, field, ...(values && { agg: 'agg' as const }), kind: values ? 'measure' : 'dimension', continuous, label: field.name, key }
+  }
   if (pill.setView && field.derived?.kind !== 'set') throw new EngineError(`${field.name} is not a set, so it has no members to show.`)
   if (pill.setView && pill.agg) throw new EngineError(`Show Members in Set works on the set as a dimension, not aggregated.`)
   const isDate = field.type === 'date' || field.type === 'datetime'

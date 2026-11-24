@@ -27,7 +27,7 @@ export const meta = {
         rows: [{ field: 'Minutes Watched' }],
         marks: { detail: [{ field: 'Country' }] },
       },
-      caption: 'Country on Detail: one circle per country, with no new headers.',
+      caption: 'Country on Detail: one mark per country, with no new headers.',
     },
   },
   facts: {
@@ -103,7 +103,7 @@ Every dimension in the view adds to the level of detail, wherever you place it. 
 
 <LessonViz id="lod-plan-device" />
 
-**Detail** is the Marks card property for exactly this: it adds a dimension to the level of detail without colour, size or headers. Here two measures make a scatterplot, and Country on Detail gives one circle per country. Without it, there would be a single circle for all of Driftlight:
+**Detail** is the Marks card property for exactly this: it adds a dimension to the level of detail without colour, size or headers. Here two measures make a scatterplot, and Country on Detail gives one mark per country. Without it, there would be a single mark for all of Driftlight:
 
 <LessonViz id="lod-detail" />
 

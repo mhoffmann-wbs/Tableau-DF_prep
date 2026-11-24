@@ -36,6 +36,6 @@ describe('dataset', () => {
 
   it.each(SOURCES)('lists every %s field present in the rows', (source) => {
     const row = data[source][0]!
-    for (const f of SOURCE_INFO[source].fields.filter((x) => !x.generated)) expect(f.name in row, f.name).toBe(true)
+    for (const f of SOURCE_INFO[source].fields.filter((x) => !x.generated && !x.special)) expect(f.name in row, f.name).toBe(true)
   })
 })

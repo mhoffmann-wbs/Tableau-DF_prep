@@ -39,6 +39,11 @@ const CHARTS: [string, unknown][] = [
   ['nested headers', { columns: [{ field: 'Start', date: { level: 'year', mode: 'part' } }, { field: 'Start', date: { level: 'quarter', mode: 'part' } }], rows: [{ field: 'Minutes Watched' }] }],
   ['panes on both shelves', { columns: [{ field: 'Type' }, { field: 'Minutes Watched' }], rows: [{ field: 'Region' }, { field: 'Device' }] }],
   ['labelled bars', { rows: [{ field: 'Plan' }], columns: [{ field: 'Subscriber ID', agg: 'countd' }], marks: { label: { field: 'Subscriber ID', agg: 'countd' } } }],
+  ['combined axis (2.1.5)', { columns: [month], rows: [{ field: 'Measure Values' }], measureValues: [{ field: 'Minutes Watched', agg: 'avg' }, { field: 'Runtime', agg: 'avg' }], marks: { color: { field: 'Measure Names' } } }],
+  ['measure panes', { columns: [month], rows: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)', mark: 'bar' }] }],
+  ['dual axis (2.1.6)', { columns: [month], rows: [{ field: 'Minutes Watched', mark: 'bar' }, { field: 'Sessions (Count)', mark: 'line' }], axes: { rows: { dual: true } } }],
+  ['dual axis, synchronized, in panes', { columns: [{ field: 'Region' }, month], rows: [{ field: 'Minutes Watched' }, { field: 'Minutes Watched', agg: 'avg' }], axes: { rows: { dual: true, sync: true } } }],
+  ['table of measures', { rows: [{ field: 'Genre' }], columns: [{ field: 'Measure Names' }], measureValues: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }], marks: { label: { field: 'Measure Values' } } }],
 ]
 
 describe('render', () => {
@@ -56,10 +61,12 @@ describe('render', () => {
     }
     expect(marks(CHARTS[0]![1])).toBe('bar')
     expect(marks(CHARTS[1]![1])).toBe('line')
-    expect(marks(CHARTS[2]![1])).toBe('circle')
+    // Measures as the inner fields of both shelves: Shape.
+    expect(marks(CHARTS[2]![1])).toBe('shape')
     expect(marks(CHARTS[7]![1])).toBe('text')
-    // A date part is discrete, so the same measure over MONTH parts draws bars.
-    expect(marks({ columns: [{ field: 'Start', date: { level: 'month', mode: 'part' } }], rows: [{ field: 'Minutes Watched' }] })).toBe('bar')
+    // A date field and a measure draw a line, whether the date is a part (discrete) or a value.
+    expect(marks({ columns: [{ field: 'Start', date: { level: 'month', mode: 'part' } }], rows: [{ field: 'Minutes Watched' }] })).toBe('line')
+    expect(marks({ rows: [{ field: 'Genre' }], columns: [{ field: 'Minutes Watched' }] })).toBe('bar')
   })
 
   it('splits the view into panes for discrete pills before the axis', () => {
@@ -67,7 +74,30 @@ describe('render', () => {
     expect(vl.facet?.column).toBeTruthy()
   })
 
+  it('gives each measure its own axis: panes, or a dual axis with one scale per axis unless synchronized', () => {
+    type Layered = { facet?: unknown; resolve?: { scale: Record<string, string>; axis?: Record<string, string> }; spec?: Layered; layer?: { mark: { type: string; color?: string } }[] }
+    const panes = build(CHARTS.find(([n]) => n === 'measure panes')![1]).vl as Layered
+    expect(panes.facet).toBeTruthy()
+    expect(panes.resolve).toEqual({ scale: { y: 'independent' } })
+    // Each measure has its own Marks card: SUM(Minutes Watched) stays Automatic (Line), the count draws bars.
+    expect(panes.spec!.layer!.map((l) => l.mark.type).sort()).toEqual(['bar', 'line'])
+    const dual = build(CHARTS.find(([n]) => n === 'dual axis (2.1.6)')![1]).vl as Layered
+    expect(dual.facet).toBeUndefined()
+    expect((dual as { height?: number }).height).toBe(260)
+    expect(dual.resolve).toEqual({ scale: { y: 'independent' }, axis: { y: 'independent' } })
+    expect(dual.layer!.map((l) => [l.mark.type, l.mark.color])).toEqual([
+      ['bar', '#4e79a7'],
+      ['line', '#f28e2b'],
+    ])
+    const sync = build(CHARTS.find(([n]) => n === 'dual axis, synchronized, in panes')![1]).vl as Layered
+    expect(sync.spec!.resolve).toEqual({ scale: { y: 'shared' }, axis: { y: 'independent' } })
+  })
+
   it('explains shelf setups it can’t draw', () => {
+    expect(() => build({ columns: [month, { field: 'Runtime' }], rows: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }] })).toThrow(/both Columns and Rows/)
+    expect(() => build({ columns: [month], rows: [{ field: 'Minutes Watched' }, { field: 'Sessions (Count)' }, { field: 'Runtime' }], axes: { rows: { dual: true } } })).toThrow(/exactly two measures/)
+    expect(() => build({ rows: [{ field: 'Measure Values' }] })).toThrow(/Measure Values card is empty/)
+    expect(() => build({ rows: [{ field: 'Measure Values' }], measureValues: [{ field: 'Genre' }] })).toThrow(/holds measures/)
     expect(() => build({ columns: [{ field: 'Minutes Watched' }, { field: 'Genre' }] })).toThrow(EngineError)
     expect(() => build({ rows: [{ field: 'Genre' }], marks: { type: 'map' } })).toThrow('A map needs Longitude on Columns and Latitude on Rows.')
   })

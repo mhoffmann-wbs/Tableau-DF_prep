@@ -8,7 +8,7 @@ import { type CalcFields, evaluateGroup, rowValue } from './calc/index.ts'
 import { calcsOf, type Dataset, type Row, type SourceRef, type Value } from './model.ts'
 import { MONTHS, WEEKDAYS, aggregate, compareKeys, datePart, dateTrunc, display } from './values.ts'
 import { EngineError, type ResolvedPill, resolvePill } from './pills.ts'
-import { type DateLevel, type Filter, type Pill, type VizSpec, pillsOf } from './spec.ts'
+import { type DateLevel, type Filter, MEASURE_NAMES, type Pill, type VizSpec, pillsOf } from './spec.ts'
 
 export interface Column extends ResolvedPill {
   id: string
@@ -104,6 +104,8 @@ function geoCoords(geo: (typeof GEO_PRECEDENCE)[number], name: string): [number,
 
 function rowFilter(f: Filter, spec: VizSpec, get: Getter): ((r: Row) => boolean) | undefined {
   const { field, agg } = resolvePill(spec, { field: f.field })
+  // A Measure Names filter picks measures from the Measure Values card, not rows.
+  if (field.special) return undefined
   const isDate = field.type === 'date' || field.type === 'datetime'
   switch (f.kind) {
     case 'values': {
@@ -163,8 +165,9 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     const rp = resolvePill(spec, pill)
     if (!columns.some((c) => c.key === rp.key)) columns.push({ ...rp, id: `c${columns.length}` })
   }
-  const dims = columns.filter((c) => c.kind === 'dimension')
-  const measures = columns.filter((c) => c.kind === 'measure')
+  const dims = columns.filter((c) => c.kind === 'dimension' && !c.field.special)
+  const measures = columns.filter((c) => c.kind === 'measure' && !c.field.special)
+  const measureCards = measureValuesOf(spec, columns)
 
   const filters = spec.filters.map((f) => rowFilter(f, spec, get)).filter((f) => f !== undefined)
   // Show Members in Set keeps the members In the set.
@@ -186,7 +189,8 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
   const measureFilters = spec.filters.filter((f): f is Extract<Filter, { kind: 'range' }> => isMeasureFilter(f, spec))
   const finestGeo = GEO_PRECEDENCE.map((g) => dims.find((d) => d.field.geo === g)).find((d) => d !== undefined)
 
-  let out: { members: Member[]; row: Row }[] = []
+  // `cards`: the value of each measure on the Measure Values card for this mark.
+  let out: { members: Member[]; row: Row; cards: Value[] }[] = []
   for (const g of groups.values()) {
     if (
       !measureFilters.every((f) => {
@@ -205,7 +209,7 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
         row[m.id] = coords ? coords[m.field.geo === 'latitude' ? 0 : 1] : null
       } else row[m.id] = measureValue(calcs, get, g.rows, m.field.name, m.agg)
     }
-    out.push({ members: g.members, row })
+    out.push({ members: g.members, row, cards: measureCards.map((m) => measureValue(calcs, get, g.rows, m.field.name, m.agg)) })
   }
 
   // Member order of each discrete dimension, then marks sorted by those orders.
@@ -254,7 +258,32 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     for (const d of aliased) row[d.id] = d.field.aliases![row[d.id] as string] ?? row[d.id]!
     return row
   }
-  return { columns, rows: out.map((o) => (aliased.length ? alias(o.row) : o.row)) }
+  const rowsOut = out.map((o) => (aliased.length ? alias(o.row) : o.row))
+  if (measureCards.length === 0) return { columns, rows: rowsOut }
+  // Measure Names and Measure Values: one row per mark and measure.
+  const names = columns.find((c) => c.field.special === 'names')
+  const values = columns.find((c) => c.field.special === 'values')
+  if (names) names.order = measureCards.map((m) => m.label)
+  const unpivoted = rowsOut.flatMap((row, i) =>
+    measureCards.map((m, j) => ({ ...row, ...(names && { [names.id]: m.label }), ...(values && { [values.id]: out[i]!.cards[j]! }) })),
+  )
+  return { columns, rows: unpivoted }
+}
+
+/**
+ * The measures Measure Names and Measure Values stand for when either is in
+ * the view: the Measure Values card, less those a Measure Names filter leaves out.
+ */
+function measureValuesOf(spec: VizSpec, columns: Column[]): ResolvedPill[] {
+  if (!columns.some((c) => c.field.special)) return []
+  const cards = spec.measureValues.map((p) => resolvePill(spec, p))
+  for (const m of cards) {
+    if (m.kind !== 'measure' || m.field.special || m.field.generated) throw new EngineError(`The Measure Values card holds measures: ${m.label} can’t go there.`)
+  }
+  const filter = spec.filters.find((f): f is Extract<Filter, { kind: 'values' }> => f.kind === 'values' && f.field === MEASURE_NAMES)
+  const kept = filter ? cards.filter((m) => filter.values.includes(m.label) !== (filter.exclude ?? false)) : cards
+  if (kept.length === 0) throw new EngineError('The Measure Values card is empty: add the measures to show, or drag a measure onto an axis.')
+  return kept
 }
 
 /** The column a pill produced, for reading values in tests and checkpoints. */

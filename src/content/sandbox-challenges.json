@@ -63,12 +63,14 @@
           { "field": "Start", "date": { "level": "year", "mode": "part" } },
           { "field": "Start", "date": { "level": "quarter", "mode": "part" } }
         ],
-        "rows": [{ "field": "Minutes Watched" }]
+        "rows": [{ "field": "Minutes Watched" }],
+        "marks": { "type": "bar" }
       }
     ],
     "hints": [
       "You need Start twice on Columns.",
-      "Keep the first one as YEAR and change the second one to the QUARTER date part."
+      "Keep the first one as YEAR and change the second one to the QUARTER date part.",
+      "With a date and a measure, Automatic draws a line: choose Bar on the Marks card."
     ],
     "debrief": "Date parts are discrete, so each one draws headers (blue pills) and the view splits into panes. Q1 means the first quarter of the year in its header, not one continuous stretch of time."
   },
