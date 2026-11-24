@@ -4,7 +4,9 @@ import {
   type PillAt,
   SHELF_LABEL,
   aggregationChoices,
+  canTableCalc,
   canToggleContinuity,
+  computeUsingOf,
   continuousOn,
   drillDown,
   drillState,
@@ -16,11 +18,14 @@ import {
   setDualAxis,
   setSyncAxis,
   withAggregation,
+  withComputeUsing,
   withContinuity,
   withDateLevel,
+  withTableCalc,
 } from '../engine/edit'
-import { EngineError, type ResolvedPill, resolvePill } from '../engine/pills'
-import type { Aggregation, DateLevel, Pill, VizSpec } from '../engine/spec'
+import { EngineError, type ResolvedPill, TABLE_CALC_NAME, resolvePill } from '../engine/pills'
+import { type Aggregation, COMPUTE_USING, type DateLevel, type Pill, TABLE_CALCS, type VizSpec } from '../engine/spec'
+import { COMPUTE_USING_NAME } from '../engine/tablecalc'
 import { startDrag, useDropTarget } from './dnd'
 import { MenuButton, MenuHeading, MenuItem } from './Menu'
 
@@ -112,6 +117,7 @@ export function ShelfPill({
             {rp?.label ?? `${pill.field} ?`}
             <span className="sr-only"> ({rp ? (rp.continuous ? 'continuous' : 'discrete') : 'broken'})</span>
             {pill.sort && <span aria-label=", sorted"> ⇅</span>}
+            {pill.tableCalc && <span aria-label={`, ${TABLE_CALC_NAME[pill.tableCalc.type]} table calculation`}> △</span>}
           </>
         }
       >
@@ -166,6 +172,27 @@ export function ShelfPill({
                   <MenuItem checked={pill.setView === 'members'} onSelect={act(() => set({ ...withoutSetView(pill), setView: 'members' }))}>
                     Show Members in Set
                   </MenuItem>
+                </>
+              )}
+              {canTableCalc(spec, at, pill) && (
+                <>
+                  <MenuHeading>Quick Table Calculation</MenuHeading>
+                  {TABLE_CALCS.map((t) => (
+                    <MenuItem key={t} checked={pill.tableCalc?.type === t} onSelect={act(() => set(withTableCalc(pill, t)))}>
+                      {TABLE_CALC_NAME[t]}
+                    </MenuItem>
+                  ))}
+                  {pill.tableCalc && (
+                    <>
+                      <MenuHeading>Compute Using</MenuHeading>
+                      {COMPUTE_USING.map((c) => (
+                        <MenuItem key={c} checked={computeUsingOf(spec, pill) === c} onSelect={act(() => set(withComputeUsing(pill, c)))}>
+                          {COMPUTE_USING_NAME[c]}
+                        </MenuItem>
+                      ))}
+                      <MenuItem onSelect={act(() => set(withTableCalc(pill, undefined)))}>Clear Table Calculation</MenuItem>
+                    </>
+                  )}
                 </>
               )}
               {twoMeasures && axisShelf && (

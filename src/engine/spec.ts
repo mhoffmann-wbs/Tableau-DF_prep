@@ -17,6 +17,21 @@ export type MarkType = (typeof MARK_TYPES)[number]
 const fieldName = z.string().trim().min(1)
 
 /**
+ * The quick table calculations whose results the help defines (Running total
+ * sums). YTD total, Compound growth rate, Year over year growth and YTD growth
+ * aren't defined there, so they are left out (PLAN.md §10).
+ */
+export const TABLE_CALCS = ['runningTotal', 'difference', 'percentDifference', 'percentOfTotal', 'rank', 'percentile', 'movingAverage'] as const
+export type TableCalcType = (typeof TABLE_CALCS)[number]
+
+/** Compute Using, as the help lists it (it lists no plain Pane (across)), then Cell. */
+export const COMPUTE_USING = ['tableAcross', 'tableDown', 'tableAcrossDown', 'tableDownAcross', 'paneDown', 'paneAcrossDown', 'paneDownAcross', 'cell'] as const
+export type ComputeUsing = (typeof COMPUTE_USING)[number]
+
+export const TOTAL_AGGS = ['automatic', 'sum', 'avg', 'min', 'max'] as const
+export type TotalAgg = (typeof TOTAL_AGGS)[number]
+
+/**
  * Without `field` the members sort by their own value (data source order);
  * with `field` + `agg` it is a computed sort by that measure; `manual` lists
  * members (underlying values, before aliases) first in the given order.
@@ -45,6 +60,8 @@ export const pillSchema = z
     setView: z.literal('members').optional(),
     /** Discrete pills only; overrides the field's default sort. */
     sort: sortSchema.optional(),
+    /** A quick table calculation on a measure; without `compute`, the engine picks Compute Using from the view. */
+    tableCalc: z.object({ type: z.enum(TABLE_CALCS), compute: z.enum(COMPUTE_USING).optional() }).optional(),
   })
   .refine((p) => !(p.date?.level === 'weekday' && p.date.mode === 'value'), 'weekday is a date part only')
 
@@ -167,6 +184,15 @@ export const vizSpecSchema = z.object({
       columns: z.object({ dual: z.boolean().optional(), sync: z.boolean().optional() }).optional(),
       rows: z.object({ dual: z.boolean().optional(), sync: z.boolean().optional() }).optional(),
     })
+    .default({}),
+  /**
+   * Analysis > Totals: Row Grand Totals (a Grand Total column at the right),
+   * Column Grand Totals (a row at the bottom), subtotals for the outer headers,
+   * and Total All Using (Automatic totals the underlying rows; the others
+   * aggregate the marks).
+   */
+  totals: z
+    .object({ row: z.boolean().optional(), column: z.boolean().optional(), subtotals: z.boolean().optional(), using: z.enum(TOTAL_AGGS).optional() })
     .default({}),
   columns: z.array(pillSchema).default([]),
   rows: z.array(pillSchema).default([]),

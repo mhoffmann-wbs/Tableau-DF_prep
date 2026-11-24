@@ -68,7 +68,7 @@ describe('sandbox', () => {
     expect(screen.getByRole('figure', { name: 'Your view' })).toBeInTheDocument()
 
     await user.click(within(shelf('Columns')).getByRole('button', { name: /SUM\(Minutes Watched\)/ }))
-    await user.click(screen.getByRole('menuitemradio', { name: /Average/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: /^.?Average$/ }))
     expect(shelf('Columns')).toHaveTextContent('AVG(Minutes Watched)')
     expect(parseSpecHash(router.state.location.hash)).toMatchObject({ columns: [{ field: 'Minutes Watched', agg: 'avg' }], rows: [{ field: 'Genre' }] })
 
@@ -79,6 +79,26 @@ describe('sandbox', () => {
     await pillMenu('Rows', /^Genre/, 'Color')
     expect(shelf('Rows')).not.toHaveTextContent('Genre')
     expect(shelf('Color')).toHaveTextContent('Genre')
+  })
+
+  it('applies a quick table calculation and totals', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    await addField('Genre', 'Add to Rows')
+    await addField('Minutes Watched', 'Add to Columns')
+    await user.click(within(shelf('Columns')).getByRole('button', { name: /SUM\(Minutes Watched\)/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: /Percent of Total/ }))
+    expect(within(shelf('Columns')).getByLabelText(', Percent of Total table calculation')).toBeInTheDocument()
+    // Nothing is across, so it runs down the table.
+    await user.click(within(shelf('Columns')).getByRole('button', { name: /SUM\(Minutes Watched\)/ }))
+    expect(screen.getByRole('menuitemradio', { name: /Table \(down\)$/ })).toHaveAttribute('aria-checked', 'true')
+    await user.click(screen.getByRole('menuitemradio', { name: /Cell/ }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ columns: [{ field: 'Minutes Watched', tableCalc: { type: 'percentOfTotal', compute: 'cell' } }] })
+    await pillMenu('Columns', /SUM\(Minutes Watched\)/, 'Clear Table Calculation')
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ columns: [{ field: 'Minutes Watched' }] })
+
+    await user.click(screen.getByRole('button', { name: 'Totals ▾' }))
+    await user.click(screen.getByRole('menuitemradio', { name: /Show Column Grand Totals/ }))
+    expect(parseSpecHash(router.state.location.hash)).toMatchObject({ totals: { column: true } })
   })
 
   it('switches a date between parts and values', async () => {
@@ -290,7 +310,7 @@ describe('make this chart', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Columns: SUM(Minutes Watched) needs a different aggregation.')
 
     await user.click(within(shelf('Columns')).getByRole('button', { name: /SUM\(Minutes Watched\)/ }))
-    await user.click(screen.getByRole('menuitemradio', { name: /Average/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: /^.?Average$/ }))
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Check my chart' }))
     expect(screen.getByRole('status')).toHaveTextContent('That’s the target chart.')

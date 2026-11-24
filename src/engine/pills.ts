@@ -2,7 +2,7 @@
 // dimension or an (aggregated) measure, blue or green, and its Tableau label.
 // No data here, so the shelves view can use it without loading the dataset.
 import { type Field, fieldOf, SOURCE_INFO, type SourceRef } from './model.ts'
-import type { Aggregation, DateLevel, Pill } from './spec.ts'
+import type { Aggregation, DateLevel, Pill, TableCalcType } from './spec.ts'
 
 /** A problem with a spec, phrased for the learner. */
 export class EngineError extends Error {}
@@ -32,6 +32,18 @@ export interface ResolvedPill {
   key: string
   /** Show Members in Set: the column shows this field's members (the set's dimension), only those In the set. */
   members?: string
+  /** A quick table calculation over the marks (the pill shows a delta). */
+  tableCalc?: Pill['tableCalc']
+}
+
+export const TABLE_CALC_NAME: Record<TableCalcType, string> = {
+  runningTotal: 'Running Total',
+  difference: 'Difference',
+  percentDifference: 'Percent Difference',
+  percentOfTotal: 'Percent of Total',
+  rank: 'Rank',
+  percentile: 'Percentile',
+  movingAverage: 'Moving Average',
 }
 
 const NUMERIC_ONLY: Aggregation[] = ['sum', 'avg', 'median']
@@ -43,6 +55,7 @@ export function resolvePill(ref: SourceRef, pill: Pill): ResolvedPill {
   if (field.calc?.error) throw new EngineError(`The calculation ${field.name} has an error: ${field.calc.error.message}`)
   if (field.broken) throw new EngineError(field.broken)
   if (field.special) {
+    if (pill.tableCalc) throw new EngineError(`${field.name} can’t take a table calculation: add it to a measure on Columns, Rows or the Marks card.`)
     if (pill.agg || pill.date || pill.setView) throw new EngineError(`${field.name} can’t be aggregated: each measure on the Measure Values card keeps its own aggregation.`)
     // Measure Values is a measure without an aggregation of its own, like an aggregate calc.
     const values = field.special === 'values'
@@ -72,7 +85,11 @@ export function resolvePill(ref: SourceRef, pill: Pill): ResolvedPill {
 
   const aggLabel = agg === 'agg' ? 'AGG' : agg ? AGG_LABEL[agg] : undefined
   const label = aggLabel ? `${aggLabel}(${field.name})` : date ? `${date.level.toUpperCase()}(${field.name})` : field.name
-  const key = [agg ?? '', date ? `${date.mode}:${date.level}` : '', field.name, continuous ? 'c' : 'd', pill.setView ?? ''].join('|')
+  // "You can only perform quick table calculations on measures in the view."
+  if (pill.tableCalc && !agg) throw new EngineError(`A quick table calculation needs a measure: ${field.name} is a dimension here.`)
+  if (pill.tableCalc && field.generated) throw new EngineError(`${field.name} is generated, so it can’t take a table calculation.`)
+  const calcKey = pill.tableCalc ? `|${pill.tableCalc.type}:${pill.tableCalc.compute ?? ''}` : ''
+  const key = [agg ?? '', date ? `${date.mode}:${date.level}` : '', field.name, continuous ? 'c' : 'd', pill.setView ?? ''].join('|') + calcKey
   const members = pill.setView && field.derived?.kind === 'set' ? field.derived.def.field : undefined
-  return { pill, field, agg, date, kind: agg ? 'measure' : 'dimension', continuous, label, key, ...(members && { members }) }
+  return { pill, field, agg, date, kind: agg ? 'measure' : 'dimension', continuous, label, key, ...(members && { members }), ...(pill.tableCalc && { tableCalc: pill.tableCalc }) }
 }

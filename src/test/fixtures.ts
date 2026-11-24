@@ -45,6 +45,7 @@ export const VIZ: Item = {
       hierarchies: [],
       measureValues: [],
       axes: {},
+      totals: {},
       columns: [{ field: 'Start', date: { level: 'month', mode: 'value' } }],
       rows: [{ field: 'Minutes Watched', agg: 'sum' }],
       marks: { type: 'line', detail: [], tooltip: [] },

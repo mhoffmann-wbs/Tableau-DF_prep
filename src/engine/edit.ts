@@ -3,10 +3,12 @@
 // VizSpec, no data, so they are tested without the dataset or a browser.
 import { fieldOf, fieldsOf, type SourceRef } from './model.ts'
 import { EngineError, resolvePill } from './pills.ts'
+import { defaultCompute } from './tablecalc.ts'
 import {
   type Aggregation,
   type Bin,
   type Calc,
+  type ComputeUsing,
   type DateLevel,
   type FieldEdit,
   type Filter,
@@ -17,6 +19,7 @@ import {
   type Pill,
   type SetDef,
   type SourceId,
+  type TableCalcType,
   type VizSpec,
   pillsOf,
   vizSpecSchema,
@@ -290,6 +293,50 @@ export function setSyncAxis(spec: VizSpec, shelf: 'columns' | 'rows', sync: bool
   return { ...spec, axes: { ...spec.axes, [shelf]: { ...spec.axes[shelf], dual: true, ...(sync ? { sync: true } : { sync: undefined }) } } }
 }
 
+// ---- table calculations and totals ----
+
+/** Whether a pill can take a quick table calculation: a measure in the view, not on the Measure Values card. */
+export function canTableCalc(source: SourceRef, at: PillAt, pill: Pill): boolean {
+  if (at.shelf === 'measureValues') return false
+  try {
+    const rp = resolvePill(source, { ...pill, tableCalc: undefined })
+    return rp.kind === 'measure' && !rp.field.special && !rp.field.generated
+  } catch {
+    return false
+  }
+}
+
+/** Quick Table Calculation > type, or Clear Table Calculation (`undefined`); Compute Using starts over. */
+export function withTableCalc(pill: Pill, type: TableCalcType | undefined): Pill {
+  const { tableCalc: _t, ...rest } = pill
+  return type ? { ...rest, tableCalc: { type } } : rest
+}
+
+export function withComputeUsing(pill: Pill, compute: ComputeUsing): Pill {
+  return pill.tableCalc ? { ...pill, tableCalc: { ...pill.tableCalc, compute } } : pill
+}
+
+/** The Compute Using a table calculation runs with: its own, or the default for the view. */
+export function computeUsingOf(spec: VizSpec, pill: Pill): ComputeUsing {
+  if (pill.tableCalc?.compute) return pill.tableCalc.compute
+  const across = spec.columns.some((p) => {
+    try {
+      const rp = resolvePill(spec, p)
+      return rp.kind === 'dimension' && !rp.field.special
+    } catch {
+      return false
+    }
+  })
+  return defaultCompute(across)
+}
+
+/** Analysis > Totals: `undefined` keys switch an option off (Total All Using back to Automatic). */
+export function setTotals(spec: VizSpec, patch: Partial<VizSpec['totals']>): VizSpec {
+  const totals = { ...spec.totals, ...patch }
+  for (const k of Object.keys(totals) as (keyof typeof totals)[]) if (totals[k] === undefined || totals[k] === false || totals[k] === 'automatic') delete totals[k]
+  return { ...spec, totals }
+}
+
 /** A measure's own mark type (its Marks card), when its shelf holds several measures. */
 export function setPillMark(spec: VizSpec, at: PillAt, mark: MarkType): VizSpec {
   const { mark: _m, ...pill } = pillAt(spec, at)!
@@ -449,6 +496,7 @@ export function compactSpec(spec: VizSpec): Record<string, unknown> {
   if (spec.fields.length) out.fields = spec.fields
   for (const k of ['groups', 'sets', 'bins', 'hierarchies', 'measureValues'] as const) if (spec[k].length) out[k] = spec[k]
   if (spec.axes.columns || spec.axes.rows) out.axes = spec.axes
+  if (Object.values(spec.totals).some((v) => v !== undefined)) out.totals = spec.totals
   if (spec.columns.length) out.columns = spec.columns
   if (spec.rows.length) out.rows = spec.rows
   const marks: Record<string, unknown> = {}

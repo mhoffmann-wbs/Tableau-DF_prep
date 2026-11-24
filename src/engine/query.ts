@@ -7,8 +7,9 @@ import { COUNTRIES } from '../data/geography.ts'
 import { type CalcFields, evaluateGroup, rowValue } from './calc/index.ts'
 import { calcsOf, type Dataset, type Row, type SourceRef, type Value } from './model.ts'
 import { MONTHS, WEEKDAYS, aggregate, compareKeys, datePart, dateTrunc, display } from './values.ts'
-import { EngineError, type ResolvedPill, resolvePill } from './pills.ts'
+import { EngineError, type ResolvedPill, TABLE_CALC_NAME, resolvePill } from './pills.ts'
 import { type DateLevel, type Filter, MEASURE_NAMES, type Pill, type VizSpec, pillsOf } from './spec.ts'
+import { PERCENT_CALCS, PERCENT_FORMAT, addressing, defaultCompute, tableCalcValues } from './tablecalc.ts'
 
 export interface Column extends ResolvedPill {
   id: string
@@ -190,7 +191,7 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
   const finestGeo = GEO_PRECEDENCE.map((g) => dims.find((d) => d.field.geo === g)).find((d) => d !== undefined)
 
   // `cards`: the value of each measure on the Measure Values card for this mark.
-  let out: { members: Member[]; row: Row; cards: Value[] }[] = []
+  let out: Mark[] = []
   for (const g of groups.values()) {
     if (
       !measureFilters.every((f) => {
@@ -209,7 +210,7 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
         row[m.id] = coords ? coords[m.field.geo === 'latitude' ? 0 : 1] : null
       } else row[m.id] = measureValue(calcs, get, g.rows, m.field.name, m.agg)
     }
-    out.push({ members: g.members, row, cards: measureCards.map((m) => measureValue(calcs, get, g.rows, m.field.name, m.agg)) })
+    out.push({ members: g.members, rows: g.rows, row, cards: measureCards.map((m) => measureValue(calcs, get, g.rows, m.field.name, m.agg)) })
   }
 
   // Member order of each discrete dimension, then marks sorted by those orders.
@@ -254,6 +255,44 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     }
     return 0
   })
+  // Dimensions across (on Columns) and down (on Rows), outer to inner; the Marks card's only partition.
+  const keysOn = (pills: Pill[]) => new Set(pills.map((p) => resolvePill(spec, p).key))
+  const acrossKeys = keysOn(spec.columns)
+  const downKeys = keysOn(spec.rows)
+  const across = dims.filter((d) => acrossKeys.has(d.key))
+  const down = dims.filter((d) => downKeys.has(d.key) && !acrossKeys.has(d.key))
+  const compareOn = (ds: Column[]) => (a: Mark, b: Mark) => {
+    for (const d of ds) {
+      const i = dims.indexOf(d)
+      const r = rank.get(d)
+      const diff = r ? r.get(a.members[i]!.value)! - r.get(b.members[i]!.value)! : compareKeys(a.members[i]!.sortKey, b.members[i]!.sortKey)
+      if (diff) return diff
+    }
+    return 0
+  }
+  for (const m of measures) {
+    if (!m.tableCalc) continue
+    const addr = addressing(m.tableCalc.compute ?? defaultCompute(across.length > 0), across, down)
+    const partition = dims.filter((d) => !addr.includes(d))
+    const parts = new Map<string, Mark[]>()
+    for (const o of out) {
+      const key = JSON.stringify(partition.map((d) => o.members[dims.indexOf(d)]!.value))
+      parts.set(key, [...(parts.get(key) ?? []), o])
+    }
+    for (const marks of parts.values()) {
+      marks.sort(compareOn(addr))
+      const values = tableCalcValues(
+        m.tableCalc.type,
+        marks.map((o) => o.row[m.id]!),
+      )
+      marks.forEach((o, i) => (o.row[m.id] = values[i]!))
+    }
+    if (PERCENT_CALCS.includes(m.tableCalc.type)) m.field = { ...m.field, format: PERCENT_FORMAT }
+    // Axis and tooltip titles name the calculation; the pill itself keeps its label and a delta.
+    m.label = `${TABLE_CALC_NAME[m.tableCalc.type]} of ${m.label}`
+  }
+  out.push(...totalsOf(spec, { calcs, get, dims, measures, measureCards, across, down, marks: out }))
+
   const alias = (row: Row) => {
     for (const d of aliased) row[d.id] = d.field.aliases![row[d.id] as string] ?? row[d.id]!
     return row
@@ -268,6 +307,78 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     measureCards.map((m, j) => ({ ...row, ...(names && { [names.id]: m.label }), ...(values && { [values.id]: out[i]!.cards[j]! }) })),
   )
   return { columns, rows: unpivoted }
+}
+
+/** One mark: its dimension members, its rows, its output row, and its Measure Values card values. */
+interface Mark {
+  members: Member[]
+  rows: Row[]
+  row: Row
+  cards: Value[]
+}
+
+export const GRAND_TOTAL = 'Grand Total'
+export const SUBTOTAL = 'Total'
+
+/**
+ * The marks totals add. Row Grand Totals total across the Columns headers (a
+ * column at the right), Column Grand Totals down the Rows headers (a row at
+ * the bottom), and subtotals each outer header's members. A total's headers
+ * read Total or Grand Total (labels unverified). Automatic totals aggregate
+ * the underlying rows; Total All Using aggregates the marks' values. A shelf
+ * with no discrete header, or a continuous dimension, gets none ("Grand totals
+ * cannot be applied to continuous dimensions"). Table calculations show no
+ * total here.
+ */
+function totalsOf(
+  spec: VizSpec,
+  ctx: { calcs: CalcFields; get: Getter; dims: Column[]; measures: Column[]; measureCards: ResolvedPill[]; across: Column[]; down: Column[]; marks: Mark[] },
+): Mark[] {
+  const { calcs, get, dims, measures, measureCards, marks } = ctx
+  const totals = spec.totals
+  if (!totals.row && !totals.column && !totals.subtotals) return []
+  // How many leading headers each total keeps: all (no total), then subtotals, then none (the grand total).
+  const levels = (headers: Column[], grand: boolean | undefined) => {
+    if (headers.length === 0 || headers.some((h) => h.continuous)) return [headers.length]
+    const ks = [headers.length]
+    if (totals.subtotals) for (let k = headers.length - 1; k >= 1; k--) ks.push(k)
+    if (grand) ks.push(0)
+    return ks
+  }
+  const using = totals.using ?? 'automatic'
+  const out: Mark[] = []
+  for (const ka of levels(ctx.across, totals.row)) {
+    for (const kd of levels(ctx.down, totals.column)) {
+      if (ka === ctx.across.length && kd === ctx.down.length) continue
+      const replaced = new Map<Column, string>()
+      for (const d of ctx.across.slice(ka)) replaced.set(d, ka === 0 ? GRAND_TOTAL : SUBTOTAL)
+      for (const d of ctx.down.slice(kd)) replaced.set(d, kd === 0 ? GRAND_TOTAL : SUBTOTAL)
+      const groups = new Map<string, Mark[]>()
+      for (const o of marks) {
+        const key = JSON.stringify(dims.map((d, i) => (replaced.has(d) ? null : o.members[i]!.value)))
+        groups.set(key, [...(groups.get(key) ?? []), o])
+      }
+      for (const group of groups.values()) {
+        const members = group[0]!.members.map((m, i) => (replaced.has(dims[i]!) ? { value: replaced.get(dims[i]!)!, sortKey: '' } : m))
+        const rows = group.flatMap((o) => o.rows)
+        const row: Row = {}
+        dims.forEach((d, i) => (row[d.id] = members[i]!.value))
+        const total = (values: Value[], field: string, agg: ResolvedPill['agg']) =>
+          using === 'automatic' ? measureValue(calcs, get, rows, field, agg) : aggregate(values, using)
+        for (const m of measures) {
+          row[m.id] = m.tableCalc || m.field.generated ? null : total(group.map((o) => o.row[m.id]!), m.field.name, m.agg)
+        }
+        const cards = measureCards.map((m, j) => total(group.map((o) => o.cards[j]!), m.field.name, m.agg))
+        out.push({ members, rows, row, cards })
+      }
+      for (const [d, label] of replaced) {
+        if (d.order?.includes(label)) continue
+        d.order?.push(label)
+        d.raw?.push(label)
+      }
+    }
+  }
+  return out
 }
 
 /**

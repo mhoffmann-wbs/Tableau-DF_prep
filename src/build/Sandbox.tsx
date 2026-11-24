@@ -21,14 +21,16 @@ import {
   setFilter,
   setMarkType,
   setPillMark,
+  setTotals,
 } from '../engine/edit'
 import { type Field, fieldOf, fieldsOf, isEditable, SOURCE_INFO } from '../engine/model'
 import type { MarkMembers } from '../engine/runtime'
 import { AGG_LABEL, EngineError, type ResolvedPill, resolvePill } from '../engine/pills'
 import { automaticMark } from '../engine/render'
-import { type Bin, type Calc, type FieldEdit, type Group, MARK_TYPES, MEASURE_NAMES, MEASURE_VALUES, type Filter, type MarkType, type SetDef, type VizSpec, pillsOf } from '../engine/spec'
+import { type Bin, type Calc, type FieldEdit, type Group, MARK_TYPES, type TotalAgg, MEASURE_NAMES, MEASURE_VALUES, type Filter, type MarkType, type SetDef, type VizSpec, pillsOf } from '../engine/spec'
 import { Viz } from '../engine/Viz'
 import { type Dragged, useDropTarget } from './dnd'
+import { MenuButton, MenuHeading, MenuItem } from './Menu'
 import { FilterEditor } from './FilterEditor'
 import { saveCalc } from '../progress/store'
 import { CalcEditor, calcStatus } from './CalcEditor'
@@ -117,6 +119,10 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
           <MarksCard spec={spec} onChange={edit} dropOn={dropOn} pillProps={pillProps} />
         </div>
         <div className={`${card} px-3 py-1`}>
+          <div className="flex items-center gap-2 border-b border-slate-200 py-1.5">
+            <span className="w-20 shrink-0 text-xs font-semibold tracking-wide text-slate-500 uppercase">Analysis</span>
+            <TotalsMenu spec={spec} onChange={edit} />
+          </div>
           {(['columns', 'rows'] as const).map((shelf) => (
             <ListShelfRow key={shelf} shelf={shelf} spec={spec} dropOn={dropOn} pillProps={pillProps} />
           ))}
@@ -433,6 +439,43 @@ function ListShelfRow({
         <ShelfPill key={i} {...pillProps} at={{ shelf, index: i }} onDropBefore={dropOn(shelf, i)} />
       ))}
     </div>
+  )
+}
+
+const TOTAL_AGG_NAME: Record<TotalAgg, string> = { automatic: 'Automatic', sum: 'Sum', avg: 'Average', min: 'Minimum', max: 'Maximum' }
+
+/** Analysis > Totals: grand totals, subtotals and Total All Using. */
+function TotalsMenu({ spec, onChange }: { spec: VizSpec; onChange: (next: VizSpec) => void }) {
+  const { totals } = spec
+  return (
+    <MenuButton menuLabel="Analysis > Totals" label="Totals ▾" className="rounded border border-slate-300 bg-white px-2 py-0.5 text-xs text-slate-700 hover:bg-slate-50">
+      {(close) => {
+        const act = (patch: Partial<VizSpec['totals']>) => () => {
+          onChange(setTotals(spec, patch))
+          close()
+        }
+        return (
+          <>
+            <MenuHeading>Analysis &gt; Totals</MenuHeading>
+            <MenuItem checked={totals.row === true} onSelect={act({ row: !totals.row })}>
+              Show Row Grand Totals
+            </MenuItem>
+            <MenuItem checked={totals.column === true} onSelect={act({ column: !totals.column })}>
+              Show Column Grand Totals
+            </MenuItem>
+            <MenuItem checked={totals.subtotals === true} onSelect={act({ subtotals: !totals.subtotals })}>
+              Add All Subtotals
+            </MenuItem>
+            <MenuHeading>Total All Using</MenuHeading>
+            {(Object.keys(TOTAL_AGG_NAME) as TotalAgg[]).map((a) => (
+              <MenuItem key={a} checked={(totals.using ?? 'automatic') === a} onSelect={act({ using: a })}>
+                {TOTAL_AGG_NAME[a]}
+              </MenuItem>
+            ))}
+          </>
+        )
+      }}
+    </MenuButton>
   )
 }
 
