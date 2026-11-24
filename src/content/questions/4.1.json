@@ -899,5 +899,561 @@
       "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
       "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
     ]
+  },
+  {
+    "id": "4.1-025",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "Look at the pills on the shelves. Which statement about them is correct?",
+    "options": [
+      {
+        "text": "`Device` is a measure because it sits on Columns, and `Minutes Watched` is a dimension because it sits on Rows",
+        "correct": false,
+        "rationale": "The shelf a field sits on never decides its role."
+      },
+      {
+        "text": "Both pills are dimensions, because every field in a view categorizes the marks",
+        "correct": false,
+        "rationale": "Only dimensions categorize; a measure is aggregated to size the marks."
+      },
+      {
+        "text": "`Device` is a dimension that makes the headers; `SUM(Minutes Watched)` is an aggregated measure",
+        "correct": true,
+        "rationale": "`Device` holds text, so it slices the view, and the numeric field is summed per slice."
+      },
+      {
+        "text": "Both pills are measures, because a view that draws bars can only be built from numbers",
+        "correct": false,
+        "rationale": "The bars show a measure, but the headers under them come from a dimension."
+      }
+    ],
+    "explanation": "Text fields such as Device are dimensions and make one header per member. A numeric field such as Minutes Watched is a measure, and the pill name `SUM(Minutes Watched)` shows how it is aggregated.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-026",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "Which two pills in this view are dimensions? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`SUM(Minutes Watched)`",
+        "correct": false,
+        "rationale": "A numeric field that is summed, so a measure."
+      },
+      {
+        "text": "`MONTH(Start)`",
+        "correct": true,
+        "rationale": "A date part of `Start`; dates are dimensions."
+      },
+      {
+        "text": "`Device`",
+        "correct": true,
+        "rationale": "Text values, so a dimension."
+      },
+      {
+        "text": "`AVG(Runtime)`",
+        "correct": false,
+        "rationale": "A numeric field that is averaged, so a measure."
+      },
+      {
+        "text": "`Sessions (Count)`",
+        "correct": false,
+        "rationale": "The generated row count is a measure."
+      }
+    ],
+    "explanation": "Dates and text are dimensions, so `Start` (here cut to months) and `Device` are. Minutes Watched, Runtime and the generated `Sessions (Count)` are measures, whatever shelf or card they sit on.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "part"
+            }
+          },
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "size": {
+            "field": "Runtime",
+            "agg": "avg"
+          },
+          "label": {
+            "field": "Sessions (Count)"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-027",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.1.1"
+    ],
+    "stem": "The chart has a bar labelled Null under the `Device` headers. What does that bar represent?",
+    "options": [
+      {
+        "text": "Sessions with no recorded device, grouped as one more `Device` member",
+        "correct": true,
+        "rationale": "A dimension has a member for blank values too, and Tableau shows it as Null."
+      },
+      {
+        "text": "A measure that Tableau adds to every view to hold the overall total of minutes",
+        "correct": false,
+        "rationale": "Tableau adds no total measure to the view."
+      },
+      {
+        "text": "A device called Null that Driftlight really sells",
+        "correct": false,
+        "rationale": "Null is Tableau's name for a missing value, not a device name."
+      },
+      {
+        "text": "Rows that Tableau dropped because they could not be aggregated by device",
+        "correct": false,
+        "rationale": "Nothing was dropped; those rows sit in the Null member."
+      }
+    ],
+    "explanation": "Every distinct value of a dimension is a member and gets its own header. Blank values form the member Null, so the totals of all bars still add up to the overall total.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "chart"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-028",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "What does the view draw?",
+    "options": [
+      {
+        "text": "One bar per session, each showing the minutes watched in that session",
+        "correct": false,
+        "rationale": "Without a dimension nothing splits the rows apart."
+      },
+      {
+        "text": "One mark per device, because Tableau always adds the most detailed dimension",
+        "correct": false,
+        "rationale": "Tableau does not add dimensions on its own."
+      },
+      {
+        "text": "A count of how many sessions are in the data, shown as one mark",
+        "correct": false,
+        "rationale": "A count needs `Sessions (Count)` or a COUNT aggregation; this pill is a SUM."
+      },
+      {
+        "text": "A single mark: all `Minutes Watched` values added up into one total",
+        "correct": true,
+        "rationale": "`SUM` is the default aggregation, and with no dimension there is one group."
+      }
+    ],
+    "explanation": "A measure alone is aggregated over all rows. The pill name shows `SUM`, and with no dimension in the view there is just one mark for the grand total.",
+    "viz": {
+      "spec": {
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ]
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-029",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "What does each bar show?",
+    "options": [
+      {
+        "text": "The number of different genres that appear in the data",
+        "correct": false,
+        "rationale": "Genre is the dimension that makes the bars, so it is not counted."
+      },
+      {
+        "text": "The number of sessions in that genre, because `Sessions (Count)` counts rows",
+        "correct": true,
+        "rationale": "The generated count measure counts the rows of its table, per genre here."
+      },
+      {
+        "text": "The sum of a numeric field named Sessions, taken for each genre",
+        "correct": false,
+        "rationale": "There is no such numeric field; `Sessions (Count)` is generated by Tableau."
+      },
+      {
+        "text": "The number of distinct subscribers who watched that genre",
+        "correct": false,
+        "rationale": "That would need `COUNTD(Subscriber ID)`."
+      }
+    ],
+    "explanation": "Each table gets a generated count measure named after it. Aggregated per genre, `Sessions (Count)` gives the number of rows of the sessions table in each genre.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Sessions (Count)"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.1-030",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.1.2"
+    ],
+    "stem": "Which two statements about this view are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Runtime` became a dimension because it sits next to `Genre`",
+        "correct": false,
+        "rationale": "Role comes from the values, not from neighbouring pills."
+      },
+      {
+        "text": "`Runtime` is a measure, and its aggregation was changed from the default `SUM` to `AVG`",
+        "correct": true,
+        "rationale": "The pill name `AVG(Runtime)` shows the changed aggregation."
+      },
+      {
+        "text": "`Genre` is averaged as well, once for each bar",
+        "correct": false,
+        "rationale": "Dimensions are not aggregated here; they make the bars."
+      },
+      {
+        "text": "Each bar shows the average runtime of the titles in one genre",
+        "correct": true,
+        "rationale": "The measure is aggregated within each genre."
+      },
+      {
+        "text": "The axis is green because `Runtime` is a dimension",
+        "correct": false,
+        "rationale": "Green marks a continuous pill; it says nothing about the role."
+      }
+    ],
+    "explanation": "A measure is aggregated per member of the dimensions in the view. Here Runtime keeps its measure role and uses `AVG` instead of the default `SUM`, so each bar is a genre's average.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "columns": [
+          {
+            "field": "Genre"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Runtime",
+            "agg": "avg"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-031",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "What does each bar show?",
+    "options": [
+      {
+        "text": "How many different subscribers had sessions on that plan",
+        "correct": true,
+        "rationale": "`COUNTD` counts distinct members of the dimension within each plan."
+      },
+      {
+        "text": "The sum of all `Subscriber ID` values for that plan, added up",
+        "correct": false,
+        "rationale": "IDs are labels and are not added up; the pill is COUNTD, not SUM."
+      },
+      {
+        "text": "The number of sessions on that plan, counting every single row",
+        "correct": false,
+        "rationale": "COUNTD skips repeats; counting every row would need `Sessions (Count)`."
+      },
+      {
+        "text": "The number of plans, since `Plan` is the only dimension",
+        "correct": false,
+        "rationale": "The plan only decides the bars; it is not what is counted."
+      }
+    ],
+    "explanation": "Aggregating a dimension with Count (Distinct) creates a temporary measure. The field stays a dimension, and each bar counts its distinct members within one plan.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Plan"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Subscriber ID",
+            "agg": "countd"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm",
+      "https://help.tableau.com/current/pro/desktop/en-us/calculations_aggregation.htm"
+    ]
+  },
+  {
+    "id": "4.1-032",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "Compared with a view of only `Device` and `SUM(Minutes Watched)`, what does the `Genre` pill on Color change?",
+    "options": [
+      {
+        "text": "`Genre` is added up like a measure, so every device bar becomes taller",
+        "correct": false,
+        "rationale": "A dimension is not summed, and the bar height stays the device total."
+      },
+      {
+        "text": "The measure is replaced by a count of genres within each device bar",
+        "correct": false,
+        "rationale": "The measure stays; it is now split, not replaced."
+      },
+      {
+        "text": "Nothing, because only a measure can change how the marks are drawn in a view",
+        "correct": false,
+        "rationale": "Any field on the Marks card changes the marks, and dimensions split them."
+      },
+      {
+        "text": "One segment per genre inside each device bar, adding up to the device total",
+        "correct": true,
+        "rationale": "A dimension adds detail, and the measure is summed per combination of members."
+      }
+    ],
+    "explanation": "A dimension on the Marks card increases the level of detail: there is one mark per combination of members. The measure is aggregated for each, so the pieces add up to the same total.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Device"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Genre"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-033",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 2,
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "Which two statements about this view are true? (Choose 2 answers.)",
+    "options": [
+      {
+        "text": "`Device` is a measure because it is on the Color card",
+        "correct": false,
+        "rationale": "Placement never changes the role; `Device` holds text, so it is a dimension."
+      },
+      {
+        "text": "`SUM(Minutes Watched)` decides how large each mark is",
+        "correct": true,
+        "rationale": "A measure is aggregated and sets the size of the marks."
+      },
+      {
+        "text": "`Minutes Watched` is a dimension because it is on Rows",
+        "correct": false,
+        "rationale": "A numeric quantity stays a measure on any shelf."
+      },
+      {
+        "text": "`MONTH(Start)` and `Device` together decide how many marks the view has",
+        "correct": true,
+        "rationale": "Dimensions set the number of marks, one per combination of members."
+      },
+      {
+        "text": "`Device` is summed in each month",
+        "correct": false,
+        "rationale": "Dimensions are not aggregated on their own."
+      }
+    ],
+    "explanation": "The dimensions slice the data into groups and the measure is aggregated within each group. In SQL terms, `MONTH(Start)` and `Device` are the `GROUP BY` columns and the measure sits inside `SUM()`.",
+    "viz": {
+      "spec": {
+        "columns": [
+          {
+            "field": "Start",
+            "date": {
+              "level": "month",
+              "mode": "part"
+            }
+          }
+        ],
+        "rows": [
+          {
+            "field": "Minutes Watched"
+          }
+        ],
+        "marks": {
+          "color": {
+            "field": "Device"
+          }
+        }
+      },
+      "show": "shelves"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
+  },
+  {
+    "id": "4.1-034",
+    "taskId": "4.1",
+    "kind": "viz",
+    "select": 1,
+    "objectives": [
+      "4.1.3"
+    ],
+    "stem": "`Release Year` is made of digits, yet this view draws one bar per year. Why?",
+    "options": [
+      {
+        "text": "It is a dimension, so each year is a member that makes a bar",
+        "correct": true,
+        "rationale": "In the Driftlight titles table the year is a label, not a quantity."
+      },
+      {
+        "text": "Tableau converts every numeric field to a measure, then sums the years into bars",
+        "correct": false,
+        "rationale": "Summing years would give one meaningless total, not one bar per year."
+      },
+      {
+        "text": "The `Titles (Count)` pill is a dimension that groups the years into bars",
+        "correct": false,
+        "rationale": "`Titles (Count)` is a measure; the year makes the groups."
+      },
+      {
+        "text": "Years can only be drawn as bars after they are converted to dates first",
+        "correct": false,
+        "rationale": "No conversion is needed for the bars to appear."
+      }
+    ],
+    "explanation": "Digits do not make a measure. A year is a label that groups titles, so it is a dimension and gives one bar per member, while `Titles (Count)` is the measure.",
+    "viz": {
+      "spec": {
+        "source": "titles",
+        "columns": [
+          {
+            "field": "Release Year"
+          }
+        ],
+        "rows": [
+          {
+            "field": "Titles (Count)"
+          }
+        ]
+      },
+      "show": "both"
+    },
+    "sourceLinks": [
+      "https://help.tableau.com/current/pro/desktop/en-us/datafields_typesandroles.htm"
+    ]
   }
 ]
