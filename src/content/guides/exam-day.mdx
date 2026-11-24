@@ -1,0 +1,54 @@
+export const meta = {
+  id: 'exam-day',
+  title: 'Exam-day guide',
+  summary: 'The exam’s format, what each domain is worth, a pace for the clock, and what to do in the last days and in the exam itself.',
+  updated: '2026-11-24',
+  sources: ['1.1', '4.2'],
+}
+
+The facts below come from the official exam guide for the <Exam fact="name" /> exam (<Exam fact="code" />). Read the guide itself before you book: it is the only source that counts, and it can change.
+
+## The format
+
+| | |
+|---|---|
+| Items | <Exam fact="items" /> multiple-choice/multiple-select, plus up to <Exam fact="unscoredMax" /> unscored items mixed in at random |
+| Time | <Exam fact="minutes" /> minutes |
+| Passing score | <Exam fact="passPercent" />% |
+| Product version | Tableau <Exam fact="productVersion" /> |
+| Delivery | <Exam fact="delivery" /> |
+| References | <Exam fact="references" /> |
+| Fee | US$<Exam fact="feeUsd" />; retake: <Exam fact="retakeFee" /> |
+| Prerequisite | <Exam fact="prerequisite" /> |
+
+A multiple-select item says how many answers to choose, for example "(Choose 2 answers.)". The guide also says its outline "is not a comprehensive listing", so expect the odd question on a neighbouring basic.
+
+## What each domain is worth
+
+<DomainTable />
+
+The item counts are the weights applied to <Exam fact="items" /> items, the same split as this app's mock exam. The exam guide gives only the weights, not item counts.
+
+## The clock and the pass mark
+
+- <Exam fact="minutes" /> minutes for <Exam fact="items" /> items is <Pace of="scored" /> per item. With all <Exam fact="unscoredMax" /> unscored items added, it's <Pace of="all" />. Plan for the second number.
+- <Exam fact="passPercent" />% of <Exam fact="items" /> scored items is <PassCount /> correct answers, if every scored item counts the same.
+- You can't tell which items are unscored, so treat every item as if it counts.
+- An unanswered item can't be correct. Answer every item, even with an educated guess.
+
+## The last few days
+
+1. Take this app's [mock exam](/mock) under exam conditions: <Exam fact="items" /> items, <Exam fact="minutes" /> minutes, no notes. Read the result per domain and per task.
+2. On the [Progress](/progress) page, **run the weak-spot drill** and read the lessons of your weakest tasks.
+3. Run your [flashcards](/build/flashcards) until nothing is due, and read the [cheat sheet](/guides/cheat-sheet) once more.
+4. Check the exam guide's product version. The exam tests Tableau <Exam fact="productVersion" />, so features Tableau added since are not on it; the lessons leave them out.
+5. Read the rules your exam provider sends you for an online or test-centre exam, and check your setup in advance if you sit it online.
+
+## In the exam
+
+- **Read the last line first.** Many items describe a view, then ask one precise thing: the chart type, the next step, or why a number changed.
+- **Count the answers.** In a multiple-select item, choose exactly as many as it asks for.
+- **Read the shelves.** For "which steps create this chart?", rebuild the view in your head: what is on Columns, Rows and the Marks card, and what's blue or green (<LessonLink id="4.2" />).
+- **Watch for near-miss options.** `.tds` vs. `.tdsx`, live vs. extract (<LessonLink id="1.1" />), combined vs. dual axis, group vs. alias: many wrong options are the right idea applied to the wrong case.
+- **Don't spend too long on one item.** Pick your best answer and move on rather than lose minutes the later items need.
+- **Superstore:** many items assume Tableau's Sample-Superstore data (Sales, Profit, Category › Sub-Category, Region, Order Date). The lessons' Superstore notes map it to Driftlight.

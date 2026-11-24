@@ -1,6 +1,10 @@
 import { Suspense, useState } from 'react'
 import { Link, NavLink, Outlet } from 'react-router'
 
+/** The footer's notices; printed guides repeat them, since the footer doesn't print. */
+export const NOT_AFFILIATED = 'Not affiliated with or endorsed by Salesforce, Inc. or Tableau. Tableau and Salesforce are trademarks of Salesforce, Inc.'
+export const INVENTED_DATA = 'Driftlight and its data are invented for this app.'
+
 // Links are added as their pages are built (PLAN.md §9).
 const NAV: { to: string; label: string }[] = [
   { to: '/', label: 'Exam outline' },
@@ -9,13 +13,14 @@ const NAV: { to: string; label: string }[] = [
   { to: '/questions', label: 'Questions' },
   { to: '/mock', label: 'Mock exam' },
   { to: '/build', label: 'Build' },
+  { to: '/guides', label: 'Guides' },
   { to: '/progress', label: 'Progress' },
 ]
 
 export function Layout() {
   const [menuOpen, setMenuOpen] = useState(false)
   return (
-    <div className="flex min-h-screen flex-col bg-page text-slate-900">
+    <div className="flex min-h-screen flex-col bg-page text-slate-900 print:bg-white">
       <header className="bg-header text-chalk print:hidden">
         <nav aria-label="Main" className="mx-auto max-w-5xl px-4 py-3 sm:flex sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2 sm:text-sm">
           <div className="flex items-center justify-between">
@@ -55,8 +60,8 @@ export function Layout() {
         </Suspense>
       </main>
       <footer className="border-t border-slate-200 px-4 py-4 text-center text-sm text-slate-500 print:hidden">
-        <p>Not affiliated with or endorsed by Salesforce, Inc. or Tableau. Tableau and Salesforce are trademarks of Salesforce, Inc.</p>
-        <p>Driftlight and its data are invented for this app.</p>
+        <p>{NOT_AFFILIATED}</p>
+        <p>{INVENTED_DATA}</p>
       </footer>
     </div>
   )

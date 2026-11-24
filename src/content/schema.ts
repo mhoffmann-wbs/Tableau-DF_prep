@@ -152,3 +152,17 @@ export const lessonMetaSchema = z.object({
 })
 
 export type LessonMeta = z.infer<typeof lessonMetaSchema>
+
+/** A print-ready guide (PLAN.md §8): its facts come from the lessons in `sources` and from EXAM_FORMAT. */
+export const guideMetaSchema = z.object({
+  id: slug,
+  title: nonEmpty,
+  /** One sentence for the guide list. */
+  summary: nonEmpty,
+  /** Date the guide was last checked against its lessons and the exam guide. */
+  updated: z.iso.date(),
+  /** Task ids whose lessons the guide's Tableau facts come from. */
+  sources: z.array(z.string().regex(/^\d\.\d$/)),
+})
+
+export type GuideMeta = z.infer<typeof guideMetaSchema>

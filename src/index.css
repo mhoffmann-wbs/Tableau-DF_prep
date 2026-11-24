@@ -82,9 +82,37 @@ body {
 }
 
 /* Print (guides): dark mode only applies on screen, so paper gets the light tokens. */
+@page {
+  margin: 12mm;
+}
 @media print {
+  html,
+  body {
+    background: white;
+  }
   main {
     padding-top: 0;
+  }
+  /* A guide's text: everything in .prose is sized in em, so this scales tables and headings too. */
+  .print-compact.prose {
+    font-size: 8.5pt;
+    line-height: 1.35;
+  }
+  .print-compact.prose :where(h2) {
+    margin-top: 1em;
+    margin-bottom: 0.3em;
+  }
+  .print-compact.prose :where(p, ul, ol, table) {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+  }
+  .print-compact.prose :where(li) {
+    margin-top: 0.15em;
+    margin-bottom: 0.15em;
+  }
+  .print-compact.prose :where(td, th) {
+    padding-top: 0.12em;
+    padding-bottom: 0.12em;
   }
   h2,
   h3 {

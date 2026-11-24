@@ -1,0 +1,113 @@
+export const meta = {
+  id: 'cheat-sheet',
+  title: 'Cheat sheet',
+  summary: 'Chart recipes, dimensions and measures, blue and green, the filter order, file types and the menu paths worth knowing, on three printed pages.',
+  updated: '2026-11-24',
+  sources: ['1.1', '1.2', '1.3', '2.1', '2.2', '2.3', '3.1', '3.2', '3.3', '4.1', '4.2', '4.3'],
+}
+
+Everything here comes from the lessons, which quote Tableau's help. Each heading names the lesson to read for the details.
+
+## Chart recipes
+
+From <LessonLink id="2.1" />. A chart is what you put on which shelf, plus the mark type. With the mark type left on **Automatic**, Tableau picks Bar for a dimension and a measure, Line for a date and a measure, and Shape when measures are the innermost fields on both shelves.
+
+| Chart | Columns / Rows | Marks card |
+|---|---|---|
+| Bar | a dimension and a measure | Automatic (Bar) |
+| Line | a date and a measure | Automatic (Line) |
+| Scatterplot | a measure and a measure | Automatic; a dimension on Detail or Color for more marks |
+| Symbol map | Longitude / Latitude (generated) | a geographic field on Detail; a measure on Size |
+| Filled map | Longitude / Latitude (generated) | Map; a geographic field on Detail; a measure on Color |
+| Combined axis | two measures sharing one axis (Measure Values) | Measure Names on Color |
+| Dual axis | two measures, each with its own axis | one Marks card per measure |
+| Stacked bar | a dimension and a measure | a second dimension on Color |
+| Density map | Longitude / Latitude | Density; a detailed field on Detail |
+| Crosstab | dimensions on both | a measure on Text |
+| Highlight table | dimensions on both | Square; a measure on Color |
+| Histogram | a bin of a measure | the count of the measure |
+
+- **Combined vs. dual axis:** drop a measure on an existing axis for one shared axis (same units); drop it on the right edge, or choose **Dual Axis** on the pill, for two axes (different units). Only a dual axis gives each measure its own mark type. **Synchronize Axis** puts both on one scale.
+- **Highlight table** = Square + a measure on Color. A measure on Color with the mark type left on Text only colours the numbers.
+
+## Dimensions, measures, blue and green
+
+From <LessonLink id="4.1" />, <LessonLink id="4.2" /> and <LessonLink id="4.3" />.
+
+| | Dimension | Measure |
+|---|---|---|
+| Holds | qualitative values: names, categories, dates, places | numbers you can add up |
+| In the view | slices it into marks | is aggregated per mark, `SUM` by default |
+| Set when you connect | everything that isn't a number | numbers |
+
+| | Discrete (blue) | Continuous (green) |
+|---|---|---|
+| Draws | headers: separate members | an axis: an unbroken range |
+| Dates | date parts, such as `MONTH(Start)`, merge all years | date values (truncated dates) run along a timeline |
+| Can be | any field | dates, numbers and measures only, never strings or Booleans |
+
+- **Role and colour are separate properties.** A green date pill is still a dimension; a blue measure is still aggregated.
+- **IDs, postal codes and phone numbers are labels:** make them dimensions (and strings), don't change their aggregation.
+- **Level of detail:** every dimension in the view, on Rows, Columns *or* the Marks card, splits the marks, so each aggregate covers fewer rows. Clearing **Analysis > Aggregate Measures** shows one mark per row.
+- **An asterisk (\*)** in a header or tooltip is ATTR finding more than one value in the group.
+- Change a measure's aggregation **on the pill** for one view, or under **Default Properties > Aggregation** for every new view.
+
+## Filters: the order of operations
+
+From <LessonLink id="2.2" />. Tableau applies filters in a fixed order:
+
+1. Extract filters
+2. Data source filters
+3. Context filters (gray pills, at the top of the Filters shelf)
+4. Filters on dimensions, including Top N
+5. Filters on measures
+6. Table calculation filters, applied last
+
+A Top N filter runs over all the data. To get the top N *within* another filter, right-click that filter and choose **Add to Context**.
+
+## Organize and analyse
+
+From <LessonLink id="1.3" />, <LessonLink id="2.2" /> and <LessonLink id="2.3" />.
+
+| Tool | What it does |
+|---|---|
+| Rename | changes a field's name, not the data |
+| Alias | changes how a member is displayed (`PRM` shows as Premium); discrete dimensions only |
+| Group | combines members into bigger categories (paperclip, or Create > Group); can lump the rest into Other |
+| Set | splits a dimension into In and Out: fixed when picked from marks, dynamic by a condition or a top N |
+| Hierarchy | lets you drill down and up with + and − |
+| Bin | cuts a measure into equal ranges: a new dimension, the basis of a histogram |
+| Parameter | a single value the user picks, used by calculations, filters and reference lines |
+| Quick table calc | running total, percent of total, rank… from a measure pill's menu, marked with a delta |
+
+- **Manual sort** (drag headers, or Manual in the Sort dialog) keeps its order when the data changes; a **computed sort** (by a field) follows the data.
+- To merge two spellings of a member, use a **group**, not an alias.
+
+## Data sources and files
+
+From <LessonLink id="1.1" />, <LessonLink id="1.2" /> and <LessonLink id="3.3" />.
+
+| File | Holds |
+|---|---|
+| `.twb` workbook | worksheets, dashboards and stories; no data |
+| `.twbx` packaged workbook | the workbook plus its local file data and images, in one file |
+| `.tds` data source | the connection and metadata (calculations, groups, sets, default properties); no data |
+| `.tdsx` packaged data source | the `.tds` plus a copy of local file data or extracts |
+| `.hyper` extract | the extracted data itself |
+
+- **Live** queries the original data; an **extract** is a faster `.hyper` snapshot that works offline and is refreshed on demand. A full refresh replaces everything (the default); an incremental refresh only adds new rows.
+- **Relationships** (the logical layer, the "noodles") keep each table at its own level of detail and pick the join per view; **joins** and **unions** live in the physical layer. A cross-database join needs both tables in one data source as two connections; separate data sources can only be blended.
+
+## Menu paths worth knowing
+
+| Task | Path |
+|---|---|
+| Save a reusable data source | Data pane: right-click the data source > **Add to Saved Data Sources** |
+| Default aggregation, format, sort, color | Data pane: right-click the field > **Default Properties** |
+| Geographic role or data type | Data pane: click the data type icon |
+| Force a filter to run first | right-click the filter > **Add to Context** |
+| Wire sheets together | **Dashboard > Actions** (Filter, Highlight, Go to URL, Go to Sheet, Change Parameter, Change Set Values) |
+| Package a workbook | **File > Save As**, Tableau Packaged Workbook |
+| Image, PDF, PowerPoint | **Worksheet > Export > Image**, **File > Print to PDF**, **File > Export as PowerPoint** |
+| Publish | **Server > Publish Workbook** |
+| The data behind a mark | **View Data**: Summary (the marks) and Full Data (the rows) |

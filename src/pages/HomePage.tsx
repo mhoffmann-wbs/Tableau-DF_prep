@@ -35,6 +35,14 @@ export default function HomePage() {
           <a className="text-brand-dark underline" href={EXAM_FORMAT.guideUrl}>
             the official exam guide
           </a>
+          . Before the exam, read the{' '}
+          <Link to="/guides/exam-day" className="text-brand-dark underline">
+            exam-day guide
+          </Link>{' '}
+          and the{' '}
+          <Link to="/guides/cheat-sheet" className="text-brand-dark underline">
+            cheat sheet
+          </Link>
           .
         </p>
       </section>

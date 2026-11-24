@@ -205,5 +205,5 @@ Leitner boxes 0–5 rated Again, Good or Easy, with intervals of 0, 1, 3, 7, 16 
    6. **Simple dashboard**: two sheets with a filter action.
    7. **Content on the new features**: `viz` items for 2.1.5–2.1.6 and 2.3.2–2.3.7, new sandbox challenges, lesson charts that replace the text-only parts, and the Group/set/hierarchy simulator building in the sandbox.
    8. **Tableau Public challenges** (§7d). Needs the three `unverified` `PUBLIC_LIMITS` checked in Tableau Public first.
-   9. **Cheat sheet and exam-day guide** (print-ready, §8).
+   9. **Cheat sheet and exam-day guide** (done 2026-11-24): `/guides` with a print-ready cheat sheet (chart recipes, dimensions/measures and blue/green, the filter order, organize-and-analyse tools, file types and data sources, menu paths; 3 printed pages) and an exam-day guide (the format, domain weights, pace and pass mark computed from `EXAM_FORMAT`, the last days, in the exam; 2 pages). Tableau facts restated from the lessons; no new facts. **Open:** when 8.4–8.6 add quick table calcs, totals and reference lines to the sandbox, nothing in the guides changes, but recheck the cheat sheet whenever a lesson is corrected.
    10. **Mobile pass and sandbox accessibility** (keyboard alternatives to dragging pills).

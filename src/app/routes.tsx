@@ -16,6 +16,7 @@ const SandboxPage = lazy(() => import('../pages/SandboxPage'))
 const CalcPage = lazy(() => import('../pages/CalcPage'))
 const FlashcardsPage = lazy(() => import('../pages/FlashcardsPage'))
 const SimPage = lazy(() => import('../pages/SimPage'))
+const GuidesPage = lazy(() => import('../pages/GuidesPage'))
 const ChartGalleryPage = lazy(() => import('../pages/ChartGalleryPage'))
 
 export const routes: RouteObject[] = [
@@ -38,6 +39,8 @@ export const routes: RouteObject[] = [
       { path: 'build/sim/:simId', element: <SimPage /> },
       { path: 'build/flashcards', element: <FlashcardsPage /> },
       { path: 'build/flashcards/deck/:deckId', element: <FlashcardsPage /> },
+      { path: 'guides', element: <GuidesPage /> },
+      { path: 'guides/:guideId', element: <GuidesPage /> },
       { path: 'dev/charts', element: <ChartGalleryPage /> },
       { path: '*', element: <h1 className="text-2xl font-semibold">Page not found</h1> },
     ],

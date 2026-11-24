@@ -49,6 +49,25 @@ describe('pages', () => {
     expect(await screen.findByRole('button', { name: '✓ Marked as read' })).toBeInTheDocument()
   })
 
+  it('lists the guides and shows each with numbers from the exam guide', async () => {
+    await renderAt('/guides', 'Guides')
+    expect(screen.getByRole('link', { name: 'Cheat sheet' })).toHaveAttribute('href', '/guides/cheat-sheet')
+    cleanup()
+    await renderAt('/guides/exam-day', /Exam-day guide/)
+    expect(screen.getByRole('button', { name: 'Print' })).toBeInTheDocument()
+    // 70 minutes for 40 items is 105 s; with 5 unscored items, 93 s. 48% of 40 needs 20.
+    expect(screen.getByText(/is 1 min 45 s per item/)).toBeInTheDocument()
+    expect(screen.getByText(/it's 1 min 33 s/)).toBeInTheDocument()
+    expect(screen.getByText(/is 20 correct answers/)).toBeInTheDocument()
+    expect(screen.getByRole('cell', { name: '2. Exploring and Analyzing Data' }).closest('tr')).toHaveTextContent('37%15')
+    // The footer doesn't print, so the guide repeats the notice for paper.
+    expect(screen.getAllByText(/Not affiliated with or endorsed by Salesforce/)).toHaveLength(2)
+    cleanup()
+    await renderAt('/guides/cheat-sheet', /Cheat sheet/)
+    for (const link of screen.getAllByRole('link', { name: '2.2 Organize data and apply filters' })) expect(link).toHaveAttribute('href', '/learn/2.2')
+    expect(screen.getByRole('cell', { name: 'Highlight table' })).toBeInTheDocument()
+  })
+
   it('shows the non-affiliation footer and a not-found page', async () => {
     await renderAt('/nope', 'Page not found')
     expect(screen.getByText(/Not affiliated with or endorsed by Salesforce/)).toBeInTheDocument()
