@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { isCompleteFilter } from '../engine/edit'
 import { fieldOf, type SourceRef } from '../engine/model'
 import { AGG_LABEL } from '../engine/pills'
-import type { Member } from '../engine/runtime'
 import { AGGREGATIONS, type Aggregation, type DateLevel, type Filter } from '../engine/spec'
+import { sheetOf, useMembers } from './members'
 
 /** Long member lists (Title, Subscriber ID) show this many until the search narrows them. */
 const SHOWN = 200
@@ -157,21 +157,8 @@ type MemberFilter = Extract<Filter, { kind: 'values' | 'datePart' }>
 /** Checkboxes for the members of a field or date part, loaded from the data. */
 function MemberPicker({ source, draft, onChange }: { source: SourceRef; draft: MemberFilter; onChange: (f: MemberFilter) => void }) {
   const level = draft.kind === 'datePart' ? draft.level : undefined
-  const loadKey = JSON.stringify([source, draft.field, level ?? ''])
-  const [loaded, setLoaded] = useState<{ key: string; members: Member[] }>()
   const [search, setSearch] = useState('')
-  const members = loaded?.key === loadKey ? loaded.members : undefined
-
-  useEffect(() => {
-    let cancelled = false
-    const pill = level ? { field: draft.field, date: { level, mode: 'part' as const } } : { field: draft.field }
-    import('../engine/runtime')
-      .then((m) => m.membersOf(source, pill))
-      .then((list) => !cancelled && setLoaded({ key: loadKey, members: list }))
-    return () => {
-      cancelled = true
-    }
-  }, [loadKey, source, draft.field, level])
+  const members = useMembers(sheetOf(source), level ? { field: draft.field, date: { level, mode: 'part' } } : { field: draft.field })
 
   if (!members) return <p className="text-slate-500">Loading the members…</p>
   const selected = new Set<string | number>(draft.values)

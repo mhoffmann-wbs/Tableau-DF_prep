@@ -12,8 +12,10 @@ import { type DateLevel, type Filter, type Pill, type VizSpec, pillsOf } from '.
 
 export interface Column extends ResolvedPill {
   id: string
-  /** Discrete columns: every member in display order. */
+  /** Discrete columns: every member in display order, aliased. */
   order?: string[]
+  /** Set when the field has aliases: the underlying members, in the same order. */
+  raw?: string[]
 }
 
 export interface QueryResult {
@@ -211,7 +213,8 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     const seen = new Map<Value, number | string>()
     for (const o of out) seen.set(o.members[i]!.value, o.members[i]!.sortKey)
     let order = [...seen.keys()].sort((a, b) => compareKeys(seen.get(a)!, seen.get(b)!))
-    const sort = d.pill.sort
+    // A pill's own sort wins over the field's default sort.
+    const sort = d.pill.sort ?? (d.date ? undefined : d.field.sort)
     if (sort?.field) {
       const fieldAgg = resolvePill(spec, { field: sort.field })
       const by = resolvePill(spec, { field: sort.field, ...(fieldAgg.agg !== 'agg' && { agg: sort.agg }) } as Pill)
@@ -231,6 +234,12 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     d.order = order as string[]
     rank.set(d, new Map(order.map((m, j) => [m, j])))
   }
+  // Aliases change only the labels; filters and sorts work on the underlying members.
+  const aliased = dims.filter((d) => !d.continuous && !d.date && d.field.aliases)
+  for (const d of aliased) {
+    d.raw = d.order
+    d.order = d.order!.map((m) => d.field.aliases![m] ?? m)
+  }
   out = out.sort((a, b) => {
     for (const [i, d] of dims.entries()) {
       const r = rank.get(d)
@@ -239,7 +248,11 @@ export function query(spec: VizSpec, data: Dataset): QueryResult {
     }
     return 0
   })
-  return { columns, rows: out.map((o) => o.row) }
+  const alias = (row: Row) => {
+    for (const d of aliased) row[d.id] = d.field.aliases![row[d.id] as string] ?? row[d.id]!
+    return row
+  }
+  return { columns, rows: out.map((o) => (aliased.length ? alias(o.row) : o.row)) }
 }
 
 /** The column a pill produced, for reading values in tests and checkpoints. */

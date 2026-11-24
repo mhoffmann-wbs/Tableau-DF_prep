@@ -24,14 +24,18 @@ export interface Member {
   value: string | number
 }
 
-/** The members a discrete pill shows, in display order. */
+/**
+ * The members a discrete pill shows, in display order: labels with aliases,
+ * values as filters and manual sorts store them (underlying members).
+ */
 export async function membersOf(ref: SourceRef, pill: Pill): Promise<Member[]> {
-  const sheet = typeof ref === 'string' ? { source: ref } : ref
+  const sheet = typeof ref === 'string' ? { source: ref } : { source: ref.source, calcs: ref.calcs, fields: ref.fields }
   const result = query(vizSpecSchema.parse({ ...sheet, rows: [pill] }), await loadDataset())
   const level = pill.date?.mode === 'part' ? pill.date.level : undefined
-  return (result.columns[0]?.order ?? [])
-    .filter((m) => !(level && m === 'Null'))
-    .map((m) => ({ label: m, value: level ? partFromLabel(m, level) : m }))
+  const column = result.columns[0]
+  return (column?.order ?? [])
+    .map((m, i) => ({ label: m, value: level ? partFromLabel(m, level) : (column!.raw?.[i] ?? m) }))
+    .filter((m) => !(level && m.label === 'Null'))
 }
 
 /** Runs a spec over the dataset, for components that read numbers rather than draw. */

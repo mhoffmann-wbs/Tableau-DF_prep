@@ -6,7 +6,9 @@ import {
   SHELF_LABEL,
   type ShelfId,
   defaultFilter,
+  editField,
   emptySpec,
+  fieldEdit,
   isChannel,
   movePill,
   pillAt,
@@ -21,20 +23,28 @@ import {
   setMarkType,
   usesField,
 } from '../engine/edit'
-import { type Field, fieldsOf, SOURCE_INFO } from '../engine/model'
-import { AGG_LABEL, resolvePill } from '../engine/pills'
+import { type Field, fieldsOf, isEditable, SOURCE_INFO, TYPE_CHANGES } from '../engine/model'
+import { AGG_LABEL, EngineError, resolvePill } from '../engine/pills'
 import { automaticMark } from '../engine/render'
-import { type Calc, MARK_TYPES, type Filter, type MarkType, SOURCES, type SourceId, type VizSpec, pillsOf } from '../engine/spec'
+import { type Aggregation, type Calc, type FieldEdit, MARK_TYPES, type Filter, type GeoRole, type MarkType, SOURCES, type SourceId, type VizSpec, pillsOf } from '../engine/spec'
 import { Viz } from '../engine/Viz'
 import { type Dragged, startDrag, useDropTarget } from './dnd'
 import { FilterEditor } from './FilterEditor'
 import { MenuButton, MenuHeading, MenuItem } from './Menu'
 import { saveCalc, useProgress } from '../progress/store'
 import { CalcEditor, calcStatus } from './CalcEditor'
-import { ShelfPill } from './ShelfPill'
+import { AliasEditor, CommentEditor, NumberFormatEditor, RenameEditor } from './FieldEditors'
+import { AGG_NAME, ShelfPill } from './ShelfPill'
 import { SortEditor } from './SortEditor'
 
-type Editor = { kind: 'filter'; index: number; filter: Filter } | { kind: 'sort'; at: PillAt } | { kind: 'calc'; index?: number }
+/** Data pane field dialogs, for a field named by its data source name. */
+type FieldDialog = 'rename' | 'aliases' | 'comment' | 'format' | 'sort'
+
+type Editor =
+  | { kind: 'filter'; index: number; filter: Filter }
+  | { kind: 'sort'; at: PillAt }
+  | { kind: 'calc'; index?: number }
+  | { kind: 'field'; dialog: FieldDialog; original: string; error?: string }
 
 const MARK_NAME: Record<MarkType, string> = {
   automatic: 'Automatic',
@@ -72,10 +82,28 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
     if (filter) setEditor({ kind: 'filter', index: spec.filters.length, filter })
   }
   const pillProps = { spec, onChange: edit, onEditSort: (at: PillAt) => setEditor({ kind: 'sort', at }) }
+  /** Applies a Data pane change; a refused one (a taken name) keeps its dialog open with the reason. */
+  const changeField = (original: string, patch: Partial<Omit<FieldEdit, 'field'>>) => {
+    try {
+      edit(editField(spec, original, patch))
+    } catch (e) {
+      if (!(e instanceof EngineError)) throw e
+      setEditor((cur) => (cur?.kind === 'field' ? { ...cur, error: e.message } : cur))
+    }
+  }
+  const fieldEditor = editor?.kind === 'field' ? fieldsOf(spec).find((f) => (f.original?.name ?? f.name) === editor.original) : undefined
 
   return (
     <div className="grid grid-cols-[minmax(0,1fr)] gap-4 lg:grid-cols-[14rem_minmax(0,1fr)]">
-      <DataPane spec={spec} onChange={edit} lockSource={lockSource} onAddFilter={addFilter} onEditCalc={(index) => setEditor({ kind: 'calc', index })} />
+      <DataPane
+        spec={spec}
+        onChange={edit}
+        lockSource={lockSource}
+        onAddFilter={addFilter}
+        onEditCalc={(index) => setEditor({ kind: 'calc', index })}
+        onFieldChange={changeField}
+        onFieldDialog={(original, dialog) => setEditor({ kind: 'field', original, dialog })}
+      />
       <div className="min-w-0 space-y-3">
         <div className="grid gap-3 sm:grid-cols-2">
           <FiltersCard spec={spec} onDropField={addFilter} onEdit={(index) => setEditor({ kind: 'filter', index, filter: spec.filters[index]! })} />
@@ -112,9 +140,16 @@ export function Sandbox({ spec, onChange, lockSource = false }: { spec: VizSpec;
           <SortEditor
             source={spec}
             pill={pillAt(spec, editor.at)!}
-            onApply={(p) => edit(replacePill(spec, editor.at, p))}
+            initial={pillAt(spec, editor.at)!.sort}
+            onApply={(sort) => {
+              const { sort: _old, ...pill } = pillAt(spec, editor.at)!
+              edit(replacePill(spec, editor.at, sort ? { ...pill, sort } : pill))
+            }}
             onCancel={() => setEditor(undefined)}
           />
+        )}
+        {editor?.kind === 'field' && fieldEditor && (
+          <FieldDialogView key={`${editor.original}|${editor.dialog}`} spec={spec} field={fieldEditor} editor={editor} onApply={(patch) => changeField(editor.original, patch)} onCancel={() => setEditor(undefined)} />
         )}
         {pillsOf(spec).length === 0 ? (
           <p className={`${card} p-6 text-center text-slate-500`}>Drag fields from the Data pane to Columns and Rows, or open a field’s menu to add it.</p>
@@ -134,6 +169,8 @@ function DataPane({
   lockSource,
   onAddFilter,
   onEditCalc,
+  onFieldChange,
+  onFieldDialog,
 }: {
   spec: VizSpec
   onChange: (s: VizSpec) => void
@@ -141,7 +178,7 @@ function DataPane({
   onAddFilter: (field: string) => void
   /** Opens the calculation editor: a calc's index, or undefined for a new one. */
   onEditCalc: (index?: number) => void
-}) {
+} & FieldActions) {
   const saved = useProgress().calcs.filter((c) => c.source === spec.source && !spec.calcs.some((x) => x.name === c.name))
   // Dropping a pill back on the Data pane removes it, as in Tableau.
   const drop = useDropTarget((d) => d.kind === 'pill' && onChange(removePill(spec, d.at)), (k) => k === 'pill')
@@ -154,7 +191,7 @@ function DataPane({
           .filter((f) => f.role === role)
           .map((f) => (
             <li key={f.name}>
-              <FieldButton field={f} spec={spec} onChange={onChange} onAddFilter={onAddFilter} onEditCalc={onEditCalc} />
+              <FieldButton field={f} spec={spec} onChange={onChange} onAddFilter={onAddFilter} onEditCalc={onEditCalc} onFieldChange={onFieldChange} onFieldDialog={onFieldDialog} />
             </li>
           ))}
       </ul>
@@ -209,19 +246,38 @@ function DataPane({
   )
 }
 
+/** Data pane changes to a data source field, by its data source name. */
+interface FieldActions {
+  onFieldChange: (original: string, patch: Partial<Omit<FieldEdit, 'field'>>) => void
+  onFieldDialog: (original: string, dialog: FieldDialog) => void
+}
+
+const TYPE_NAME: Record<Field['type'], string> = { string: 'String', number: 'Number', date: 'Date', datetime: 'Date & Time', boolean: 'Boolean' }
+const GEO_NAME: Record<GeoRole, string> = {
+  country: 'Country/Region',
+  state: 'State/Province',
+  city: 'City',
+  postal: 'ZIP Code/Postcode',
+  latitude: 'Latitude',
+  longitude: 'Longitude',
+}
+const DEFAULT_AGGS: Aggregation[] = ['sum', 'avg', 'median', 'count', 'countd', 'min', 'max']
+
 function FieldButton({
   field,
   spec,
   onChange,
   onAddFilter,
   onEditCalc,
+  onFieldChange,
+  onFieldDialog,
 }: {
   field: Field
   spec: VizSpec
   onChange: (s: VizSpec) => void
   onAddFilter: (field: string) => void
   onEditCalc: (index?: number) => void
-}) {
+} & FieldActions) {
   const calcIndex = spec.calcs.findIndex((c) => c.name === field.name)
   const broken = field.calc?.error
   const targets: ShelfId[] = ['columns', 'rows', ...CHANNELS, 'detail', 'tooltip']
@@ -230,7 +286,7 @@ function FieldButton({
       menuLabel={`Add ${field.name}`}
       draggable
       onDragStart={(e) => startDrag(e, { kind: 'field', field: field.name })}
-      title={broken ? broken.message : field.calc?.formula}
+      title={broken ? broken.message : (field.calc?.formula ?? field.comment)}
       className={`flex w-full cursor-grab items-center gap-2 rounded px-1 py-0.5 text-left text-sm hover:bg-slate-100 ${field.role === 'dimension' ? 'text-discrete' : 'text-continuous'}`}
       label={
         <>
@@ -265,6 +321,7 @@ function FieldButton({
               Add to Filters…
             </MenuItem>
           )}
+          {isEditable(field, spec.source) && <FieldMenu field={field} spec={spec} close={close} onFieldChange={onFieldChange} onFieldDialog={onFieldDialog} />}
           {calcIndex >= 0 && (
             <>
               <MenuHeading>Calculation</MenuHeading>
@@ -290,6 +347,102 @@ function FieldButton({
       )}
     </MenuButton>
   )
+}
+
+/** The field actions of lesson 1.3 and 4.2: rename, aliases, data type, geographic role, conversions and Default Properties. */
+function FieldMenu({ field, spec, close, onFieldChange, onFieldDialog }: { field: Field; spec: VizSpec; close: () => void } & FieldActions) {
+  const original = field.original?.name ?? field.name
+  const edit = fieldEdit(spec, original)
+  const act = (fn: () => void) => () => {
+    close()
+    fn()
+  }
+  const change = (patch: Partial<Omit<FieldEdit, 'field'>>) => act(() => onFieldChange(original, patch))
+  const dialog = (d: FieldDialog) => act(() => onFieldDialog(original, d))
+  const isDate = field.type === 'date' || field.type === 'datetime'
+  const types = [field.original?.type ?? field.type, ...TYPE_CHANGES[field.original?.type ?? field.type]]
+  const roles: GeoRole[] = field.type === 'string' && field.role === 'dimension' ? ['country', 'state', 'city', 'postal'] : field.type === 'number' ? ['latitude', 'longitude'] : []
+  // Convert to Discrete/Continuous: numbers and dates only; the default is continuous for measures.
+  const natural = field.role === 'measure' ? 'continuous' : 'discrete'
+  const current = field.as ?? natural
+  const toggle = current === 'discrete' ? 'continuous' : 'discrete'
+  return (
+    <>
+      <MenuHeading>Field</MenuHeading>
+      <MenuItem onSelect={dialog('rename')}>Rename…</MenuItem>
+      {field.role === 'dimension' && !isDate && field.as !== 'continuous' && <MenuItem onSelect={dialog('aliases')}>Aliases…</MenuItem>}
+      {field.role === 'measure' && <MenuItem onSelect={change({ role: 'dimension', as: undefined })}>Convert to Dimension</MenuItem>}
+      {edit?.role === 'dimension' && <MenuItem onSelect={change({ role: undefined, as: undefined, aliases: undefined, sort: undefined })}>Convert to Measure</MenuItem>}
+      {(field.type === 'number' || isDate) && <MenuItem onSelect={change({ as: toggle === natural ? undefined : toggle, aliases: undefined })}>Convert to {toggle === 'continuous' ? 'Continuous' : 'Discrete'}</MenuItem>}
+      {field.role === 'dimension' && types.length > 1 && (
+        <>
+          <MenuHeading>Change Data Type</MenuHeading>
+          {types.map((t) => (
+            <MenuItem key={t} checked={field.type === t} onSelect={change({ type: t === (field.original?.type ?? field.type) ? undefined : t })}>
+              {TYPE_NAME[t]}
+            </MenuItem>
+          ))}
+        </>
+      )}
+      {roles.length > 0 && (
+        <>
+          <MenuHeading>Geographic Role</MenuHeading>
+          {roles.map((g) => (
+            <MenuItem key={g} checked={field.geo === g} onSelect={change({ geo: g })}>
+              {GEO_NAME[g]}
+            </MenuItem>
+          ))}
+        </>
+      )}
+      <MenuHeading>Default Properties</MenuHeading>
+      <MenuItem onSelect={dialog('comment')}>Comment…</MenuItem>
+      {field.type === 'number' && <MenuItem onSelect={dialog('format')}>Number Format…</MenuItem>}
+      {field.role === 'dimension' && !isDate && <MenuItem onSelect={dialog('sort')}>Sort…</MenuItem>}
+      {field.role === 'measure' &&
+        DEFAULT_AGGS.map((a) => (
+          <MenuItem key={a} checked={field.agg === a} onSelect={change({ agg: a })}>
+            Aggregation: {AGG_NAME[a]}
+          </MenuItem>
+        ))}
+      {edit && (
+        <>
+          <MenuHeading>Sandbox</MenuHeading>
+          <MenuItem onSelect={act(() => onFieldChange(original, Object.fromEntries(Object.keys(edit).filter((k) => k !== 'field').map((k) => [k, undefined]))))}>
+            Undo all changes to this field
+          </MenuItem>
+        </>
+      )}
+    </>
+  )
+}
+
+/** The open Data pane dialog for a field. */
+function FieldDialogView({
+  spec,
+  field,
+  editor,
+  onApply,
+  onCancel,
+}: {
+  spec: VizSpec
+  field: Field
+  editor: Extract<Editor, { kind: 'field' }>
+  onApply: (patch: Partial<Omit<FieldEdit, 'field'>>) => void
+  onCancel: () => void
+}) {
+  const props = { field, onApply, onCancel, error: editor.error }
+  switch (editor.dialog) {
+    case 'rename':
+      return <RenameEditor {...props} />
+    case 'aliases':
+      return <AliasEditor {...props} source={spec} />
+    case 'comment':
+      return <CommentEditor {...props} />
+    case 'format':
+      return <NumberFormatEditor {...props} />
+    case 'sort':
+      return <SortEditor source={spec} pill={{ field: field.name }} scope="default" initial={field.sort} onApply={(sort) => onApply({ sort })} onCancel={onCancel} />
+  }
 }
 
 function filterLabel(f: Filter): string {
@@ -424,7 +577,7 @@ function CalcDialog({ spec, index, onApply, onCancel }: { spec: VizSpec; index?:
   const [name, setName] = useState(existing?.name ?? nextCalcName(spec))
   const [formula, setFormula] = useState(existing?.formula ?? '')
   // Earlier calcs can be used; the one being edited and later ones can't.
-  const sheet = { source: spec.source, calcs: spec.calcs.slice(0, index ?? spec.calcs.length) }
+  const sheet = { source: spec.source, fields: spec.fields, calcs: spec.calcs.slice(0, index ?? spec.calcs.length) }
   const valid = name.trim() !== '' && formula.trim() !== '' && 'field' in calcStatus(sheet, name, formula)
   return (
     <section aria-label={existing ? `Edit ${existing.name}` : 'Create calculated field'} className="space-y-3 rounded-lg border border-brand/40 bg-white p-3 text-sm">

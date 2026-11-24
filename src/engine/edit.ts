@@ -1,9 +1,21 @@
 // Spec edits the sandbox makes (PLAN.md §7a): dropping fields on shelves,
 // moving and changing pills, filters and the mark type. Pure functions over a
 // VizSpec, no data, so they are tested without the dataset or a browser.
-import { fieldOf, type SourceRef } from './model.ts'
-import { resolvePill } from './pills.ts'
-import { type Aggregation, type Calc, type DateLevel, type Filter, type MarkType, type Pill, type SourceId, type VizSpec, pillsOf, vizSpecSchema } from './spec.ts'
+import { fieldOf, fieldsOf, type SourceRef } from './model.ts'
+import { EngineError, resolvePill } from './pills.ts'
+import {
+  type Aggregation,
+  type Calc,
+  type DateLevel,
+  type FieldEdit,
+  type Filter,
+  type MarkType,
+  type Pill,
+  type SourceId,
+  type VizSpec,
+  pillsOf,
+  vizSpecSchema,
+} from './spec.ts'
 
 /** Shelves that hold a list of pills. */
 export const LIST_SHELVES = ['columns', 'rows', 'detail', 'tooltip'] as const
@@ -182,18 +194,28 @@ function mapPills(spec: VizSpec, fn: (p: Pill) => Pill | undefined): VizSpec {
 
 const fieldRef = (name: string) => `[${name.replace(/]/g, ']]')}]`
 
+/** Renames a field wherever the sheet uses it: pills, filters, sorts (default ones too) and formulas, as Tableau does. */
+function renameRefs(spec: VizSpec, old: string, name: string): VizSpec {
+  if (old === name) return spec
+  const rename = (n: string) => (n === old ? name : n)
+  const renamed = mapPills(spec, (p) => ({ ...p, field: rename(p.field), ...(p.sort && { sort: { ...p.sort, ...(p.sort.field && { field: rename(p.sort.field) }) } }) }))
+  return {
+    ...renamed,
+    calcs: spec.calcs.map((c) => ({ ...c, formula: c.formula.split(fieldRef(old)).join(fieldRef(name)) })),
+    fields: spec.fields.map((e) => (e.sort?.field === old ? { ...e, sort: { ...e.sort, field: name } } : e)),
+    filters: spec.filters.map((f) => ({ ...f, field: rename(f.field) })),
+  }
+}
+
 /**
  * Adds a calc (at `index` undefined) or replaces one. Renaming a calc renames
- * the pills, filters, sorts and formulas that use it, as Tableau does.
+ * the pills, filters, sorts and formulas that use it.
  */
 export function setCalc(spec: VizSpec, index: number | undefined, calc: Calc): VizSpec {
   if (index === undefined) return { ...spec, calcs: [...spec.calcs, calc] }
   const old = spec.calcs[index]!.name
-  const calcs = spec.calcs.map((c, i) => (i === index ? calc : { ...c, formula: old === calc.name ? c.formula : c.formula.split(fieldRef(old)).join(fieldRef(calc.name)) }))
-  if (old === calc.name) return { ...spec, calcs }
-  const rename = (name: string) => (name === old ? calc.name : name)
-  const renamed = mapPills(spec, (p) => ({ ...p, field: rename(p.field), ...(p.sort && { sort: { ...p.sort, ...(p.sort.field && { field: rename(p.sort.field) }) } }) }))
-  return { ...renamed, calcs, filters: spec.filters.map((f) => ({ ...f, field: rename(f.field) })) }
+  const renamed = renameRefs(spec, old, calc.name)
+  return { ...renamed, calcs: renamed.calcs.map((c, i) => (i === index ? calc : c)) }
 }
 
 /** Removes a calc with the pills and filters on it; sorts by it go back to the default. */
@@ -205,6 +227,52 @@ export function removeCalc(spec: VizSpec, name: string): VizSpec {
     return rest
   })
   return { ...cleared, calcs: spec.calcs.filter((c) => c.name !== name), filters: spec.filters.filter((f) => f.field !== name) }
+}
+
+// ---- field edits (Data pane) ----
+
+/** The sheet's edit of a data source field, by its data source name. */
+export function fieldEdit(spec: VizSpec, original: string): FieldEdit | undefined {
+  return spec.fields.find((e) => e.field === original)
+}
+
+const currentName = (spec: VizSpec, original: string) => fieldEdit(spec, original)?.name ?? original
+
+/**
+ * Changes a data source field. Keys set to `undefined` go back to the data
+ * source's setting; a rename follows through the sheet. A new data type
+ * clears the field's filters and its pills' date levels and sorts, which no
+ * longer fit.
+ */
+export function editField(spec: VizSpec, original: string, patch: Partial<Omit<FieldEdit, 'field'>>): VizSpec {
+  const before = currentName(spec, original)
+  const merged: Record<string, unknown> = { ...fieldEdit(spec, original), ...patch, field: original }
+  for (const k of Object.keys(merged)) if (merged[k] === undefined) delete merged[k]
+  if (merged.name === original) delete merged.name
+  const after = (merged.name as string | undefined) ?? original
+  if (after !== before && fieldsOf(spec).some((f) => f.name === after))
+    throw new EngineError(`There is already a field called ${after}. Choose another name.`)
+  const edit = merged as FieldEdit
+  const empty = Object.keys(edit).length === 1
+  let next: VizSpec = { ...spec, fields: empty ? spec.fields.filter((e) => e.field !== original) : [...spec.fields.filter((e) => e.field !== original), edit] }
+  next = renameRefs(next, before, after)
+  if ('type' in patch) {
+    next = mapPills(next, (p) => {
+      if (p.field !== after) return p
+      const { date: _d, sort: _s, ...rest } = p
+      return rest
+    })
+    next = { ...next, filters: next.filters.filter((f) => f.field !== after) }
+  }
+  return next
+}
+
+/** Undoes every change to a field (a sandbox shortcut, not a Tableau command). */
+export function resetField(spec: VizSpec, original: string): VizSpec {
+  const edit = fieldEdit(spec, original)
+  if (!edit) return spec
+  const keys = Object.fromEntries(Object.keys(edit).filter((k) => k !== 'field').map((k) => [k, undefined]))
+  return editField(spec, original, keys)
 }
 
 /** Whether the view uses a field: on a shelf, in a filter or in a sort. */
@@ -219,6 +287,7 @@ export function compactSpec(spec: VizSpec): Record<string, unknown> {
   const out: Record<string, unknown> = {}
   if (spec.source !== 'sessions') out.source = spec.source
   if (spec.calcs.length) out.calcs = spec.calcs
+  if (spec.fields.length) out.fields = spec.fields
   if (spec.columns.length) out.columns = spec.columns
   if (spec.rows.length) out.rows = spec.rows
   const marks: Record<string, unknown> = {}

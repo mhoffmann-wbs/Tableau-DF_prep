@@ -32,6 +32,12 @@ async function addField(field: string | RegExp, item: string) {
   await user.click(screen.getByRole('menuitem', { name: item }))
 }
 
+/** Opens a field in the Data pane and picks a checkable menu item (data type, aggregation…). */
+async function setField(field: string | RegExp, item: string) {
+  await user.click(within(screen.getByRole('complementary', { name: 'Data pane' })).getByRole('button', { name: field }))
+  await user.click(screen.getByRole('menuitemradio', { name: item }))
+}
+
 /** Opens the pill on a shelf and picks a menu item. */
 async function pillMenu(shelfName: string, pill: RegExp, item: string) {
   await user.click(within(shelf(shelfName)).getByRole('button', { name: pill }))
@@ -98,6 +104,48 @@ describe('sandbox', () => {
       rows: [{ field: 'Genre', sort: { order: 'desc', field: 'Minutes Watched', agg: 'sum' } }],
       filters: [{ kind: 'values', field: 'Device', values: ['TV'] }],
     })
+  })
+
+  it('changes fields in the Data pane: rename, aliases, type, aggregation, manual sort', async () => {
+    const router = await renderAt('/build/sandbox', 'Viz builder sandbox')
+    const hash = () => parseSpecHash(router.state.location.hash)
+    await addField('Device', 'Add to Rows')
+
+    await addField('Device', 'Rename…')
+    const rename = screen.getByRole('region', { name: 'Rename Device' })
+    await user.clear(within(rename).getByRole('textbox', { name: 'Name' }))
+    await user.type(within(rename).getByRole('textbox', { name: 'Name' }), 'Genre')
+    await user.click(within(rename).getByRole('button', { name: 'OK' }))
+    expect(within(rename).getByRole('alert')).toHaveTextContent('already a field called Genre')
+    await user.clear(within(rename).getByRole('textbox', { name: 'Name' }))
+    await user.type(within(rename).getByRole('textbox', { name: 'Name' }), 'Screen{Enter}')
+    expect(shelf('Rows')).toHaveTextContent('Screen')
+    expect(hash()).toMatchObject({ rows: [{ field: 'Screen' }], fields: [{ field: 'Device', name: 'Screen' }] })
+
+    await addField('Screen', 'Aliases…')
+    const aliases = screen.getByRole('region', { name: 'Edit Aliases [Screen]' })
+    const tv = await within(aliases).findByRole('textbox', { name: 'Alias for TV' })
+    await user.clear(tv)
+    await user.type(tv, 'Television')
+    await user.click(within(aliases).getByRole('button', { name: 'OK' }))
+    expect(hash()).toMatchObject({ fields: [{ field: 'Device', name: 'Screen', aliases: { TV: 'Television' } }] })
+
+    await pillMenu('Rows', /^Screen/, 'Sort…')
+    const sort = screen.getByRole('region', { name: 'Sort Screen' })
+    await user.selectOptions(within(sort).getByRole('combobox', { name: 'Sort by' }), 'manual')
+    await user.click(await within(sort).findByRole('button', { name: 'Move TV up' }))
+    await user.click(within(sort).getByRole('button', { name: 'Apply sort' }))
+    expect(hash()).toMatchObject({ rows: [{ field: 'Screen', sort: { manual: ['Console', 'TV', 'Mobile', 'Null'] } }] })
+
+    await setField('Minutes Watched', 'Aggregation: Average')
+    await addField('Minutes Watched', 'Add to Columns')
+    expect(shelf('Columns')).toHaveTextContent('AVG(Minutes Watched)')
+
+    await setField('Release Year', 'String')
+    expect(hash()).toMatchObject({ fields: [{ field: 'Device' }, { field: 'Minutes Watched', agg: 'avg' }, { field: 'Release Year', type: 'string' }] })
+    await addField('Release Year', 'Undo all changes to this field')
+    expect(hash()).toMatchObject({ fields: [{ field: 'Device' }, { field: 'Minutes Watched' }] })
+    expect(router.state.location.hash).not.toContain('Release')
   })
 
   it('opens a preset from the URL', async () => {

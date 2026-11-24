@@ -6,11 +6,10 @@
 // The metadata is the data source as it looks *after* the preparation lessons:
 // Postal Code is a string with a geographic role and Release Year a discrete
 // dimension. The raw CSVs (what Tableau shows first) live in public/data/.
-import { type CalcType, CalcError, type CompiledCalc, compileFormula, type FieldInfo } from './calc/index.ts'
-import type { Aggregation, Calc, SourceId } from './spec.ts'
+import { type CalcType, CalcError, type CompiledCalc, compileFormula, type FieldInfo, formatDate } from './calc/index.ts'
+import type { Aggregation, Calc, FieldEdit, FieldType, GeoRole, NumberFormat, Sort, SourceId } from './spec.ts'
 
-export type FieldType = 'string' | 'number' | 'date' | 'datetime' | 'boolean'
-export type GeoRole = 'country' | 'state' | 'city' | 'postal' | 'latitude' | 'longitude'
+export type { FieldType, GeoRole } from './spec.ts'
 
 export interface Field {
   name: string
@@ -23,6 +22,15 @@ export interface Field {
   generated?: boolean
   /** A calculated field: compiled, or the error that stops it. */
   calc?: { formula: string; compiled?: CompiledCalc; error?: CalcError }
+  /** Set when the sheet changed the field in the Data pane: its data source name and type. */
+  original?: { name: string; type: FieldType }
+  /** Default discrete or continuous, from Convert to Discrete/Continuous. */
+  as?: 'discrete' | 'continuous'
+  aliases?: Record<string, string>
+  format?: NumberFormat
+  /** Default sort of a dimension's members. */
+  sort?: Sort
+  comment?: string
 }
 
 /** A cell: dates and datetimes are epoch milliseconds (UTC). */
@@ -104,8 +112,74 @@ export const SOURCE_INFO: Record<SourceId, { label: string; countField: string; 
   titles: { label: 'Titles', countField: 'Titles (Count)', fields: sourceFields(['titles.csv'], 'Titles (Count)') },
 }
 
-/** A data source plus the sheet's calculated fields: a spec, or a bare source with none. */
-export type SourceRef = SourceId | { source: SourceId; calcs?: Calc[] }
+/** A data source plus the sheet's field edits and calculated fields: a spec, or a bare source with none. */
+export type SourceRef = SourceId | { source: SourceId; calcs?: Calc[]; fields?: FieldEdit[] }
+
+// ---- field edits (Data pane) ----
+
+/**
+ * The data types each type can be changed to. The help's rules for values
+ * that don't fit ("Text is treated as Null" in a number or date field) give
+ * the results; types whose conversion the help leaves open (Boolean, number
+ * to date) aren't offered.
+ */
+export const TYPE_CHANGES: Record<FieldType, FieldType[]> = {
+  string: ['number', 'date', 'datetime'],
+  number: ['string'],
+  date: ['string', 'datetime'],
+  datetime: ['string', 'date'],
+  boolean: [],
+}
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2})?$/
+
+/** A value read as another data type; what can't be read becomes Null. */
+export function convertValue(v: Value, from: FieldType, to: FieldType): Value {
+  if (v === null || from === to) return v
+  if (to === 'string') return typeof v === 'number' && (from === 'date' || from === 'datetime') ? formatDate(v, from === 'datetime') : String(v)
+  if (from === 'string') {
+    const text = String(v).trim()
+    if (to === 'number') return text !== '' && Number.isFinite(Number(text)) ? Number(text) : null
+    // ISO text is the one date form the sandbox reads; other text is Null.
+    if (ISO_DATE.test(text)) return Date.parse(`${text}T00:00:00Z`)
+    if (to === 'datetime' && ISO_DATETIME.test(text)) return Date.parse(`${text.replace(' ', 'T')}Z`)
+    return null
+  }
+  if (from === 'datetime' && to === 'date') return Math.floor((v as number) / 86_400_000) * 86_400_000
+  return v // date → datetime: midnight
+}
+
+/** Which Data pane edits a field takes: base fields only, not calcs, counts or generated coordinates. */
+export function isEditable(field: Field, source: SourceId): boolean {
+  return !field.calc && !field.generated && field.name !== SOURCE_INFO[source].countField
+}
+
+function applyEdit(field: Field, edit: FieldEdit | undefined): Field {
+  if (!edit) return field
+  const type = edit.type ?? field.type
+  const role = edit.role ?? field.role
+  let geo = edit.geo === null ? undefined : (edit.geo ?? field.geo)
+  // Latitude and Longitude roles are for numbers only.
+  if ((geo === 'latitude' || geo === 'longitude') && type !== 'number') geo = undefined
+  const out: Field = { name: edit.name ?? field.name, type, role, original: { name: field.name, type: field.type } }
+  if (role === 'measure') out.agg = edit.agg ?? field.agg ?? (type === 'number' ? 'sum' : 'count')
+  if (geo) out.geo = geo
+  if (edit.as) out.as = edit.as
+  if (edit.aliases && Object.keys(edit.aliases).length) out.aliases = edit.aliases
+  if (edit.format) out.format = edit.format
+  if (edit.sort) out.sort = edit.sort
+  if (edit.comment) out.comment = edit.comment
+  return out
+}
+
+/** The source's fields with the sheet's edits, before calcs. */
+function editedFields(source: SourceId, edits: FieldEdit[]): Field[] {
+  const base = SOURCE_INFO[source].fields
+  if (edits.length === 0) return base
+  const all = base.map((f) => (isEditable(f, source) ? applyEdit(f, edits.find((e) => e.field === f.name)) : f))
+  return [...all.filter((f) => f.role === 'dimension'), ...all.filter((f) => f.role === 'measure')]
+}
 
 const refSource = (ref: SourceRef): SourceId => (typeof ref === 'string' ? ref : ref.source)
 
@@ -132,8 +206,8 @@ function calcField(calc: Calc, compiled: CompiledCalc): Field {
  * fields and the calcs before it. A broken calc stays in the list with its
  * error, so the Data pane can show it and pills on it turn red.
  */
-export function calcFields(source: SourceId, calcs: Calc[]): Field[] {
-  const base = SOURCE_INFO[source].fields
+export function calcFields(source: SourceId, calcs: Calc[], edits: FieldEdit[] = []): Field[] {
+  const base = editedFields(source, edits)
   const out: Field[] = []
   for (const calc of calcs) {
     const lookup = (name: string): FieldInfo | string => {
@@ -142,7 +216,7 @@ export function calcFields(source: SourceId, calcs: Calc[]): Field[] {
         const later = calcs.some((c) => c.name === name)
         return later ? `[${name}] is defined after this calculation (or is this calculation), so it can’t be used here.` : `There is no field [${name}] in the ${SOURCE_INFO[source].label} data source.`
       }
-      const why = field.calc ? (field.calc.error ? `[${name}] has an error of its own; fix it first.` : undefined) : notInFormulas(field, source)
+      const why = field.calc ? (field.calc.error ? `[${name}] has an error of its own; fix it first.` : undefined) : notInFormulas(field.original ? { ...field, name: field.original.name } : field, source)
       if (why) return why
       return { type: field.calc?.compiled?.type ?? field.type, level: field.calc?.compiled?.aggregate ? 'agg' : 'row' }
     }
@@ -165,16 +239,17 @@ export function calcFields(source: SourceId, calcs: Calc[]): Field[] {
 // Compiling is cheap, but fieldOf runs for every pill on every render.
 const fieldCache = new Map<string, Field[]>()
 
-/** Every field of a source with the sheet's calcs, in Data pane order (dimensions, then measures). */
+/** Every field of a source with the sheet's edits and calcs, in Data pane order (dimensions, then measures). */
 export function fieldsOf(ref: SourceRef): Field[] {
   const source = refSource(ref)
   const calcs = typeof ref === 'string' ? [] : (ref.calcs ?? [])
-  if (calcs.length === 0) return SOURCE_INFO[source].fields
-  const key = JSON.stringify([source, calcs])
+  const edits = typeof ref === 'string' ? [] : (ref.fields ?? [])
+  if (calcs.length === 0 && edits.length === 0) return SOURCE_INFO[source].fields
+  const key = JSON.stringify([source, calcs, edits])
   let fields = fieldCache.get(key)
   if (!fields) {
     if (fieldCache.size > 100) fieldCache.clear()
-    const all = [...SOURCE_INFO[source].fields, ...calcFields(source, calcs)]
+    const all = [...editedFields(source, edits), ...calcFields(source, calcs, edits)]
     fields = [...all.filter((f) => f.role === 'dimension'), ...all.filter((f) => f.role === 'measure')]
     fieldCache.set(key, fields)
   }
@@ -185,10 +260,19 @@ export function fieldOf(ref: SourceRef, name: string): Field | undefined {
   return fieldsOf(ref).find((f) => f.name === name)
 }
 
-/** The compiled calcs of a sheet by name, for evaluating them. */
-export function calcsOf(ref: SourceRef): { calc(name: string): CompiledCalc | undefined } {
-  const byName = new Map(fieldsOf(ref).flatMap((f) => (f.calc?.compiled ? [[f.name, f.calc.compiled] as const] : [])))
-  return { calc: (name) => byName.get(name) }
+/** The compiled calcs of a sheet by name, for evaluating them, and a reader for renamed or retyped fields. */
+export function calcsOf(ref: SourceRef): { calc(name: string): CompiledCalc | undefined; read(row: Row, name: string): Value } {
+  const fields = fieldsOf(ref)
+  const byName = new Map(fields.flatMap((f) => (f.calc?.compiled ? [[f.name, f.calc.compiled] as const] : [])))
+  const edited = new Map(fields.flatMap((f) => (f.original ? [[f.name, f] as const] : [])))
+  return {
+    calc: (name) => byName.get(name),
+    read: (row, name) => {
+      const f = edited.get(name)
+      if (!f) return row[name] ?? null
+      return convertValue(row[f.original!.name] ?? null, f.original!.type, f.type)
+    },
+  }
 }
 
 /** Parses RFC 4180 CSV (quoted fields, doubled quotes) into rows of strings. */

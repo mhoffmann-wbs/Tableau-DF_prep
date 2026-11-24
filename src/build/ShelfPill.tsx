@@ -18,7 +18,7 @@ import type { Aggregation, DateLevel, Pill, VizSpec } from '../engine/spec'
 import { startDrag, useDropTarget } from './dnd'
 import { MenuButton, MenuHeading, MenuItem } from './Menu'
 
-const AGG_NAME: Record<Aggregation, string> = {
+export const AGG_NAME: Record<Aggregation, string> = {
   sum: 'Sum',
   avg: 'Average',
   median: 'Median',

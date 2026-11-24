@@ -1,7 +1,7 @@
 // Value helpers shared by the query layer and the calc evaluator: UTC date
 // parts and truncations, member display strings and the aggregations.
 import type { Value } from './model.ts'
-import type { Aggregation, DateLevel } from './spec.ts'
+import type { Aggregation, DateLevel, NumberFormat } from './spec.ts'
 
 // ---- dates (UTC) ----
 
@@ -84,4 +84,23 @@ export function aggregate(values: Value[], agg: Aggregation): Value {
     case 'attr':
       return present.every((v) => v === present[0]) ? present[0]! : '*'
   }
+}
+
+// ---- number formats ----
+
+const UNIT_DIVISOR = { '': 1, K: 1e3, M: 1e6 } as const
+
+/** A number in a field's Default Properties > Number Format: 20,000 in thousands with no decimals is 20K. */
+export function formatNumber(v: number, f: NumberFormat): string {
+  const scaled = f.kind === 'percent' ? v * 100 : v / UNIT_DIVISOR[f.units]
+  const text = scaled.toLocaleString('en', { minimumFractionDigits: f.decimals, maximumFractionDigits: f.decimals, useGrouping: f.separators })
+  return `${f.prefix}${text}${f.kind === 'percent' ? '%' : f.units}${f.suffix}`
+}
+
+/** The same format as a Vega expression over `ref`, for axis labels. */
+export function formatExpr(f: NumberFormat, ref: string): string {
+  const scaled = f.kind === 'percent' ? `${ref} * 100` : f.units ? `${ref} / ${UNIT_DIVISOR[f.units]}` : ref
+  const specifier = `${f.separators ? ',' : ''}.${f.decimals}f`
+  const tail = (f.kind === 'percent' ? '%' : f.units) + f.suffix
+  return `${JSON.stringify(f.prefix)} + format(${scaled}, '${specifier}') + ${JSON.stringify(tail)}`
 }

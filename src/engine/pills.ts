@@ -46,12 +46,14 @@ export function resolvePill(ref: SourceRef, pill: Pill): ResolvedPill {
   if (agg && agg !== 'agg' && NUMERIC_ONLY.includes(agg) && field.type !== 'number')
     throw new EngineError(`${AGG_LABEL[agg]} needs a number, but ${field.name} is a ${field.type} field.`)
   if (pill.date && !isDate) throw new EngineError(`${field.name} is not a date, so it has no date parts or date values.`)
-  // A date dimension without a level starts as YEAR, the way Tableau drops one on a shelf.
-  const date = isDate && !agg ? (pill.date ?? { level: 'year' as const, mode: 'part' as const }) : undefined
+  // A date dimension without a level starts as YEAR, the way Tableau drops one on a shelf:
+  // a date part, or a date value once the field is converted to continuous.
+  const date = isDate && !agg ? (pill.date ?? { level: 'year' as const, mode: field.as === 'continuous' ? ('value' as const) : ('part' as const) }) : undefined
 
   let continuous: boolean
   if (pill.as) continuous = pill.as === 'continuous'
   else if (date) continuous = date.mode === 'value'
+  else if (field.as) continuous = field.as === 'continuous'
   else if (agg) continuous = field.type === 'number' || agg === 'count' || agg === 'countd'
   else continuous = false
 

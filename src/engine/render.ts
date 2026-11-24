@@ -9,6 +9,7 @@ import type { Row } from './model.ts'
 import { EngineError, resolvePill } from './pills.ts'
 import type { Column, QueryResult } from './query.ts'
 import type { MarkType, Pill, VizSpec } from './spec.ts'
+import { formatExpr, formatNumber } from './values.ts'
 
 export interface Theme {
   text: string
@@ -51,14 +52,19 @@ function encodingOf(c: Column, extra: Obj = {}): Obj {
   return { ...base, type: 'quantitative', ...extra }
 }
 
+/** A continuous number column with a default number format: its formatted text sits in the rows as `<id>f`. */
+const formatOf = (c: Column) => (c.continuous && !c.date ? c.field.format : undefined)
+
 /** Axis format of a positional encoding. */
 function axisOf(c: Column): Obj | undefined {
   if (!c.continuous) return undefined
   if (c.date) return { format: TIME_FORMAT[c.date.level], formatType: 'utc' }
-  return { format: NUMBER_FORMAT }
+  const f = formatOf(c)
+  return f ? { labelExpr: formatExpr(f, 'datum.value') } : { format: NUMBER_FORMAT }
 }
 
 function tooltipOf(c: Column): Obj {
+  if (formatOf(c)) return { field: `${c.id}f`, title: c.label, type: 'nominal' }
   const t: Obj = { field: c.id, title: c.label, type: !c.continuous ? 'nominal' : c.date ? 'temporal' : 'quantitative' }
   if (c.continuous && c.date) Object.assign(t, { format: TIME_FORMAT[c.date.level], formatType: 'utc' })
   else if (c.continuous) t.format = NUMBER_FORMAT
@@ -110,6 +116,15 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
   const isGeo = x?.field.geo === 'longitude' && y?.field.geo === 'latitude'
   const mark = spec.marks.type === 'automatic' ? automaticMark(x, y) : spec.marks.type
   if (mark === 'map' && !isGeo) throw new EngineError('A map needs Longitude on Columns and Latitude on Rows.')
+
+  const formatted = result.columns.filter((c) => formatOf(c))
+  let rows = formatted.length
+    ? result.rows.map((r) => {
+        const out = { ...r }
+        for (const c of formatted) out[`${c.id}f`] = typeof r[c.id] === 'number' ? formatNumber(r[c.id] as number, formatOf(c)!) : 'Null'
+        return out
+      })
+    : result.rows
 
   const enc: Obj = {}
   if (isGeo) {
@@ -184,7 +199,6 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
     layers.push({ mark: { type: 'text', color: theme.text, ...placement }, encoding })
   }
 
-  let rows = result.rows
   const config: Obj = {
     background: null,
     font: 'system-ui, sans-serif',
@@ -204,7 +218,7 @@ export function toVegaLite(spec: VizSpec, result: QueryResult, options: { theme?
       const country = detail.concat(color ? [color] : []).find((c) => c.field.geo === 'country')
       if (!country) throw new EngineError('A filled map needs Country on Detail or Color (only countries have shapes here).')
       rows = rows.map((r) => ({ ...r, __iso: ISO_BY_COUNTRY.get(String(r[country.id])) ?? null }))
-      const fields = result.columns.map((c) => c.id)
+      const fields = [...result.columns.map((c) => c.id), ...formatted.map((c) => `${c.id}f`)]
       const { longitude: _lo, latitude: _la, detail: _d, ...rest } = enc
       geoLayers.push({
         data: world('countries'),

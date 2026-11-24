@@ -30,11 +30,13 @@ export function compileFormula(formula: string, lookup: FieldLookup): CompiledCa
 export interface CalcFields {
   /** A compiled calc by name, if the field is one. */
   calc(name: string): CompiledCalc | undefined
+  /** A data field's value, when the sheet renamed or retyped fields; by default the row's own cell. */
+  read?(row: Row, name: string): Value
 }
 
 export function rowValue(fields: CalcFields, row: Row, name: string): Value {
   const calc = fields.calc(name)
-  if (!calc) return row[name] ?? null
+  if (!calc) return fields.read ? fields.read(row, name) : (row[name] ?? null)
   if (calc.aggregate) throw new Error(`${name} is an aggregate calculation`)
   return evaluate(calc.ast, { field: (n) => rowValue(fields, row, n) })
 }

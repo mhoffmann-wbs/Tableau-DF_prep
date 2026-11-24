@@ -16,6 +16,20 @@ export type MarkType = (typeof MARK_TYPES)[number]
 
 const fieldName = z.string().trim().min(1)
 
+/**
+ * Without `field` the members sort by their own value (data source order);
+ * with `field` + `agg` it is a computed sort by that measure; `manual` lists
+ * members (underlying values, before aliases) first in the given order.
+ */
+const sortSchema = z.object({
+  order: z.enum(['asc', 'desc']).default('asc'),
+  field: fieldName.optional(),
+  agg: z.enum(AGGREGATIONS).optional(),
+  manual: z.array(z.string()).optional(),
+})
+
+export type Sort = z.infer<typeof sortSchema>
+
 export const pillSchema = z
   .object({
     field: fieldName,
@@ -25,19 +39,8 @@ export const pillSchema = z
     date: z.object({ level: z.enum(DATE_LEVELS), mode: z.enum(['part', 'value']) }).optional(),
     /** Overrides the default: date parts and dimensions are discrete, date values and measures continuous. */
     as: z.enum(['discrete', 'continuous']).optional(),
-    /**
-     * Discrete pills only. Without `field` the members sort by their own value
-     * (data source order); with `field` + `agg` it is a computed sort by that
-     * measure; `manual` lists members first in the given order.
-     */
-    sort: z
-      .object({
-        order: z.enum(['asc', 'desc']).default('asc'),
-        field: fieldName.optional(),
-        agg: z.enum(AGGREGATIONS).optional(),
-        manual: z.array(z.string()).optional(),
-      })
-      .optional(),
+    /** Discrete pills only; overrides the field's default sort. */
+    sort: sortSchema.optional(),
   })
   .refine((p) => !(p.date?.level === 'weekday' && p.date.mode === 'value'), 'weekday is a date part only')
 
@@ -60,10 +63,53 @@ export type SourceId = (typeof SOURCES)[number]
 export const calcSchema = z.object({ name: fieldName, formula: z.string().trim().min(1) })
 export type Calc = z.infer<typeof calcSchema>
 
+export const FIELD_TYPES = ['string', 'number', 'date', 'datetime', 'boolean'] as const
+export type FieldType = (typeof FIELD_TYPES)[number]
+export const GEO_ROLES = ['country', 'state', 'city', 'postal', 'latitude', 'longitude'] as const
+export type GeoRole = (typeof GEO_ROLES)[number]
+
+/** Default Properties > Number Format, the Number (Custom), Currency (Custom) and Percentage choices. */
+export const numberFormatSchema = z.object({
+  kind: z.enum(['number', 'currency', 'percent']).default('number'),
+  decimals: z.number().int().min(0).max(6).default(0),
+  /** Display units: 20,000 in thousands shows as 20K. */
+  units: z.enum(['', 'K', 'M']).default(''),
+  separators: z.boolean().default(true),
+  prefix: z.string().default(''),
+  suffix: z.string().default(''),
+})
+
+export type NumberFormat = z.infer<typeof numberFormatSchema>
+
+/**
+ * A Data pane change to one of the source's fields, kept with the sheet like
+ * calcs. `field` is the data source's name; everything else names the field
+ * by its current name (`name` once renamed).
+ */
+export const fieldEditSchema = z.object({
+  field: fieldName,
+  name: fieldName.optional(),
+  type: z.enum(FIELD_TYPES).optional(),
+  /** `null` removes the field's geographic role. */
+  geo: z.enum(GEO_ROLES).nullable().optional(),
+  role: z.enum(['dimension', 'measure']).optional(),
+  as: z.enum(['discrete', 'continuous']).optional(),
+  /** Member (display string of the underlying value) → alias. */
+  aliases: z.record(z.string(), z.string()).optional(),
+  agg: z.enum(AGGREGATIONS).optional(),
+  format: numberFormatSchema.optional(),
+  sort: sortSchema.optional(),
+  comment: z.string().optional(),
+})
+
+export type FieldEdit = z.infer<typeof fieldEditSchema>
+
 export const vizSpecSchema = z.object({
   source: z.enum(SOURCES).default('sessions'),
   /** Checked against the data model by the engine, like field names. */
   calcs: z.array(calcSchema).default([]),
+  /** Renames, aliases, types and default properties of the source's fields. */
+  fields: z.array(fieldEditSchema).default([]),
   columns: z.array(pillSchema).default([]),
   rows: z.array(pillSchema).default([]),
   marks: z

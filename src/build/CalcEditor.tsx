@@ -2,18 +2,19 @@ import { type ReactNode, useRef } from 'react'
 import { Link } from 'react-router'
 import { CalcError, CATEGORY_LABEL, FUNCTIONS, type FunctionDef } from '../engine/calc'
 import { calcFields, type Field, fieldsOf } from '../engine/model'
-import type { Calc, SourceId } from '../engine/spec'
+import type { Calc, FieldEdit, SourceId } from '../engine/spec'
 
-/** The sheet a formula is written in: a data source and the other calcs it may use. */
+/** The sheet a formula is written in: a data source, its field edits and the other calcs it may use. */
 export interface CalcSheet {
   source: SourceId
   calcs: Calc[]
+  fields?: FieldEdit[]
 }
 
 /** What a formula compiles to on a sheet: the field it becomes, or the error that stops it. */
 export function calcStatus(sheet: CalcSheet, name: string, formula: string): { field: Field } | { error: CalcError } {
   const others = sheet.calcs.filter((c) => c.name !== name)
-  const field = calcFields(sheet.source, [...others, { name: name.trim() || 'Calculation', formula }]).at(-1)!
+  const field = calcFields(sheet.source, [...others, { name: name.trim() || 'Calculation', formula }], sheet.fields).at(-1)!
   return field.calc?.error ? { error: field.calc.error } : { field }
 }
 
