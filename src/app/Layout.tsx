@@ -24,6 +24,7 @@ const NAV_GROUPS: { id: string; label: string; links: NavEntry[] }[] = [
     links: [
       { to: '/practice', label: 'Practice' },
       { to: '/questions', label: 'Questions' },
+      { to: '/flashcards', label: 'Flashcards' },
       { to: '/mock', label: 'Mock exam' },
     ],
   },
@@ -35,7 +36,6 @@ const NAV_GROUPS: { id: string; label: string; links: NavEntry[] }[] = [
       { to: '/build', label: 'Overview', end: true },
       { to: '/build/sandbox', label: 'Viz sandbox' },
       { to: '/build/calc', label: 'Calc playground' },
-      { to: '/build/flashcards', label: 'Flashcards' },
     ],
   },
 ]

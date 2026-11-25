@@ -21,7 +21,7 @@ How the built parts work is in `docs/` (engine, content, app). This plan keeps t
 | Name | **Tableau-DF_prep**: `github.com/mhoffmann-wbs/Tableau-DF_prep` → `https://mhoffmann-wbs.github.io/Tableau-DF_prep/` |
 | Audience | English-speaking **data bootcamp learners**: comfortable with spreadsheets and some SQL or Python, new to Tableau. Brisk on general data concepts, nothing assumed about Tableau, SQL and pandas analogies where they help. |
 | Theme | One invented streaming service, **Driftlight**, with its own generated dataset (§6a). Places are real, so geographic roles work; every person, title and figure is invented. Lessons add a "Superstore note" wherever exam items are likely to assume Sample-Superstore. |
-| Pillars | **Learn** (lessons), **Check** (practice, bank, mock) and **Build** (sandbox, calc playground, simulators, Tableau Public challenges, flashcards) (§7). |
+| Pillars | **Learn** (lessons), **Check** (practice, bank, flashcards, mock) and **Build** (sandbox, calc playground, simulators, Tableau Public challenges) (§7). |
 | Granularity | One lesson per **task** (12). Every item carries a task id and objective id(s); coverage is checked per objective (56). |
 | Item kinds | `single`, `multi`, `viz` (§4). |
 | Bank size | About **600 items** (§4). |
@@ -119,7 +119,7 @@ About 12 MDX challenges, roughly one per task, in Tableau Public with the downlo
 
 Challenges never count towards readiness.
 
-### 7e. Flashcards (`/build/flashcards`)
+### 7e. Flashcards (`/flashcards`)
 Leitner boxes 0–5 (Again, Good, Easy; intervals 0, 1, 3, 7, 16, 35 days), due cards first. Built-in cards per task; own decks shared as validated JSON, review state never shared.
 
 ## 8. App features

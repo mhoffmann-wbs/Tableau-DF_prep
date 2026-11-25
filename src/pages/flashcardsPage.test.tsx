@@ -27,7 +27,7 @@ beforeEach(() => {
 describe('flashcards', () => {
   it('reviews a task’s cards: Again brings a card back, Good schedules it', async () => {
     const cards = FLASHCARDS.filter((c) => c.taskId === '4.2')
-    await renderAt('/build/flashcards?task=4.2', /^4\.2 /)
+    await renderAt('/flashcards?task=4.2', /^4\.2 /)
     expect(screen.getByText(`Card 1 of ${cards.length} · new`)).toBeTruthy()
     expect(screen.getByText(cards[0]!.front)).toBeTruthy()
     await user.keyboard(' ')
@@ -40,7 +40,7 @@ describe('flashcards', () => {
   })
 
   it('makes an own deck, then reviews it to the end', async () => {
-    const router = await renderAt('/build/flashcards/deck/new', 'New deck')
+    const router = await renderAt('/flashcards/deck/new', 'New deck')
     await user.click(screen.getByRole('button', { name: 'Save deck' }))
     expect(screen.getByRole('alert').textContent).toBe('Give the deck a name.')
     await user.type(screen.getByLabelText('Deck name'), 'LOD')
@@ -50,7 +50,7 @@ describe('flashcards', () => {
     await user.type(screen.getByLabelText('Card 1 back'), 'Ignores the view')
     await user.click(screen.getByRole('button', { name: 'Save deck' }))
     await screen.findByRole('heading', { level: 1, name: 'Flashcards' })
-    expect(router.state.location.pathname).toBe('/build/flashcards')
+    expect(router.state.location.pathname).toBe('/flashcards')
     expect(getProgress().decks.map((d) => [d.name, d.cards.length])).toEqual([['LOD', 1]])
 
     await user.click(screen.getByRole('link', { name: 'Review' }))

@@ -127,7 +127,7 @@ function Overview() {
           </ul>
         )}
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <Link to="/build/flashcards/deck/new" className={button}>
+          <Link to="/flashcards/deck/new" className={button}>
             New deck
           </Link>
           <ImportDeck />
@@ -160,7 +160,7 @@ function OwnDeckRow({ deck, now }: { deck: Deck; now: number }) {
             Review
           </Link>
         )}
-        <Link to={`/build/flashcards/deck/${deck.id}`} className={button}>
+        <Link to={`/flashcards/deck/${deck.id}`} className={button}>
           Edit
         </Link>
         <button onClick={download} className={button}>
@@ -246,7 +246,7 @@ function Session({ title, cards }: { title: string; cards: ReviewCard[] }) {
   )
 
   const back = (
-    <Link to="/build/flashcards" className="text-brand-dark underline">
+    <Link to="/flashcards" className="text-brand-dark underline">
       All decks
     </Link>
   )
@@ -329,7 +329,7 @@ function DeckEditor({ deckId }: { deckId: string }) {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">Deck not found</h1>
-        <Link to="/build/flashcards" className="text-brand-dark underline">
+        <Link to="/flashcards" className="text-brand-dark underline">
           All decks
         </Link>
       </div>
@@ -344,7 +344,7 @@ function DeckEditor({ deckId }: { deckId: string }) {
     const bad = kept.findIndex((c) => !deckCardSchema.safeParse(c).success)
     if (bad >= 0) return setError(`Card ${cards.indexOf(kept[bad]!) + 1} needs a front and a back (up to 200 and 400 characters).`)
     saveDeck({ id: existing?.id, name: name.trim(), cards: kept.map((c) => ({ ...c, front: c.front.trim(), back: c.back.trim() })) })
-    navigate('/build/flashcards')
+    navigate('/flashcards')
   }
 
   return (
@@ -384,7 +384,7 @@ function DeckEditor({ deckId }: { deckId: string }) {
         <button onClick={save} className={primary}>
           Save deck
         </button>
-        <Link to="/build/flashcards" className={`${button} py-2`}>
+        <Link to="/flashcards" className={`${button} py-2`}>
           Cancel
         </Link>
       </div>

@@ -99,7 +99,7 @@ export function BuildLinks() {
       ))}
       {cards > 0 && (
         <li>
-          Flashcards: <Link to={`/build/flashcards?task=${meta.taskId}`}>{cards} cards for this task</Link>
+          Flashcards: <Link to={`/flashcards?task=${meta.taskId}`}>{cards} cards for this task</Link>
         </li>
       )}
       {challenges.length + exercises.length + presets.length + sims.length + publicChallenges.length + cards === 0 && <li>Hands-on practice for this task arrives with the simulators and the Tableau Public challenges.</li>}

@@ -1,22 +1,13 @@
-import { useState } from 'react'
 import { Link } from 'react-router'
 import { challengeStatus } from '../challenges/answer'
 import { CALC_EXERCISES } from '../content/calc'
 import { CHALLENGES } from '../content/challenges'
-import { FLASHCARDS } from '../content/flashcards'
 import { SIMS } from '../content/sims'
-import { deckStats } from '../flashcards/leitner'
 import { SANDBOX_CHALLENGES } from '../content/sandbox'
 import { useProgress } from '../progress/store'
 
 export default function BuildPage() {
-  const { sandbox: solved, calcExercises, flashcards, challenges } = useProgress()
-  const [now] = useState(Date.now)
-  const cards = deckStats(
-    FLASHCARDS.map((c) => c.id),
-    flashcards,
-    now,
-  )
+  const { sandbox: solved, calcExercises, challenges } = useProgress()
   const calcsDone = CALC_EXERCISES.filter((e) => calcExercises[e.id] !== undefined).length
   const done = SANDBOX_CHALLENGES.filter((c) => solved[c.id] !== undefined).length
   const publicDone = CHALLENGES.filter((c) => challengeStatus(c.meta, challenges[c.meta.id]).done).length
@@ -85,17 +76,6 @@ export default function BuildPage() {
             </li>
           ))}
         </ol>
-      </section>
-      <section className="rounded-lg border border-slate-200 bg-white p-4">
-        <h2 className="text-lg font-semibold">
-          <Link to="/build/flashcards" className="text-brand-dark underline">
-            Flashcards
-          </Link>
-        </h2>
-        <p className="mt-1 text-sm text-slate-600">
-          {FLASHCARDS.length} cards on terms, menu paths, file types, chart recipes and the blue/green rules, reviewed in Leitner boxes:{' '}
-          {cards.due} due, {cards.fresh} new. Make and share your own decks too.
-        </p>
       </section>
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">Make this chart</h2>
