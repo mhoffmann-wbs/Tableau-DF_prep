@@ -18,8 +18,8 @@ export default function SimPage() {
     return (
       <div className="space-y-4">
         <h1 className="text-2xl font-bold">Simulator not found</h1>
-        <Link to="/build" className="text-brand-dark underline">
-          Back to Build
+        <Link to="/build/sim" className="text-brand-dark underline">
+          All simulators
         </Link>
       </div>
     )
@@ -28,8 +28,8 @@ export default function SimPage() {
   const items = sim.items.map((id) => ITEMS.find((i) => i.id === id)!)
   return (
     <div className="space-y-6">
-      <Link to="/build" className="text-sm text-slate-600 hover:underline">
-        ← Build
+      <Link to="/build/sim" className="text-sm text-slate-600 hover:underline">
+        ← Concept simulators
       </Link>
       <h1 className="text-3xl font-bold">{sim.title}</h1>
       <p className="text-slate-600">

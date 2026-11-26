@@ -62,6 +62,11 @@ describe('simulator page', () => {
 
   it('says when a simulator does not exist', async () => {
     await renderAt('/build/sim/nope', 'Simulator not found')
-    expect(screen.getByRole('link', { name: 'Back to Build' })).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'All simulators' })).toHaveAttribute('href', '/build/sim')
+  })
+
+  it('lists the simulators', async () => {
+    await renderAt('/build/sim', 'Concept simulators')
+    expect(screen.getByRole('link', { name: SIM_BY_ID.get('granularity')!.title })).toHaveAttribute('href', '/build/sim/granularity')
   })
 })

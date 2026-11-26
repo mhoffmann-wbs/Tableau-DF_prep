@@ -2,7 +2,7 @@
 // The sandbox and its challenges, driven through the field and pill menus (the
 // keyboard and touch path; drag and drop uses the same spec edits). The lazy
 // runtime is mocked: jsdom can't fetch the dataset or draw with Vega.
-import { act, render, screen, waitFor, within } from '@testing-library/react'
+import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { RouterProvider, createMemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
@@ -425,14 +425,24 @@ describe('make this chart', () => {
   })
 
   it('lists the challenges with their solved state', async () => {
-    await renderAt('/build', 'Build')
+    await renderAt('/build/charts', 'Make this chart')
     expect(screen.getByText(/0 of 25 solved/)).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '1. Bar chart: minutes by genre' })).toHaveAttribute('href', '/build/sandbox/bar-genre-minutes')
   })
 
+  it('sends /build to the sandbox and marks Make this chart in the menu on a challenge', async () => {
+    await renderAt('/build', 'Viz builder sandbox')
+    expect(within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Viz sandbox' })).toHaveClass('font-semibold')
+    cleanup()
+    await renderAt('/build/sandbox/bar-genre-minutes', 'Bar chart: minutes by genre')
+    const nav = within(screen.getByRole('navigation', { name: 'Main' }))
+    expect(nav.getByRole('link', { name: 'Make this chart' })).toHaveClass('font-semibold')
+    expect(nav.getByRole('link', { name: 'Viz sandbox' })).not.toHaveClass('font-semibold')
+  })
+
   it('says when a challenge does not exist', async () => {
     await renderAt('/build/sandbox/nope', 'Challenge not found')
-    expect(screen.getByRole('link', { name: 'All challenges' })).toHaveAttribute('href', '/build')
+    expect(screen.getByRole('link', { name: 'All challenges' })).toHaveAttribute('href', '/build/charts')
   })
 })
 

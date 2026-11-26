@@ -102,9 +102,9 @@ describe('calc exercises', () => {
     expect(screen.getByText('[Minutes Watched] / 60', { selector: 'code' })).toBeInTheDocument()
   })
 
-  it('is linked from the Build page', async () => {
-    await renderAt('/build', 'Build')
-    expect(within(screen.getByRole('main')).getByRole('link', { name: 'Calc playground' })).toBeInTheDocument()
+  it('is in the Build menu', async () => {
+    await renderAt('/build/calc', 'Calc playground')
+    expect(within(screen.getByRole('navigation', { name: 'Main' })).getByRole('link', { name: 'Calc playground' })).toHaveAttribute('href', '/build/calc')
   })
 
   it('says when an exercise is missing', async () => {

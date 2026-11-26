@@ -5,7 +5,8 @@ import { Link, NavLink, Outlet, useLocation } from 'react-router'
 export const NOT_AFFILIATED = 'Not affiliated with or endorsed by Salesforce, Inc. or Tableau. Tableau and Salesforce are trademarks of Salesforce, Inc.'
 export const INVENTED_DATA = 'Driftlight and its data are invented for this app.'
 
-type NavEntry = { to: string; label: string; end?: boolean }
+/** `also`: another path prefix under which the link counts as active. */
+type NavEntry = { to: string; label: string; end?: boolean; also?: string }
 
 /** The main nav groups pages by what the learner does; Progress stands on its own. */
 const NAV_GROUPS: { id: string; label: string; links: NavEntry[] }[] = [
@@ -32,10 +33,12 @@ const NAV_GROUPS: { id: string; label: string; links: NavEntry[] }[] = [
     id: 'build',
     label: 'Build',
     links: [
-      // The overview also lists the simulators and the challenges.
-      { to: '/build', label: 'Overview', end: true },
-      { to: '/build/sandbox', label: 'Viz sandbox' },
+      // A "Make this chart" challenge opens in the sandbox at /build/sandbox/:id.
+      { to: '/build/sandbox', label: 'Viz sandbox', end: true },
       { to: '/build/calc', label: 'Calc playground' },
+      { to: '/build/charts', label: 'Make this chart', also: '/build/sandbox/' },
+      { to: '/build/sim', label: 'Concept simulators' },
+      { to: '/build/challenges', label: 'Tableau Public challenges' },
     ],
   },
 ]
@@ -122,9 +125,14 @@ export function Layout() {
                     id={`nav-${group.id}`}
                     className={`mt-1 sm:absolute sm:left-0 sm:top-full sm:z-20 sm:mt-2 sm:min-w-40 sm:rounded sm:bg-header sm:px-4 sm:py-2 sm:shadow-lg ${open ? 'sm:block' : 'sm:hidden'}`}
                   >
-                    {group.links.map(({ to, label, end }) => (
+                    {group.links.map(({ to, label, end, also }) => (
                       <li key={to}>
-                        <NavLink to={to} end={end} onClick={closeAll} className={linkClass}>
+                        <NavLink
+                          to={to}
+                          end={end}
+                          onClick={closeAll}
+                          className={({ isActive }) => linkClass({ isActive: isActive || (also !== undefined && pathname.startsWith(also)) })}
+                        >
                           {label}
                         </NavLink>
                       </li>

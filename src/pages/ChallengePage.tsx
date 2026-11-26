@@ -22,8 +22,8 @@ function ChallengeView({ id }: { id: string }) {
     return (
       <p>
         No such challenge.{' '}
-        <Link to="/build" className="underline">
-          Back to Build
+        <Link to="/build/challenges" className="underline">
+          All challenges
         </Link>
       </p>
     )
@@ -37,10 +37,10 @@ function ChallengeView({ id }: { id: string }) {
     <article className="space-y-6">
       <header className="space-y-2">
         <p className="text-sm text-slate-500">
-          <Link to="/build" className="hover:underline">
-            Build
+          <Link to="/build/challenges" className="hover:underline">
+            Tableau Public challenges
           </Link>{' '}
-          / Tableau Public challenge {index + 1} of {CHALLENGES.length}
+          / {index + 1} of {CHALLENGES.length}
         </p>
         <h1 className="text-3xl font-bold">{meta.title}</h1>
         <p className="text-slate-600">{meta.summary}</p>
@@ -87,7 +87,7 @@ function ChallengeView({ id }: { id: string }) {
         </div>
       </section>
       <footer className="flex flex-wrap gap-3">
-        <Link to="/build" className="rounded border border-slate-300 px-3 py-1.5 text-sm">
+        <Link to="/build/challenges" className="rounded border border-slate-300 px-3 py-1.5 text-sm">
           All challenges
         </Link>
         {next && (

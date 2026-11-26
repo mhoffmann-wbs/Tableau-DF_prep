@@ -75,7 +75,7 @@ export default function SandboxPage() {
     return (
       <div className="space-y-3">
         <h1 className="text-2xl font-semibold">Challenge not found</h1>
-        <Link to="/build" className="text-brand-dark underline">
+        <Link to="/build/charts" className="text-brand-dark underline">
           All challenges
         </Link>
       </div>
@@ -166,10 +166,10 @@ function ChallengeSandbox({ challenge }: { challenge: SandboxChallenge }) {
   return (
     <div className="space-y-4">
       <p className="text-sm text-slate-500">
-        <Link to="/build" className="text-brand-dark underline">
-          Build
+        <Link to="/build/charts" className="text-brand-dark underline">
+          Make this chart
         </Link>{' '}
-        › Make this chart {index + 1} of {SANDBOX_CHALLENGES.length}
+        › {index + 1} of {SANDBOX_CHALLENGES.length}
       </p>
       <h1 className="text-3xl font-bold">
         {challenge.title}
@@ -220,7 +220,7 @@ function ChallengeSandbox({ challenge }: { challenge: SandboxChallenge }) {
                     Next challenge: {next.title}
                   </Link>
                 ) : (
-                  <Link to="/build" className="text-brand-dark underline">
+                  <Link to="/build/charts" className="text-brand-dark underline">
                     Back to all challenges
                   </Link>
                 )}

@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import type { RouteObject } from 'react-router'
+import { Navigate, type RouteObject } from 'react-router'
 import { Layout } from './Layout'
 
 // Every page is code-split, so the shell loads fast and each page (with its
@@ -11,11 +11,13 @@ const PracticePage = lazy(() => import('../pages/PracticePage'))
 const QuestionsPage = lazy(() => import('../pages/QuestionsPage'))
 const MockExamPage = lazy(() => import('../pages/MockExamPage'))
 const ProgressPage = lazy(() => import('../pages/ProgressPage'))
-const BuildPage = lazy(() => import('../pages/BuildPage'))
 const SandboxPage = lazy(() => import('../pages/SandboxPage'))
 const CalcPage = lazy(() => import('../pages/CalcPage'))
 const FlashcardsPage = lazy(() => import('../pages/FlashcardsPage'))
 const SimPage = lazy(() => import('../pages/SimPage'))
+const SimListPage = lazy(() => import('../pages/SimListPage'))
+const ChartListPage = lazy(() => import('../pages/ChartListPage'))
+const ChallengeListPage = lazy(() => import('../pages/ChallengeListPage'))
 const ChallengePage = lazy(() => import('../pages/ChallengePage'))
 const GuidesPage = lazy(() => import('../pages/GuidesPage'))
 const ChartGalleryPage = lazy(() => import('../pages/ChartGalleryPage'))
@@ -32,12 +34,16 @@ export const routes: RouteObject[] = [
       { path: 'questions/:itemId', element: <QuestionsPage /> },
       { path: 'mock', element: <MockExamPage /> },
       { path: 'progress', element: <ProgressPage /> },
-      { path: 'build', element: <BuildPage /> },
+      // Build has no overview: its menu lists every page.
+      { path: 'build', element: <Navigate to="/build/sandbox" replace /> },
       { path: 'build/sandbox', element: <SandboxPage /> },
       { path: 'build/sandbox/:challengeId', element: <SandboxPage /> },
       { path: 'build/calc', element: <CalcPage /> },
       { path: 'build/calc/:exerciseId', element: <CalcPage /> },
+      { path: 'build/charts', element: <ChartListPage /> },
+      { path: 'build/sim', element: <SimListPage /> },
       { path: 'build/sim/:simId', element: <SimPage /> },
+      { path: 'build/challenges', element: <ChallengeListPage /> },
       { path: 'build/challenges/:challengeId', element: <ChallengePage /> },
       { path: 'flashcards', element: <FlashcardsPage /> },
       { path: 'flashcards/deck/:deckId', element: <FlashcardsPage /> },

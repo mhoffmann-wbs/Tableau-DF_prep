@@ -15,7 +15,7 @@ describe('pages', () => {
   it('shows the exam format and every domain on the home page', async () => {
     await renderAt('/', 'Salesforce Certified Tableau Desktop Foundations')
     expect(screen.getByText(/40 questions in 70 minutes, 48% to pass/)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /^Build/ })).toHaveAttribute('href', '/build')
+    expect(screen.getByRole('link', { name: /^Build/ })).toHaveAttribute('href', '/build/sandbox')
     expect(screen.getByText('2. Exploring and Analyzing Data').closest('summary')).toHaveTextContent('37% · 15 questions')
     expect(screen.getByText('Create a density map')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '4.1 Understand dimensions and measures' })).toHaveAttribute('href', '/learn/4.1')
@@ -89,7 +89,7 @@ describe('pages', () => {
     expect(getProgress().challenges['connect-and-extract']?.checkpoints).toEqual(['sessions-2025'])
     expect(screen.getByText(/1 of 3 steps ticked, 1 of 3 checkpoints answered/)).toBeInTheDocument()
     cleanup()
-    await renderAt('/build', 'Build')
+    await renderAt('/build/challenges', 'Tableau Public challenges')
     expect(screen.getByRole('link', { name: '1. Connect, extract and save a data source' })).toHaveAttribute('href', '/build/challenges/connect-and-extract')
     resetProgress()
   })

@@ -147,6 +147,7 @@ Versioned progress store with export/import; readiness per task (coverage × acc
    8. **Tableau Public challenges** (done 2026-11-24): 12 challenges, one per task, at `/build/challenges/:id`, with checklists and checkpoints in progress (v6); the steps for the three `unverified` limits are optional until checked.
    9. **Cheat sheet and exam-day guide** (done 2026-11-24): `/guides`, facts restated from the lessons and `EXAM_FORMAT`. Recheck the cheat sheet whenever a lesson is corrected.
    10. **Mobile pass and sandbox accessibility** (done 2026-11-24): every route checked at 390px for horizontal overflow (the calc playground's selects fixed); the Data pane scrolls in its own box below `lg`; Move earlier/later in the pill menu, so every drag has a menu path.
+   - **Build menu** (done 2026-11-26): the `/build` overview is gone; the menu lists Viz sandbox, Calc playground, Make this chart (`/build/charts`), Concept simulators (`/build/sim`) and Tableau Public challenges (`/build/challenges`); `/build` redirects to the sandbox.
 
 ## 10. Open checks
 

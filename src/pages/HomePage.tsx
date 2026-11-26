@@ -6,7 +6,7 @@ const mock = allocateMock()
 const PILLARS = [
   { to: '/learn', title: 'Learn', text: 'One lesson per exam task, written for people new to Tableau, all on the data of one streaming service, Driftlight.' },
   { to: '/practice', title: 'Check', text: 'Practice questions in the exam’s style with full explanations, a timed mock exam and spaced-review flashcards.' },
-  { to: '/build', title: 'Build', text: 'A viz builder sandbox, a calculated-field playground, concept simulators and challenges you build in Tableau Public.' },
+  { to: '/build/sandbox', title: 'Build', text: 'A viz builder sandbox, a calculated-field playground, concept simulators and challenges you build in Tableau Public.' },
 ]
 
 export default function HomePage() {
