@@ -39,7 +39,7 @@ How the built parts work is in `docs/` (engine, content, app). This plan keeps t
 | Product version | 2022.3 | Lessons teach 2022.3; newer features are labelled or left out. Challenges note where Tableau Public's newer UI differs. |
 | Fee and retake | US$75; retake free | Exam-day guide. |
 | Delivery | Test centre or online proctored; no reference materials | Exam-day guide. |
-| Prerequisite | None; "a minimum of 3 months experience" | Home page. |
+| Prerequisite | None; "a minimum of 3 months experience" | Exam-day guide. |
 | Item style | MC/MR; multi-select says how many | `multi` stems say "(Choose 2 answers.)". |
 
 The outline "is not a comprehensive listing": lessons may touch adjacent basics, but questions stay tagged to an outline objective.

@@ -14,8 +14,9 @@ async function renderAt(path: string, heading: string | RegExp) {
 describe('pages', () => {
   it('shows the exam format and every domain on the home page', async () => {
     await renderAt('/', 'Salesforce Certified Tableau Desktop Foundations')
-    expect(screen.getByText('70 minutes')).toBeInTheDocument()
-    expect(screen.getByRole('heading', { level: 3, name: /2\. Exploring and Analyzing Data/ })).toHaveTextContent('15 of 40 mock items')
+    expect(screen.getByText(/40 questions in 70 minutes, 48% to pass/)).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /^Build/ })).toHaveAttribute('href', '/build')
+    expect(screen.getByText('2. Exploring and Analyzing Data').closest('summary')).toHaveTextContent('37% · 15 questions')
     expect(screen.getByText('Create a density map')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '4.1 Understand dimensions and measures' })).toHaveAttribute('href', '/learn/4.1')
   })

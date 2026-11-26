@@ -1,84 +1,66 @@
 import { Link } from 'react-router'
-import { DOMAINS, EXAM_FORMAT, LESSON_ORDER, TASK_BY_ID, allocateMock, tasksOf } from '../content/blueprint'
+import { DOMAINS, EXAM_FORMAT, allocateMock, tasksOf } from '../content/blueprint'
 
 const mock = allocateMock()
 
-const FACTS: [string, string][] = [
-  ['Questions', `${EXAM_FORMAT.items} multiple-choice/multiple-select, plus up to ${EXAM_FORMAT.unscoredMax} unscored`],
-  ['Time', `${EXAM_FORMAT.minutes} minutes`],
-  ['Passing score', `${EXAM_FORMAT.passPercent}%`],
-  ['Product version', `Tableau ${EXAM_FORMAT.productVersion}`],
-  ['Fee', `US$${EXAM_FORMAT.feeUsd}, retake ${EXAM_FORMAT.retakeFee.toLowerCase()}`],
-  ['Prerequisite', EXAM_FORMAT.prerequisite],
+const PILLARS = [
+  { to: '/learn', title: 'Learn', text: 'One lesson per exam task, written for people new to Tableau, all on the data of one streaming service, Driftlight.' },
+  { to: '/practice', title: 'Check', text: 'Practice questions in the exam’s style with full explanations, a timed mock exam and spaced-review flashcards.' },
+  { to: '/build', title: 'Build', text: 'A viz builder sandbox, a calculated-field playground, concept simulators and challenges you build in Tableau Public.' },
 ]
 
 export default function HomePage() {
   return (
     <div className="space-y-8">
       <section className="space-y-3">
-        <h1 className="text-3xl font-bold tracking-tight">{EXAM_FORMAT.name}</h1>
-        <p className="max-w-3xl text-slate-600">
-          A free self-study app: lessons for every task in the exam guide, practice questions in the exam's style, a timed mock exam, and
-          hands-on tools — a viz builder, a calculated-field playground and challenges you build in Tableau Public — all using the data of
-          an invented streaming service, Driftlight.
+        <h1 className="text-3xl font-bold">{EXAM_FORMAT.name}</h1>
+        <p className="text-lg text-slate-700">
+          A free self-study course for the exam: {EXAM_FORMAT.items} questions in {EXAM_FORMAT.minutes} minutes,{' '}
+          {EXAM_FORMAT.passPercent}% to pass, on Tableau {EXAM_FORMAT.productVersion}.
         </p>
-        <dl className="grid gap-x-6 gap-y-2 rounded-lg border border-slate-200 bg-white p-4 text-sm sm:grid-cols-2">
-          {FACTS.map(([term, value]) => (
-            <div key={term} className="flex gap-2">
-              <dt className="w-32 shrink-0 font-medium text-slate-500">{term}</dt>
-              <dd>{value}</dd>
-            </div>
-          ))}
-        </dl>
-        <p className="text-sm text-slate-500">
-          Source:{' '}
-          <a className="text-brand-dark underline" href={EXAM_FORMAT.guideUrl}>
-            the official exam guide
-          </a>
-          . Before the exam, read the{' '}
-          <Link to="/guides/exam-day" className="text-brand-dark underline">
-            exam-day guide
-          </Link>{' '}
-          and the{' '}
-          <Link to="/guides/cheat-sheet" className="text-brand-dark underline">
-            cheat sheet
+      </section>
+      <section className="grid gap-4 sm:grid-cols-3">
+        {PILLARS.map((p) => (
+          <Link key={p.to} to={p.to} className="rounded-lg border border-slate-200 bg-white p-4 hover:border-brand">
+            <h2 className="text-lg font-semibold text-brand-dark">{p.title}</h2>
+            <p className="mt-1 text-sm text-slate-600">{p.text}</p>
           </Link>
-          .
-        </p>
+        ))}
       </section>
-
+      <p className="text-sm text-slate-600">
+        Before the exam: the printable{' '}
+        <Link to="/guides/cheat-sheet" className="text-brand-dark underline">
+          cheat sheet
+        </Link>{' '}
+        and the{' '}
+        <Link to="/guides/exam-day" className="text-brand-dark underline">
+          exam-day guide
+        </Link>
+        .
+      </p>
       <section className="space-y-3">
-        <h2 className="text-2xl font-semibold">Lessons</h2>
-        <p className="max-w-3xl text-slate-600">One lesson per exam task, in the order of the exam guide.</p>
-        <ol className="grid gap-x-6 gap-y-1 rounded-lg border border-slate-200 bg-white p-4 text-sm sm:grid-cols-2">
-          {LESSON_ORDER.map((id, i) => (
-            <li key={id} className="flex gap-2">
-              <span className="w-5 shrink-0 text-right font-mono text-slate-400">{i + 1}</span>
-              <Link to={`/learn/${id}`} className="text-brand-dark hover:underline">
-                {id} {TASK_BY_ID.get(id)!.title}
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-2xl font-semibold">Exam outline</h2>
+        <h2 className="text-xl font-semibold">The exam outline</h2>
+        <p className="text-sm text-slate-600">
+          Weights are percent of scored content; question counts are this app’s {EXAM_FORMAT.items}-question mock exam.{' '}
+          <a href={EXAM_FORMAT.guideUrl} className="underline">
+            Official exam guide
+          </a>
+        </p>
         {DOMAINS.map((d) => (
-          <article key={d.id} className="rounded-lg border border-slate-200 bg-white p-4">
-            <h3 className="flex flex-wrap items-baseline justify-between gap-2 text-lg font-semibold">
+          <details key={d.id} className="rounded-lg border border-slate-200 bg-white p-4">
+            <summary className="flex cursor-pointer justify-between gap-4 font-semibold">
               <span>
                 {d.id}. {d.title}
               </span>
-              <span className="text-sm font-normal text-slate-500">
-                {d.weight}% · {mock.get(d.id)} of {EXAM_FORMAT.items} mock items
+              <span className="shrink-0 font-normal text-slate-500">
+                {d.weight}% · {mock.get(d.id)} questions
               </span>
-            </h3>
+            </summary>
             {tasksOf(d.id).map((t) => (
               <div key={t.id} className="mt-3">
-                <h4 className="font-medium">
+                <Link to={`/learn/${t.id}`} className="font-medium text-brand-dark hover:underline">
                   {t.id} {t.title}
-                </h4>
+                </Link>
                 <ul className="mt-1 space-y-0.5 text-sm text-slate-600">
                   {t.objectives.map((o) => (
                     <li key={o.id}>
@@ -89,7 +71,7 @@ export default function HomePage() {
                 </ul>
               </div>
             ))}
-          </article>
+          </details>
         ))}
       </section>
     </div>

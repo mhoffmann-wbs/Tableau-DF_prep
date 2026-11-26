@@ -15,7 +15,7 @@ The quiz, progress store, sandbox UI, simulators, pages and routes, testing, and
 - `src/components/Inline.tsx` renders `` `backtick` `` spans in stems, options and rationales as code.
 - `src/app/`: `routes.tsx` (every page lazy-loaded; keep content imports out of it and `Layout`) and `Layout.tsx` (nav grouped into Learn, Quiz and Build dropdowns plus Progress, a phone Menu button that lists every group, the non-affiliation footer).
 - `src/pages/`:
-  - `HomePage` (format and outline).
+  - `HomePage` (the exam in one line, a card per pillar, the guides, and the outline as one collapsible section per domain with its tasks linked to their lessons).
   - `LearnPage` (`/learn` grouped by domain in guide order, with read marks; `/learn/:taskId` with the tl;dr, objectives, sources, Mark as read and previous/next in guide order). Revealed items link to their lesson.
   - `PracticePage` (`?task=`, `?domain=`, `?mix=N`, `&focus=1` for least mastered, `?weak=1`).
   - `QuestionsPage` (`/questions` with topic, kind and mastery filters in the URL; `/questions/:itemId`).
