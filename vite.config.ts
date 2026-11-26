@@ -20,5 +20,7 @@ export default defineConfig({
     environment: 'node',
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/test/setup.ts'],
+    // Room for a few slow lazy-page waits (5 s each, see setup.ts) in one test.
+    testTimeout: 20000,
   },
 })
